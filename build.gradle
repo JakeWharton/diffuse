@@ -7,10 +7,6 @@ repositories {
   mavenCentral()
 }
 
-dependencies {
-  compile 'org.smali:dexlib2:2.1.0'
-}
-
 task fatJar(type: Jar, dependsOn:'compileJava') {
   from files(sourceSets.main.output.classesDir)
   from configurations.runtime.asFileTree.files.collect { zipTree(it) }
