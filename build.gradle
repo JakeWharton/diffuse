@@ -7,6 +7,10 @@ repositories {
   mavenCentral()
 }
 
+dependencies {
+  compile 'com.jakewharton.android.repackaged:libcore-dex:2'
+}
+
 task fatJar(type: Jar, dependsOn:'compileJava') {
   from files(sourceSets.main.output.classesDir)
   from configurations.runtime.asFileTree.files.collect { zipTree(it) }
