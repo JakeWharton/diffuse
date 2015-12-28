@@ -1,0 +1,41 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'org.smali:dexlib2:2.1.0'
+}
+
+task fatJar(type: Jar, dependsOn:'compileJava') {
+  from files(sourceSets.main.output.classesDir)
+  from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+
+  classifier 'fat'
+
+  manifest {
+    attributes 'Main-Class': 'com.jakewharton.dexmethodlist.Main'
+  }
+}
+
+def execFile = new File(buildDir, 'exec/dex-method-list')
+task execJar << {
+  def fatJarFile = fatJar.archivePath
+
+  execFile.getParentFile().mkdirs()
+  execFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+  fatJarFile.withInputStream { execFile.append it }
+
+  execFile.setExecutable true, false
+}
+execJar.dependsOn fatJar
+
+tasks.findByName('assemble').dependsOn execJar
+
+artifacts {
+  archives file: execFile, name: 'binary', type: 'jar', builtBy: execJar, extension: 'jar', classifier: 'binary'
+}

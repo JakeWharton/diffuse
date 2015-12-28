@@ -1,0 +1,10 @@
+# IntelliJ IDEA
+/.idea
+
+# Gradle
+/.gradle
+/build
+/reports
+
+# OS X sadness
+.DS_Store
