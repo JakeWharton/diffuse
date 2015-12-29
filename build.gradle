@@ -9,6 +9,9 @@ repositories {
 
 dependencies {
   compile 'com.jakewharton.android.repackaged:libcore-dex:2'
+  testCompile 'junit:junit:4.12'
+  testCompile 'com.google.guava:guava:19.0'
+  testCompile 'com.google.truth:truth:0.28'
 }
 
 task fatJar(type: Jar, dependsOn:'compileJava') {

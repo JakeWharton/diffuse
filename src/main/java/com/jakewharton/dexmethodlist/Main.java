@@ -75,4 +75,8 @@ public final class Main {
       default: throw new IllegalArgumentException("Unknown type: " + type);
     }
   }
+
+  private Main() {
+    throw new AssertionError("No instances.");
+  }
 }
