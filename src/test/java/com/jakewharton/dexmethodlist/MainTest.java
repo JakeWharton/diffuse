@@ -75,4 +75,51 @@ public final class MainTest {
         + "Visibilities test4()\n"
         + "java.lang.Object <init>()\n");
   }
+
+  @Test public void apk() throws IOException {
+    System.setIn(Resources.getResource("one.apk").openStream());
+    Main.main(new String[0]);
+    assertThat(out.get()).isEqualTo(""
+        + "Params <init>()\n"
+        + "Params test(String, String, String, String)\n"
+        + "java.lang.Object <init>()\n");
+  }
+
+  @Test public void apkArgumentOneDex() {
+    Main.main(new String[] {
+        Resources.getResource("one.apk").getFile()
+    });
+    assertThat(out.get()).isEqualTo(""
+        + "Params <init>()\n"
+        + "Params test(String, String, String, String)\n"
+        + "java.lang.Object <init>()\n");
+  }
+
+  @Test public void apkArgumentThreeDex() {
+    Main.main(new String[] {
+        Resources.getResource("three.apk").getFile()
+    });
+    assertThat(out.get()).isEqualTo(""
+        + "Params <init>()\n"
+        + "Params test(String, String, String, String)\n"
+        + "Types <init>()\n"
+        + "Types test(String)\n"
+        + "Types test(String[])\n"
+        + "Types test(boolean)\n"
+        + "Types test(byte)\n"
+        + "Types test(char)\n"
+        + "Types test(double)\n"
+        + "Types test(float)\n"
+        + "Types test(int)\n"
+        + "Types test(long)\n"
+        + "Types test(short)\n"
+        + "Visibilities <init>()\n"
+        + "Visibilities test1()\n"
+        + "Visibilities test2()\n"
+        + "Visibilities test3()\n"
+        + "Visibilities test4()\n"
+        + "java.lang.Object <init>()\n"
+        + "java.lang.Object <init>()\n"
+        + "java.lang.Object <init>()\n");
+  }
 }
