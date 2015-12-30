@@ -8,9 +8,24 @@ more dex or apk files as arguments or piping one through stdin.
 
 For example:
 ```
-$ ./build/exec/dex-method-list test.dex
-$ ./build/exec/dex-method-list one.dex two.dex three.dex
-$ ./build/exec/dex-method-list test.apk
+$ ./build/exec/dex-method-list src/test/resources/types.dex
+Types <init>()
+Types test(String)
+Types test(String[])
+Types test(boolean)
+Types test(byte)
+Types test(char)
+Types test(double)
+Types test(float)
+Types test(int)
+Types test(long)
+Types test(short)
+java.lang.Object <init>()
+
+$ ./build/exec/dex-method-list src/test/resources/one.apk
+Params <init>()
+Params test(String, String, String, String)
+java.lang.Object <init>()
 ```
 
 
