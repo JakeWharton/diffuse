@@ -11,9 +11,7 @@ public final class MainTest {
   @Rule public final SystemOutCaptureRule out = new SystemOutCaptureRule();
 
   @Test public void singleArgument() {
-    Main.main(new String[] {
-        Resources.getResource("params_joined.dex").getFile()
-    });
+    Main.main(Resources.getResource("params_joined.dex").getFile());
     assertThat(out.get()).isEqualTo(""
         + "Params <init>()\n"
         + "Params test(String, String, String, String)\n"
@@ -21,10 +19,9 @@ public final class MainTest {
   }
 
   @Test public void multipleArguments() {
-    Main.main(new String[] {
+    Main.main(
         Resources.getResource("params_joined.dex").getFile(),
-        Resources.getResource("visibilities.dex").getFile()
-    });
+        Resources.getResource("visibilities.dex").getFile());
     assertThat(out.get()).isEqualTo(""
         + "Params <init>()\n"
         + "Params test(String, String, String, String)\n"
@@ -57,7 +54,7 @@ public final class MainTest {
 
   @Test public void paramsJoined() throws IOException {
     System.setIn(Resources.getResource("params_joined.dex").openStream());
-    Main.main(new String[0]);
+    Main.main();
     assertThat(out.get()).isEqualTo(""
         + "Params <init>()\n"
         + "Params test(String, String, String, String)\n"
@@ -66,7 +63,7 @@ public final class MainTest {
 
   @Test public void visibilities() throws IOException {
     System.setIn(Resources.getResource("visibilities.dex").openStream());
-    Main.main(new String[0]);
+    Main.main();
     assertThat(out.get()).isEqualTo(""
         + "Visibilities <init>()\n"
         + "Visibilities test1()\n"
@@ -78,7 +75,7 @@ public final class MainTest {
 
   @Test public void apk() throws IOException {
     System.setIn(Resources.getResource("one.apk").openStream());
-    Main.main(new String[0]);
+    Main.main();
     assertThat(out.get()).isEqualTo(""
         + "Params <init>()\n"
         + "Params test(String, String, String, String)\n"
@@ -86,9 +83,7 @@ public final class MainTest {
   }
 
   @Test public void apkArgumentOneDex() {
-    Main.main(new String[] {
-        Resources.getResource("one.apk").getFile()
-    });
+    Main.main(Resources.getResource("one.apk").getFile());
     assertThat(out.get()).isEqualTo(""
         + "Params <init>()\n"
         + "Params test(String, String, String, String)\n"
@@ -96,9 +91,7 @@ public final class MainTest {
   }
 
   @Test public void apkArgumentThreeDex() {
-    Main.main(new String[] {
-        Resources.getResource("three.apk").getFile()
-    });
+    Main.main(Resources.getResource("three.apk").getFile());
     assertThat(out.get()).isEqualTo(""
         + "Params <init>()\n"
         + "Params test(String, String, String, String)\n"
