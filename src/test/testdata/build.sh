@@ -6,13 +6,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
 pushd ../resources
-rm *.dex
+rm -f *.dex
 popd
 
 for folder in `find "$DIR" -type d -mindepth 1 -maxdepth 1`; do
   name=`basename $folder`
   pushd "$folder"
-  rm *.class
+  rm -f *.class
   javac *.java
   zip -r "$folder.jar" *.class
   rm *.class
@@ -22,3 +22,7 @@ for folder in `find "$DIR" -type d -mindepth 1 -maxdepth 1`; do
   rm "$folder.dex"
   popd
 done
+
+pushd ../resources
+zip three.apk *.dex
+zip one.apk params_joined.dex
