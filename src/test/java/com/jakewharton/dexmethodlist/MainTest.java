@@ -10,42 +10,69 @@ import static com.google.common.truth.Truth.assertThat;
 public final class MainTest {
   @Rule public final SystemOutCaptureRule out = new SystemOutCaptureRule();
 
+  @Test public void singleArgument() {
+    Main.main(new String[] {
+        Resources.getResource("params_joined.dex").getFile()
+    });
+    assertThat(out.get()).isEqualTo(""
+        + "Params <init>()\n"
+        + "Params test(String, String, String, String)\n"
+        + "java.lang.Object <init>()\n");
+  }
+
+  @Test public void multipleArguments() {
+    Main.main(new String[] {
+        Resources.getResource("params_joined.dex").getFile(),
+        Resources.getResource("visibilities.dex").getFile()
+    });
+    assertThat(out.get()).isEqualTo(""
+        + "Params <init>()\n"
+        + "Params test(String, String, String, String)\n"
+        + "Visibilities <init>()\n"
+        + "Visibilities test1()\n"
+        + "Visibilities test2()\n"
+        + "Visibilities test3()\n"
+        + "Visibilities test4()\n"
+        + "java.lang.Object <init>()\n"
+        + "java.lang.Object <init>()\n");
+  }
+
   @Test public void types() throws IOException {
     System.setIn(Resources.getResource("types.dex").openStream());
-    Main.main();
+    Main.main(new String[0]);
     assertThat(out.get()).isEqualTo(""
-        + "Test <init>()\n"
-        + "Test test(String)\n"
-        + "Test test(String[])\n"
-        + "Test test(boolean)\n"
-        + "Test test(byte)\n"
-        + "Test test(char)\n"
-        + "Test test(double)\n"
-        + "Test test(float)\n"
-        + "Test test(int)\n"
-        + "Test test(long)\n"
-        + "Test test(short)\n"
+        + "Types <init>()\n"
+        + "Types test(String)\n"
+        + "Types test(String[])\n"
+        + "Types test(boolean)\n"
+        + "Types test(byte)\n"
+        + "Types test(char)\n"
+        + "Types test(double)\n"
+        + "Types test(float)\n"
+        + "Types test(int)\n"
+        + "Types test(long)\n"
+        + "Types test(short)\n"
         + "java.lang.Object <init>()\n");
   }
 
   @Test public void paramsJoined() throws IOException {
     System.setIn(Resources.getResource("params_joined.dex").openStream());
-    Main.main();
+    Main.main(new String[0]);
     assertThat(out.get()).isEqualTo(""
-        + "Test <init>()\n"
-        + "Test test(String, String, String, String)\n"
+        + "Params <init>()\n"
+        + "Params test(String, String, String, String)\n"
         + "java.lang.Object <init>()\n");
   }
 
   @Test public void visibilities() throws IOException {
     System.setIn(Resources.getResource("visibilities.dex").openStream());
-    Main.main();
+    Main.main(new String[0]);
     assertThat(out.get()).isEqualTo(""
-        + "Test <init>()\n"
-        + "Test test1()\n"
-        + "Test test2()\n"
-        + "Test test3()\n"
-        + "Test test4()\n"
+        + "Visibilities <init>()\n"
+        + "Visibilities test1()\n"
+        + "Visibilities test2()\n"
+        + "Visibilities test3()\n"
+        + "Visibilities test4()\n"
         + "java.lang.Object <init>()\n");
   }
 }

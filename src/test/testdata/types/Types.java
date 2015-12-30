@@ -1,4 +1,4 @@
-class Test {
+class Types {
   void test(boolean value) {}
   void test(byte value) {}
   void test(char value) {}
