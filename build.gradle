@@ -1,14 +1,19 @@
 buildscript {
   repositories {
     mavenCentral()
+    jcenter()
   }
   dependencies {
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584'
+    classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.4'
   }
 }
 
 apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
@@ -25,7 +30,22 @@ dependencies {
   testCompile 'com.google.truth:truth:0.28'
 }
 
-task fatJar(type: Jar, dependsOn:'compileJava') {
+dokka {
+  outputFormat 'javadoc'
+  outputDirectory "$buildDir/javadoc"
+}
+
+task javadocJar(type: Jar, dependsOn: 'dokka') {
+  classifier 'javadoc'
+  from "$buildDir/javadoc"
+}
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task fatJar(type: Jar, dependsOn: 'compileJava') {
   from files(sourceSets.main.output.classesDir)
   from configurations.runtime.asFileTree.files.collect { zipTree(it) }
 
@@ -48,8 +68,73 @@ task execJar << {
 }
 execJar.dependsOn fatJar
 
-tasks.findByName('assemble').dependsOn execJar
-
 artifacts {
+  archives sourcesJar, javadocJar
   archives file: execFile, name: 'binary', type: 'jar', builtBy: execJar, extension: 'jar', classifier: 'binary'
+}
+
+def version() {
+  return '1.0.0-SNAPSHOT'
+}
+
+def isReleaseBuild() {
+  return version().contains("SNAPSHOT") == false
+}
+
+def getRepositoryUsername() {
+  return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+  return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
+}
+
+signing {
+  required { isReleaseBuild() && gradle.taskGraph.hasTask('uploadArchives') }
+  sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+        authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+      }
+      snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+        authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+      }
+
+      pom.groupId = 'com.jakewharton.dex'
+      pom.artifactId = 'dex-method-list'
+      pom.version = version()
+
+      pom.project {
+        name 'Dex Method List'
+        packaging 'jar'
+        description 'A simple utility which lists all method references in a dex file.'
+        url 'https://github.com/JakeWharton/dex-method-list'
+
+        scm {
+          connection 'git@github.com:JakeWharton/dex-method-list.git'
+          url 'https://github.com/JakeWharton/dex-method-list'
+        }
+
+        licenses {
+          license {
+            name 'Apache 2.0'
+            url 'http://opensource.org/licenses/Apache-2.0'
+          }
+        }
+
+        developers {
+          developer {
+            id 'jakewharton'
+            name 'Jake Wharton'
+          }
+        }
+      }
+    }
+  }
 }
