@@ -56,25 +56,33 @@ task fatJar(type: Jar, dependsOn: 'compileJava') {
   }
 }
 
-def execFile = new File(buildDir, 'exec/dex-method-list')
-task execJar << {
+def binaryFile = new File(buildDir, "libs/$name-binary.jar")
+task binaryJar << {
   def fatJarFile = fatJar.archivePath
 
-  execFile.getParentFile().mkdirs()
-  execFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
-  fatJarFile.withInputStream { execFile.append it }
+  binaryFile.getParentFile().mkdirs()
+  binaryFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+  fatJarFile.withInputStream { binaryFile.append it }
 
-  execFile.setExecutable true, false
+  binaryFile.setExecutable true, false
 }
-execJar.dependsOn fatJar
+binaryJar.dependsOn fatJar
+
+task copyBinary(type: Copy, dependsOn: 'binaryJar') {
+  from(binaryFile)
+  into buildDir
+  rename(".*", project.name)
+}
+tasks.getByName('assemble').dependsOn('copyBinary')
 
 artifacts {
-  archives sourcesJar, javadocJar
-  archives file: execFile, name: 'binary', type: 'jar', builtBy: execJar, extension: 'jar', classifier: 'binary'
+  archives sourcesJar
+  archives javadocJar
+  archives file: binaryFile, name: 'binary', type: 'jar', builtBy: binaryJar, classifier: 'binary'
 }
 
 def version() {
-  return '1.0.0-SNAPSHOT'
+  return '1.0.0'
 }
 
 def isReleaseBuild() {

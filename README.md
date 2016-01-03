@@ -3,12 +3,12 @@ Dex Method List
 
 A simple utility which lists all method references in a dex file.
 
-Build by calling `./gradlew clean build`. Run `./build/exec/dex-method-list` by passing in one or
+Build by calling `./gradlew clean assemble`. Run `./build/dex-method-list` by passing in one or
 more dex or apk files as arguments or piping one through stdin.
 
 For example:
 ```
-$ ./build/exec/dex-method-list src/test/resources/types.dex
+$ ./build/dex-method-list src/test/resources/types.dex
 Types <init>()
 Types test(String)
 Types test(String[])
@@ -22,11 +22,14 @@ Types test(long)
 Types test(short)
 java.lang.Object <init>()
 
-$ ./build/exec/dex-method-list src/test/resources/one.apk
+$ ./build/dex-method-list src/test/resources/one.apk
 Params <init>()
 Params test(String, String, String, String)
 java.lang.Object <init>()
 ```
+
+You can also use this tool as a library. Add a dependency on
+`com.jakewharton.dex:dex-method-list:1.0.0` and use the `DexMethods.list` methods.
 
 
 License
