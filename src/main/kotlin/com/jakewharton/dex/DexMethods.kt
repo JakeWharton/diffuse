@@ -45,7 +45,7 @@ class DexMethods private constructor() {
         .sorted()
 
     /** List method references in the dex bytecode `bytes`. */
-    @JvmStatic fun list(bytes: ByteArray) = listOf(bytes)
+    @JvmStatic fun list(bytes: ByteArray): List<String> = listOf(bytes)
         .flatMap {
           if (it.startsWith(DEX_MAGIC)) {
             listOf(it)
