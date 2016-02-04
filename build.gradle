@@ -4,8 +4,8 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584'
-    classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.4'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-rc-1036'
+    classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.6'
   }
 }
 
@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
   compile 'com.jakewharton.android.repackaged:libcore-dex:2'
-  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-4584'
+  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-rc-1036'
   testCompile 'junit:junit:4.12'
   testCompile 'com.google.guava:guava:19.0'
   testCompile 'com.google.truth:truth:0.28'
