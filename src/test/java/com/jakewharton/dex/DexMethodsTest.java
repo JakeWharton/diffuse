@@ -129,7 +129,6 @@ public final class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()",
         "java.lang.Object <init>()"
     );
   }
@@ -156,7 +155,6 @@ public final class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()",
         "java.lang.Object <init>()"
     );
   }
@@ -183,8 +181,6 @@ public final class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()",
-        "java.lang.Object <init>()",
         "java.lang.Object <init>()"
     );
   }

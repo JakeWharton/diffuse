@@ -12,6 +12,7 @@ import com.android.dx.dex.file.DexFile
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileInputStream
+import java.util.ArrayList
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -22,54 +23,61 @@ class DexMethods private constructor() {
     private val DEX_MAGIC = byteArrayOf(0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x35, 0x00)
 
     @JvmStatic fun main(vararg args: String) {
-      args.map { FileInputStream(it) }
+      val bytesList = args.map { FileInputStream(it) }
           .defaultIfEmpty(System.`in`)
           .map { it.readBytes() }
-          .flatMap { list(it) }
-          .forEach { println(it) }
+          .toList()
+      list(bytesList).forEach { println(it) }
     }
 
     /** List method references in `files` of any of `.dex`, `.class`, `.jar`, or `.apk`. */
-    @JvmStatic fun list(vararg files: File): List<String> = files
-        .map { it.readBytes() }
-        .flatMap { list(it) }
-        .sorted()
+    @JvmStatic fun list(vararg files: File): List<String> = list(files.map { it.readBytes() })
 
     /** List method references in the `bytes` of any of `.dex`, `.class`, `.jar`, or `.apk`. */
-    @JvmStatic fun list(bytes: ByteArray): List<String> = listOf(bytes)
-        .flatMap {
-          if (it.startsWith(DEX_MAGIC)) {
-            listOf(it)
-          } else if (it.startsWith(CLASS_MAGIC)) {
-            listOf(classToDex(it))
-          } else {
-            ZipInputStream(ByteArrayInputStream(it)).use { zis ->
-              zis.entries()
-                  .flatMap {
-                    if (it.name.endsWith(".dex")) {
-                      sequenceOf(zis.readBytes())
-                    } else if (it.name.endsWith(".class")) {
-                      sequenceOf(classToDex(zis.readBytes()))
-                    } else {
-                      sequenceOf<ByteArray>()
-                    }
-                  }
-                  .toList() // Make eager since we are in a disposable resource.
-            }
-          }
-        }
-        .map { Dex(it) }
-        .flatMap { dex -> dex.methodIds().map { renderMethod(dex, it) } }
-        .sorted()
+    @JvmStatic fun list(bytes: ByteArray): List<String> = list(listOf(bytes))
 
-    private fun classToDex(bytes: ByteArray): ByteArray {
+    /** List method references in the bytes of any of `.dex`, `.class`, `.jar`, or `.apk`. */
+    @JvmStatic fun list(bytes: Iterable<ByteArray>): List<String> {
+      val collection = bytes
+          .fold(ClassAndDexCollection()) { collection, bytes ->
+            if (bytes.startsWith(DEX_MAGIC)) {
+              collection.dexes += bytes
+            } else if (bytes.startsWith(CLASS_MAGIC)) {
+              collection.classes += bytes
+            } else {
+              ZipInputStream(ByteArrayInputStream(bytes)).use { zis ->
+                zis.entries().forEach {
+                  if (it.name.endsWith(".dex")) {
+                    collection.dexes += zis.readBytes()
+                  } else if (it.name.endsWith(".class")) {
+                    collection.classes += zis.readBytes()
+                  }
+                }
+              }
+            }
+
+            collection // Pass along the mutable reference.
+          }
+
+      if (collection.classes.isNotEmpty()) {
+        collection.dexes += classesToDex(collection.classes)
+      }
+      return collection.dexes
+          .map { Dex(it) }
+          .flatMap { dex -> dex.methodIds().map { renderMethod(dex, it) } }
+          .sorted()
+    }
+
+    private fun classesToDex(bytes: List<ByteArray>): ByteArray {
       val dexOptions = DexOptions()
       dexOptions.targetApiLevel = DexFormat.API_NO_EXTENDED_OPCODES
       val dexFile = DexFile(dexOptions)
 
-      val cf = DirectClassFile(bytes, "None.class", false)
-      cf.setAttributeFactory(StdAttributeFactory.THE_ONE)
-      CfTranslator.translate(cf, bytes, CfOptions(), dexOptions, dexFile)
+      bytes.forEach {
+        val cf = DirectClassFile(it, "None.class", false)
+        cf.setAttributeFactory(StdAttributeFactory.THE_ONE)
+        CfTranslator.translate(cf, it, CfOptions(), dexOptions, dexFile)
+      }
 
       return dexFile.toDex(null, false)
     }
@@ -137,6 +145,11 @@ class DexMethods private constructor() {
           }
         }
       }
+    }
+
+    internal class ClassAndDexCollection {
+      val classes = ArrayList<ByteArray>()
+      val dexes = ArrayList<ByteArray>()
     }
   }
 }
