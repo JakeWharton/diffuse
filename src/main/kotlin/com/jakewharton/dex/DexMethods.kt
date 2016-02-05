@@ -29,13 +29,13 @@ class DexMethods private constructor() {
           .forEach { println(it) }
     }
 
-    /** List method references in `files` of any of `.dex`, `.class`, or `.apk`. */
+    /** List method references in `files` of any of `.dex`, `.class`, `.jar`, or `.apk`. */
     @JvmStatic fun list(vararg files: File): List<String> = files
         .map { it.readBytes() }
         .flatMap { list(it) }
         .sorted()
 
-    /** List method references in the `bytes` of any of `.dex`, `.class`, or `.apk`. */
+    /** List method references in the `bytes` of any of `.dex`, `.class`, `.jar`, or `.apk`. */
     @JvmStatic fun list(bytes: ByteArray): List<String> = listOf(bytes)
         .flatMap {
           if (it.startsWith(DEX_MAGIC)) {
@@ -45,8 +45,15 @@ class DexMethods private constructor() {
           } else {
             ZipInputStream(ByteArrayInputStream(it)).use { zis ->
               zis.entries()
-                  .filter { it.name.endsWith(".dex") }
-                  .map { zis.readBytes() }
+                  .flatMap {
+                    if (it.name.endsWith(".dex")) {
+                      sequenceOf(zis.readBytes())
+                    } else if (it.name.endsWith(".class")) {
+                      sequenceOf(classToDex(zis.readBytes()))
+                    } else {
+                      sequenceOf<ByteArray>()
+                    }
+                  }
                   .toList() // Make eager since we are in a disposable resource.
             }
           }

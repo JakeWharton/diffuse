@@ -134,9 +134,64 @@ public final class DexMethodsTest {
     );
   }
 
+  @Test public void jarFile() throws IOException {
+    File params = new File(Resources.getResource("params_joined.jar").getFile());
+    List<String> methods = DexMethods.list(params);
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "java.lang.Object <init>()"
+    );
+  }
+
+  @Test public void multipleJarFiles() throws IOException {
+    File params = new File(Resources.getResource("params_joined.jar").getFile());
+    File visibilities = new File(Resources.getResource("visibilities.jar").getFile());
+    List<String> methods = DexMethods.list(params, visibilities);
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "Visibilities <init>()",
+        "Visibilities test1()",
+        "Visibilities test2()",
+        "Visibilities test3()",
+        "Visibilities test4()",
+        "java.lang.Object <init>()",
+        "java.lang.Object <init>()"
+    );
+  }
+
+  @Test public void jarMultipleClasses() {
+    File three = new File(Resources.getResource("three.jar").getFile());
+    List<String> methods = DexMethods.list(three);
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "Types <init>()",
+        "Types test(String)",
+        "Types test(String[])",
+        "Types test(boolean)",
+        "Types test(byte)",
+        "Types test(char)",
+        "Types test(double)",
+        "Types test(float)",
+        "Types test(int)",
+        "Types test(long)",
+        "Types test(short)",
+        "Visibilities <init>()",
+        "Visibilities test1()",
+        "Visibilities test2()",
+        "Visibilities test3()",
+        "Visibilities test4()",
+        "java.lang.Object <init>()",
+        "java.lang.Object <init>()",
+        "java.lang.Object <init>()"
+    );
+  }
+
   @Test public void dexBytes() throws IOException {
-    byte[] dex = Resources.toByteArray(Resources.getResource("params_joined.dex"));
-    List<String> methods = DexMethods.list(dex);
+    byte[] bytes = Resources.toByteArray(Resources.getResource("params_joined.dex"));
+    List<String> methods = DexMethods.list(bytes);
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -145,8 +200,8 @@ public final class DexMethodsTest {
   }
 
   @Test public void apkBytes() throws IOException {
-    byte[] apk = Resources.toByteArray(Resources.getResource("one.apk"));
-    List<String> methods = DexMethods.list(apk);
+    byte[] bytes = Resources.toByteArray(Resources.getResource("one.apk"));
+    List<String> methods = DexMethods.list(bytes);
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -155,8 +210,18 @@ public final class DexMethodsTest {
   }
 
   @Test public void classBytes() throws IOException {
-    byte[] apk = Resources.toByteArray(Resources.getResource("Params.class"));
-    List<String> methods = DexMethods.list(apk);
+    byte[] bytes = Resources.toByteArray(Resources.getResource("Params.class"));
+    List<String> methods = DexMethods.list(bytes);
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "java.lang.Object <init>()"
+    );
+  }
+
+  @Test public void jarBytes() throws IOException {
+    byte[] bytes = Resources.toByteArray(Resources.getResource("params_joined.jar"));
+    List<String> methods = DexMethods.list(bytes);
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
