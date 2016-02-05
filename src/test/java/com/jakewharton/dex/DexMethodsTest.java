@@ -107,6 +107,33 @@ public final class DexMethodsTest {
     );
   }
 
+  @Test public void classFile() throws IOException {
+    File params = new File(Resources.getResource("Params.class").getFile());
+    List<String> methods = DexMethods.list(params);
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "java.lang.Object <init>()"
+    );
+  }
+
+  @Test public void multipleClassFiles() throws IOException {
+    File params = new File(Resources.getResource("Params.class").getFile());
+    File visibilities = new File(Resources.getResource("Visibilities.class").getFile());
+    List<String> methods = DexMethods.list(params, visibilities);
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "Visibilities <init>()",
+        "Visibilities test1()",
+        "Visibilities test2()",
+        "Visibilities test3()",
+        "Visibilities test4()",
+        "java.lang.Object <init>()",
+        "java.lang.Object <init>()"
+    );
+  }
+
   @Test public void dexBytes() throws IOException {
     byte[] dex = Resources.toByteArray(Resources.getResource("params_joined.dex"));
     List<String> methods = DexMethods.list(dex);
@@ -119,6 +146,16 @@ public final class DexMethodsTest {
 
   @Test public void apkBytes() throws IOException {
     byte[] apk = Resources.toByteArray(Resources.getResource("one.apk"));
+    List<String> methods = DexMethods.list(apk);
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "java.lang.Object <init>()"
+    );
+  }
+
+  @Test public void classBytes() throws IOException {
+    byte[] apk = Resources.toByteArray(Resources.getResource("Params.class"));
     List<String> methods = DexMethods.list(apk);
     assertThat(methods).containsExactly(
         "Params <init>()",

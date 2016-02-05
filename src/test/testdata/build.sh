@@ -14,6 +14,7 @@ for folder in `find "$DIR" -type d -mindepth 1 -maxdepth 1`; do
   pushd "$folder"
   rm -f *.class
   javac *.java
+  cp *.class "../../resources/"
   zip -r "$folder.jar" *.class
   rm *.class
   dx --dex --output="$folder.dex" "$folder.jar"

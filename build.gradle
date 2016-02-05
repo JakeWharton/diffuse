@@ -24,6 +24,7 @@ repositories {
 
 dependencies {
   compile 'com.jakewharton.android.repackaged:libcore-dex:2'
+  compile 'com.jakewharton.android.repackaged:dalvik-dx:1'
   compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-rc-1036'
   testCompile 'junit:junit:4.12'
   testCompile 'com.google.guava:guava:19.0'
