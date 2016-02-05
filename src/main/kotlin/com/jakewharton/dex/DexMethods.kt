@@ -7,23 +7,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
-import kotlin.collections.flatMap
-import kotlin.collections.forEach
-import kotlin.collections.forEachIndexed
-import kotlin.collections.isNotEmpty
-import kotlin.collections.joinToString
-import kotlin.collections.last
-import kotlin.collections.listOf
-import kotlin.collections.map
-import kotlin.collections.sorted
-import kotlin.sequences.filter
-import kotlin.sequences.map
-import kotlin.sequences.toList
-import kotlin.text.endsWith
-import kotlin.text.replace
-import kotlin.text.split
-import kotlin.text.startsWith
-import kotlin.text.substring
 
 /** Extract method references from dex bytecode. */
 class DexMethods private constructor() {
