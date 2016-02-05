@@ -1,7 +1,14 @@
 package com.jakewharton.dex
 
 import com.android.dex.Dex
+import com.android.dex.DexFormat
 import com.android.dex.MethodId
+import com.android.dx.cf.direct.DirectClassFile
+import com.android.dx.cf.direct.StdAttributeFactory
+import com.android.dx.dex.DexOptions
+import com.android.dx.dex.cf.CfOptions
+import com.android.dx.dex.cf.CfTranslator
+import com.android.dx.dex.file.DexFile
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -28,6 +35,7 @@ import kotlin.text.substring
 /** Extract method references from dex bytecode. */
 class DexMethods private constructor() {
   companion object {
+    private val CLASS_MAGIC = byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(), 0xBE.toByte())
     private val DEX_MAGIC = byteArrayOf(0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x35, 0x00)
 
     @JvmStatic fun main(vararg args: String) {
@@ -38,29 +46,43 @@ class DexMethods private constructor() {
           .forEach { println(it) }
     }
 
-    /** List method references in `files`. Files can be either `.dex` or `.apk`. */
+    /** List method references in `files` of any of `.dex`, `.class`, or `.apk`. */
     @JvmStatic fun list(vararg files: File): List<String> = files
         .map { it.readBytes() }
         .flatMap { list(it) }
         .sorted()
 
-    /** List method references in the dex bytecode `bytes`. */
+    /** List method references in the `bytes` of any of `.dex`, `.class`, or `.apk`. */
     @JvmStatic fun list(bytes: ByteArray): List<String> = listOf(bytes)
         .flatMap {
           if (it.startsWith(DEX_MAGIC)) {
             listOf(it)
+          } else if (it.startsWith(CLASS_MAGIC)) {
+            listOf(classToDex(it))
           } else {
             ZipInputStream(ByteArrayInputStream(it)).use { zis ->
               zis.entries()
                   .filter { it.name.endsWith(".dex") }
                   .map { zis.readBytes() }
-                  .toList()
+                  .toList() // Make eager since we are in a disposable resource.
             }
           }
         }
         .map { Dex(it) }
         .flatMap { dex -> dex.methodIds().map { renderMethod(dex, it) } }
         .sorted()
+
+    private fun classToDex(bytes: ByteArray): ByteArray {
+      val dexOptions = DexOptions()
+      dexOptions.targetApiLevel = DexFormat.API_NO_EXTENDED_OPCODES
+      val dexFile = DexFile(dexOptions)
+
+      val cf = DirectClassFile(bytes, "None.class", false)
+      cf.setAttributeFactory(StdAttributeFactory.THE_ONE)
+      CfTranslator.translate(cf, bytes, CfOptions(), dexOptions, dexFile)
+
+      return dexFile.toDex(null, false)
+    }
 
     private fun renderMethod(dex: Dex, methodId: MethodId): String {
       val type = humanName(dex.typeNames()[methodId.declaringClassIndex])
