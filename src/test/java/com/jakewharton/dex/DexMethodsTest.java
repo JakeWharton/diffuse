@@ -224,4 +224,30 @@ public final class DexMethodsTest {
         "java.lang.Object <init>()"
     );
   }
+
+  @Test public void aarExtractsJars() {
+    File three = new File(Resources.getResource("three.aar").getFile());
+    List<String> methods = DexMethods.list(three);
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "Types <init>()",
+        "Types test(String)",
+        "Types test(String[])",
+        "Types test(boolean)",
+        "Types test(byte)",
+        "Types test(char)",
+        "Types test(double)",
+        "Types test(float)",
+        "Types test(int)",
+        "Types test(long)",
+        "Types test(short)",
+        "Visibilities <init>()",
+        "Visibilities test1()",
+        "Visibilities test2()",
+        "Visibilities test3()",
+        "Visibilities test4()",
+        "java.lang.Object <init>()"
+    );
+  }
 }

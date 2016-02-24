@@ -51,6 +51,14 @@ class DexMethods private constructor() {
                     collection.dexes += zis.readBytes()
                   } else if (it.name.endsWith(".class")) {
                     collection.classes += zis.readBytes()
+                  } else if (it.name.endsWith(".jar")) {
+                    ZipInputStream(ByteArrayInputStream(zis.readBytes())).use { jar ->
+                      jar.entries().forEach {
+                        if (it.name.endsWith(".class")) {
+                          collection.classes += jar.readBytes()
+                        }
+                      }
+                    }
                   }
                 }
               }

@@ -29,3 +29,7 @@ pushd ../resources
 zip three.apk *.dex
 zip one.apk params_joined.dex
 zip three.jar *.class
+
+cp three.jar classes.jar
+zip three.aar classes.jar
+rm classes.jar
