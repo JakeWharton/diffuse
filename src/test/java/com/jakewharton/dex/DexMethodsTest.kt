@@ -1,17 +1,14 @@
-package com.jakewharton.dex;
+package com.jakewharton.dex
 
-import com.google.common.io.Resources;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import org.junit.Test;
+import com.google.common.io.Resources
+import com.google.common.truth.Truth.assertThat
+import org.junit.Test
+import java.io.File
 
-import static com.google.common.truth.Truth.assertThat;
-
-public final class DexMethodsTest {
-  @Test public void types() throws IOException {
-    File types = new File(Resources.getResource("types.dex").getFile());
-    List<String> methods = DexMethods.list(types);
+class DexMethodsTest {
+  @Test fun types() {
+    val types = File(Resources.getResource("types.dex").file)
+    val methods = DexMethods.list(types)
     assertThat(methods).containsExactly(
         "Types <init>()",
         "Types test(String)",
@@ -24,37 +21,34 @@ public final class DexMethodsTest {
         "Types test(int)",
         "Types test(long)",
         "Types test(short)",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void paramsJoined() throws IOException {
-    File params = new File(Resources.getResource("params_joined.dex").getFile());
-    List<String> methods = DexMethods.list(params);
+  @Test fun paramsJoined() {
+    val params = File(Resources.getResource("params_joined.dex").file)
+    val methods = DexMethods.list(params)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void visibilities() throws IOException {
-    File visibilities = new File(Resources.getResource("visibilities.dex").getFile());
-    List<String> methods = DexMethods.list(visibilities);
+  @Test fun visibilities() {
+    val visibilities = File(Resources.getResource("visibilities.dex").file)
+    val methods = DexMethods.list(visibilities)
     assertThat(methods).containsExactly(
         "Visibilities <init>()",
         "Visibilities test1()",
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void multipleDexFiles() {
-    File params = new File(Resources.getResource("params_joined.dex").getFile());
-    File visibilities = new File(Resources.getResource("visibilities.dex").getFile());
-    List<String> methods = DexMethods.list(params, visibilities);
+  @Test fun multipleDexFiles() {
+    val params = File(Resources.getResource("params_joined.dex").file)
+    val visibilities = File(Resources.getResource("visibilities.dex").file)
+    val methods = DexMethods.list(params, visibilities)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -64,24 +58,21 @@ public final class DexMethodsTest {
         "Visibilities test3()",
         "Visibilities test4()",
         "java.lang.Object <init>()",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-
-  @Test public void apk() throws IOException {
-    File one = new File(Resources.getResource("one.apk").getFile());
-    List<String> methods = DexMethods.list(one);
+  @Test fun apk() {
+    val one = File(Resources.getResource("one.apk").file)
+    val methods = DexMethods.list(one)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void apkMultipleDex() {
-    File three = new File(Resources.getResource("three.apk").getFile());
-    List<String> methods = DexMethods.list(three);
+  @Test fun apkMultipleDex() {
+    val three = File(Resources.getResource("three.apk").file)
+    val methods = DexMethods.list(three)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -103,50 +94,22 @@ public final class DexMethodsTest {
         "Visibilities test4()",
         "java.lang.Object <init>()",
         "java.lang.Object <init>()",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void classFile() throws IOException {
-    File params = new File(Resources.getResource("Params.class").getFile());
-    List<String> methods = DexMethods.list(params);
+  @Test fun classFile() {
+    val params = File(Resources.getResource("Params.class").file)
+    val methods = DexMethods.list(params)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void multipleClassFiles() throws IOException {
-    File params = new File(Resources.getResource("Params.class").getFile());
-    File visibilities = new File(Resources.getResource("Visibilities.class").getFile());
-    List<String> methods = DexMethods.list(params, visibilities);
-    assertThat(methods).containsExactly(
-        "Params <init>()",
-        "Params test(String, String, String, String)",
-        "Visibilities <init>()",
-        "Visibilities test1()",
-        "Visibilities test2()",
-        "Visibilities test3()",
-        "Visibilities test4()",
-        "java.lang.Object <init>()"
-    );
-  }
-
-  @Test public void jarFile() throws IOException {
-    File params = new File(Resources.getResource("params_joined.jar").getFile());
-    List<String> methods = DexMethods.list(params);
-    assertThat(methods).containsExactly(
-        "Params <init>()",
-        "Params test(String, String, String, String)",
-        "java.lang.Object <init>()"
-    );
-  }
-
-  @Test public void multipleJarFiles() throws IOException {
-    File params = new File(Resources.getResource("params_joined.jar").getFile());
-    File visibilities = new File(Resources.getResource("visibilities.jar").getFile());
-    List<String> methods = DexMethods.list(params, visibilities);
+  @Test fun multipleClassFiles() {
+    val params = File(Resources.getResource("Params.class").file)
+    val visibilities = File(Resources.getResource("Visibilities.class").file)
+    val methods = DexMethods.list(params, visibilities)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -155,13 +118,36 @@ public final class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void jarMultipleClasses() {
-    File three = new File(Resources.getResource("three.jar").getFile());
-    List<String> methods = DexMethods.list(three);
+  @Test fun jarFile() {
+    val params = File(Resources.getResource("params_joined.jar").file)
+    val methods = DexMethods.list(params)
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "java.lang.Object <init>()")
+  }
+
+  @Test fun multipleJarFiles() {
+    val params = File(Resources.getResource("params_joined.jar").file)
+    val visibilities = File(Resources.getResource("visibilities.jar").file)
+    val methods = DexMethods.list(params, visibilities)
+    assertThat(methods).containsExactly(
+        "Params <init>()",
+        "Params test(String, String, String, String)",
+        "Visibilities <init>()",
+        "Visibilities test1()",
+        "Visibilities test2()",
+        "Visibilities test3()",
+        "Visibilities test4()",
+        "java.lang.Object <init>()")
+  }
+
+  @Test fun jarMultipleClasses() {
+    val three = File(Resources.getResource("three.jar").file)
+    val methods = DexMethods.list(three)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -181,53 +167,48 @@ public final class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void dexBytes() throws IOException {
-    byte[] bytes = Resources.toByteArray(Resources.getResource("params_joined.dex"));
-    List<String> methods = DexMethods.list(bytes);
+  @Test fun dexBytes() {
+    val bytes = Resources.toByteArray(Resources.getResource("params_joined.dex"))
+    val methods = DexMethods.list(bytes)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void apkBytes() throws IOException {
-    byte[] bytes = Resources.toByteArray(Resources.getResource("one.apk"));
-    List<String> methods = DexMethods.list(bytes);
+  @Test fun apkBytes() {
+    val bytes = Resources.toByteArray(Resources.getResource("one.apk"))
+    val methods = DexMethods.list(bytes)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void classBytes() throws IOException {
-    byte[] bytes = Resources.toByteArray(Resources.getResource("Params.class"));
-    List<String> methods = DexMethods.list(bytes);
+  @Test fun classBytes() {
+    val bytes = Resources.toByteArray(Resources.getResource("Params.class"))
+    val methods = DexMethods.list(bytes)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void jarBytes() throws IOException {
-    byte[] bytes = Resources.toByteArray(Resources.getResource("params_joined.jar"));
-    List<String> methods = DexMethods.list(bytes);
+  @Test fun jarBytes() {
+    val bytes = Resources.toByteArray(Resources.getResource("params_joined.jar"))
+    val methods = DexMethods.list(bytes)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 
-  @Test public void aarExtractsJars() {
-    File three = new File(Resources.getResource("three.aar").getFile());
-    List<String> methods = DexMethods.list(three);
+  @Test fun aarExtractsJars() {
+    val three = File(Resources.getResource("three.aar").file)
+    val methods = DexMethods.list(three)
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -247,7 +228,6 @@ public final class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()"
-    );
+        "java.lang.Object <init>()")
   }
 }
