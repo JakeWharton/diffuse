@@ -26,9 +26,9 @@ for folder in `find "$DIR" -type d -mindepth 1 -maxdepth 1`; do
 done
 
 pushd ../resources
-zip three.apk *.dex
+zip three.apk params_joined.dex types.dex visibilities.dex
 zip one.apk params_joined.dex
-zip three.jar *.class
+zip three.jar Params.class Types.class Visibilities.class
 
 cp three.jar classes.jar
 zip three.aar classes.jar

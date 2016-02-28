@@ -21,13 +21,17 @@ class DexMethods private constructor() {
   companion object {
     private val CLASS_MAGIC = byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(), 0xBE.toByte())
     private val DEX_MAGIC = byteArrayOf(0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x35, 0x00)
+    private val SYNTHETIC_SUFFIX = ".*?\\$\\d+".toRegex()
 
     @JvmStatic fun main(vararg args: String) {
-      val bytesList = args.map { FileInputStream(it) }
+      val hideSyntheticNumbers = args.contains("--hide-synthetic-numbers")
+      val bytesList = args
+          .filter { !it.startsWith("--") }
+          .map { FileInputStream(it) }
           .defaultIfEmpty(System.`in`)
           .map { it.readBytes() }
           .toList()
-      list(bytesList).forEach { println(it) }
+      list(bytesList, hideSyntheticNumbers).forEach { println(it) }
     }
 
     /** List method references in `files` of any of `.dex`, `.class`, `.jar`, or `.apk`. */
@@ -37,7 +41,13 @@ class DexMethods private constructor() {
     @JvmStatic fun list(bytes: ByteArray): List<String> = list(listOf(bytes))
 
     /** List method references in the bytes of any of `.dex`, `.class`, `.jar`, or `.apk`. */
-    @JvmStatic fun list(bytes: Iterable<ByteArray>): List<String> {
+    @JvmStatic fun list(bytes: Iterable<ByteArray>) = list(bytes, hideSyntheticNumbers = false)
+
+    /**
+     * List method references in the bytes of any of `.dex`, `.class`, `.jar`, or `.apk`,
+     * optionally hiding number suffixes from synthetic methods.
+     */
+    @JvmStatic fun list(bytes: Iterable<ByteArray>, hideSyntheticNumbers: Boolean): List<String> {
       val collection = bytes
           .fold(ClassAndDexCollection()) { collection, bytes ->
             if (bytes.startsWith(DEX_MAGIC)) {
@@ -72,7 +82,7 @@ class DexMethods private constructor() {
       }
       return collection.dexes
           .map { Dex(it) }
-          .flatMap { dex -> dex.methodIds().map { renderMethod(dex, it) } }
+          .flatMap { dex -> dex.methodIds().map { renderMethod(dex, it, hideSyntheticNumbers) } }
           .sorted()
     }
 
@@ -90,9 +100,13 @@ class DexMethods private constructor() {
       return dexFile.toDex(null, false)
     }
 
-    private fun renderMethod(dex: Dex, methodId: MethodId): String {
+    private fun renderMethod(dex: Dex, methodId: MethodId,
+        hideSyntheticNumbers: Boolean): String {
       val type = humanName(dex.typeNames()[methodId.declaringClassIndex])
-      val method = dex.strings()[methodId.nameIndex]
+      var method = dex.strings()[methodId.nameIndex]
+      if (hideSyntheticNumbers && method.matches(SYNTHETIC_SUFFIX)) {
+        method = method.substring(0, method.lastIndexOf('$'))
+      }
       val params = dex.readTypeList(dex.protoIds()[methodId.protoIndex].parametersOffset).types
           .map { humanName(dex.typeNames()[it.toInt()], true) }
           .joinToString(", ")
