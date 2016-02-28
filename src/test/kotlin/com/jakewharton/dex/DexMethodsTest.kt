@@ -230,4 +230,39 @@ class DexMethodsTest {
         "Visibilities test4()",
         "java.lang.Object <init>()")
   }
+
+  @Test fun synthetics() {
+    val types = File(Resources.getResource("synthetics.dex").file);
+    val methods = DexMethods.list(types);
+    assertThat(methods).containsExactly(
+        "Synthetics <init>()",
+        "Synthetics access$000(Synthetics)",
+        "Synthetics access$002(Synthetics, int)",
+        "Synthetics access$004(Synthetics)",
+        "Synthetics access$006(Synthetics)",
+        "Synthetics access$008(Synthetics)",
+        "Synthetics access$010(Synthetics)",
+        "Synthetics\$Inner <init>(Synthetics)",
+        "java.io.PrintStream println(int)",
+        "java.lang.Object <init>()"
+    );
+  }
+
+  @Test fun syntheticsWithoutNumbers() {
+    val types = File(Resources.getResource("synthetics.dex").file);
+    val bytes = types.readBytes()
+    val methods = DexMethods.list(listOf(bytes), true);
+    assertThat(methods).containsExactly(
+        "Synthetics <init>()",
+        "Synthetics access(Synthetics)",
+        "Synthetics access(Synthetics)",
+        "Synthetics access(Synthetics)",
+        "Synthetics access(Synthetics)",
+        "Synthetics access(Synthetics)",
+        "Synthetics access(Synthetics, int)",
+        "Synthetics\$Inner <init>(Synthetics)",
+        "java.io.PrintStream println(int)",
+        "java.lang.Object <init>()"
+    );
+  }
 }
