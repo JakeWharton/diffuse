@@ -57,8 +57,11 @@ com.google.common.base.Absent get()
 com.google.common.base.Absent hashCode()
 ```
 
+Use the `--hide-synthetic-numbers` argument to remove number suffix from synthetic accessor
+methods. This is useful to prevent noise when `diff`ing output.
+
 You can also use this tool as a library. Add a dependency on
-`com.jakewharton.dex:dex-method-list:1.1.0` and use the `DexMethods.list` methods.
+`com.jakewharton.dex:dex-method-list:1.2.0` and use the `DexMethods.list` methods.
 
 
 License
