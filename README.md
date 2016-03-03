@@ -1,10 +1,11 @@
 Dex Method List
 ===============
 
-A simple utility which lists all method references in `.apk`, `.dex`, `.jar`, and `.class` files.
+A simple utility which lists all method references in an `.apk`, `.aar`, `.dex`, `.jar`, and/or
+`.class` files (and any combination of those).
 
 Build by calling `./gradlew clean assemble`. Run `./build/dex-method-list` by passing in one or
-more arguments or piping data through stdin.
+more arguments or by piping data through stdin.
 
 For example:
 ```
