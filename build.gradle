@@ -84,9 +84,9 @@ tasks.getByName('jar').enabled = false
 
 artifacts {
   runtime shadowJar
-  archives sourcesJar
-  archives javadocJar
-  archives file: binaryFile, name: 'binary', type: 'jar', builtBy: binaryJar, classifier: 'binary'
+  shadow sourcesJar
+  shadow javadocJar
+  shadow file: binaryFile, name: 'binary', type: 'jar', builtBy: binaryJar, classifier: 'binary'
 }
 
 def version() {
@@ -107,8 +107,10 @@ def getRepositoryPassword() {
 
 signing {
   required { isReleaseBuild() && gradle.taskGraph.hasTask('uploadArchives') }
-  sign configurations.archives
+  sign configurations.shadow
 }
+
+task uploadArchives(dependsOn: 'uploadShadow')
 
 uploadShadow {
   repositories {
