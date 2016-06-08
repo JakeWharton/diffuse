@@ -110,7 +110,7 @@ signing {
   sign configurations.archives
 }
 
-uploadArchives {
+uploadShadow {
   repositories {
     mavenDeployer {
       beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
