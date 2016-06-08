@@ -6,6 +6,7 @@ buildscript {
   dependencies {
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0'
     classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.7'
+    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
   }
 }
 
@@ -14,9 +15,13 @@ apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
+
+mainClassName = 'com.jakewharton.dex.DexMethods'
 
 repositories {
   mavenCentral()
@@ -36,6 +41,15 @@ dokka {
   outputDirectory "$buildDir/javadoc"
 }
 
+shadowJar {
+  classifier = ''
+  relocate 'com.android', 'com.jakewharton.dex.internal.android'
+
+  dependencies {
+    include(dependency('com.jakewharton.android.repackaged:.*'))
+  }
+}
+
 task javadocJar(type: Jar, dependsOn: 'dokka') {
   classifier 'javadoc'
   from "$buildDir/javadoc"
@@ -46,20 +60,9 @@ task sourcesJar(type: Jar) {
   from sourceSets.main.allSource
 }
 
-task fatJar(type: Jar, dependsOn: 'compileJava') {
-  from files(sourceSets.main.output.classesDir)
-  from configurations.runtime.asFileTree.files.collect { zipTree(it) }
-
-  classifier 'fat'
-
-  manifest {
-    attributes 'Main-Class': 'com.jakewharton.dex.DexMethods'
-  }
-}
-
 def binaryFile = new File(buildDir, "libs/$name-binary.jar")
 task binaryJar << {
-  def fatJarFile = fatJar.archivePath
+  def fatJarFile = tasks.getByName('shadowJar').archivePath
 
   binaryFile.getParentFile().mkdirs()
   binaryFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
@@ -67,7 +70,7 @@ task binaryJar << {
 
   binaryFile.setExecutable true, false
 }
-binaryJar.dependsOn fatJar
+binaryJar.dependsOn('shadowJar')
 
 task copyBinary(type: Copy, dependsOn: 'binaryJar') {
   from(binaryFile)
@@ -76,7 +79,11 @@ task copyBinary(type: Copy, dependsOn: 'binaryJar') {
 }
 tasks.getByName('assemble').dependsOn('copyBinary')
 
+configurations.runtime.artifacts.removeAll { it.archiveTask.is jar }
+tasks.getByName('jar').enabled = false
+
 artifacts {
+  runtime shadowJar
   archives sourcesJar
   archives javadocJar
   archives file: binaryFile, name: 'binary', type: 'jar', builtBy: binaryJar, classifier: 'binary'
