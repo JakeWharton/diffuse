@@ -9,4 +9,8 @@ class Types {
   void test(short value) {}
   void test(String value) {}
   void test(String[] value) {}
+
+  Runnable returnsRunnable() { return null; }
+  String returnsString() { return null; }
+  boolean returnsBoolean() { return false; }
 }

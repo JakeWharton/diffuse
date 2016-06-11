@@ -107,10 +107,15 @@ class DexMethods private constructor() {
       if (hideSyntheticNumbers && method.matches(SYNTHETIC_SUFFIX)) {
         method = method.substring(0, method.lastIndexOf('$'))
       }
-      val params = dex.readTypeList(dex.protoIds()[methodId.protoIndex].parametersOffset).types
+      val methodProtoIds = dex.protoIds()[methodId.protoIndex]
+      val params = dex.readTypeList(methodProtoIds.parametersOffset).types
           .map { humanName(dex.typeNames()[it.toInt()], true) }
           .joinToString(", ")
-      return "$type $method($params)"
+      val returnType = humanName(dex.typeNames()[methodProtoIds.returnTypeIndex], true)
+      if (returnType == "void") {
+        return "$type $method($params)"
+      }
+      return "$type $method($params) → $returnType"
     }
 
     private fun humanName(type: String, stripPackage: Boolean = false): String {
