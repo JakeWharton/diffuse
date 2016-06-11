@@ -15,13 +15,10 @@ apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
-
-mainClassName = 'com.jakewharton.dex.DexMethods'
 
 repositories {
   mavenCentral()
@@ -60,9 +57,20 @@ task sourcesJar(type: Jar) {
   from sourceSets.main.allSource
 }
 
+task fatJar(type: Jar, dependsOn: 'compileJava') {
+  from files(sourceSets.main.output.classesDir)
+  from configurations.compile.asFileTree.files.collect { zipTree(it) }
+
+  classifier 'fat'
+
+  manifest {
+   attributes 'Main-Class': 'com.jakewharton.dex.DexMethods'
+  }
+}
+
 def binaryFile = new File(buildDir, "libs/$name-binary.jar")
 task binaryJar << {
-  def fatJarFile = tasks.getByName('shadowJar').archivePath
+  def fatJarFile = fatJar.archivePath
 
   binaryFile.getParentFile().mkdirs()
   binaryFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
@@ -70,7 +78,7 @@ task binaryJar << {
 
   binaryFile.setExecutable true, false
 }
-binaryJar.dependsOn('shadowJar')
+binaryJar.dependsOn(fatJar)
 
 task copyBinary(type: Copy, dependsOn: 'binaryJar') {
   from(binaryFile)
