@@ -21,6 +21,9 @@ class DexMethodsTest {
         "Types test(int)",
         "Types test(long)",
         "Types test(short)",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
+        "Types returnsBoolean() → boolean",
         "java.lang.Object <init>()")
   }
 
@@ -87,6 +90,9 @@ class DexMethodsTest {
         "Types test(int)",
         "Types test(long)",
         "Types test(short)",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
+        "Types returnsBoolean() → boolean",
         "Visibilities <init>()",
         "Visibilities test1()",
         "Visibilities test2()",
@@ -162,6 +168,9 @@ class DexMethodsTest {
         "Types test(int)",
         "Types test(long)",
         "Types test(short)",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
+        "Types returnsBoolean() → boolean",
         "Visibilities <init>()",
         "Visibilities test1()",
         "Visibilities test2()",
@@ -223,6 +232,9 @@ class DexMethodsTest {
         "Types test(int)",
         "Types test(long)",
         "Types test(short)",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
+        "Types returnsBoolean() → boolean",
         "Visibilities <init>()",
         "Visibilities test1()",
         "Visibilities test2()",
@@ -236,12 +248,12 @@ class DexMethodsTest {
     val methods = DexMethods.list(types);
     assertThat(methods).containsExactly(
         "Synthetics <init>()",
-        "Synthetics access$000(Synthetics)",
-        "Synthetics access$002(Synthetics, int)",
-        "Synthetics access$004(Synthetics)",
-        "Synthetics access$006(Synthetics)",
-        "Synthetics access$008(Synthetics)",
-        "Synthetics access$010(Synthetics)",
+        "Synthetics access$000(Synthetics) → int",
+        "Synthetics access$002(Synthetics, int) → int",
+        "Synthetics access$004(Synthetics) → int",
+        "Synthetics access$006(Synthetics) → int",
+        "Synthetics access$008(Synthetics) → int",
+        "Synthetics access$010(Synthetics) → int",
         "Synthetics\$Inner <init>(Synthetics)",
         "java.io.PrintStream println(int)",
         "java.lang.Object <init>()"
@@ -254,12 +266,12 @@ class DexMethodsTest {
     val methods = DexMethods.list(listOf(bytes), true);
     assertThat(methods).containsExactly(
         "Synthetics <init>()",
-        "Synthetics access(Synthetics)",
-        "Synthetics access(Synthetics)",
-        "Synthetics access(Synthetics)",
-        "Synthetics access(Synthetics)",
-        "Synthetics access(Synthetics)",
-        "Synthetics access(Synthetics, int)",
+        "Synthetics access(Synthetics) → int",
+        "Synthetics access(Synthetics) → int",
+        "Synthetics access(Synthetics) → int",
+        "Synthetics access(Synthetics) → int",
+        "Synthetics access(Synthetics) → int",
+        "Synthetics access(Synthetics, int) → int",
         "Synthetics\$Inner <init>(Synthetics)",
         "java.io.PrintStream println(int)",
         "java.lang.Object <init>()"
