@@ -27,6 +27,29 @@ class DexMethodsTest {
         "java.lang.Object <init>()")
   }
 
+  @Test fun typesDeobfuscated() {
+    val types = File(Resources.getResource("types.dex").file);
+    val bytes = types.readBytes()
+    val methods = DexMethods.list(
+        listOf(bytes), false, ProguardNameMapper(Resources.getResource("obfuscation.map").file))
+    assertThat(methods).containsExactly(
+        "Typos <init>()",
+        "Typos stringTest(String)",
+        "Typos stringArrayTest(String[])",
+        "Typos booleanTest(boolean)",
+        "Typos byteTest(byte)",
+        "Typos charTest(char)",
+        "Typos doubleTest(double)",
+        "Typos floatTest(float)",
+        "Typos intTest(int)",
+        "Typos longTest(long)",
+        "Typos shortTest(short)",
+        "Typos runnableReturned() → Runnable",
+        "Typos stringReturned() → String",
+        "Typos returnsBoolean() → boolean",  // Intentionally not obfuscated.
+        "java.lang.Object <init>()")
+  }
+
   @Test fun paramsJoined() {
     val params = File(Resources.getResource("params_joined.dex").file)
     val methods = DexMethods.list(params)

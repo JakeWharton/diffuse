@@ -1,0 +1,13 @@
+Typos -> Types:
+    void booleanTest(boolean) -> test
+    void byteTest(byte) -> test
+    void charTest(char) -> test
+    void doubleTest(double) -> test
+    void floatTest(float) -> test
+    void intTest(int) -> test
+    void longTest(long) -> test
+    void shortTest(short) -> test
+    void stringTest(String) -> test
+    void stringArrayTest(String[]) -> test
+    Runnable runnableReturned() -> returnsRunnable
+    String stringReturned() -> returnsString

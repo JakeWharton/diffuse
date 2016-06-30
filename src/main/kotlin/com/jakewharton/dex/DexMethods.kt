@@ -9,6 +9,9 @@ import com.android.dx.dex.DexOptions
 import com.android.dx.dex.cf.CfOptions
 import com.android.dx.dex.cf.CfTranslator
 import com.android.dx.dex.file.DexFile
+import org.kohsuke.args4j.Argument
+import org.kohsuke.args4j.CmdLineParser
+import org.kohsuke.args4j.Option
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -18,20 +21,37 @@ import java.util.zip.ZipInputStream
 
 /** Extract method references from dex bytecode. */
 class DexMethods private constructor() {
+  /** Configuration flags populated at startup. */
+  private class Config {
+    @Option(name="--hide-synthetic-numbers")
+    var hideSyntheticNumbers: Boolean = false
+
+    @Option(name="--proguard-map")
+    var proguardMap : String? = null
+
+    @Argument
+    var files : List<String> = ArrayList()
+  }
+
   companion object {
     private val CLASS_MAGIC = byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(), 0xBE.toByte())
     private val DEX_MAGIC = byteArrayOf(0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x35, 0x00)
     private val SYNTHETIC_SUFFIX = ".*?\\$\\d+".toRegex()
 
     @JvmStatic fun main(vararg args: String) {
-      val hideSyntheticNumbers = args.contains("--hide-synthetic-numbers")
-      val bytesList = args
-          .filter { !it.startsWith("--") }
+      val config = Config()
+      CmdLineParser(config).parseArgument(args.toList())
+
+      val proguardMap = config.proguardMap
+      val methodMapper : ((MethodName) -> MethodName) =
+          if (proguardMap != null) ProguardNameMapper(proguardMap) else ({ it })
+
+      val bytesList = config.files
           .map { FileInputStream(it) }
           .defaultIfEmpty(System.`in`)
-          .map { it.readBytes() }
+          .map { it.use { it.readBytes() } }
           .toList()
-      list(bytesList, hideSyntheticNumbers).forEach { println(it) }
+      list(bytesList, config.hideSyntheticNumbers, methodMapper).forEach { println(it) }
     }
 
     /** List method references in `files` of any of `.dex`, `.class`, `.jar`, or `.apk`. */
@@ -47,7 +67,9 @@ class DexMethods private constructor() {
      * List method references in the bytes of any of `.dex`, `.class`, `.jar`, or `.apk`,
      * optionally hiding number suffixes from synthetic methods.
      */
-    @JvmStatic fun list(bytes: Iterable<ByteArray>, hideSyntheticNumbers: Boolean): List<String> {
+    @JvmStatic fun list(
+            bytes: Iterable<ByteArray>, hideSyntheticNumbers: Boolean,
+            methodMapper: (MethodName) -> MethodName = {it}): List<String> {
       val collection = bytes
           .fold(ClassAndDexCollection()) { collection, bytes ->
             if (bytes.startsWith(DEX_MAGIC)) {
@@ -82,7 +104,9 @@ class DexMethods private constructor() {
       }
       return collection.dexes
           .map { Dex(it) }
-          .flatMap { dex -> dex.methodIds().map { renderMethod(dex, it, hideSyntheticNumbers) } }
+          .flatMap { dex -> dex.methodIds().map {
+              methodMapper(renderMethod(dex, it, hideSyntheticNumbers)).toString()
+          } }
           .sorted()
     }
 
@@ -101,46 +125,17 @@ class DexMethods private constructor() {
     }
 
     private fun renderMethod(dex: Dex, methodId: MethodId,
-        hideSyntheticNumbers: Boolean): String {
-      val type = humanName(dex.typeNames()[methodId.declaringClassIndex])
+        hideSyntheticNumbers: Boolean): MethodName {
+      val type = TypeName.parse(dex.typeNames()[methodId.declaringClassIndex])
       var method = dex.strings()[methodId.nameIndex]
       if (hideSyntheticNumbers && method.matches(SYNTHETIC_SUFFIX)) {
         method = method.substring(0, method.lastIndexOf('$'))
       }
       val methodProtoIds = dex.protoIds()[methodId.protoIndex]
       val params = dex.readTypeList(methodProtoIds.parametersOffset).types
-          .map { humanName(dex.typeNames()[it.toInt()], true) }
-          .joinToString(", ")
-      val returnType = humanName(dex.typeNames()[methodProtoIds.returnTypeIndex], true)
-      if (returnType == "void") {
-        return "$type $method($params)"
-      }
-      return "$type $method($params) → $returnType"
-    }
-
-    private fun humanName(type: String, stripPackage: Boolean = false): String {
-      if (type.startsWith("[")) {
-        return humanName(type.substring(1), stripPackage) + "[]"
-      }
-      if (type.startsWith("L")) {
-        val name = type.substring(1, type.length - 1)
-        if (stripPackage) {
-          return name.split('/').last()
-        }
-        return name.replace('/', '.')
-      }
-      return when (type) {
-        "B" -> "byte"
-        "C" -> "char"
-        "D" -> "double"
-        "F" -> "float"
-        "I" -> "int"
-        "J" -> "long"
-        "S" -> "short"
-        "V" -> "void"
-        "Z" -> "boolean"
-        else -> throw IllegalArgumentException("Unknown type $type")
-      }
+          .map { TypeName.parse(dex.typeNames()[it.toInt()], true) }
+      val returnType = TypeName.parse(dex.typeNames()[methodProtoIds.returnTypeIndex], true)
+      return MethodName(method, type, returnType, params.toTypedArray())
     }
 
     private fun <T> List<T>.defaultIfEmpty(value: T): List<T> {

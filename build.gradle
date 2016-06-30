@@ -25,6 +25,7 @@ repositories {
 }
 
 dependencies {
+  compile 'args4j:args4j:2.33'
   compile 'com.jakewharton.android.repackaged:libcore-dex:2'
   compile 'com.jakewharton.android.repackaged:dalvik-dx:1'
   compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0'
