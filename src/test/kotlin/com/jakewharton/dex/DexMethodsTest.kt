@@ -8,7 +8,7 @@ import java.io.File
 class DexMethodsTest {
   @Test fun types() {
     val types = File(Resources.getResource("types.dex").file)
-    val methods = DexMethods.list(types)
+    val methods = DexMethods.list(types).map { it.render() }
     assertThat(methods).containsExactly(
         "Types <init>()",
         "Types test(String)",
@@ -29,7 +29,7 @@ class DexMethodsTest {
 
   @Test fun paramsJoined() {
     val params = File(Resources.getResource("params_joined.dex").file)
-    val methods = DexMethods.list(params)
+    val methods = DexMethods.list(params).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -38,7 +38,7 @@ class DexMethodsTest {
 
   @Test fun visibilities() {
     val visibilities = File(Resources.getResource("visibilities.dex").file)
-    val methods = DexMethods.list(visibilities)
+    val methods = DexMethods.list(visibilities).map { it.render() }
     assertThat(methods).containsExactly(
         "Visibilities <init>()",
         "Visibilities test1()",
@@ -51,7 +51,7 @@ class DexMethodsTest {
   @Test fun multipleDexFiles() {
     val params = File(Resources.getResource("params_joined.dex").file)
     val visibilities = File(Resources.getResource("visibilities.dex").file)
-    val methods = DexMethods.list(params, visibilities)
+    val methods = DexMethods.list(params, visibilities).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -66,7 +66,7 @@ class DexMethodsTest {
 
   @Test fun apk() {
     val one = File(Resources.getResource("one.apk").file)
-    val methods = DexMethods.list(one)
+    val methods = DexMethods.list(one).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -75,7 +75,7 @@ class DexMethodsTest {
 
   @Test fun apkMultipleDex() {
     val three = File(Resources.getResource("three.apk").file)
-    val methods = DexMethods.list(three)
+    val methods = DexMethods.list(three).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -105,7 +105,7 @@ class DexMethodsTest {
 
   @Test fun classFile() {
     val params = File(Resources.getResource("Params.class").file)
-    val methods = DexMethods.list(params)
+    val methods = DexMethods.list(params).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -115,7 +115,7 @@ class DexMethodsTest {
   @Test fun multipleClassFiles() {
     val params = File(Resources.getResource("Params.class").file)
     val visibilities = File(Resources.getResource("Visibilities.class").file)
-    val methods = DexMethods.list(params, visibilities)
+    val methods = DexMethods.list(params, visibilities).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -129,7 +129,7 @@ class DexMethodsTest {
 
   @Test fun jarFile() {
     val params = File(Resources.getResource("params_joined.jar").file)
-    val methods = DexMethods.list(params)
+    val methods = DexMethods.list(params).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -139,7 +139,7 @@ class DexMethodsTest {
   @Test fun multipleJarFiles() {
     val params = File(Resources.getResource("params_joined.jar").file)
     val visibilities = File(Resources.getResource("visibilities.jar").file)
-    val methods = DexMethods.list(params, visibilities)
+    val methods = DexMethods.list(params, visibilities).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -153,7 +153,7 @@ class DexMethodsTest {
 
   @Test fun jarMultipleClasses() {
     val three = File(Resources.getResource("three.jar").file)
-    val methods = DexMethods.list(three)
+    val methods = DexMethods.list(three).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -181,7 +181,7 @@ class DexMethodsTest {
 
   @Test fun dexBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("params_joined.dex"))
-    val methods = DexMethods.list(bytes)
+    val methods = DexMethods.list(bytes).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -190,7 +190,7 @@ class DexMethodsTest {
 
   @Test fun apkBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("one.apk"))
-    val methods = DexMethods.list(bytes)
+    val methods = DexMethods.list(bytes).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -199,7 +199,7 @@ class DexMethodsTest {
 
   @Test fun classBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("Params.class"))
-    val methods = DexMethods.list(bytes)
+    val methods = DexMethods.list(bytes).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -208,7 +208,7 @@ class DexMethodsTest {
 
   @Test fun jarBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("params_joined.jar"))
-    val methods = DexMethods.list(bytes)
+    val methods = DexMethods.list(bytes).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -217,7 +217,7 @@ class DexMethodsTest {
 
   @Test fun aarExtractsJars() {
     val three = File(Resources.getResource("three.aar").file)
-    val methods = DexMethods.list(three)
+    val methods = DexMethods.list(three).map { it.render() }
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -244,8 +244,8 @@ class DexMethodsTest {
   }
 
   @Test fun synthetics() {
-    val types = File(Resources.getResource("synthetics.dex").file);
-    val methods = DexMethods.list(types);
+    val types = File(Resources.getResource("synthetics.dex").file)
+    val methods = DexMethods.list(types).map { it.render() }
     assertThat(methods).containsExactly(
         "Synthetics <init>()",
         "Synthetics access$000(Synthetics) → int",
@@ -261,9 +261,9 @@ class DexMethodsTest {
   }
 
   @Test fun syntheticsWithoutNumbers() {
-    val types = File(Resources.getResource("synthetics.dex").file);
+    val types = File(Resources.getResource("synthetics.dex").file)
     val bytes = types.readBytes()
-    val methods = DexMethods.list(listOf(bytes), true);
+    val methods = DexMethods.list(listOf(bytes)).map { it.render(true) }
     assertThat(methods).containsExactly(
         "Synthetics <init>()",
         "Synthetics access(Synthetics) → int",
