@@ -27,7 +27,7 @@ class DexMethods private constructor() {
       args.filter { !it.startsWith("--") }
           .map { FileInputStream(it) }
           .defaultIfEmpty(System.`in`)
-          .map { it.readBytes() }
+          .map { it.use { it.readBytes() } }
           .toList()
           .let { list(it) }
           .map { it.render(hideSyntheticNumbers) }
