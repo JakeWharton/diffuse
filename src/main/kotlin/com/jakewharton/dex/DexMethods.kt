@@ -21,33 +21,27 @@ class DexMethods private constructor() {
   companion object {
     private val CLASS_MAGIC = byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(), 0xBE.toByte())
     private val DEX_MAGIC = byteArrayOf(0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x35, 0x00)
-    private val SYNTHETIC_SUFFIX = ".*?\\$\\d+".toRegex()
 
     @JvmStatic fun main(vararg args: String) {
       val hideSyntheticNumbers = args.contains("--hide-synthetic-numbers")
-      val bytesList = args
-          .filter { !it.startsWith("--") }
+      args.filter { !it.startsWith("--") }
           .map { FileInputStream(it) }
           .defaultIfEmpty(System.`in`)
           .map { it.readBytes() }
           .toList()
-      list(bytesList, hideSyntheticNumbers).forEach { println(it) }
+          .let { list(it) }
+          .map { it.render(hideSyntheticNumbers) }
+          .forEach { println(it) }
     }
 
-    /** List method references in `files` of any of `.dex`, `.class`, `.jar`, or `.apk`. */
-    @JvmStatic fun list(vararg files: File): List<String> = list(files.map { it.readBytes() })
+    /** List method references in the files of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
+    @JvmStatic fun list(vararg files: File) = list(files.map { it.readBytes() })
 
-    /** List method references in the `bytes` of any of `.dex`, `.class`, `.jar`, or `.apk`. */
-    @JvmStatic fun list(bytes: ByteArray): List<String> = list(listOf(bytes))
+    /** List method references in the bytes of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
+    @JvmStatic fun list(bytes: ByteArray) = list(listOf(bytes))
 
-    /** List method references in the bytes of any of `.dex`, `.class`, `.jar`, or `.apk`. */
-    @JvmStatic fun list(bytes: Iterable<ByteArray>) = list(bytes, hideSyntheticNumbers = false)
-
-    /**
-     * List method references in the bytes of any of `.dex`, `.class`, `.jar`, or `.apk`,
-     * optionally hiding number suffixes from synthetic methods.
-     */
-    @JvmStatic fun list(bytes: Iterable<ByteArray>, hideSyntheticNumbers: Boolean): List<String> {
+    /** List method references in the bytes of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
+    @JvmStatic fun list(bytes: Iterable<ByteArray>): List<DexMethod> {
       val collection = bytes
           .fold(ClassAndDexCollection()) { collection, bytes ->
             if (bytes.startsWith(DEX_MAGIC)) {
@@ -82,7 +76,7 @@ class DexMethods private constructor() {
       }
       return collection.dexes
           .map { Dex(it) }
-          .flatMap { dex -> dex.methodIds().map { renderMethod(dex, it, hideSyntheticNumbers) } }
+          .flatMap { dex -> dex.methodIds().map { toMethod(dex, it) } }
           .sorted()
     }
 
@@ -100,34 +94,23 @@ class DexMethods private constructor() {
       return dexFile.toDex(null, false)
     }
 
-    private fun renderMethod(dex: Dex, methodId: MethodId,
-        hideSyntheticNumbers: Boolean): String {
-      val type = humanName(dex.typeNames()[methodId.declaringClassIndex])
-      var method = dex.strings()[methodId.nameIndex]
-      if (hideSyntheticNumbers && method.matches(SYNTHETIC_SUFFIX)) {
-        method = method.substring(0, method.lastIndexOf('$'))
-      }
+    private fun toMethod(dex: Dex, methodId: MethodId): DexMethod {
+      val declaringType = humanName(dex.typeNames()[methodId.declaringClassIndex])
+      val name = dex.strings()[methodId.nameIndex]
       val methodProtoIds = dex.protoIds()[methodId.protoIndex]
-      val params = dex.readTypeList(methodProtoIds.parametersOffset).types
-          .map { humanName(dex.typeNames()[it.toInt()], true) }
-          .joinToString(", ")
-      val returnType = humanName(dex.typeNames()[methodProtoIds.returnTypeIndex], true)
-      if (returnType == "void") {
-        return "$type $method($params)"
-      }
-      return "$type $method($params) → $returnType"
+      val parameterTypes = dex.readTypeList(methodProtoIds.parametersOffset).types
+          .map { dex.typeNames()[it.toInt()] }
+          .map { humanName(it) }
+      val returnType = humanName(dex.typeNames()[methodProtoIds.returnTypeIndex])
+      return DexMethod(declaringType, name, parameterTypes, returnType)
     }
 
-    private fun humanName(type: String, stripPackage: Boolean = false): String {
+    private fun humanName(type: String): String {
       if (type.startsWith("[")) {
-        return humanName(type.substring(1), stripPackage) + "[]"
+        return humanName(type.substring(1)) + "[]"
       }
       if (type.startsWith("L")) {
-        val name = type.substring(1, type.length - 1)
-        if (stripPackage) {
-          return name.split('/').last()
-        }
-        return name.replace('/', '.')
+        return type.substring(1, type.length - 1).replace('/', '.')
       }
       return when (type) {
         "B" -> "byte"

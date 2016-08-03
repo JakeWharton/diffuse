@@ -98,7 +98,7 @@ artifacts {
 }
 
 def version() {
-  return '1.2.1-SNAPSHOT'
+  return '2.0.0-SNAPSHOT'
 }
 
 def isReleaseBuild() {
