@@ -28,6 +28,7 @@ dependencies {
   compile 'com.jakewharton.android.repackaged:libcore-dex:7.1.0_r7'
   compile 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
   compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.5'
+  shadow  'org.jetbrains.kotlin:kotlin-stdlib:1.0.5'
   testCompile 'junit:junit:4.12'
   testCompile 'com.google.guava:guava:19.0'
   testCompile 'com.google.truth:truth:0.28'
@@ -58,7 +59,7 @@ task sourcesJar(type: Jar) {
 }
 
 task fatJar(type: Jar, dependsOn: 'compileJava') {
-  from files(sourceSets.main.output.classesDir)
+  from files(sourceSets.main.output.classesDirs)
   from configurations.compile.asFileTree.files.collect { zipTree(it) }
 
   classifier 'fat'
@@ -69,14 +70,17 @@ task fatJar(type: Jar, dependsOn: 'compileJava') {
 }
 
 def binaryFile = new File(buildDir, "libs/$name-binary.jar")
-task binaryJar << {
-  def fatJarFile = fatJar.archivePath
+task binaryJar {
+  doLast {
+    def fatJarFile = fatJar.archivePath
 
-  binaryFile.getParentFile().mkdirs()
-  binaryFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
-  fatJarFile.withInputStream { binaryFile.append it }
+    binaryFile.getParentFile().mkdirs()
+    binaryFile.delete()
+    binaryFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+    fatJarFile.withInputStream { binaryFile.append it }
 
-  binaryFile.setExecutable true, false
+    binaryFile.setExecutable true, false
+  }
 }
 binaryJar.dependsOn(fatJar)
 
@@ -97,12 +101,11 @@ artifacts {
   shadow file: binaryFile, name: 'binary', type: 'jar', builtBy: binaryJar, classifier: 'binary'
 }
 
-def version() {
-  return '2.0.0-SNAPSHOT'
-}
+group = 'com.jakewharton.dex'
+version = '2.0.0-SNAPSHOT'
 
 def isReleaseBuild() {
-  return version().contains("SNAPSHOT") == false
+  return version.contains("SNAPSHOT") == false
 }
 
 def getRepositoryUsername() {
@@ -118,6 +121,17 @@ signing {
   sign configurations.shadow
 }
 
+install {
+  configuration = configurations.shadow
+  repositories {
+    mavenInstaller {
+      pom.scopeMappings.mappings.remove(project.configurations.compile)
+      pom.scopeMappings.mappings.remove(project.configurations.runtime)
+      pom.scopeMappings.addMapping(MavenPlugin.RUNTIME_PRIORITY, project.configurations.shadow, Conf2ScopeMappingContainer.RUNTIME)
+    }
+  }
+}
+
 task uploadArchives(dependsOn: 'uploadShadow')
 
 uploadShadow {
@@ -131,10 +145,6 @@ uploadShadow {
       snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
         authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
       }
-
-      pom.groupId = 'com.jakewharton.dex'
-      pom.artifactId = 'dex-method-list'
-      pom.version = version()
 
       pom.project {
         name 'Dex Method List'
