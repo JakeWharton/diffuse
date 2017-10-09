@@ -11,7 +11,7 @@ data class DexMethod(
     val method = if (hideSyntheticNumbers && name.matches(SYNTHETIC_SUFFIX)) {
       name.substring(0, name.lastIndexOf('$'))
     } else name
-    val parameters = parameterTypes.map { typeOnly(it) }.joinToString(", ")
+    val parameters = parameterTypes.joinToString(", ") { typeOnly(it) }
 
     if (returnType == "void") {
       return "$declaringType $method($parameters)"
@@ -33,12 +33,12 @@ data class DexMethod(
     return 0
   }
 
-  private fun typeOnly(type: String): String {
-    val lastDot = type.lastIndexOf('.')
-    return if (lastDot == -1) type else type.substring(lastDot + 1)
-  }
-
   companion object {
     private val SYNTHETIC_SUFFIX = ".*?\\$\\d+".toRegex()
+
+    private fun typeOnly(type: String): String {
+      val lastDot = type.lastIndexOf('.')
+      return if (lastDot == -1) type else type.substring(lastDot + 1)
+    }
   }
 }
