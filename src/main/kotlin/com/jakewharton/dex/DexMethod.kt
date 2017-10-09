@@ -1,5 +1,8 @@
 package com.jakewharton.dex
 
+import kotlin.comparisons.compareBy
+import kotlin.comparisons.thenBy
+
 /** Represents a single method reference. */
 data class DexMethod(
     val declaringType: String,
@@ -22,23 +25,39 @@ data class DexMethod(
 
   override fun toString() = render()
 
-  override fun compareTo(other: DexMethod): Int {
-    declaringType.compareTo(other.declaringType).let { if (it != 0) return it }
-    name.compareTo(other.name).let { if (it != 0) return it }
-    parameterTypes.size.compareTo(other.parameterTypes.size).let { if (it != 0) return it }
-    parameterTypes.zip(other.parameterTypes).forEach {
-      it.component1().compareTo(it.component2()).let { if (it != 0) return it }
-    }
-    returnType.compareTo(other.returnType).let { if (it != 0) return it }
-    return 0
-  }
+  override fun compareTo(other: DexMethod) = COMPARATOR.compare(this, other)
 
   companion object {
     private val SYNTHETIC_SUFFIX = ".*?\\$\\d+".toRegex()
+    private val COMPARATOR = compareBy(DexMethod::declaringType, DexMethod::name)
+        .thenBy(comparingValues(), DexMethod::parameterTypes)
+        .thenBy(DexMethod::returnType)
 
     private fun typeOnly(type: String): String {
       val lastDot = type.lastIndexOf('.')
       return if (lastDot == -1) type else type.substring(lastDot + 1)
+    }
+
+    // TODO replace with https://youtrack.jetbrains.com/issue/KT-20690
+    private fun <T : Comparable<T>> comparingValues(): Comparator<Iterable<T>> {
+      return object : Comparator<Iterable<T>> {
+        override fun compare(o1: Iterable<T>, o2: Iterable<T>): Int {
+          val i1 = o1.iterator()
+          val i2 = o2.iterator()
+          while (true) {
+            if (!i1.hasNext()) {
+              return if (!i2.hasNext()) 0 else -1
+            }
+            if (!i2.hasNext()) {
+              return 1
+            }
+            val result = i1.next().compareTo(i2.next())
+            if (result != 0) {
+              return result
+            }
+          }
+        }
+      }
     }
   }
 }
