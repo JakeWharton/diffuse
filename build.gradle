@@ -75,6 +75,7 @@ task binaryJar {
     def fatJarFile = fatJar.archivePath
 
     binaryFile.getParentFile().mkdirs()
+    binaryFile.delete()
     binaryFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
     fatJarFile.withInputStream { binaryFile.append it }
 
