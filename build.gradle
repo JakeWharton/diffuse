@@ -58,7 +58,7 @@ task sourcesJar(type: Jar) {
 }
 
 task fatJar(type: Jar, dependsOn: 'compileJava') {
-  from files(sourceSets.main.output.classesDir)
+  from files(sourceSets.main.output.classesDirs)
   from configurations.compile.asFileTree.files.collect { zipTree(it) }
 
   classifier 'fat'
@@ -69,14 +69,16 @@ task fatJar(type: Jar, dependsOn: 'compileJava') {
 }
 
 def binaryFile = new File(buildDir, "libs/$name-binary.jar")
-task binaryJar << {
-  def fatJarFile = fatJar.archivePath
+task binaryJar {
+  doLast {
+    def fatJarFile = fatJar.archivePath
 
-  binaryFile.getParentFile().mkdirs()
-  binaryFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
-  fatJarFile.withInputStream { binaryFile.append it }
+    binaryFile.getParentFile().mkdirs()
+    binaryFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+    fatJarFile.withInputStream { binaryFile.append it }
 
-  binaryFile.setExecutable true, false
+    binaryFile.setExecutable true, false
+  }
 }
 binaryJar.dependsOn(fatJar)
 
