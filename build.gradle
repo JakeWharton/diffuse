@@ -100,12 +100,11 @@ artifacts {
   shadow file: binaryFile, name: 'binary', type: 'jar', builtBy: binaryJar, classifier: 'binary'
 }
 
-def version() {
-  return '2.0.0-SNAPSHOT'
-}
+group = 'com.jakewharton.dex'
+version = '2.0.0-SNAPSHOT'
 
 def isReleaseBuild() {
-  return version().contains("SNAPSHOT") == false
+  return version.contains("SNAPSHOT") == false
 }
 
 def getRepositoryUsername() {
@@ -121,6 +120,17 @@ signing {
   sign configurations.shadow
 }
 
+install {
+  configuration = configurations.shadow
+  repositories {
+    mavenInstaller {
+      pom.scopeMappings.mappings.remove(project.configurations.compile)
+      pom.scopeMappings.mappings.remove(project.configurations.runtime)
+      pom.scopeMappings.addMapping(MavenPlugin.RUNTIME_PRIORITY, project.configurations.shadow, Conf2ScopeMappingContainer.RUNTIME)
+    }
+  }
+}
+
 task uploadArchives(dependsOn: 'uploadShadow')
 
 uploadShadow {
@@ -134,10 +144,6 @@ uploadShadow {
       snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
         authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
       }
-
-      pom.groupId = 'com.jakewharton.dex'
-      pom.artifactId = 'dex-method-list'
-      pom.version = version()
 
       pom.project {
         name 'Dex Method List'
