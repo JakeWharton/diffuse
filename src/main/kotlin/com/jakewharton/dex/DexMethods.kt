@@ -25,7 +25,7 @@ class DexMethods private constructor() {
     @JvmStatic fun main(vararg args: String) {
       val hideSyntheticNumbers = args.contains("--hide-synthetic-numbers")
       args.filter { !it.startsWith("--") }
-          .map { FileInputStream(it) }
+          .map(::FileInputStream)
           .defaultIfEmpty(System.`in`)
           .map { it.use { it.readBytes() } }
           .toList()
