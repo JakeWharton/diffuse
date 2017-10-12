@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Version 2.0.0 *(2017-10-12)*
+----------------------------
+
+ * New: Show non-`void` return types.
+ * New: API now returns a model object representing methods.
+ * The Dalvik and Dex dependencies are now shaded to prevent conflicts in some environments.
+
+
 Version 1.2.0 *(2016-02-28)*
 ----------------------------
 
