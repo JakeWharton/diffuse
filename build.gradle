@@ -70,7 +70,12 @@ task fatJar(type: Jar, dependsOn: 'compileJava') {
 }
 
 def binaryFile = new File(buildDir, "libs/$name-binary.jar")
-task binaryJar {
+task binaryJar() {
+  dependsOn(fatJar)
+
+  inputs.file(fatJar.archivePath)
+  outputs.file(binaryFile)
+
   doLast {
     def fatJarFile = fatJar.archivePath
 
@@ -82,7 +87,6 @@ task binaryJar {
     binaryFile.setExecutable true, false
   }
 }
-binaryJar.dependsOn(fatJar)
 
 task copyBinary(type: Copy, dependsOn: 'binaryJar') {
   from(binaryFile)
@@ -131,6 +135,9 @@ install {
     }
   }
 }
+
+// Make sure binaries are signed before attempting to upload.
+tasks.getByName('uploadShadow').dependsOn('signShadow')
 
 task uploadArchives(dependsOn: 'uploadShadow')
 
