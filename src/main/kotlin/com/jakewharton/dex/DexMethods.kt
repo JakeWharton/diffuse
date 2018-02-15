@@ -53,12 +53,12 @@ class DexMethods private constructor() {
                 zis.entries().forEach {
                   if (it.name.endsWith(".dex")) {
                     collection.dexes += zis.readBytes()
-                  } else if (it.name.endsWith(".class")) {
+                  } else if (it.name.endsWith(".class") && !it.name.startsWith("META-INF/")) {
                     collection.classes += zis.readBytes()
                   } else if (it.name.endsWith(".jar")) {
                     ZipInputStream(ByteArrayInputStream(zis.readBytes())).use { jar ->
                       jar.entries().forEach {
-                        if (it.name.endsWith(".class")) {
+                        if (it.name.endsWith(".class") && !it.name.startsWith("META-INF/")) {
                           collection.classes += jar.readBytes()
                         }
                       }
