@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 3.0.0 *(2018-03-05)*
+----------------------------
+
+ * New: `dex-fields-list` command for listing field references.
+ * New: Added `DexFields` and `DexField` types for listing field references.
+ * Fix: Ignore `META-INF` contents.
+
+Note: The dx and dex dependencies are no longer shadowed in the jar dependency.
+
+
 Version 2.0.0 *(2017-10-12)*
 ----------------------------
 

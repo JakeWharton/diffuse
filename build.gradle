@@ -6,7 +6,6 @@ buildscript {
   dependencies {
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.30'
     classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.16'
-    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
   }
 }
 
@@ -15,10 +14,12 @@ apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
+
+group = 'com.jakewharton.dex'
+version = '3.0.0'
 
 repositories {
   mavenCentral()
@@ -28,7 +29,6 @@ dependencies {
   compile 'com.jakewharton.android.repackaged:libcore-dex:7.1.0_r7'
   compile 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
   compile 'org.jetbrains.kotlin:kotlin-stdlib:1.2.30'
-  shadow  'org.jetbrains.kotlin:kotlin-stdlib:1.2.30'
   testCompile 'junit:junit:4.12'
   testCompile 'com.google.guava:guava:19.0'
   testCompile 'com.google.truth:truth:0.28'
@@ -37,15 +37,6 @@ dependencies {
 dokka {
   outputFormat 'javadoc'
   outputDirectory "$buildDir/javadoc"
-}
-
-shadowJar {
-  classifier = ''
-  relocate 'com.android', 'com.jakewharton.dex.internal.android'
-
-  dependencies {
-    include(dependency('com.jakewharton.android.repackaged:.*'))
-  }
 }
 
 task javadocJar(type: Jar, dependsOn: 'dokka') {
@@ -133,19 +124,12 @@ task copyFieldsMethods(type: Copy, dependsOn: binaryFieldsJar) {
 }
 assemble.dependsOn(copyFieldsMethods)
 
-configurations.runtime.artifacts.removeAll { it.archiveTask.is jar }
-tasks.getByName('jar').enabled = false
-
 artifacts {
-  runtime shadowJar
-  shadow sourcesJar
-  shadow javadocJar
-  shadow file: binaryMethodsFile, name: 'binary', type: 'jar', builtBy: binaryMethodsJar, classifier: 'binary-methods'
-  shadow file: binaryFieldsFile, name: 'binary', type: 'jar', builtBy: binaryFieldsJar, classifier: 'binary-fields'
+  archives sourcesJar
+  archives javadocJar
+  archives file: binaryMethodsFile, name: 'binary', type: 'jar', builtBy: binaryMethodsJar, classifier: 'binary-methods'
+  archives file: binaryFieldsFile, name: 'binary', type: 'jar', builtBy: binaryFieldsJar, classifier: 'binary-fields'
 }
-
-group = 'com.jakewharton.dex'
-version = '3.0.0-SNAPSHOT'
 
 def isReleaseBuild() {
   return version.contains("SNAPSHOT") == false
@@ -161,26 +145,10 @@ def getRepositoryPassword() {
 
 signing {
   required { isReleaseBuild() && gradle.taskGraph.hasTask('uploadArchives') }
-  sign configurations.shadow
+  sign configurations.archives
 }
 
-install {
-  configuration = configurations.shadow
-  repositories {
-    mavenInstaller {
-      pom.scopeMappings.mappings.remove(project.configurations.compile)
-      pom.scopeMappings.mappings.remove(project.configurations.runtime)
-      pom.scopeMappings.addMapping(MavenPlugin.RUNTIME_PRIORITY, project.configurations.shadow, Conf2ScopeMappingContainer.RUNTIME)
-    }
-  }
-}
-
-// Make sure binaries are signed before attempting to upload.
-tasks.getByName('uploadShadow').dependsOn('signShadow')
-
-task uploadArchives(dependsOn: 'uploadShadow')
-
-uploadShadow {
+uploadArchives {
   repositories {
     mavenDeployer {
       beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
@@ -193,9 +161,9 @@ uploadShadow {
       }
 
       pom.project {
-        name 'Dex Method List'
+        name 'Dex Method/Field List'
         packaging 'jar'
-        description 'A simple utility which lists all method references in a dex file.'
+        description 'A simple utility which lists all method or field references in a dex file.'
         url 'https://github.com/JakeWharton/dex-method-list'
 
         scm {

@@ -1,11 +1,11 @@
-Dex Method List
-===============
+Dex Method/Field List
+=====================
 
-A simple utility which lists all method references in an `.apk`, `.aar`, `.dex`, `.jar`, and/or
-`.class` files (and any combination of those).
+A simple utility which lists all method or field references in an `.apk`, `.aar`, `.dex`, `.jar`,
+and/or `.class` files (and any combination of those).
 
-Build by calling `./gradlew clean assemble`. Run `./build/dex-method-list` by passing in one or
-more arguments or by piping data through stdin.
+Build by calling `./gradlew clean assemble`. Run `./build/dex-method-list` or
+`./build/dex-field-list` by passing in one or more arguments or by piping data through stdin.
 
 For example:
 ```
@@ -63,13 +63,26 @@ com.google.common.base.Absent asSet() → Set
 com.google.common.base.Absent equals(Object) → boolean
 com.google.common.base.Absent get() → Object
 com.google.common.base.Absent hashCode() → int
+
+$ ./build/dex-field-list src/test/resources/types.dex
+Types valueBoolean: boolean
+Types valueByte: byte
+Types valueChar: char
+Types valueDouble: double
+Types valueFloat: float
+Types valueInt: int
+Types valueLong: long
+Types valueShort: short
+Types valueString: String
+Types valueStringArray: String[]
 ```
 
 Use the `--hide-synthetic-numbers` argument to remove number suffix from synthetic accessor
 methods. This is useful to prevent noise when `diff`ing output.
 
 You can also use this tool as a library. Add a dependency on
-`com.jakewharton.dex:dex-method-list:2.0.0` and use the `DexMethods.list` methods.
+`com.jakewharton.dex:dex-method-list:3.0.0` and use the `DexMethods.list` or `DexFields.list`
+methods.
 
 
 License
