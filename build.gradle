@@ -4,8 +4,8 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.51'
-    classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.10'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.30'
+    classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.16'
     classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
   }
 }
@@ -27,8 +27,8 @@ repositories {
 dependencies {
   compile 'com.jakewharton.android.repackaged:libcore-dex:7.1.0_r7'
   compile 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
-  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.51'
-  shadow  'org.jetbrains.kotlin:kotlin-stdlib:1.1.51'
+  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.2.30'
+  shadow  'org.jetbrains.kotlin:kotlin-stdlib:1.2.30'
   testCompile 'junit:junit:4.12'
   testCompile 'com.google.guava:guava:19.0'
   testCompile 'com.google.truth:truth:0.28'
@@ -58,42 +58,80 @@ task sourcesJar(type: Jar) {
   from sourceSets.main.allSource
 }
 
-task fatJar(type: Jar, dependsOn: 'compileJava') {
+task fatMethodsJar(type: Jar, dependsOn: 'compileJava') {
   from files(sourceSets.main.output.classesDirs)
   from configurations.compile.asFileTree.files.collect { zipTree(it) }
 
-  classifier 'fat'
+  classifier 'fat-methods'
 
   manifest {
    attributes 'Main-Class': 'com.jakewharton.dex.DexMethods'
   }
 }
 
-def binaryFile = new File(buildDir, "libs/$name-binary.jar")
-task binaryJar() {
-  dependsOn(fatJar)
+def binaryMethodsFile = new File(buildDir, "libs/dex-methods-list-binary.jar")
+task binaryMethodsJar() {
+  dependsOn(fatMethodsJar)
 
-  inputs.file(fatJar.archivePath)
-  outputs.file(binaryFile)
+  inputs.file(fatMethodsJar.archivePath)
+  outputs.file(binaryMethodsFile)
 
   doLast {
-    def fatJarFile = fatJar.archivePath
+    def fatJarFile = fatMethodsJar.archivePath
 
-    binaryFile.getParentFile().mkdirs()
-    binaryFile.delete()
-    binaryFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
-    fatJarFile.withInputStream { binaryFile.append it }
+    binaryMethodsFile.getParentFile().mkdirs()
+    binaryMethodsFile.delete()
+    binaryMethodsFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+    fatJarFile.withInputStream { binaryMethodsFile.append it }
 
-    binaryFile.setExecutable true, false
+    binaryMethodsFile.setExecutable true, false
   }
 }
 
-task copyBinary(type: Copy, dependsOn: 'binaryJar') {
-  from(binaryFile)
+task copyBinaryMethods(type: Copy, dependsOn: binaryMethodsJar) {
+  from(binaryMethodsFile)
   into buildDir
-  rename(".*", project.name)
+  rename(".*", 'dex-methods-list')
 }
-tasks.getByName('assemble').dependsOn('copyBinary')
+assemble.dependsOn(copyBinaryMethods)
+
+
+task fatFieldsJar(type: Jar, dependsOn: 'compileJava') {
+  from files(sourceSets.main.output.classesDirs)
+  from configurations.compile.asFileTree.files.collect { zipTree(it) }
+
+  classifier 'fat-fields'
+
+  manifest {
+   attributes 'Main-Class': 'com.jakewharton.dex.DexFields'
+  }
+}
+
+def binaryFieldsFile = new File(buildDir, "libs/dex-fields-list-binary.jar")
+task binaryFieldsJar() {
+  dependsOn(fatFieldsJar)
+
+  inputs.file(fatFieldsJar.archivePath)
+  outputs.file(binaryFieldsFile)
+
+  doLast {
+    def fatJarFile = fatFieldsJar.archivePath
+
+    binaryFieldsFile.getParentFile().mkdirs()
+    binaryFieldsFile.delete()
+    binaryFieldsFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+    fatJarFile.withInputStream { binaryFieldsFile.append it }
+
+    binaryFieldsFile.setExecutable true, false
+  }
+}
+
+task copyFieldsMethods(type: Copy, dependsOn: binaryFieldsJar) {
+  from(binaryFieldsFile)
+  into buildDir
+  rename(".*", 'dex-fields-list')
+}
+assemble.dependsOn(copyFieldsMethods)
 
 configurations.runtime.artifacts.removeAll { it.archiveTask.is jar }
 tasks.getByName('jar').enabled = false
@@ -102,11 +140,12 @@ artifacts {
   runtime shadowJar
   shadow sourcesJar
   shadow javadocJar
-  shadow file: binaryFile, name: 'binary', type: 'jar', builtBy: binaryJar, classifier: 'binary'
+  shadow file: binaryMethodsFile, name: 'binary', type: 'jar', builtBy: binaryMethodsJar, classifier: 'binary-methods'
+  shadow file: binaryFieldsFile, name: 'binary', type: 'jar', builtBy: binaryFieldsJar, classifier: 'binary-fields'
 }
 
 group = 'com.jakewharton.dex'
-version = '2.0.1-SNAPSHOT'
+version = '3.0.0-SNAPSHOT'
 
 def isReleaseBuild() {
   return version.contains("SNAPSHOT") == false
