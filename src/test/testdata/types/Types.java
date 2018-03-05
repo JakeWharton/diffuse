@@ -1,4 +1,15 @@
 class Types {
+  boolean valueBoolean;
+  byte valueByte;
+  char valueChar;
+  double valueDouble;
+  float valueFloat;
+  int valueInt;
+  long valueLong;
+  short valueShort;
+  String valueString;
+  String[] valueStringArray;
+
   void test(boolean value) {}
   void test(byte value) {}
   void test(char value) {}

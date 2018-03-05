@@ -14,12 +14,12 @@ data class DexMethod(
     val method = if (hideSyntheticNumbers && name.matches(SYNTHETIC_SUFFIX)) {
       name.substring(0, name.lastIndexOf('$'))
     } else name
-    val parameters = parameterTypes.joinToString(", ") { typeOnly(it) }
+    val parameters = parameterTypes.joinToString(", ") { it.substringAfterLast('.') }
 
     if (returnType == "void") {
       return "$declaringType $method($parameters)"
     }
-    val returnName = typeOnly(returnType)
+    val returnName = returnType.substringAfterLast('.')
     return "$declaringType $method($parameters) → $returnName"
   }
 
@@ -32,11 +32,6 @@ data class DexMethod(
     private val COMPARATOR = compareBy(DexMethod::declaringType, DexMethod::name)
         .thenBy(comparingValues(), DexMethod::parameterTypes)
         .thenBy(DexMethod::returnType)
-
-    private fun typeOnly(type: String): String {
-      val lastDot = type.lastIndexOf('.')
-      return if (lastDot == -1) type else type.substring(lastDot + 1)
-    }
 
     // TODO replace with https://youtrack.jetbrains.com/issue/KT-20690
     private fun <T : Comparable<T>> comparingValues(): Comparator<Iterable<T>> {
