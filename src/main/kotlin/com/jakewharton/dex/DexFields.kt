@@ -5,17 +5,10 @@ package com.jakewharton.dex
 import com.android.dex.Dex
 import com.android.dex.FieldId
 import java.io.File
-import java.io.FileInputStream
 
 fun main(vararg args: String) {
-  args.filter { !it.startsWith("--") }
-      .map(::FileInputStream)
-      .defaultIfEmpty(System.`in`)
-      .map { it.use { it.readBytes() } }
-      .toList()
-      .let { dexFields(it) }
-      .map { it.toString() }
-      .forEach { println(it) }
+  val configuration = Configuration.load("dex-fields-list", *args)
+  dexFields(configuration.loadInputs()).forEach(::println)
 }
 
 /** List field references in the files of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
