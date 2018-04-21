@@ -8,6 +8,9 @@ internal class Configuration private constructor(parser: ArgParser) {
   val hideSyntheticNumbers by parser.flagging("--hide-synthetic-numbers",
       help = "Remove number suffixes from synthetic accessor methods. This is useful to prevent noise when diffing output.")
 
+  val legacyDx by parser.flagging("--legacy-dx",
+      help = "Use legacy 'dx' dex compiler instead of D8.")
+
   val inputs by parser.positionalList("FILE",
       ".apk, .aar, .jar, .dex, and/or .class files to process. STDIN is used when no files are provided.",
       0..Int.MAX_VALUE)

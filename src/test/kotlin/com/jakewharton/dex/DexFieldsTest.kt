@@ -3,12 +3,29 @@ package com.jakewharton.dex
 import com.google.common.io.Resources
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
 import java.io.File
 
+@RunWith(Parameterized::class)
 class DexFieldsTest {
+  companion object {
+    @JvmStatic
+    @Parameters(name = "{0}")
+    fun parameters() = listOf(arrayOf<Any>(false), arrayOf<Any>(true))
+  }
+
+  @Parameter @JvmField var legacyDxParam: Boolean? = null
+  private val legacyDx get() = legacyDxParam!!
+
   @Test fun types() {
     val types = File(Resources.getResource("types.dex").file)
-    val methods = dexFields(types).map { it.toString() }
+    val methods = DexParser.fromFile(types)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -24,7 +41,10 @@ class DexFieldsTest {
 
   @Test fun visibilities() {
     val visibilities = File(Resources.getResource("visibilities.dex").file)
-    val methods = dexFields(visibilities).map { it.toString() }
+    val methods = DexParser.fromFile(visibilities)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Visibilities test1: String",
         "Visibilities test2: String",
@@ -35,7 +55,10 @@ class DexFieldsTest {
   @Test fun multipleDexFiles() {
     val types = File(Resources.getResource("types.dex").file)
     val visibilities = File(Resources.getResource("visibilities.dex").file)
-    val methods = dexFields(types, visibilities).map { it.toString() }
+    val methods = DexParser.fromFiles(types, visibilities)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -55,7 +78,10 @@ class DexFieldsTest {
 
   @Test fun apk() {
     val one = File(Resources.getResource("one.apk").file)
-    val methods = dexFields(one).map { it.toString() }
+    val methods = DexParser.fromFiles(one)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -71,7 +97,10 @@ class DexFieldsTest {
 
   @Test fun apkMultipleDex() {
     val three = File(Resources.getResource("three.apk").file)
-    val methods = dexFields(three).map { it.toString() }
+    val methods = DexParser.fromFiles(three)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -91,7 +120,10 @@ class DexFieldsTest {
 
   @Test fun classFile() {
     val params = File(Resources.getResource("Visibilities.class").file)
-    val methods = dexFields(params).map { it.toString() }
+    val methods = DexParser.fromFiles(params)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Visibilities test1: String",
         "Visibilities test2: String",
@@ -102,7 +134,10 @@ class DexFieldsTest {
   @Test fun multipleClassFiles() {
     val params = File(Resources.getResource("Types.class").file)
     val visibilities = File(Resources.getResource("Visibilities.class").file)
-    val methods = dexFields(params, visibilities).map { it.toString() }
+    val methods = DexParser.fromFiles(params, visibilities)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -122,7 +157,10 @@ class DexFieldsTest {
 
   @Test fun jarFile() {
     val params = File(Resources.getResource("types.jar").file)
-    val methods = dexFields(params).map { it.toString() }
+    val methods = DexParser.fromFiles(params)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -139,7 +177,10 @@ class DexFieldsTest {
   @Test fun multipleJarFiles() {
     val types = File(Resources.getResource("types.jar").file)
     val visibilities = File(Resources.getResource("visibilities.jar").file)
-    val methods = dexFields(types, visibilities).map { it.toString() }
+    val methods = DexParser.fromFiles(types, visibilities)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -159,7 +200,10 @@ class DexFieldsTest {
 
   @Test fun jarMultipleClasses() {
     val three = File(Resources.getResource("three.jar").file)
-    val methods = dexFields(three).map { it.toString() }
+    val methods = DexParser.fromFiles(three)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -179,7 +223,10 @@ class DexFieldsTest {
 
   @Test fun dexBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("types.dex"))
-    val methods = dexFields(bytes).map { it.toString() }
+    val methods = DexParser.fromBytes(bytes)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -195,7 +242,10 @@ class DexFieldsTest {
 
   @Test fun apkBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("one.apk"))
-    val methods = dexFields(bytes).map { it.toString() }
+    val methods = DexParser.fromBytes(bytes)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -211,7 +261,10 @@ class DexFieldsTest {
 
   @Test fun classBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("Types.class"))
-    val methods = dexFields(bytes).map { it.toString() }
+    val methods = DexParser.fromBytes(bytes)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -227,7 +280,10 @@ class DexFieldsTest {
 
   @Test fun jarBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("types.jar"))
-    val methods = dexFields(bytes).map { it.toString() }
+    val methods = DexParser.fromBytes(bytes)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
@@ -243,7 +299,10 @@ class DexFieldsTest {
 
   @Test fun aarExtractsJars() {
     val three = File(Resources.getResource("three.aar").file)
-    val methods = dexFields(three).map { it.toString() }
+    val methods = DexParser.fromFiles(three)
+        .withLegacyDx(legacyDx)
+        .listFields()
+        .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types valueBoolean: boolean",
         "Types valueByte: byte",

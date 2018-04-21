@@ -2,32 +2,30 @@
 
 package com.jakewharton.dex
 
-import com.android.dex.Dex
-import com.android.dex.FieldId
 import java.io.File
 
 fun main(vararg args: String) {
   val configuration = Configuration.load("dex-fields-list", *args)
-  dexFields(configuration.loadInputs()).forEach(::println)
+  DexParser.fromBytes(configuration.loadInputs())
+      .withLegacyDx(configuration.legacyDx)
+      .listMethods()
+      .forEach(::println)
 }
 
 /** List field references in the files of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
+@Deprecated("Use DexParser",
+    ReplaceWith("DexParser.fromFiles(*files).listFields()", "com.jakewharton.dex.DexParser"))
 @JvmName("list")
-fun dexFields(vararg files: File) = dexFields(files.map { it.readBytes() })
+fun dexFields(vararg files: File) = DexParser.fromFiles(*files).listFields()
 
 /** List field references in the bytes of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
+@Deprecated("Use DexParser",
+    ReplaceWith("DexParser.fromBytes(bytes).listFields()", "com.jakewharton.dex.DexParser"))
 @JvmName("list")
-fun dexFields(bytes: ByteArray) = dexFields(listOf(bytes))
+fun dexFields(bytes: ByteArray) = DexParser.fromBytes(bytes).listFields()
 
 /** List field references in the bytes of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
+@Deprecated("Use DexParser",
+    ReplaceWith("DexParser.fromBytes(bytes).listFields()", "com.jakewharton.dex.DexParser"))
 @JvmName("list")
-fun dexFields(bytes: Iterable<ByteArray>) = dexes(bytes)
-    .flatMap { dex -> dex.fieldIds().map { dex.getField(it) } }
-    .sorted()
-
-private fun Dex.getField(fieldId: FieldId): DexField {
-  val declaringType = humanName(typeNames()[fieldId.declaringClassIndex])
-  val name = strings()[fieldId.nameIndex]
-  val type = humanName(typeNames()[fieldId.typeIndex])
-  return DexField(declaringType, name, type)
-}
+fun dexFields(bytes: Iterable<ByteArray>) = DexParser.fromBytes(bytes).listFields()
