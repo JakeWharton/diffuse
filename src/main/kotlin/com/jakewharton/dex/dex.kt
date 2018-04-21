@@ -16,7 +16,6 @@ import com.android.tools.r8.DexIndexedConsumer
 import com.android.tools.r8.DiagnosticsHandler
 import com.android.tools.r8.origin.Origin
 import java.io.ByteArrayInputStream
-import java.util.ArrayList
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -24,43 +23,39 @@ private val CLASS_MAGIC = byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(
 private val DEX_MAGIC = byteArrayOf(0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x35, 0x00)
 
 internal fun dexes(inputs: Iterable<ByteArray>, legacyDx: Boolean = false): List<Dex> {
-  val collection = inputs
-      .fold(ClassAndDexCollection()) { collection, bytes ->
-        if (bytes.startsWith(DEX_MAGIC)) {
-          collection.dexes += bytes
-        } else if (bytes.startsWith(CLASS_MAGIC)) {
-          collection.classes += bytes
-        } else {
-          ZipInputStream(ByteArrayInputStream(bytes)).use { zis ->
-            zis.entries().forEach {
-              if (it.name.endsWith(".dex")) {
-                collection.dexes += zis.readBytes()
-              } else if (it.name.endsWith(".class") && !it.name.startsWith("META-INF/")) {
-                collection.classes += zis.readBytes()
-              } else if (it.name.endsWith(".jar")) {
-                ZipInputStream(ByteArrayInputStream(zis.readBytes())).use { jar ->
-                  jar.entries().forEach {
-                    if (it.name.endsWith(".class") && !it.name.startsWith("META-INF/")) {
-                      collection.classes += jar.readBytes()
-                    }
-                  }
+  val classes = mutableListOf<ByteArray>()
+  val dexes = mutableListOf<ByteArray>()
+
+  for (input in inputs) {
+    if (input.startsWith(DEX_MAGIC)) {
+      dexes += input
+    } else if (input.startsWith(CLASS_MAGIC)) {
+      classes += input
+    } else {
+      ZipInputStream(ByteArrayInputStream(input)).use { zis ->
+        zis.entries().forEach {
+          if (it.name.endsWith(".dex")) {
+            dexes += zis.readBytes()
+          } else if (it.name.endsWith(".class") && !it.name.startsWith("META-INF/")) {
+            classes += zis.readBytes()
+          } else if (it.name.endsWith(".jar")) {
+            ZipInputStream(ByteArrayInputStream(zis.readBytes())).use { jar ->
+              jar.entries().forEach {
+                if (it.name.endsWith(".class") && !it.name.startsWith("META-INF/")) {
+                  classes += jar.readBytes()
                 }
               }
             }
           }
         }
-
-        collection // Pass along the mutable reference.
       }
-
-  if (collection.classes.isNotEmpty()) {
-    if (legacyDx) {
-      collection.dexes += compileWithDx(collection.classes)
-    } else {
-      collection.dexes += compileWithD8(collection.classes)
     }
   }
-  return collection.dexes.map(::Dex)
+
+  if (classes.isNotEmpty()) {
+    dexes += if (legacyDx) compileWithDx(classes) else compileWithD8(classes)
+  }
+  return dexes.map(::Dex)
 }
 
 private fun compileWithD8(bytes: List<ByteArray>): ByteArray {
@@ -164,9 +159,4 @@ private fun ZipInputStream.entries(): Sequence<ZipEntry> {
       }
     }
   }
-}
-
-private class ClassAndDexCollection {
-  val classes = ArrayList<ByteArray>()
-  val dexes = ArrayList<ByteArray>()
 }
