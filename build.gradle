@@ -23,16 +23,24 @@ version = '3.0.1-SNAPSHOT'
 
 repositories {
   mavenCentral()
+  google()
 }
 
 dependencies {
   compile 'com.xenomachina:kotlin-argparser:2.0.5'
   compile 'com.jakewharton.android.repackaged:libcore-dex:7.1.0_r7'
   compile 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
-  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.2.30'
+  compile 'com.android.tools:r8:1.0.23'
+  compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.30'
   testCompile 'junit:junit:4.12'
   testCompile 'com.google.guava:guava:19.0'
   testCompile 'com.google.truth:truth:0.28'
+}
+
+compileKotlin {
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
 }
 
 dokka {
