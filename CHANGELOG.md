@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 3.1.0 *(2018-04-21)*
+----------------------------
+
+ * New: D8 compiler is now the default. Pass `--legacy-dx` to use DX compiler from the command line.
+ * New: `DexParser` class and factory methods replace `DexMethods.list`/`DexFields.list` (Java) and `dexMethods`/`dexFields` (Kotlin).
+
+
 Version 3.0.0 *(2018-03-05)*
 ----------------------------
 

@@ -81,8 +81,7 @@ Use the `--hide-synthetic-numbers` argument to remove number suffix from synthet
 methods. This is useful to prevent noise when `diff`ing output.
 
 You can also use this tool as a library. Add a dependency on
-`com.jakewharton.dex:dex-method-list:3.0.0` and use the `DexMethods.list` or `DexFields.list`
-methods.
+`com.jakewharton.dex:dex-method-list:3.1.0` and use `DexParser`.
 
 
 License
