@@ -9,7 +9,7 @@ buildscript {
   }
 }
 
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'maven'
@@ -27,14 +27,14 @@ repositories {
 }
 
 dependencies {
-  compile 'com.xenomachina:kotlin-argparser:2.0.5'
-  compile 'com.jakewharton.android.repackaged:libcore-dex:7.1.0_r7'
-  compile 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
-  compile 'com.android.tools:r8:1.0.32'
-  compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.50'
-  testCompile 'junit:junit:4.12'
-  testCompile 'com.google.guava:guava:19.0'
-  testCompile 'com.google.truth:truth:0.28'
+  implementation 'com.xenomachina:kotlin-argparser:2.0.5'
+  implementation 'com.jakewharton.android.repackaged:libcore-dex:7.1.0_r7'
+  implementation 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
+  implementation 'com.android.tools:r8:1.0.32'
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.50'
+  testImplementation 'junit:junit:4.12'
+  testImplementation 'com.google.guava:guava:19.0'
+  testImplementation 'com.google.truth:truth:0.28'
 }
 
 compileKotlin {
