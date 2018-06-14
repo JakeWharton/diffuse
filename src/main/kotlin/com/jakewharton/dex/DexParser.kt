@@ -15,8 +15,12 @@ class DexParser private constructor(
   @JvmOverloads
   fun withLegacyDx(legacyDx: Boolean = true) = DexParser(bytes, legacyDx)
 
-  fun listMethods() = dexes.flatMap { dex -> dex.methodIds().map { dex.getMethod(it) } }.sorted()
-  fun listFields() = dexes.flatMap { dex -> dex.fieldIds().map { dex.getField(it) } }.sorted()
+  fun list() = dexes.flatMap { dex ->
+    dex.methodIds().map(dex::getMethod) + dex.fieldIds().map(dex::getField)
+  }.sorted()
+
+  fun listMethods() = dexes.flatMap { dex -> dex.methodIds().map(dex::getMethod) }.sorted()
+  fun listFields() = dexes.flatMap { dex -> dex.fieldIds().map(dex::getField) }.sorted()
 
   companion object {
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
