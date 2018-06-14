@@ -28,4 +28,39 @@ class DexMethodTest {
     assertThat(synthetic.render(hideSyntheticNumbers = true))
         .isEqualTo("com.example.Foo access() → Bar")
   }
+
+  @Test fun compareToSame() {
+    val one = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
+    val two = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
+    assertThat(one < two).isFalse()
+    assertThat(two < one).isFalse()
+  }
+
+  @Test fun compareToDifferentDeclaringType() {
+    val one = DexMethod("com.example.Bar", "bar", emptyList(), "com.example.Bar")
+    val two = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
+    assertThat(one < two).isTrue()
+    assertThat(two < one).isFalse()
+  }
+
+  @Test fun compareToDifferentName() {
+    val one = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
+    val two = DexMethod("com.example.Foo", "foo", emptyList(), "com.example.Bar")
+    assertThat(one < two).isTrue()
+    assertThat(two < one).isFalse()
+  }
+
+  @Test fun compareToDifferentParameterList() {
+    val one = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
+    val two = DexMethod("com.example.Foo", "bar", listOf("int"), "com.example.Bar")
+    assertThat(one < two).isTrue()
+    assertThat(two < one).isFalse()
+  }
+
+  @Test fun compareToDifferentReturnType() {
+    val one = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
+    val two = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Foo")
+    assertThat(one < two).isTrue()
+    assertThat(two < one).isFalse()
+  }
 }
