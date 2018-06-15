@@ -41,6 +41,6 @@ class DexParser private constructor(
     @JvmStatic fun fromBytes(bytes: Iterable<ByteArray>) = DexParser(bytes)
 
     // TODO https://youtrack.jetbrains.com/issue/KT-18242
-    @JvmStatic private fun Path.readBytes() = Files.newInputStream(this).use { it.readBytes() }
+    private fun Path.readBytes() = Files.newInputStream(this).use { it.readBytes() }
   }
 }
