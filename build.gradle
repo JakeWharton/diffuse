@@ -59,6 +59,43 @@ task sourcesJar(type: Jar) {
   from sourceSets.main.allSource
 }
 
+task fatMembersJar(type: Jar, dependsOn: 'compileJava') {
+  from files(sourceSets.main.output.classesDirs)
+  from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
+
+  classifier 'fat-members'
+
+  manifest {
+   attributes 'Main-Class': 'com.jakewharton.dex.DexMembers'
+  }
+}
+
+def binaryMembersFile = new File(buildDir, "libs/dex-members-list-binary.jar")
+task binaryMembersJar() {
+  dependsOn(fatMembersJar)
+
+  inputs.file(fatMembersJar.archivePath)
+  outputs.file(binaryMembersFile)
+
+  doLast {
+    def fatJarFile = fatMembersJar.archivePath
+
+    binaryMembersFile.getParentFile().mkdirs()
+    binaryMembersFile.delete()
+    binaryMembersFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+    fatJarFile.withInputStream { binaryMembersFile.append it }
+
+    binaryMembersFile.setExecutable true, false
+  }
+}
+
+task copyBinaryMembers(type: Copy, dependsOn: binaryMembersJar) {
+  from(binaryMembersFile)
+  into buildDir
+  rename(".*", 'dex-members-list')
+}
+assemble.dependsOn(copyBinaryMembers)
+
 task fatMethodsJar(type: Jar, dependsOn: 'compileJava') {
   from files(sourceSets.main.output.classesDirs)
   from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
@@ -139,6 +176,7 @@ artifacts {
   archives javadocJar
   archives file: binaryMethodsFile, name: 'binary', type: 'jar', builtBy: binaryMethodsJar, classifier: 'binary-methods'
   archives file: binaryFieldsFile, name: 'binary', type: 'jar', builtBy: binaryFieldsJar, classifier: 'binary-fields'
+  archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary-members'
 }
 
 def isReleaseBuild() {
