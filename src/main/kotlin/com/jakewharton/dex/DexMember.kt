@@ -4,6 +4,8 @@ sealed class DexMember : Comparable<DexMember> {
   abstract val declaringType: String
   abstract val name: String
 
+  open fun render(hideSyntheticNumbers: Boolean = false) = toString()
+
   override fun compareTo(other: DexMember): Int {
     val typeResult = declaringType.compareTo(other.declaringType)
     if (typeResult != 0) {
@@ -47,7 +49,7 @@ data class DexMethod(
   val parameterTypes: List<String>,
   val returnType: String
 ) : DexMember() {
-  fun render(hideSyntheticNumbers: Boolean = false): String {
+  override fun render(hideSyntheticNumbers: Boolean): String {
     val method = if (hideSyntheticNumbers && name.matches(SYNTHETIC_SUFFIX)) {
       name.substring(0, name.lastIndexOf('$'))
     } else name
