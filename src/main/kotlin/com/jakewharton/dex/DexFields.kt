@@ -5,11 +5,7 @@ package com.jakewharton.dex
 import java.io.File
 
 fun main(vararg args: String) {
-  val configuration = Configuration.load("dex-fields-list", *args)
-  DexParser.fromBytes(configuration.loadInputs())
-      .withLegacyDx(configuration.legacyDx)
-      .listMethods()
-      .forEach(::println)
+  FieldCommand().main(args.toList())
 }
 
 /** List field references in the files of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */

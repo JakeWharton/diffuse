@@ -5,12 +5,7 @@ package com.jakewharton.dex
 import java.io.File
 
 fun main(vararg args: String) {
-  val configuration = Configuration.load("dex-methods-list", *args)
-  DexParser.fromBytes(configuration.loadInputs())
-      .withLegacyDx(configuration.legacyDx)
-      .listMethods()
-      .map { it.render(configuration.hideSyntheticNumbers) }
-      .forEach(::println)
+  MethodCommand().main(args.toList())
 }
 
 /** List method references in the files of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */

@@ -24,10 +24,11 @@ version = '3.1.1-SNAPSHOT'
 repositories {
   mavenCentral()
   google()
+  jcenter()
 }
 
 dependencies {
-  implementation 'com.xenomachina:kotlin-argparser:2.0.5'
+  implementation 'com.github.ajalt:clikt:1.2.0'
   implementation 'com.jakewharton.android.repackaged:libcore-dex:7.1.0_r7'
   implementation 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
   implementation 'com.android.tools:r8:1.0.32'
