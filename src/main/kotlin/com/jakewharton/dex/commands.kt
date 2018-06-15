@@ -13,12 +13,12 @@ internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
   val legacyDx: Boolean by option("--legacy-dx",
       help = "Use legacy 'dx' dex compiler instead of D8").flag()
 
-  val inputs: List<File> by argument(name = "FILES",
+  private val inputs: List<File> by argument(name = "FILES",
       help = ".apk, .aar, .jar, .dex, and/or .class files to process. STDIN is used when no files are provided.")
       .convert { File(it) }
       .multiple(true)
 
-  fun loadInputs(inputs: List<File>) = inputs
+  fun loadInputs() = inputs
       .map(::FileInputStream)
       .defaultIfEmpty(System.`in`)
       .map { it.use { it.readBytes() } }
@@ -27,7 +27,7 @@ internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
 
 internal class FieldCommand : BaseCommand("dex-field-list") {
   override fun run() {
-    DexParser.fromBytes(loadInputs(inputs))
+    DexParser.fromBytes(loadInputs())
         .withLegacyDx(legacyDx)
         .listFields()
         .forEach(::println)
@@ -35,12 +35,12 @@ internal class FieldCommand : BaseCommand("dex-field-list") {
 }
 
 internal class MethodCommand : BaseCommand("dex-method-list") {
-  val hideSyntheticNumbers by option("--hide-synthetic-numbers",
+  private val hideSyntheticNumbers by option("--hide-synthetic-numbers",
       help = "Remove number suffixes from synthetic accessor methods. This is useful to prevent noise when diffing output.")
       .flag()
 
   override fun run() {
-    DexParser.fromBytes(loadInputs(inputs))
+    DexParser.fromBytes(loadInputs())
         .withLegacyDx(legacyDx)
         .listMethods()
         .map { it.render(hideSyntheticNumbers) }
