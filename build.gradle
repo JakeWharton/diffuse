@@ -60,7 +60,7 @@ task sourcesJar(type: Jar) {
 
 task fatMethodsJar(type: Jar, dependsOn: 'compileJava') {
   from files(sourceSets.main.output.classesDirs)
-  from configurations.compile.asFileTree.files.collect { zipTree(it) }
+  from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
 
   classifier 'fat-methods'
 
@@ -98,7 +98,7 @@ assemble.dependsOn(copyBinaryMethods)
 
 task fatFieldsJar(type: Jar, dependsOn: 'compileJava') {
   from files(sourceSets.main.output.classesDirs)
-  from configurations.compile.asFileTree.files.collect { zipTree(it) }
+  from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
 
   classifier 'fat-fields'
 
