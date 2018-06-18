@@ -18,8 +18,7 @@ apply plugin: 'signing'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-group = 'com.jakewharton.dex'
-version = '3.1.1-SNAPSHOT'
+version = '3.2.0'
 
 repositories {
   mavenCentral()
@@ -208,15 +207,18 @@ uploadArchives {
         authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
       }
 
+      pom.groupId = 'com.jakewharton.dex'
+      pom.artifactId = 'dex-member-list'
+
       pom.project {
-        name 'Dex Method/Field List'
+        name 'Dex Member List'
         packaging 'jar'
-        description 'A simple utility which lists all method or field references in a dex file.'
-        url 'https://github.com/JakeWharton/dex-method-list'
+        description 'A utility which lists all method and/or field references in a dex file.'
+        url 'https://github.com/JakeWharton/dex-member-list'
 
         scm {
-          connection 'git@github.com:JakeWharton/dex-method-list.git'
-          url 'https://github.com/JakeWharton/dex-method-list'
+          connection 'git@github.com:JakeWharton/dex-member-list.git'
+          url 'https://github.com/JakeWharton/dex-member-list'
         }
 
         licenses {

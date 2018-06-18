@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 3.2.0 *(2018-06-18)*
+----------------------------
+
+ * New: `DexParser.list()` method returns a list of all methods and fields as `DexMethod` and
+   `DexField` now both extend `DexMember`.
+ * New: `dex-members-list` binary lists all members. Supply `--methods` or `--fields` to filter
+   to members of one type.
+ * New: Artifact ID has changed to `dex-member-list`.
+
+
 Version 3.1.0 *(2018-04-21)*
 ----------------------------
 
