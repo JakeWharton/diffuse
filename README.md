@@ -70,7 +70,7 @@ Types valueString: String
 Types valueStringArray: String[]
 ```
 
-You can also use the `dex-methods-list` or `dex-fields-list` binaries for the same effect.
+You can also use the `dex-method-list` or `dex-field-list` binaries for the same effect.
 
 By default the D8 compiler is used to dex any class files. Pass the `--legacy-dx` flag to use the
 old DX compiler.
@@ -81,7 +81,7 @@ methods. This is useful to prevent noise when `diff`ing output.
 All binaries support the `--help` flag for more information about invocation.
 
 You can also use this tool as a library. Add a dependency on
-`com.jakewharton.dex:dex-member-list:3.2.0` and use `DexParser`.
+`com.jakewharton.dex:dex-member-list:3.2.1` and use `DexParser`.
 
 
 License

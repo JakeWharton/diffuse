@@ -18,7 +18,7 @@ apply plugin: 'signing'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = '3.2.1-SNAPSHOT'
+version = '3.2.1'
 
 repositories {
   mavenCentral()
@@ -173,9 +173,9 @@ assemble.dependsOn(copyFieldsMethods)
 artifacts {
   archives sourcesJar
   archives javadocJar
-  archives file: binaryMethodsFile, name: 'binary', type: 'jar', builtBy: binaryMethodsJar, classifier: 'binary-method'
-  archives file: binaryFieldsFile, name: 'binary', type: 'jar', builtBy: binaryFieldsJar, classifier: 'binary-field'
-  archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary-member'
+  archives file: binaryMethodsFile, name: 'binary', type: 'jar', builtBy: binaryMethodsJar, classifier: 'binary-methods'
+  archives file: binaryFieldsFile, name: 'binary', type: 'jar', builtBy: binaryFieldsJar, classifier: 'binary-fields'
+  archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary-members'
 }
 
 def isReleaseBuild() {

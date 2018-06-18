@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 3.2.1 *(2018-07-18)*
+----------------------------
+
+ * Fix: Binary names are now correctly singular instead of plural.
+
+
 Version 3.2.0 *(2018-06-18)*
 ----------------------------
 
