@@ -69,7 +69,7 @@ task fatMembersJar(type: Jar, dependsOn: 'compileJava') {
   }
 }
 
-def binaryMembersFile = new File(buildDir, "libs/dex-members-list-binary.jar")
+def binaryMembersFile = new File(buildDir, "libs/dex-member-list-binary.jar")
 task binaryMembersJar() {
   dependsOn(fatMembersJar)
 
@@ -91,7 +91,7 @@ task binaryMembersJar() {
 task copyBinaryMembers(type: Copy, dependsOn: binaryMembersJar) {
   from(binaryMembersFile)
   into buildDir
-  rename(".*", 'dex-members-list')
+  rename(".*", 'dex-member-list')
 }
 assemble.dependsOn(copyBinaryMembers)
 
@@ -106,7 +106,7 @@ task fatMethodsJar(type: Jar, dependsOn: 'compileJava') {
   }
 }
 
-def binaryMethodsFile = new File(buildDir, "libs/dex-methods-list-binary.jar")
+def binaryMethodsFile = new File(buildDir, "libs/dex-method-list-binary.jar")
 task binaryMethodsJar() {
   dependsOn(fatMethodsJar)
 
@@ -128,7 +128,7 @@ task binaryMethodsJar() {
 task copyBinaryMethods(type: Copy, dependsOn: binaryMethodsJar) {
   from(binaryMethodsFile)
   into buildDir
-  rename(".*", 'dex-methods-list')
+  rename(".*", 'dex-method-list')
 }
 assemble.dependsOn(copyBinaryMethods)
 
@@ -144,7 +144,7 @@ task fatFieldsJar(type: Jar, dependsOn: 'compileJava') {
   }
 }
 
-def binaryFieldsFile = new File(buildDir, "libs/dex-fields-list-binary.jar")
+def binaryFieldsFile = new File(buildDir, "libs/dex-field-list-binary.jar")
 task binaryFieldsJar() {
   dependsOn(fatFieldsJar)
 
@@ -166,16 +166,16 @@ task binaryFieldsJar() {
 task copyFieldsMethods(type: Copy, dependsOn: binaryFieldsJar) {
   from(binaryFieldsFile)
   into buildDir
-  rename(".*", 'dex-fields-list')
+  rename(".*", 'dex-field-list')
 }
 assemble.dependsOn(copyFieldsMethods)
 
 artifacts {
   archives sourcesJar
   archives javadocJar
-  archives file: binaryMethodsFile, name: 'binary', type: 'jar', builtBy: binaryMethodsJar, classifier: 'binary-methods'
-  archives file: binaryFieldsFile, name: 'binary', type: 'jar', builtBy: binaryFieldsJar, classifier: 'binary-fields'
-  archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary-members'
+  archives file: binaryMethodsFile, name: 'binary', type: 'jar', builtBy: binaryMethodsJar, classifier: 'binary-method'
+  archives file: binaryFieldsFile, name: 'binary', type: 'jar', builtBy: binaryFieldsJar, classifier: 'binary-field'
+  archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary-member'
 }
 
 def isReleaseBuild() {
