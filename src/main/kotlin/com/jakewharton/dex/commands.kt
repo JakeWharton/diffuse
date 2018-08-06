@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.convert
 import com.github.ajalt.clikt.parameters.arguments.multiple
+import com.github.ajalt.clikt.parameters.options.FlagOption
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
@@ -27,10 +28,12 @@ internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
       .toList()
 }
 
+private fun CliktCommand.hideSyntheticNumbersOption() = option("--hide-synthetic-numbers",
+    help = "Remove number suffixes from synthetic accessor methods. This is useful to prevent noise when diffing output.")
+    .flag()
+
 internal class MembersCommand : BaseCommand("dex-members-list") {
-  private val hideSyntheticNumbers by option("--hide-synthetic-numbers",
-      help = "Remove number suffixes from synthetic accessor methods. This is useful to prevent noise when diffing output.")
-      .flag()
+  private val hideSyntheticNumbers by hideSyntheticNumbersOption()
 
   private val mode by option(help = "Limit to only methods or fields")
       .switch("--methods" to Mode.Methods, "--fields" to Mode.Fields)
@@ -66,9 +69,7 @@ internal class FieldCommand : BaseCommand("dex-field-list") {
 }
 
 internal class MethodCommand : BaseCommand("dex-method-list") {
-  private val hideSyntheticNumbers by option("--hide-synthetic-numbers",
-      help = "Remove number suffixes from synthetic accessor methods. This is useful to prevent noise when diffing output.")
-      .flag()
+  private val hideSyntheticNumbers by hideSyntheticNumbersOption()
 
   override fun run() {
     DexParser.fromBytes(loadInputs())
