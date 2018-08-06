@@ -4,7 +4,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.50'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.60'
     classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.17'
   }
 }
@@ -23,18 +23,16 @@ version = '3.2.2-SNAPSHOT'
 repositories {
   mavenCentral()
   google()
-  jcenter()
 }
 
 dependencies {
-  implementation 'com.github.ajalt:clikt:1.2.0'
-  implementation 'com.jakewharton.android.repackaged:libcore-dex:7.1.0_r7'
-  implementation 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
-  implementation 'com.android.tools:r8:1.0.32'
-  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.50'
+  implementation 'com.github.ajalt:clikt:1.4.0'
+  implementation 'com.jakewharton.android.repackaged:dalvik-dx:8.1.0_r41'
+  implementation 'com.android.tools:r8:1.0.35'
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.60'
   testImplementation 'junit:junit:4.12'
-  testImplementation 'com.google.guava:guava:25.1-jre'
-  testImplementation 'com.google.truth:truth:0.41'
+  testImplementation 'com.google.guava:guava:26.0-jre'
+  testImplementation 'com.google.truth:truth:0.42'
 }
 
 compileKotlin {

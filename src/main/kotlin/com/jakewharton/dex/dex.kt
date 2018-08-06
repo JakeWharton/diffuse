@@ -6,6 +6,7 @@ import com.android.dex.FieldId
 import com.android.dex.MethodId
 import com.android.dx.cf.direct.DirectClassFile
 import com.android.dx.cf.direct.StdAttributeFactory
+import com.android.dx.command.dexer.DxContext
 import com.android.dx.dex.DexOptions
 import com.android.dx.dex.cf.CfOptions
 import com.android.dx.dex.cf.CfTranslator
@@ -83,13 +84,14 @@ private fun compileWithD8(bytes: List<ByteArray>): ByteArray {
 
 private fun compileWithDx(bytes: List<ByteArray>): ByteArray {
   val dexOptions = DexOptions()
-  dexOptions.targetApiLevel = DexFormat.API_NO_EXTENDED_OPCODES
+  dexOptions.minSdkVersion = DexFormat.API_NO_EXTENDED_OPCODES
   val dexFile = DexFile(dexOptions)
+  val dxContext = DxContext()
 
   bytes.forEach {
     val cf = DirectClassFile(it, "None.class", false)
     cf.setAttributeFactory(StdAttributeFactory.THE_ONE)
-    CfTranslator.translate(cf, it, CfOptions(), dexOptions, dexFile)
+    CfTranslator.translate(dxContext, cf, it, CfOptions(), dexOptions, dexFile)
   }
 
   return dexFile.toDex(null, false)
