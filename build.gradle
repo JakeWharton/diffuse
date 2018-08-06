@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
   implementation 'com.github.ajalt:clikt:1.4.0'
-  implementation 'com.jakewharton.android.repackaged:dalvik-dx:8.1.0_r41'
+  implementation 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3'
   implementation 'com.android.tools:r8:1.0.35'
   implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.60'
   testImplementation 'junit:junit:4.12'
