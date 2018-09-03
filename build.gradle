@@ -5,7 +5,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.60'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.61'
     classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.17'
     classpath 'gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:5.0.0'
   }
@@ -33,7 +33,7 @@ dependencies {
   implementation 'com.github.ajalt:clikt:1.4.0'
   implementation 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3'
   implementation 'com.android.tools:r8:1.0.35'
-  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.60'
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.61'
   testImplementation 'junit:junit:4.12'
   testImplementation 'com.google.guava:guava:26.0-jre'
   testImplementation 'com.google.truth:truth:0.42'
