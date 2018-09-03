@@ -5,8 +5,8 @@ import java.nio.file.Path
 
 /** Parser for method and field references inside of a dex file. */
 class DexParser private constructor(
-    private val bytes: Iterable<ByteArray>,
-    private val legacyDx: Boolean = false
+  private val bytes: Iterable<ByteArray>,
+  private val legacyDx: Boolean = false
 ) {
   private val dexes by lazy { dexes(bytes, legacyDx) }
 

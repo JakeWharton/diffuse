@@ -63,10 +63,10 @@ private fun compileWithD8(bytes: List<ByteArray>): ByteArray {
   builder.programConsumer = object : DexIndexedConsumer {
     override fun finished(diagnostics: DiagnosticsHandler) = Unit
     override fun accept(
-        index: Int,
-        bytes: ByteArray,
-        descriptors: Set<String>,
-        diagnostics: DiagnosticsHandler?
+      index: Int,
+      bytes: ByteArray,
+      descriptors: Set<String>,
+      diagnostics: DiagnosticsHandler?
     ) {
       assert(out == null) { "More than one dex file produced" }
       out = bytes
