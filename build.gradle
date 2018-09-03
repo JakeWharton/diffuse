@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.github.ajalt:clikt:1.4.0'
+  implementation 'com.github.ajalt:clikt:1.5.0'
   implementation 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3'
   implementation 'com.android.tools:r8:1.0.37'
   implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.61'
