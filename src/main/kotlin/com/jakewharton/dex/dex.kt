@@ -17,11 +17,7 @@ import com.android.tools.r8.DexIndexedConsumer
 import com.android.tools.r8.DiagnosticsHandler
 import com.android.tools.r8.origin.Origin
 import java.io.ByteArrayInputStream
-import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
-
-private val CLASS_MAGIC = byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(), 0xBE.toByte())
-private val DEX_MAGIC = byteArrayOf(0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x35, 0x00)
 
 internal fun dexes(inputs: Iterable<ByteArray>, legacyDx: Boolean = false): List<Dex> {
   val classes = mutableListOf<ByteArray>()
@@ -133,32 +129,5 @@ internal fun humanName(type: String): String {
     "V" -> "void"
     "Z" -> "boolean"
     else -> throw IllegalArgumentException("Unknown type $type")
-  }
-}
-
-private fun ByteArray.startsWith(value: ByteArray): Boolean {
-  if (value.size > size) return false
-  value.forEachIndexed { i, byte ->
-    if (get(i) != byte) {
-      return false
-    }
-  }
-  return true
-}
-
-private fun ZipInputStream.entries(): Sequence<ZipEntry> {
-  return object : Sequence<ZipEntry> {
-    override fun iterator(): Iterator<ZipEntry> {
-      return object : Iterator<ZipEntry> {
-        var next: ZipEntry? = null
-
-        override fun hasNext(): Boolean {
-          next = nextEntry
-          return next != null
-        }
-
-        override fun next() = next!!
-      }
-    }
   }
 }

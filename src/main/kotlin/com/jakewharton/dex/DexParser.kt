@@ -1,7 +1,6 @@
 package com.jakewharton.dex
 
 import java.io.File
-import java.nio.file.Files
 import java.nio.file.Path
 
 /** Parser for method and field references inside of a dex file. */
@@ -39,8 +38,5 @@ class DexParser private constructor(
     @JvmStatic fun fromBytes(bytes: ByteArray) = fromBytes(listOf(bytes))
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
     @JvmStatic fun fromBytes(bytes: Iterable<ByteArray>) = DexParser(bytes)
-
-    // TODO https://youtrack.jetbrains.com/issue/KT-18242
-    private fun Path.readBytes() = Files.newInputStream(this).use { it.readBytes() }
   }
 }

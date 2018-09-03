@@ -77,27 +77,5 @@ data class DexMethod(
     val COMPARATOR = compareBy(DexMethod::name)
         .thenBy(comparingValues(), DexMethod::parameterTypes)
         .thenBy(DexMethod::returnType)
-
-    // TODO replace with https://youtrack.jetbrains.com/issue/KT-20690
-    fun <T : Comparable<T>> comparingValues(): Comparator<Iterable<T>> {
-      return object : Comparator<Iterable<T>> {
-        override fun compare(o1: Iterable<T>, o2: Iterable<T>): Int {
-          val i1 = o1.iterator()
-          val i2 = o2.iterator()
-          while (true) {
-            if (!i1.hasNext()) {
-              return if (!i2.hasNext()) 0 else -1
-            }
-            if (!i2.hasNext()) {
-              return 1
-            }
-            val result = i1.next().compareTo(i2.next())
-            if (result != 0) {
-              return result
-            }
-          }
-        }
-      }
-    }
   }
 }
