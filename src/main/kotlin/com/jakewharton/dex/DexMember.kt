@@ -52,14 +52,21 @@ data class DexMethod(
   override fun render(hideSyntheticNumbers: Boolean): String {
     val method = if (hideSyntheticNumbers && name.matches(SYNTHETIC_SUFFIX)) {
       name.substring(0, name.lastIndexOf('$'))
+    } else if (hideSyntheticNumbers && name.matches(LAMBDA_ACCESSOR)) {
+      name.replace(NUMBER_SEGMENT, "")
     } else name
+
+    val declaringTypeName = if (hideSyntheticNumbers && declaringType.matches(SYNTHETIC_SUFFIX)) {
+      declaringType.substring(0, declaringType.lastIndexOf('$'))
+    } else declaringType
+
     val parameters = parameterTypes.joinToString(", ") { it.substringAfterLast('.') }
 
     if (returnType == "void") {
-      return "$declaringType $method($parameters)"
+      return "$declaringTypeName $method($parameters)"
     }
     val returnName = returnType.substringAfterLast('.')
-    return "$declaringType $method($parameters) → $returnName"
+    return "$declaringTypeName $method($parameters) → $returnName"
   }
 
   override fun toString() = render()
@@ -74,6 +81,8 @@ data class DexMethod(
 
   private companion object {
     val SYNTHETIC_SUFFIX = ".*?\\$\\d+".toRegex()
+    val LAMBDA_ACCESSOR = "lambda(\\$[a-zA-Z0-9_]+)*\\$\\d+(\\$[a-zA-Z0-9_]+)*".toRegex()
+    val NUMBER_SEGMENT = "\\$\\d+".toRegex()
     val COMPARATOR = compareBy(DexMethod::name)
         .thenBy(comparingValues(), DexMethod::parameterTypes)
         .thenBy(DexMethod::returnType)

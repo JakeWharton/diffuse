@@ -29,6 +29,38 @@ class DexMethodTest {
         .isEqualTo("com.example.Foo access() → Bar")
   }
 
+  @Test fun renderWithLambdas() {
+    val lambdaAccessor =
+      DexMethod(
+          "com.example.Foo", "lambda_12\$methods$15\$OuterClass_12", emptyList(), "com.example.Bar"
+      )
+    assertThat(lambdaAccessor.render())
+        .isEqualTo("com.example.Foo lambda_12\$methods$15\$OuterClass_12() → Bar")
+
+    val lambdaClass =
+      DexMethod("com.example.Foo$\$Lambda$15", "<init>", emptyList(), "void")
+    assertThat(lambdaClass.render())
+        .isEqualTo("com.example.Foo$\$Lambda$15 <init>()")
+  }
+
+  @Test fun renderHidingLambdas() {
+    val method = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
+    assertThat(method.render(hideSyntheticNumbers = true))
+        .isEqualTo("com.example.Foo bar() → Bar")
+
+    val lambdaAccessor =
+      DexMethod(
+          "com.example.Foo", "lambda\$methods_12$15\$OuterClass_12", emptyList(), "com.example.Bar"
+      )
+    assertThat(lambdaAccessor.render(hideSyntheticNumbers = true))
+        .isEqualTo("com.example.Foo lambda\$methods_12\$OuterClass_12() → Bar")
+
+    val lambdaClass =
+      DexMethod("com.example.Foo$\$Lambda$15", "<init>", emptyList(), "void")
+    assertThat(lambdaClass.render(hideSyntheticNumbers = true))
+        .isEqualTo("com.example.Foo$\$Lambda <init>()")
+  }
+
   @Test fun compareToSame() {
     val one = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
     val two = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
