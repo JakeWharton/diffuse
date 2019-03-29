@@ -17,10 +17,10 @@ class DexParser private constructor(
 
   fun list() = dexes.flatMapTo(TreeSet()) { dex ->
     dex.methodIds().map(dex::getMethod) + dex.fieldIds().map(dex::getField)
-  }
+  }.toList()
 
-  fun listMethods() = dexes.flatMapTo(TreeSet()) { dex -> dex.methodIds().map(dex::getMethod) }
-  fun listFields() = dexes.flatMapTo(TreeSet()) { dex -> dex.fieldIds().map(dex::getField) }
+  fun listMethods() = dexes.flatMapTo(TreeSet()) { dex -> dex.methodIds().map(dex::getMethod) }.toList()
+  fun listFields() = dexes.flatMapTo(TreeSet()) { dex -> dex.fieldIds().map(dex::getField) }.toList()
 
   companion object {
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
