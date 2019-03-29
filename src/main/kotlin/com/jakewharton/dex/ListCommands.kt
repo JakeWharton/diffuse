@@ -10,6 +10,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.switch
 import java.io.File
 import java.io.FileInputStream
+import java.io.InputStream
 
 internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
   val legacyDx: Boolean by option("--legacy-dx",
@@ -22,8 +23,8 @@ internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
 
   fun loadInputs() = inputs
       .map(::FileInputStream)
-      .defaultIfEmpty(System.`in`)
-      .map { it.use { it.readBytes() } }
+      .ifEmpty { listOf(System.`in`) }
+      .map { it.use(InputStream::readBytes) }
       .toList()
 }
 

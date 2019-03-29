@@ -5,11 +5,6 @@ import java.nio.file.Path
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-internal fun <T> List<T>.defaultIfEmpty(value: T): List<T> {
-  // TODO replace with ifEmpty in stdlib once on 1.3
-  return if (isNotEmpty()) this else listOf(value)
-}
-
 internal fun ByteArray.startsWith(value: ByteArray): Boolean {
   if (value.size > size) return false
   value.forEachIndexed { i, byte ->
