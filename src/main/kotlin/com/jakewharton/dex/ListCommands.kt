@@ -58,5 +58,5 @@ internal class FieldCommand : BaseCommand("dex-field-list") {
 }
 
 internal class MethodCommand : BaseCommand("dex-method-list") {
-  override fun run() = print(Mode.Fields)
+  override fun run() = print(Mode.Methods)
 }
