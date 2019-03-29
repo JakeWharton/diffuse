@@ -2,6 +2,7 @@ package com.jakewharton.dex
 
 import java.io.File
 import java.nio.file.Path
+import java.util.TreeSet
 
 /** Parser for method and field references inside of a dex file. */
 class DexParser private constructor(
@@ -14,12 +15,12 @@ class DexParser private constructor(
   @JvmOverloads
   fun withLegacyDx(legacyDx: Boolean = true) = DexParser(bytes, legacyDx)
 
-  fun list() = dexes.flatMap { dex ->
+  fun list() = dexes.flatMapTo(TreeSet()) { dex ->
     dex.methodIds().map(dex::getMethod) + dex.fieldIds().map(dex::getField)
-  }.sorted()
+  }
 
-  fun listMethods() = dexes.flatMap { dex -> dex.methodIds().map(dex::getMethod) }.sorted()
-  fun listFields() = dexes.flatMap { dex -> dex.fieldIds().map(dex::getField) }.sorted()
+  fun listMethods() = dexes.flatMapTo(TreeSet()) { dex -> dex.methodIds().map(dex::getMethod) }
+  fun listFields() = dexes.flatMapTo(TreeSet()) { dex -> dex.fieldIds().map(dex::getField) }
 
   companion object {
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
