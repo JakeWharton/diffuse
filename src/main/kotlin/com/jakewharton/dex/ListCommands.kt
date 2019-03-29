@@ -56,7 +56,7 @@ internal class MembersCommand : BaseCommand("dex-members-list") {
       println("WARN: --hide-synthetic-numbers has no effect when --fields is used.")
     }
     list.map { it.render(hideSyntheticNumbers) }
-        .sorted() // Re-sort because rendering my subtly change ordering.
+        .sorted() // Re-sort because rendering may subtly change ordering.
         .forEach(::println)
   }
 }
@@ -67,7 +67,7 @@ internal class FieldCommand : BaseCommand("dex-field-list") {
         .withLegacyDx(legacyDx)
         .listFields()
         .map { it.render() }
-        .sorted() // Re-sort because rendering my subtly change ordering.
+        .sorted() // Re-sort because rendering may subtly change ordering.
         .forEach(::println)
   }
 }
@@ -80,7 +80,7 @@ internal class MethodCommand : BaseCommand("dex-method-list") {
         .withLegacyDx(legacyDx)
         .listMethods()
         .map { it.render(hideSyntheticNumbers) }
-        .sorted() // Re-sort because rendering my subtly change ordering.
+        .sorted() // Re-sort because rendering may subtly change ordering.
         .forEach(::println)
   }
 }
