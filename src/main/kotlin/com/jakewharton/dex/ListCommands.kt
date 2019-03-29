@@ -13,47 +13,31 @@ import java.io.FileInputStream
 import java.io.InputStream
 
 internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
-  val legacyDx: Boolean by option("--legacy-dx",
+  private val legacyDx: Boolean by option("--legacy-dx",
       help = "Use legacy 'dx' dex compiler instead of D8").flag()
+
+  private val hideSyntheticNumbers by option("--hide-synthetic-numbers",
+      help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.")
+      .flag()
 
   private val inputs: List<File> by argument(name = "FILES",
       help = ".apk, .aar, .jar, .dex, and/or .class files to process. STDIN is used when no files are provided.")
       .convert { File(it) }
       .multiple(true)
 
-  fun loadInputs() = inputs
-      .map(::FileInputStream)
-      .ifEmpty { listOf(System.`in`) }
-      .map { it.use(InputStream::readBytes) }
-      .toList()
-}
-
-private fun CliktCommand.hideSyntheticNumbersOption() = option("--hide-synthetic-numbers",
-    help = "Remove number suffixes from synthetic accessor methods. This is useful to prevent noise when diffing output.")
-    .flag()
-
-internal class MembersCommand : BaseCommand("dex-members-list") {
-  private val hideSyntheticNumbers by hideSyntheticNumbersOption()
-
-  private val mode by option(help = "Limit to only methods or fields")
-      .switch("--methods" to Mode.Methods, "--fields" to Mode.Fields)
-      .default(Mode.Members)
-
-  sealed class Mode {
-    object Methods : Mode()
-    object Fields : Mode()
-    object Members : Mode()
+  enum class Mode {
+    Methods, Fields, Members;
   }
 
-  override fun run() {
-    val parser = DexParser.fromBytes(loadInputs()).withLegacyDx(legacyDx)
+  fun print(mode: Mode) {
+    val inputs = inputs.map(::FileInputStream)
+        .ifEmpty { listOf(System.`in`) }
+        .map { it.use(InputStream::readBytes) }
+    val parser = DexParser.fromBytes(inputs).withLegacyDx(legacyDx)
     val list = when (mode) {
       Mode.Members -> parser.list()
       Mode.Methods -> parser.listMethods()
       Mode.Fields -> parser.listFields()
-    }
-    if (hideSyntheticNumbers && mode == Mode.Fields) {
-      println("WARN: --hide-synthetic-numbers has no effect when --fields is used.")
     }
     list.map { it.render(hideSyntheticNumbers) }
         .sorted() // Re-sort because rendering may subtly change ordering.
@@ -61,26 +45,18 @@ internal class MembersCommand : BaseCommand("dex-members-list") {
   }
 }
 
+internal class MembersCommand : BaseCommand("dex-members-list") {
+  private val mode by option(help = "Limit to only methods or fields")
+      .switch("--methods" to Mode.Methods, "--fields" to Mode.Fields)
+      .default(Mode.Members)
+
+  override fun run() = print(mode)
+}
+
 internal class FieldCommand : BaseCommand("dex-field-list") {
-  override fun run() {
-    DexParser.fromBytes(loadInputs())
-        .withLegacyDx(legacyDx)
-        .listFields()
-        .map { it.render() }
-        .sorted() // Re-sort because rendering may subtly change ordering.
-        .forEach(::println)
-  }
+  override fun run() = print(Mode.Fields)
 }
 
 internal class MethodCommand : BaseCommand("dex-method-list") {
-  private val hideSyntheticNumbers by hideSyntheticNumbersOption()
-
-  override fun run() {
-    DexParser.fromBytes(loadInputs())
-        .withLegacyDx(legacyDx)
-        .listMethods()
-        .map { it.render(hideSyntheticNumbers) }
-        .sorted() // Re-sort because rendering may subtly change ordering.
-        .forEach(::println)
-  }
+  override fun run() = print(Mode.Fields)
 }
