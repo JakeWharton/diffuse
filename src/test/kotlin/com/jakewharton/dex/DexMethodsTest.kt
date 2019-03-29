@@ -28,20 +28,21 @@ class DexMethodsTest {
         .map { it.render() }
     assertThat(methods).containsExactly(
         "Types <init>()",
-        "Types test(String)",
-        "Types test(String[])",
+        "Types returnsBoolean() → boolean",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
         "Types test(boolean)",
         "Types test(byte)",
         "Types test(char)",
         "Types test(double)",
         "Types test(float)",
         "Types test(int)",
+        "Types test(String)",
+        "Types test(String[])",
         "Types test(long)",
         "Types test(short)",
-        "Types returnsRunnable() → Runnable",
-        "Types returnsString() → String",
-        "Types returnsBoolean() → boolean",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun paramsJoined() {
@@ -53,7 +54,8 @@ class DexMethodsTest {
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun visibilities() {
@@ -68,7 +70,8 @@ class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun multipleDexFiles() {
@@ -86,8 +89,8 @@ class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun apk() {
@@ -98,20 +101,21 @@ class DexMethodsTest {
         .map { it.render() }
     assertThat(methods).containsExactly(
         "Types <init>()",
-        "Types test(String)",
-        "Types test(String[])",
+        "Types returnsBoolean() → boolean",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
         "Types test(boolean)",
         "Types test(byte)",
         "Types test(char)",
         "Types test(double)",
         "Types test(float)",
         "Types test(int)",
+        "Types test(String)",
+        "Types test(String[])",
         "Types test(long)",
         "Types test(short)",
-        "Types returnsRunnable() → Runnable",
-        "Types returnsString() → String",
-        "Types returnsBoolean() → boolean",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun apkMultipleDex() {
@@ -124,27 +128,26 @@ class DexMethodsTest {
         "Params <init>()",
         "Params test(String, String, String, String)",
         "Types <init>()",
-        "Types test(String)",
-        "Types test(String[])",
+        "Types returnsBoolean() → boolean",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
         "Types test(boolean)",
         "Types test(byte)",
         "Types test(char)",
         "Types test(double)",
         "Types test(float)",
         "Types test(int)",
+        "Types test(String)",
+        "Types test(String[])",
         "Types test(long)",
         "Types test(short)",
-        "Types returnsRunnable() → Runnable",
-        "Types returnsString() → String",
-        "Types returnsBoolean() → boolean",
         "Visibilities <init>()",
         "Visibilities test1()",
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()",
-        "java.lang.Object <init>()",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun classFile() {
@@ -156,7 +159,8 @@ class DexMethodsTest {
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun multipleClassFiles() {
@@ -174,7 +178,8 @@ class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun jarFile() {
@@ -186,7 +191,8 @@ class DexMethodsTest {
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun multipleJarFiles() {
@@ -204,7 +210,8 @@ class DexMethodsTest {
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun jarMultipleClasses() {
@@ -217,25 +224,26 @@ class DexMethodsTest {
         "Params <init>()",
         "Params test(String, String, String, String)",
         "Types <init>()",
-        "Types test(String)",
-        "Types test(String[])",
+        "Types returnsBoolean() → boolean",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
         "Types test(boolean)",
         "Types test(byte)",
         "Types test(char)",
         "Types test(double)",
         "Types test(float)",
         "Types test(int)",
+        "Types test(String)",
+        "Types test(String[])",
         "Types test(long)",
         "Types test(short)",
-        "Types returnsRunnable() → Runnable",
-        "Types returnsString() → String",
-        "Types returnsBoolean() → boolean",
         "Visibilities <init>()",
         "Visibilities test1()",
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun dexBytes() {
@@ -247,7 +255,8 @@ class DexMethodsTest {
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun apkBytes() {
@@ -258,20 +267,21 @@ class DexMethodsTest {
         .map { it.render() }
     assertThat(methods).containsExactly(
         "Types <init>()",
-        "Types test(String)",
-        "Types test(String[])",
+        "Types returnsBoolean() → boolean",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
         "Types test(boolean)",
         "Types test(byte)",
         "Types test(char)",
         "Types test(double)",
         "Types test(float)",
         "Types test(int)",
+        "Types test(String)",
+        "Types test(String[])",
         "Types test(long)",
         "Types test(short)",
-        "Types returnsRunnable() → Runnable",
-        "Types returnsString() → String",
-        "Types returnsBoolean() → boolean",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun classBytes() {
@@ -283,7 +293,8 @@ class DexMethodsTest {
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun jarBytes() {
@@ -295,7 +306,8 @@ class DexMethodsTest {
     assertThat(methods).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun aarExtractsJars() {
@@ -308,25 +320,26 @@ class DexMethodsTest {
         "Params <init>()",
         "Params test(String, String, String, String)",
         "Types <init>()",
-        "Types test(String)",
-        "Types test(String[])",
+        "Types returnsBoolean() → boolean",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
         "Types test(boolean)",
         "Types test(byte)",
         "Types test(char)",
         "Types test(double)",
         "Types test(float)",
         "Types test(int)",
+        "Types test(String)",
+        "Types test(String[])",
         "Types test(long)",
         "Types test(short)",
-        "Types returnsRunnable() → Runnable",
-        "Types returnsString() → String",
-        "Types returnsBoolean() → boolean",
         "Visibilities <init>()",
         "Visibilities test1()",
         "Visibilities test2()",
         "Visibilities test3()",
         "Visibilities test4()",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 
   @Test fun synthetics() {
@@ -346,7 +359,7 @@ class DexMethodsTest {
         "Synthetics\$Inner <init>(Synthetics)",
         "java.io.PrintStream println(int)",
         "java.lang.Object <init>()"
-    )
+    ).inOrder()
   }
 
   @Test fun syntheticsWithoutNumbers() {
@@ -359,14 +372,14 @@ class DexMethodsTest {
     assertThat(methods).containsExactly(
         "Synthetics <init>()",
         "Synthetics access(Synthetics) → int",
-        "Synthetics access(Synthetics) → int",
-        "Synthetics access(Synthetics) → int",
-        "Synthetics access(Synthetics) → int",
-        "Synthetics access(Synthetics) → int",
         "Synthetics access(Synthetics, int) → int",
+        "Synthetics access(Synthetics) → int",
+        "Synthetics access(Synthetics) → int",
+        "Synthetics access(Synthetics) → int",
+        "Synthetics access(Synthetics) → int",
         "Synthetics\$Inner <init>(Synthetics)",
         "java.io.PrintStream println(int)",
         "java.lang.Object <init>()"
-    )
+    ).inOrder()
   }
 }

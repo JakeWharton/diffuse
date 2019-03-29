@@ -28,19 +28,19 @@ class DexParserTest {
         .map { it.toString() }
     assertThat(methods).containsExactly(
         "Types <init>()",
-        "Types test(String)",
-        "Types test(String[])",
+        "Types returnsBoolean() → boolean",
+        "Types returnsRunnable() → Runnable",
+        "Types returnsString() → String",
         "Types test(boolean)",
         "Types test(byte)",
         "Types test(char)",
         "Types test(double)",
         "Types test(float)",
         "Types test(int)",
+        "Types test(String)",
+        "Types test(String[])",
         "Types test(long)",
         "Types test(short)",
-        "Types returnsRunnable() → Runnable",
-        "Types returnsString() → String",
-        "Types returnsBoolean() → boolean",
         "Types valueBoolean: boolean",
         "Types valueByte: byte",
         "Types valueChar: char",
@@ -51,6 +51,7 @@ class DexParserTest {
         "Types valueShort: short",
         "Types valueString: String",
         "Types valueStringArray: String[]",
-        "java.lang.Object <init>()")
+        "java.lang.Object <init>()"
+    ).inOrder()
   }
 }
