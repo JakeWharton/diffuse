@@ -21,7 +21,7 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = '3.3.0'
+version = '3.3.1-SNAPSHOT'
 
 repositories {
   mavenCentral()
