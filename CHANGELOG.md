@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 3.3.0 *(2019-03-28)*
+----------------------------
+
+ * New: Remove synthetic numbers from Kotlin lambda types and lambda functions.
+ * Fix: De-duplicate method and field instances when multiple inputs are supplied. This means that
+   the output for APKs with multiple DEX files, for example, will output the total unique list of
+   referenced methods. This number will be smaller than the sum of the referenced methods from the
+   DEX files, but it more accurately reflects the count. If you want the old behavior, pass the
+   DEX files separately and concatenate the lists yourself.
+
+
 Version 3.2.1 *(2018-07-18)*
 ----------------------------
 
