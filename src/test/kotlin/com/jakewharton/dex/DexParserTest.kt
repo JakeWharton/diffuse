@@ -22,10 +22,12 @@ class DexParserTest {
 
   @Test fun types() {
     val types = File(Resources.getResource("types.dex").file)
-    val methods = DexParser.fromFile(types)
+    val dexParser = DexParser.fromFile(types)
+    val methods = dexParser
         .withLegacyDx(legacyDx)
         .list()
         .map { it.toString() }
+    assertThat(dexParser.dexCount()).isEqualTo(1)
     assertThat(methods).containsExactly(
         "Types <init>()",
         "Types returnsBoolean() → boolean",
