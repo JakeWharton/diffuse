@@ -22,6 +22,9 @@ class DexParser private constructor(
   fun listMethods() = dexes.flatMapTo(TreeSet()) { dex -> dex.methodIds().map(dex::getMethod) }.toList()
   fun listFields() = dexes.flatMapTo(TreeSet()) { dex -> dex.fieldIds().map(dex::getField) }.toList()
 
+  /** @return the number of dex files parsed. */
+  fun dexCount(): Int = dexes.size
+
   companion object {
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
     @JvmStatic fun fromPath(path: Path) = fromBytes(listOf(path.readBytes()))
