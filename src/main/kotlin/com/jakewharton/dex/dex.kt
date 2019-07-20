@@ -94,40 +94,18 @@ private fun compileWithDx(bytes: List<ByteArray>): ByteArray {
 }
 
 internal fun Dex.getMethod(methodId: MethodId): DexMethod {
-  val declaringType = humanName(typeNames()[methodId.declaringClassIndex])
+  val declaringType = Descriptor(typeNames()[methodId.declaringClassIndex])
   val name = strings()[methodId.nameIndex]
   val methodProtoIds = protoIds()[methodId.protoIndex]
   val parameterTypes = readTypeList(methodProtoIds.parametersOffset).types
-      .map { typeNames()[it.toInt()] }
-      .map { humanName(it) }
-  val returnType = humanName(typeNames()[methodProtoIds.returnTypeIndex])
+      .map { Descriptor(typeNames()[it.toInt()]) }
+  val returnType = Descriptor(typeNames()[methodProtoIds.returnTypeIndex])
   return DexMethod(declaringType, name, parameterTypes, returnType)
 }
 
 internal fun Dex.getField(fieldId: FieldId): DexField {
-  val declaringType = humanName(typeNames()[fieldId.declaringClassIndex])
+  val declaringType = Descriptor(typeNames()[fieldId.declaringClassIndex])
   val name = strings()[fieldId.nameIndex]
-  val type = humanName(typeNames()[fieldId.typeIndex])
+  val type = Descriptor(typeNames()[fieldId.typeIndex])
   return DexField(declaringType, name, type)
-}
-
-internal fun humanName(type: String): String {
-  if (type.startsWith("[")) {
-    return humanName(type.substring(1)) + "[]"
-  }
-  if (type.startsWith("L")) {
-    return type.substring(1, type.length - 1).replace('/', '.')
-  }
-  return when (type) {
-    "B" -> "byte"
-    "C" -> "char"
-    "D" -> "double"
-    "F" -> "float"
-    "I" -> "int"
-    "J" -> "long"
-    "S" -> "short"
-    "V" -> "void"
-    "Z" -> "boolean"
-    else -> throw IllegalArgumentException("Unknown type $type")
-  }
 }

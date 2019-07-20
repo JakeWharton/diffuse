@@ -4,16 +4,19 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class DexMemberTest {
+  private val fooDescriptor = Descriptor("Lcom/example/Foo;")
+  private val barDescriptor = Descriptor("Lcom/example/Bar;")
+
   @Test fun compareInSameClass() {
-    val field = DexField("com.example.Foo", "bar", "com.example.Bar")
-    val method = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
+    val field = DexField(fooDescriptor, "bar", barDescriptor)
+    val method = DexMethod(fooDescriptor, "bar", emptyList(), barDescriptor)
     assertThat(method < field).isTrue()
     assertThat(field < method).isFalse()
   }
 
   @Test fun compareInDifferentClass() {
-    val field = DexField("com.example.Boo", "bar", "com.example.Bar")
-    val method = DexMethod("com.example.Foo", "bar", emptyList(), "com.example.Bar")
+    val field = DexField(barDescriptor, "bar", barDescriptor)
+    val method = DexMethod(fooDescriptor, "bar", emptyList(), barDescriptor)
     assertThat(method < field).isFalse()
     assertThat(field < method).isTrue()
   }

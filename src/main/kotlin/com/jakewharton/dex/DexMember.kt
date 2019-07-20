@@ -1,7 +1,49 @@
 package com.jakewharton.dex
 
+inline class Descriptor(private val value: String) : Comparable<Descriptor> {
+  override fun compareTo(other: Descriptor): Int {
+    return sourceName.compareTo(other.sourceName)
+  }
+
+  val sourceName get() = value.toHumanName()
+  val simpleName get() = sourceName.substringAfterLast('.')
+
+  fun withoutLambdaSuffix(): Descriptor {
+    return when (value.matches(LAMBDA_CLASS_SUFFIX)) {
+      true -> Descriptor(value.substringBeforeLast('$') + ";")
+      false -> this
+    }
+  }
+
+  companion object {
+    val VOID = Descriptor("V")
+    private val LAMBDA_CLASS_SUFFIX = ".*?\\$\\\$Lambda\\$\\d+;".toRegex()
+
+    private fun String.toHumanName(): String {
+      if (startsWith("[")) {
+        return substring(1).toHumanName() + "[]"
+      }
+      if (startsWith("L")) {
+        return substring(1, length - 1).replace('/', '.')
+      }
+      return when (this) {
+        "B" -> "byte"
+        "C" -> "char"
+        "D" -> "double"
+        "F" -> "float"
+        "I" -> "int"
+        "J" -> "long"
+        "S" -> "short"
+        "V" -> "void"
+        "Z" -> "boolean"
+        else -> throw IllegalArgumentException("Unknown type $this")
+      }
+    }
+  }
+}
+
 sealed class DexMember : Comparable<DexMember> {
-  abstract val declaringType: String
+  abstract val declaringType: Descriptor
   abstract val name: String
   abstract fun render(hideSyntheticNumbers: Boolean = false): String
 
@@ -21,17 +63,16 @@ sealed class DexMember : Comparable<DexMember> {
 
 /** Represents a single field reference. */
 data class DexField(
-  override val declaringType: String,
+  override val declaringType: Descriptor,
   override val name: String,
-  val type: String
+  val type: Descriptor
 ) : DexMember() {
   override fun render(hideSyntheticNumbers: Boolean): String {
     var displayType = declaringType
-    if (hideSyntheticNumbers && displayType.matches(LAMBDA_CLASS_SUFFIX)) {
-      displayType = displayType.substringBeforeLast('$')
+    if (hideSyntheticNumbers) {
+      displayType = displayType.withoutLambdaSuffix()
     }
-    val returnName = type.substringAfterLast('.')
-    return "$displayType $name: $returnName"
+    return "${displayType.sourceName} $name: ${type.simpleName}"
   }
 
   override fun compareTo(other: DexMember): Int {
@@ -49,35 +90,40 @@ data class DexField(
 
 /** Represents a single method reference. */
 data class DexMethod(
-  override val declaringType: String,
+  override val declaringType: Descriptor,
   override val name: String,
-  val parameterTypes: List<String>,
-  val returnType: String
+  val parameterTypes: List<Descriptor>,
+  val returnType: Descriptor
 ) : DexMember() {
   override fun render(hideSyntheticNumbers: Boolean): String {
     var displayType = declaringType
-    if (hideSyntheticNumbers && displayType.matches(LAMBDA_CLASS_SUFFIX)) {
-      displayType = displayType.substringBeforeLast('$')
+    if (hideSyntheticNumbers) {
+      displayType = displayType.withoutLambdaSuffix()
     }
 
     var displayName = name
     if (hideSyntheticNumbers) {
       if (name.startsWith("lambda$")) {
         LAMBDA_METHOD_NUMBER.find(name)?.let { match ->
-          displayName = name.removeRange(match.range.start, match.range.endInclusive)
+          displayName = name.removeRange(match.range.first, match.range.last)
         }
       } else if (name.matches(SYNTHETIC_METHOD_SUFFIX)) {
         displayName = displayName.substring(0, name.lastIndexOf('$'))
       }
     }
 
-    val parameters = parameterTypes.joinToString(", ") { it.substringAfterLast('.') }
-
-    if (returnType == "void") {
-      return "$displayType $displayName($parameters)"
+    return buildString {
+      append(displayType.sourceName)
+      append(' ')
+      append(displayName)
+      append('(')
+      parameterTypes.joinTo(this, ", ", transform = Descriptor::simpleName)
+      append(')')
+      if (returnType != Descriptor.VOID) {
+        append(" → ")
+        append(returnType.simpleName)
+      }
     }
-    val returnName = returnType.substringAfterLast('.')
-    return "$displayType $displayName($parameters) → $returnName"
   }
 
   override fun compareTo(other: DexMember): Int {
@@ -96,5 +142,3 @@ data class DexMethod(
         .thenBy(DexMethod::returnType)
   }
 }
-
-private val LAMBDA_CLASS_SUFFIX = ".*?\\$\\\$Lambda\\$\\d+".toRegex()
