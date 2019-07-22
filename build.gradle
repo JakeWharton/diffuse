@@ -21,7 +21,7 @@ apply plugin: 'org.jlleitschuh.gradle.ktlint'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = '3.3.1-SNAPSHOT'
+version = '4.0.0-SNAPSHOT'
 
 repositories {
   mavenCentral()
@@ -107,86 +107,9 @@ task copyBinaryMembers(type: Copy, dependsOn: binaryMembersJar) {
 }
 assemble.dependsOn(copyBinaryMembers)
 
-task fatMethodsJar(type: Jar, dependsOn: 'compileJava') {
-  from files(sourceSets.main.output.classesDirs)
-  from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
-
-  classifier 'fat-methods'
-
-  manifest {
-   attributes 'Main-Class': 'com.jakewharton.dex.DexMethods'
-  }
-}
-
-def binaryMethodsFile = new File(buildDir, "libs/dex-method-list-binary.jar")
-task binaryMethodsJar() {
-  dependsOn(fatMethodsJar)
-
-  inputs.file(fatMethodsJar.archivePath)
-  outputs.file(binaryMethodsFile)
-
-  doLast {
-    def fatJarFile = fatMethodsJar.archivePath
-
-    binaryMethodsFile.getParentFile().mkdirs()
-    binaryMethodsFile.delete()
-    binaryMethodsFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
-    fatJarFile.withInputStream { binaryMethodsFile.append it }
-
-    binaryMethodsFile.setExecutable true, false
-  }
-}
-
-task copyBinaryMethods(type: Copy, dependsOn: binaryMethodsJar) {
-  from(binaryMethodsFile)
-  into buildDir
-  rename(".*", 'dex-method-list')
-}
-assemble.dependsOn(copyBinaryMethods)
-
-
-task fatFieldsJar(type: Jar, dependsOn: 'compileJava') {
-  from files(sourceSets.main.output.classesDirs)
-  from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
-
-  classifier 'fat-fields'
-
-  manifest {
-   attributes 'Main-Class': 'com.jakewharton.dex.DexFields'
-  }
-}
-
-def binaryFieldsFile = new File(buildDir, "libs/dex-field-list-binary.jar")
-task binaryFieldsJar() {
-  dependsOn(fatFieldsJar)
-
-  inputs.file(fatFieldsJar.archivePath)
-  outputs.file(binaryFieldsFile)
-
-  doLast {
-    def fatJarFile = fatFieldsJar.archivePath
-
-    binaryFieldsFile.getParentFile().mkdirs()
-    binaryFieldsFile.delete()
-    binaryFieldsFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
-    fatJarFile.withInputStream { binaryFieldsFile.append it }
-
-    binaryFieldsFile.setExecutable true, false
-  }
-}
-
-task copyFieldsMethods(type: Copy, dependsOn: binaryFieldsJar) {
-  from(binaryFieldsFile)
-  into buildDir
-  rename(".*", 'dex-field-list')
-}
-assemble.dependsOn(copyFieldsMethods)
-
 artifacts {
   archives sourcesJar
   archives javadocJar
-  archives file: binaryMethodsFile, name: 'binary', type: 'jar', builtBy: binaryMethodsJar, classifier: 'binary-methods'
-  archives file: binaryFieldsFile, name: 'binary', type: 'jar', builtBy: binaryFieldsJar, classifier: 'binary-fields'
   archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary-members'
 }
 

@@ -33,7 +33,7 @@ internal fun ZipInputStream.entries(): Sequence<ZipEntry> {
 }
 
 // TODO https://youtrack.jetbrains.com/issue/KT-18242
-internal fun Path.readBytes() = Files.newInputStream(this).use { it.readBytes() }
+internal fun Path.readBytes() = Files.readAllBytes(this)
 
 // TODO replace with https://youtrack.jetbrains.com/issue/KT-20690
 internal fun <T : Comparable<T>> comparingValues(): Comparator<Iterable<T>> {

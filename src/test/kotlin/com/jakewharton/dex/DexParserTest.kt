@@ -3,28 +3,13 @@ package com.jakewharton.dex
 import com.google.common.io.Resources
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
-import org.junit.runners.Parameterized.Parameter
-import org.junit.runners.Parameterized.Parameters
 import java.io.File
 
-@RunWith(Parameterized::class)
 class DexParserTest {
-  companion object {
-    @JvmStatic
-    @Parameters(name = "{0}")
-    fun parameters() = listOf(arrayOf<Any>(false), arrayOf<Any>(true))
-  }
-
-  @Parameter @JvmField var legacyDxParam: Boolean? = null
-  private val legacyDx get() = legacyDxParam!!
-
   @Test fun types() {
     val types = File(Resources.getResource("types.dex").file)
     val dexParser = DexParser.fromFile(types)
     val methods = dexParser
-        .withLegacyDx(legacyDx)
         .list()
         .map { it.toString() }
     assertThat(dexParser.dexCount()).isEqualTo(1)

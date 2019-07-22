@@ -13,9 +13,6 @@ import java.io.FileInputStream
 import java.io.InputStream
 
 internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
-  private val legacyDx: Boolean by option("--legacy-dx",
-      help = "Use legacy 'dx' dex compiler instead of D8").flag()
-
   private val hideSyntheticNumbers by option("--hide-synthetic-numbers",
       help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.")
       .flag()
@@ -33,7 +30,7 @@ internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
     val inputs = inputs.map(::FileInputStream)
         .ifEmpty { listOf(System.`in`) }
         .map { it.use(InputStream::readBytes) }
-    val parser = DexParser.fromBytes(inputs).withLegacyDx(legacyDx)
+    val parser = DexParser.fromBytes(inputs)
     val list = when (mode) {
       Mode.Members -> parser.list()
       Mode.Methods -> parser.listMethods()

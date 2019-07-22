@@ -1,16 +1,8 @@
 package com.jakewharton.dex
 
 import com.android.dex.Dex
-import com.android.dex.DexFormat
 import com.android.dex.FieldId
 import com.android.dex.MethodId
-import com.android.dx.cf.direct.DirectClassFile
-import com.android.dx.cf.direct.StdAttributeFactory
-import com.android.dx.command.dexer.DxContext
-import com.android.dx.dex.DexOptions
-import com.android.dx.dex.cf.CfOptions
-import com.android.dx.dex.cf.CfTranslator
-import com.android.dx.dex.file.DexFile
 import com.android.tools.r8.D8
 import com.android.tools.r8.D8Command
 import com.android.tools.r8.DexIndexedConsumer
@@ -19,7 +11,7 @@ import com.android.tools.r8.origin.Origin
 import java.io.ByteArrayInputStream
 import java.util.zip.ZipInputStream
 
-internal fun dexes(inputs: Iterable<ByteArray>, legacyDx: Boolean = false): List<Dex> {
+internal fun dexes(inputs: Iterable<ByteArray>): List<Dex> {
   val classes = mutableListOf<ByteArray>()
   val dexes = mutableListOf<ByteArray>()
 
@@ -50,7 +42,7 @@ internal fun dexes(inputs: Iterable<ByteArray>, legacyDx: Boolean = false): List
   }
 
   if (classes.isNotEmpty()) {
-    dexes += if (legacyDx) compileWithDx(classes) else compileWithD8(classes)
+    dexes += compileWithD8(classes)
   }
   return dexes.map(::Dex)
 }
@@ -76,21 +68,6 @@ private fun compileWithD8(bytes: List<ByteArray>): ByteArray {
   D8.run(builder.build())
 
   return checkNotNull(out) { "No dex file produced" }
-}
-
-private fun compileWithDx(bytes: List<ByteArray>): ByteArray {
-  val dexOptions = DexOptions()
-  dexOptions.minSdkVersion = DexFormat.API_NO_EXTENDED_OPCODES
-  val dexFile = DexFile(dexOptions)
-  val dxContext = DxContext()
-
-  bytes.forEach {
-    val cf = DirectClassFile(it, "None.class", false)
-    cf.setAttributeFactory(StdAttributeFactory.THE_ONE)
-    CfTranslator.translate(dxContext, cf, it, CfOptions(), dexOptions, dexFile)
-  }
-
-  return dexFile.toDex(null, false)
 }
 
 internal fun Dex.getMethod(methodId: MethodId): DexMethod {

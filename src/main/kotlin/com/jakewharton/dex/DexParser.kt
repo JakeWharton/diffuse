@@ -7,13 +7,8 @@ import java.util.TreeSet
 /** Parser for method and field references inside of a dex file. */
 class DexParser private constructor(
   private val bytes: Iterable<ByteArray>,
-  private val legacyDx: Boolean = false
 ) {
-  private val dexes by lazy { dexes(bytes, legacyDx) }
-
-  /** When true, the `dx` compiler will be used to compile `.class`, `.jar`, and `.aar` inputs. */
-  @JvmOverloads
-  fun withLegacyDx(legacyDx: Boolean = true) = DexParser(bytes, legacyDx)
+  private val dexes by lazy { dexes(bytes) }
 
   fun list() = dexes.flatMapTo(TreeSet()) { dex ->
     dex.methodIds().map(dex::getMethod) + dex.fieldIds().map(dex::getField)
