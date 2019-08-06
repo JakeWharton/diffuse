@@ -37,8 +37,8 @@ class DexParser private constructor(
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
     @JvmStatic fun fromFiles(files: Iterable<File>) = fromBytes(files.map { it.readBytes() })
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromBytes(bytes: ByteArray) = fromBytes(listOf(bytes))
+    @JvmStatic fun fromBytes(bytes: ByteArray) = fromBytes(listOf(bytes.copyOf()))
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromBytes(bytes: Iterable<ByteArray>) = DexParser(bytes)
+    @JvmStatic fun fromBytes(bytes: Iterable<ByteArray>) = DexParser(bytes.map { it.copyOf() })
   }
 }
