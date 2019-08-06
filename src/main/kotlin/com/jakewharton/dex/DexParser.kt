@@ -6,16 +6,19 @@ import java.util.TreeSet
 
 /** Parser for method and field references inside of a dex file. */
 class DexParser private constructor(
-  private val bytes: Iterable<ByteArray>,
+  private val bytes: Iterable<ByteArray>
 ) {
   private val dexes by lazy { dexes(bytes) }
+  private val members by lazy {
+    dexes.flatMapTo(TreeSet()) { dex ->
+      dex.methodIds().map(dex::getMethod) + dex.fieldIds().map(dex::getField)
+    }.toList()
+  }
 
-  fun list() = dexes.flatMapTo(TreeSet()) { dex ->
-    dex.methodIds().map(dex::getMethod) + dex.fieldIds().map(dex::getField)
-  }.toList()
+  fun list() = members
 
-  fun listMethods() = dexes.flatMapTo(TreeSet()) { dex -> dex.methodIds().map(dex::getMethod) }.toList()
-  fun listFields() = dexes.flatMapTo(TreeSet()) { dex -> dex.fieldIds().map(dex::getField) }.toList()
+  fun listMethods() = members.filterIsInstance<DexMethod>()
+  fun listFields() = members.filterIsInstance<DexField>()
 
   /** @return the number of dex files parsed. */
   fun dexCount(): Int = dexes.size
