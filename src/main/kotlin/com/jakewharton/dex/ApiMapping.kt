@@ -65,6 +65,9 @@ class ApiMapping private constructor(private val typeMappings: Map<Descriptor, T
   }
 
   companion object {
+    @JvmField
+    val EMPTY = ApiMapping(emptyMap())
+
     @JvmStatic
     @JvmOverloads
     @JvmName("fromPath")

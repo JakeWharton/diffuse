@@ -25,9 +25,10 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
       help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.")
       .flag()
 
-  private val mapping: ApiMapping? by option("--mapping",
+  private val mapping: ApiMapping by option("--mapping",
       help = "Obfuscation mapping file produced by R8 or ProGuard for de-obfuscating names.")
       .convert { File(it).toApiMapping() }
+      .default(ApiMapping.EMPTY)
 
   private val inputs: List<File> by argument(name = "FILES",
       help = ".apk, .aar, .jar, .dex, and/or .class files to process. STDIN is used when no files are provided.")

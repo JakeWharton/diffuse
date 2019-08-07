@@ -3,19 +3,20 @@ package com.jakewharton.dex
 import com.android.dex.Dex
 import java.io.File
 import java.nio.file.Path
-import java.util.TreeSet
 
 /** Parser for method and field references inside of a dex file. */
 class DexParser private constructor(
   private val bytes: List<ByteArray>,
-  val mapping: ApiMapping? = null
+  val mapping: ApiMapping = ApiMapping.EMPTY
 ) {
-  fun withApiMapping(mapping: ApiMapping?) = DexParser(bytes, mapping)
+  fun withApiMapping(mapping: ApiMapping) = DexParser(bytes, mapping)
 
   private val dexes by lazy { dexes(bytes) }
   private val members by lazy {
-    val members = dexes.flatMapTo(TreeSet(), Dex::listMembers)
-    if (mapping != null) members.map(mapping::get) else members.toList()
+    dexes.flatMap(Dex::listMembers)
+        .map(mapping::get)
+        .toSortedSet()
+        .toList()
   }
 
   fun list() = members
