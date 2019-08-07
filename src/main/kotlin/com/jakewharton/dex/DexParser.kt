@@ -1,5 +1,6 @@
 package com.jakewharton.dex
 
+import com.android.dex.Dex
 import java.io.File
 import java.nio.file.Path
 import java.util.TreeSet
@@ -13,9 +14,7 @@ class DexParser private constructor(
 
   private val dexes by lazy { dexes(bytes) }
   private val members by lazy {
-    val members = dexes.flatMapTo(TreeSet()) { dex ->
-      dex.methodIds().map(dex::getMethod) + dex.fieldIds().map(dex::getField)
-    }
+    val members = dexes.flatMapTo(TreeSet(), Dex::listMembers)
     if (mapping != null) members.map(mapping::get) else members.toList()
   }
 

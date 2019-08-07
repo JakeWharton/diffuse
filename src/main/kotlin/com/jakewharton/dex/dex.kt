@@ -70,6 +70,16 @@ private fun compileWithD8(bytes: List<ByteArray>): ByteArray {
   return checkNotNull(out) { "No dex file produced" }
 }
 
+internal fun Dex.listMembers(): List<DexMember> = listMethods() + listFields()
+
+internal fun Dex.listMethods(): List<DexMethod> {
+  return methodIds().map(::getMethod)
+}
+
+internal fun Dex.listFields(): List<DexField> {
+  return fieldIds().map(::getField)
+}
+
 internal fun Dex.getMethod(methodId: MethodId): DexMethod {
   val declaringType = Descriptor(typeNames()[methodId.declaringClassIndex])
   val name = strings()[methodId.nameIndex]
