@@ -20,13 +20,25 @@ internal fun ZipInputStream.entries(): Sequence<ZipEntry> {
     override fun iterator(): Iterator<ZipEntry> {
       return object : Iterator<ZipEntry> {
         var next: ZipEntry? = null
+        var done = false
 
         override fun hasNext(): Boolean {
-          next = nextEntry
+          if (done) return false
+          if (next == null) {
+            next = nextEntry
+            if (next == null) {
+              done = true
+            }
+          }
           return next != null
         }
 
-        override fun next() = next!!
+        override fun next(): ZipEntry {
+          if (!hasNext()) {
+            throw NoSuchElementException()
+          }
+          return next!!.also { next = null }
+        }
       }
     }
   }
