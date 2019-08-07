@@ -6,13 +6,17 @@ import java.util.TreeSet
 
 /** Parser for method and field references inside of a dex file. */
 class DexParser private constructor(
-  private val bytes: Iterable<ByteArray>
+  private val bytes: List<ByteArray>,
+  val mapping: ApiMapping? = null
 ) {
+  fun withApiMapping(mapping: ApiMapping?) = DexParser(bytes, mapping)
+
   private val dexes by lazy { dexes(bytes) }
   private val members by lazy {
-    dexes.flatMapTo(TreeSet()) { dex ->
+    val members = dexes.flatMapTo(TreeSet()) { dex ->
       dex.methodIds().map(dex::getMethod) + dex.fieldIds().map(dex::getField)
-    }.toList()
+    }
+    if (mapping != null) members.map(mapping::get) else members.toList()
   }
 
   fun list() = members

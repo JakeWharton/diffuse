@@ -8,6 +8,10 @@ inline class Descriptor(private val value: String) : Comparable<Descriptor> {
   val sourceName get() = value.toHumanName()
   val simpleName get() = sourceName.substringAfterLast('.')
 
+  val arrayArity get() = value.indexOfFirst { it != '[' }
+  val componentDescriptor get() = Descriptor(value.substring(arrayArity))
+  fun asArray(arity: Int = 1) = Descriptor("[".repeat(arity) + value)
+
   fun withoutLambdaSuffix(): Descriptor {
     return when (value.matches(LAMBDA_CLASS_SUFFIX)) {
       true -> Descriptor(value.substringBeforeLast('$') + ";")
