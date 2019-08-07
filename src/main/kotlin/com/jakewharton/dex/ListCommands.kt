@@ -4,10 +4,12 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.convert
 import com.github.ajalt.clikt.parameters.arguments.multiple
+import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.switch
+import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -16,6 +18,10 @@ internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
   private val hideSyntheticNumbers by option("--hide-synthetic-numbers",
       help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.")
       .flag()
+
+  private val mapping: ApiMapping? by option("--mapping",
+      help = "Obfuscation mapping file produced by R8 or ProGuard for de-obfuscating names.")
+      .convert { File(it).toApiMapping() }
 
   private val inputs: List<File> by argument(name = "FILES",
       help = ".apk, .aar, .jar, .dex, and/or .class files to process. STDIN is used when no files are provided.")
@@ -31,6 +37,7 @@ internal abstract class BaseCommand(name: String) : CliktCommand(name = name) {
         .ifEmpty { listOf(System.`in`) }
         .map { it.use(InputStream::readBytes) }
     val parser = DexParser.fromBytes(inputs)
+        .withApiMapping(mapping)
     val list = when (mode) {
       Mode.Members -> parser.list()
       Mode.Methods -> parser.listMethods()
