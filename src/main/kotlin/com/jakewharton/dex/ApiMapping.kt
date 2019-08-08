@@ -9,6 +9,10 @@ class ApiMapping private constructor(private val typeMappings: Map<Descriptor, T
   override fun hashCode() = typeMappings.hashCode()
   override fun toString() = typeMappings.toString()
 
+  val types get() = typeMappings.size
+  val methods get() = typeMappings.values.sumBy { it.methods.size }
+  val fields get() = typeMappings.values.sumBy { it.fields.size }
+
   /**
    * Given a [Descriptor] which is typically obfuscated, return a new [Descriptor] for the original
    * name or return [type] if not included in the mapping.
@@ -168,8 +172,8 @@ private data class MethodSignature(
 
 private data class TypeMapping(
   val descriptor: Descriptor,
-  private val fields: Map<String, String>,
-  private val methods: Map<MethodSignature, String>
+  val fields: Map<String, String>,
+  val methods: Map<MethodSignature, String>
 ) {
   operator fun get(field: String) = fields[field]
   operator fun get(method: MethodSignature) = methods[method]
