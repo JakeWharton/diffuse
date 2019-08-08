@@ -1,174 +1,53 @@
 buildscript {
+  ext.versions = [
+      'kotlin': '1.3.41'
+  ]
+
+  ext.deps = [
+      'android': [
+          'dalvikDx': 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3',
+      ],
+      'kotlin': [
+          'stdlibJdk8': "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
+          'metadata': 'org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.0.5',
+      ],
+      'r8': 'com.android.tools:r8:1.4.93',
+      'clikt': 'com.github.ajalt:clikt:2.1.0',
+      'junit': 'junit:junit:4.13-beta-3',
+      'truth': 'com.google.truth:truth:1.0',
+      'guava': 'com.google.guava:guava:28.0-jre',
+  ]
+
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+    classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.17'
+    classpath 'org.jlleitschuh.gradle:ktlint-gradle:8.2.0'
+  }
+
   repositories {
     mavenCentral()
     jcenter()
     gradlePluginPortal()
   }
-  dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41'
-    classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.17'
-    classpath 'org.jlleitschuh.gradle:ktlint-gradle:8.2.0'
-  }
 }
 
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
-apply plugin: 'org.jetbrains.dokka'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'org.jlleitschuh.gradle.ktlint'
-
-sourceCompatibility = JavaVersion.VERSION_1_6
-targetCompatibility = JavaVersion.VERSION_1_6
-
-version = '4.0.0-SNAPSHOT'
-
-repositories {
-  mavenCentral()
-  google()
-  jcenter()
-}
-
-dependencies {
-  implementation 'com.github.ajalt:clikt:2.1.0'
-  implementation 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3'
-  implementation 'com.android.tools:r8:1.4.93'
-  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.41'
-
-  // TODO remove explicit metadata-jvm dependency on next major r8 update
-  implementation 'org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.0.5'
-
-  // Truth uses a newer version of Guava than R8.
-  implementation 'com.google.guava:guava:28.0-jre'
-
-  testImplementation 'junit:junit:4.13-beta-3'
-  testImplementation 'com.google.truth:truth:1.0'
-}
-
-compileKotlin {
-  kotlinOptions {
-    jvmTarget = "1.8"
-    freeCompilerArgs = [
-        "-XXLanguage:+InlineClasses",
-        "-progressive",
-    ]
-  }
-}
-
-dokka {
-  outputFormat 'javadoc'
-  outputDirectory "$buildDir/javadoc"
-}
-
-task javadocJar(type: Jar, dependsOn: 'dokka') {
-  classifier 'javadoc'
-  from "$buildDir/javadoc"
-}
-
-task sourcesJar(type: Jar) {
-  classifier = 'sources'
-  from sourceSets.main.allSource
-}
-
-task fatMembersJar(type: Jar, dependsOn: 'compileJava') {
-  from files(sourceSets.main.output.classesDirs)
-  from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
-
-  classifier 'fat-members'
-
-  manifest {
-   attributes 'Main-Class': 'com.jakewharton.dex.DexMembers'
-  }
-}
-
-def binaryMembersFile = new File(buildDir, "libs/dex-member-list-binary.jar")
-task binaryMembersJar() {
-  dependsOn(fatMembersJar)
-
-  inputs.file(fatMembersJar.archivePath)
-  outputs.file(binaryMembersFile)
-
-  doLast {
-    def fatJarFile = fatMembersJar.archivePath
-
-    binaryMembersFile.getParentFile().mkdirs()
-    binaryMembersFile.delete()
-    binaryMembersFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
-    fatJarFile.withInputStream { binaryMembersFile.append it }
-
-    binaryMembersFile.setExecutable true, false
-  }
-}
-
-task copyBinaryMembers(type: Copy, dependsOn: binaryMembersJar) {
-  from(binaryMembersFile)
-  into buildDir
-  rename(".*", 'dex-member-list')
-}
-assemble.dependsOn(copyBinaryMembers)
-
-artifacts {
-  archives sourcesJar
-  archives javadocJar
-  archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary-members'
-}
-
-def isReleaseBuild() {
-  return version.contains("SNAPSHOT") == false
-}
-
-def getRepositoryUsername() {
-  return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
-}
-
-def getRepositoryPassword() {
-  return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
-}
-
-signing {
-  required { isReleaseBuild() && gradle.taskGraph.hasTask('uploadArchives') }
-  sign configurations.archives
-}
-
-uploadArchives {
+allprojects {
   repositories {
-    mavenDeployer {
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    mavenCentral()
+    google()
+    jcenter()
+  }
 
-      repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-        authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-      }
-      snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-        authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-      }
+  plugins.withId('org.jetbrains.kotlin.jvm') {
+    apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
-      pom.groupId = 'com.jakewharton.dex'
-      pom.artifactId = 'dex-member-list'
-
-      pom.project {
-        name 'Dex Member List'
-        packaging 'jar'
-        description 'A utility which lists all method and/or field references in a dex file.'
-        url 'https://github.com/JakeWharton/dex-member-list'
-
-        scm {
-          connection 'git@github.com:JakeWharton/dex-member-list.git'
-          url 'https://github.com/JakeWharton/dex-member-list'
-        }
-
-        licenses {
-          license {
-            name 'Apache 2.0'
-            url 'http://opensource.org/licenses/Apache-2.0'
-          }
-        }
-
-        developers {
-          developer {
-            id 'jakewharton'
-            name 'Jake Wharton'
-          }
-        }
+    compileKotlin {
+      kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = [
+            "-XXLanguage:+InlineClasses",
+            "-progressive",
+        ]
       }
     }
   }

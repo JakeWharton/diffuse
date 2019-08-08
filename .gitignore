@@ -1,12 +1,8 @@
 # IntelliJ IDEA
 /.idea
 *.iml
-/out
 
 # Gradle
 /.gradle
-/build
+build
 /reports
-
-# OS X sadness
-.DS_Store
