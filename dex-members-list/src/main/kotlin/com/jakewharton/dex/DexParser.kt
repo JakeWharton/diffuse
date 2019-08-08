@@ -29,20 +29,33 @@ class DexParser private constructor(
 
   companion object {
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromPath(path: Path) = DexParser(listOf(path.readBytes()))
+    @JvmStatic
+    @JvmName("fromPath")
+    fun Path.toDexParser() = DexParser(listOf(readBytes()))
+
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromPaths(vararg paths: Path) = fromPaths(paths.toList())
+    @JvmStatic
+    @JvmName("fromPaths")
+    fun Collection<Path>.toDexParser() = DexParser(map { it.readBytes() })
+
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromPaths(paths: Collection<Path>) = DexParser(paths.map { it.readBytes() })
+    @JvmStatic
+    @JvmName("fromFile")
+    fun File.toDexParser() = DexParser(listOf(readBytes()))
+
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromFile(file: File) = fromBytes(listOf(file.readBytes()))
+    @JvmStatic
+    @JvmName("fromFiles")
+    fun Iterable<File>.toDexParser() = DexParser(map { it.readBytes() })
+
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromFiles(vararg files: File) = fromFiles(files.toList())
+    @JvmStatic
+    @JvmName("fromBytes")
+    fun ByteArray.toDexParser() = DexParser(listOf(copyOf()))
+
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromFiles(files: Iterable<File>) = DexParser(files.map { it.readBytes() })
-    /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromBytes(bytes: ByteArray) = fromBytes(listOf(bytes.copyOf()))
-    /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
-    @JvmStatic fun fromBytes(bytes: Iterable<ByteArray>) = DexParser(bytes.map { it.copyOf() })
+    @JvmStatic
+    @JvmName("fromBytes")
+    fun Iterable<ByteArray>.toDexParser() = DexParser(map { it.copyOf() })
   }
 }

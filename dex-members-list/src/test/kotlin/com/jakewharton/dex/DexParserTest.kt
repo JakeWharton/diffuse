@@ -2,13 +2,14 @@ package com.jakewharton.dex
 
 import com.google.common.io.Resources
 import com.google.common.truth.Truth.assertThat
+import com.jakewharton.dex.DexParser.Companion.toDexParser
 import org.junit.Test
 import java.io.File
 
 class DexParserTest {
   @Test fun types() {
     val types = File(Resources.getResource("types.dex").file)
-    val dexParser = DexParser.fromFile(types)
+    val dexParser = types.toDexParser()
     val methods = dexParser
         .list()
         .map { it.toString() }

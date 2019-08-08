@@ -12,6 +12,7 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.switch
 import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
+import com.jakewharton.dex.DexParser.Companion.toDexParser
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -47,7 +48,7 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
     val inputs = inputs.map(::FileInputStream)
         .ifEmpty { listOf(System.`in`) }
         .map { it.use(InputStream::readBytes) }
-    val parser = DexParser.fromBytes(inputs)
+    val parser = inputs.toDexParser()
         .withApiMapping(mapping)
     val list = when (mode) {
       Mode.Members -> parser.list()

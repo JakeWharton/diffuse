@@ -2,13 +2,14 @@ package com.jakewharton.dex
 
 import com.google.common.io.Resources
 import com.google.common.truth.Truth.assertThat
+import com.jakewharton.dex.DexParser.Companion.toDexParser
 import org.junit.Test
 import java.io.File
 
 class DexFieldsTest {
   @Test fun types() {
     val types = File(Resources.getResource("types.dex").file)
-    val methods = DexParser.fromFile(types)
+    val methods = types.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -26,7 +27,7 @@ class DexFieldsTest {
 
   @Test fun visibilities() {
     val visibilities = File(Resources.getResource("visibilities.dex").file)
-    val methods = DexParser.fromFile(visibilities)
+    val methods = visibilities.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -39,7 +40,7 @@ class DexFieldsTest {
   @Test fun multipleDexFiles() {
     val types = File(Resources.getResource("types.dex").file)
     val visibilities = File(Resources.getResource("visibilities.dex").file)
-    val methods = DexParser.fromFiles(types, visibilities)
+    val methods = listOf(types, visibilities).toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -61,7 +62,7 @@ class DexFieldsTest {
 
   @Test fun apk() {
     val one = File(Resources.getResource("one.apk").file)
-    val methods = DexParser.fromFiles(one)
+    val methods = one.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -79,7 +80,7 @@ class DexFieldsTest {
 
   @Test fun apkMultipleDex() {
     val three = File(Resources.getResource("three.apk").file)
-    val methods = DexParser.fromFiles(three)
+    val methods = three.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -101,7 +102,7 @@ class DexFieldsTest {
 
   @Test fun classFile() {
     val params = File(Resources.getResource("Visibilities.class").file)
-    val methods = DexParser.fromFiles(params)
+    val methods = params.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -114,7 +115,7 @@ class DexFieldsTest {
   @Test fun multipleClassFiles() {
     val params = File(Resources.getResource("Types.class").file)
     val visibilities = File(Resources.getResource("Visibilities.class").file)
-    val methods = DexParser.fromFiles(params, visibilities)
+    val methods = listOf(params, visibilities).toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -136,7 +137,7 @@ class DexFieldsTest {
 
   @Test fun jarFile() {
     val params = File(Resources.getResource("types.jar").file)
-    val methods = DexParser.fromFiles(params)
+    val methods = params.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -155,7 +156,7 @@ class DexFieldsTest {
   @Test fun multipleJarFiles() {
     val types = File(Resources.getResource("types.jar").file)
     val visibilities = File(Resources.getResource("visibilities.jar").file)
-    val methods = DexParser.fromFiles(types, visibilities)
+    val methods = listOf(types, visibilities).toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -177,7 +178,7 @@ class DexFieldsTest {
 
   @Test fun jarMultipleClasses() {
     val three = File(Resources.getResource("three.jar").file)
-    val methods = DexParser.fromFiles(three)
+    val methods = three.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -199,7 +200,7 @@ class DexFieldsTest {
 
   @Test fun dexBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("types.dex"))
-    val methods = DexParser.fromBytes(bytes)
+    val methods = bytes.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -217,7 +218,7 @@ class DexFieldsTest {
 
   @Test fun apkBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("one.apk"))
-    val methods = DexParser.fromBytes(bytes)
+    val methods = bytes.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -235,7 +236,7 @@ class DexFieldsTest {
 
   @Test fun classBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("Types.class"))
-    val methods = DexParser.fromBytes(bytes)
+    val methods = bytes.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -253,7 +254,7 @@ class DexFieldsTest {
 
   @Test fun jarBytes() {
     val bytes = Resources.toByteArray(Resources.getResource("types.jar"))
-    val methods = DexParser.fromBytes(bytes)
+    val methods = bytes.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
@@ -271,7 +272,7 @@ class DexFieldsTest {
 
   @Test fun aarExtractsJars() {
     val three = File(Resources.getResource("three.aar").file)
-    val methods = DexParser.fromFiles(three)
+    val methods = three.toDexParser()
         .listFields()
         .map { it.toString() }
     assertThat(methods).containsExactly(
