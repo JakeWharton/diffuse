@@ -7,7 +7,7 @@ apply plugin: 'signing'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = '4.0.0-SNAPSHOT'
+version = '4.0.0'
 
 dependencies {
   implementation deps.clikt
@@ -44,7 +44,7 @@ task fatMembersJar(type: Jar, dependsOn: 'compileJava') {
   from files(sourceSets.main.output.classesDirs)
   from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
 
-  classifier 'fat-members'
+  classifier 'fat'
 
   manifest {
     attributes 'Main-Class': 'com.jakewharton.dex.DexMembers'
@@ -80,7 +80,7 @@ assemble.dependsOn(copyBinaryMembers)
 artifacts {
   archives sourcesJar
   archives javadocJar
-  archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary-members'
+  archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary'
 }
 
 def isReleaseBuild() {

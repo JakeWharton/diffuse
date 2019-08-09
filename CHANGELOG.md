@@ -1,6 +1,19 @@
 Change Log
 ==========
 
+Version 4.0.0 *(2019-08-08)*
+----------------------------
+
+  * New: Support for mapping files produced by R8 or ProGuard. Dump obfuscated APKs in unobfuscated
+    form by providing this file on the command line or in the API using `ApiMapping`.
+  * New: Kotlin users can create a `DexParser` using extension functions on receiver types
+    (like `File`, `Path`, etc.) instead of Java-like static factories.
+  * New: Types are modeled using a new `TypeDescriptor` class.
+  * New: Add `dexCount()` method to `DexParser`.
+  * Remove support for using `dx` as a dex compiler for class files.
+  * Remove old `dex-field-list` and `dex-method-list` binaries and types.
+
+
 Version 3.3.0 *(2019-03-28)*
 ----------------------------
 
