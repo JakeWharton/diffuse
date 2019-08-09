@@ -1,1 +1,2 @@
 include ':dex-members-list'
+include ':picnic'

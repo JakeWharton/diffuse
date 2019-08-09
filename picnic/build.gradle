@@ -1,0 +1,9 @@
+apply plugin: 'java-library'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+dependencies {
+  implementation deps.kotlin.stdlibJdk8
+
+  testImplementation deps.junit
+  testImplementation deps.truth
+}
