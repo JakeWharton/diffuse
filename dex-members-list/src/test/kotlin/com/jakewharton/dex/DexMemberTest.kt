@@ -4,8 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class DexMemberTest {
-  private val fooDescriptor = Descriptor("Lcom/example/Foo;")
-  private val barDescriptor = Descriptor("Lcom/example/Bar;")
+  private val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+  private val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
 
   @Test fun compareInSameClass() {
     val field = DexField(fooDescriptor, "bar", barDescriptor)

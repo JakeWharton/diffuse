@@ -23,13 +23,13 @@ class ApiMappingTest {
       com.example.Bar -> a.a.b:
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     assertEquals(fooDescriptor, mapping[aaaDescriptor])
 
     // Ensure trailing type mapping is included.
-    val aabDescriptor = Descriptor("La/a/b;")
-    val barDescriptor = Descriptor("Lcom/example/Bar;")
+    val aabDescriptor = TypeDescriptor("La/a/b;")
+    val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
     assertEquals(barDescriptor, mapping[aabDescriptor])
   }
 
@@ -39,10 +39,10 @@ class ApiMappingTest {
           java.lang.String bar -> a
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aField = DexField(aaaDescriptor, "a", stringDescriptor)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val barField = DexField(fooDescriptor, "bar", stringDescriptor)
 
     assertEquals(barField, mapping[aField])
@@ -55,12 +55,12 @@ class ApiMappingTest {
       com.example.Bar -> a.a.b:
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val aabDescriptor = Descriptor("La/a/b;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val aabDescriptor = TypeDescriptor("La/a/b;")
     val aField = DexField(aaaDescriptor, "a", aabDescriptor)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
-    val barDescriptor = Descriptor("Lcom/example/Bar;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+    val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
     val barField = DexField(fooDescriptor, "bar", barDescriptor)
 
     assertEquals(barField, mapping[aField])
@@ -71,10 +71,10 @@ class ApiMappingTest {
       com.example.Foo -> a.a.a:
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
     val unmappedField = DexField(aaaDescriptor, "bar", stringDescriptor)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val barField = DexField(fooDescriptor, "bar", stringDescriptor)
 
     assertEquals(barField, mapping[unmappedField])
@@ -83,7 +83,7 @@ class ApiMappingTest {
   @Test fun fieldUnmappedDeclaringType() {
     val mapping = "".toApiMapping()
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val field = DexField(fooDescriptor, "bar", stringDescriptor)
     assertSame(field, mapping[field])
   }
@@ -94,7 +94,7 @@ class ApiMappingTest {
     val byteArrayLength = DexField(byteDescriptor.asArray(1), "length", intDescriptor)
     assertSame(byteArrayLength, mapping[byteArrayLength])
 
-    val boxedByteSize = DexField(Descriptor("Ljava/lang/Byte;"), "SIZE", intDescriptor)
+    val boxedByteSize = DexField(TypeDescriptor("Ljava/lang/Byte;"), "SIZE", intDescriptor)
     assertSame(boxedByteSize, mapping[boxedByteSize])
   }
 
@@ -111,7 +111,7 @@ class ApiMappingTest {
           short aShort -> h
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aField = DexField(aaaDescriptor, "a", booleanDescriptor)
     val bField = DexField(aaaDescriptor, "b", byteDescriptor)
     val cField = DexField(aaaDescriptor, "c", charDescriptor)
@@ -121,7 +121,7 @@ class ApiMappingTest {
     val gField = DexField(aaaDescriptor, "g", longDescriptor)
     val hField = DexField(aaaDescriptor, "h", shortDescriptor)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val booleanField = DexField(fooDescriptor, "aBoolean", booleanDescriptor)
     val byteField = DexField(fooDescriptor, "aByte", byteDescriptor)
     val charField = DexField(fooDescriptor, "aChar", charDescriptor)
@@ -150,14 +150,14 @@ class ApiMappingTest {
       com.example.Bar -> a.a.b:
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val aabDescriptor = Descriptor("La/a/b;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val aabDescriptor = TypeDescriptor("La/a/b;")
     val aField = DexField(aaaDescriptor, "a", byteDescriptor.asArray(1))
     val bField = DexField(aaaDescriptor, "b", aabDescriptor.asArray(1))
     val cField = DexField(aaaDescriptor, "c", stringDescriptor.asArray(6))
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
-    val barDescriptor = Descriptor("Lcom/example/Bar;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+    val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
     val bytesField = DexField(fooDescriptor, "bytes", byteDescriptor.asArray(1))
     val barsField = DexField(fooDescriptor, "bars", barDescriptor.asArray(1))
     val stringsField = DexField(fooDescriptor, "strings", stringDescriptor.asArray(6))
@@ -173,11 +173,11 @@ class ApiMappingTest {
           void bar() -> a
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), Descriptor.VOID)
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), TypeDescriptor.VOID)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
-    val barField = DexMethod(fooDescriptor, "bar", emptyList(), Descriptor.VOID)
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+    val barField = DexMethod(fooDescriptor, "bar", emptyList(), TypeDescriptor.VOID)
 
     assertEquals(barField, mapping[aMethod])
   }
@@ -189,12 +189,12 @@ class ApiMappingTest {
       com.example.Bar -> a.a.b:
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val aabDescriptor = Descriptor("La/a/b;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val aabDescriptor = TypeDescriptor("La/a/b;")
     val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), aabDescriptor)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
-    val barDescriptor = Descriptor("Lcom/example/Bar;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+    val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
     val barField = DexMethod(fooDescriptor, "bar", emptyList(), barDescriptor)
 
     assertEquals(barField, mapping[aMethod])
@@ -207,13 +207,13 @@ class ApiMappingTest {
       com.example.Bar -> a.a.b:
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val aabDescriptor = Descriptor("La/a/b;")
-    val aMethod = DexMethod(aaaDescriptor, "a", listOf(aabDescriptor), Descriptor.VOID)
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val aabDescriptor = TypeDescriptor("La/a/b;")
+    val aMethod = DexMethod(aaaDescriptor, "a", listOf(aabDescriptor), TypeDescriptor.VOID)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
-    val barDescriptor = Descriptor("Lcom/example/Bar;")
-    val barField = DexMethod(fooDescriptor, "bar", listOf(barDescriptor), Descriptor.VOID)
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+    val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
+    val barField = DexMethod(fooDescriptor, "bar", listOf(barDescriptor), TypeDescriptor.VOID)
 
     assertEquals(barField, mapping[aMethod])
   }
@@ -224,11 +224,11 @@ class ApiMappingTest {
           1:1:void bar() -> a
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), Descriptor.VOID)
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), TypeDescriptor.VOID)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
-    val barField = DexMethod(fooDescriptor, "bar", emptyList(), Descriptor.VOID)
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+    val barField = DexMethod(fooDescriptor, "bar", emptyList(), TypeDescriptor.VOID)
 
     assertEquals(barField, mapping[aMethod])
   }
@@ -239,11 +239,11 @@ class ApiMappingTest {
           1:1:void bar():12:12 -> a
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), Descriptor.VOID)
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), TypeDescriptor.VOID)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
-    val barField = DexMethod(fooDescriptor, "bar", emptyList(), Descriptor.VOID)
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+    val barField = DexMethod(fooDescriptor, "bar", emptyList(), TypeDescriptor.VOID)
 
     assertEquals(barField, mapping[aMethod])
   }
@@ -261,7 +261,7 @@ class ApiMappingTest {
           short aShort() -> h
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), booleanDescriptor)
     val bMethod = DexMethod(aaaDescriptor, "b", emptyList(), byteDescriptor)
     val cMethod = DexMethod(aaaDescriptor, "c", emptyList(), charDescriptor)
@@ -271,7 +271,7 @@ class ApiMappingTest {
     val gMethod = DexMethod(aaaDescriptor, "g", emptyList(), longDescriptor)
     val hMethod = DexMethod(aaaDescriptor, "h", emptyList(), shortDescriptor)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val booleanMethod = DexMethod(fooDescriptor, "aBoolean", emptyList(), booleanDescriptor)
     val byteMethod = DexMethod(fooDescriptor, "aByte", emptyList(), byteDescriptor)
     val charMethod = DexMethod(fooDescriptor, "aChar", emptyList(), charDescriptor)
@@ -297,15 +297,15 @@ class ApiMappingTest {
           void bar(boolean,byte,char,double,float,int,long,short) -> a
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aMethod = DexMethod(aaaDescriptor, "a",
         listOf(booleanDescriptor, byteDescriptor, charDescriptor, doubleDescriptor, floatDescriptor,
-            intDescriptor, longDescriptor, shortDescriptor), Descriptor.VOID)
+            intDescriptor, longDescriptor, shortDescriptor), TypeDescriptor.VOID)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val barMethod = DexMethod(fooDescriptor, "bar",
         listOf(booleanDescriptor, byteDescriptor, charDescriptor, doubleDescriptor, floatDescriptor,
-            intDescriptor, longDescriptor, shortDescriptor), Descriptor.VOID)
+            intDescriptor, longDescriptor, shortDescriptor), TypeDescriptor.VOID)
 
     assertEquals(barMethod, mapping[aMethod])
   }
@@ -319,14 +319,14 @@ class ApiMappingTest {
       com.example.Bar -> a.a.b:
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val aabDescriptor = Descriptor("La/a/b;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val aabDescriptor = TypeDescriptor("La/a/b;")
     val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), byteDescriptor.asArray(1))
     val bMethod = DexMethod(aaaDescriptor, "b", emptyList(), aabDescriptor.asArray(1))
     val cMethod = DexMethod(aaaDescriptor, "c", emptyList(), stringDescriptor.asArray(6))
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
-    val barDescriptor = Descriptor("Lcom/example/Bar;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+    val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
     val bytesMethod = DexMethod(fooDescriptor, "bytes", emptyList(), byteDescriptor.asArray(1))
     val barsMethod = DexMethod(fooDescriptor, "bars", emptyList(), barDescriptor.asArray(1))
     val stringsMethod = DexMethod(fooDescriptor, "strings", emptyList(), stringDescriptor.asArray(6))
@@ -343,17 +343,17 @@ class ApiMappingTest {
       com.example.Bar -> a.a.b:
     """.trimIndent().toApiMapping()
 
-    val aaaDescriptor = Descriptor("La/a/a;")
-    val aabDescriptor = Descriptor("La/a/b;")
+    val aaaDescriptor = TypeDescriptor("La/a/a;")
+    val aabDescriptor = TypeDescriptor("La/a/b;")
     val aMethod = DexMethod(aaaDescriptor, "a",
         listOf(byteDescriptor.asArray(1), aabDescriptor.asArray(1), stringDescriptor.asArray(6)),
-        Descriptor.VOID)
+        TypeDescriptor.VOID)
 
-    val fooDescriptor = Descriptor("Lcom/example/Foo;")
-    val barDescriptor = Descriptor("Lcom/example/Bar;")
+    val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+    val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
     val barMethod = DexMethod(fooDescriptor, "bar",
         listOf(byteDescriptor.asArray(1), barDescriptor.asArray(1), stringDescriptor.asArray(6)),
-        Descriptor.VOID)
+        TypeDescriptor.VOID)
 
     assertEquals(barMethod, mapping[aMethod])
   }
@@ -361,7 +361,7 @@ class ApiMappingTest {
   @Test fun methodUnmappedSignatures() {
     val mapping = "".toApiMapping()
 
-    val boxedByteToString = DexMethod(Descriptor("Ljava/lang/Byte;"), "toString", emptyList(),
+    val boxedByteToString = DexMethod(TypeDescriptor("Ljava/lang/Byte;"), "toString", emptyList(),
         stringDescriptor)
     assertSame(boxedByteToString, mapping[boxedByteToString])
   }
@@ -373,18 +373,18 @@ class ApiMappingTest {
         byteDescriptor.asArray(1))
     assertSame(byteArrayClone, mapping[byteArrayClone])
 
-    val boxedByteToString = DexMethod(Descriptor("Ljava/lang/Byte;"), "toString",
+    val boxedByteToString = DexMethod(TypeDescriptor("Ljava/lang/Byte;"), "toString",
         listOf(byteDescriptor), stringDescriptor)
     assertSame(boxedByteToString, mapping[boxedByteToString])
   }
 
-  private val booleanDescriptor = Descriptor("Z")
-  private val byteDescriptor = Descriptor("B")
-  private val charDescriptor = Descriptor("C")
-  private val doubleDescriptor = Descriptor("D")
-  private val floatDescriptor = Descriptor("F")
-  private val intDescriptor = Descriptor("I")
-  private val longDescriptor = Descriptor("J")
-  private val shortDescriptor = Descriptor("S")
-  private val stringDescriptor = Descriptor("Ljava/lang/String;")
+  private val booleanDescriptor = TypeDescriptor("Z")
+  private val byteDescriptor = TypeDescriptor("B")
+  private val charDescriptor = TypeDescriptor("C")
+  private val doubleDescriptor = TypeDescriptor("D")
+  private val floatDescriptor = TypeDescriptor("F")
+  private val intDescriptor = TypeDescriptor("I")
+  private val longDescriptor = TypeDescriptor("J")
+  private val shortDescriptor = TypeDescriptor("S")
+  private val stringDescriptor = TypeDescriptor("Ljava/lang/String;")
 }

@@ -81,18 +81,18 @@ internal fun Dex.listFields(): List<DexField> {
 }
 
 internal fun Dex.getMethod(methodId: MethodId): DexMethod {
-  val declaringType = Descriptor(typeNames()[methodId.declaringClassIndex])
+  val declaringType = TypeDescriptor(typeNames()[methodId.declaringClassIndex])
   val name = strings()[methodId.nameIndex]
   val methodProtoIds = protoIds()[methodId.protoIndex]
   val parameterTypes = readTypeList(methodProtoIds.parametersOffset).types
-      .map { Descriptor(typeNames()[it.toInt()]) }
-  val returnType = Descriptor(typeNames()[methodProtoIds.returnTypeIndex])
+      .map { TypeDescriptor(typeNames()[it.toInt()]) }
+  val returnType = TypeDescriptor(typeNames()[methodProtoIds.returnTypeIndex])
   return DexMethod(declaringType, name, parameterTypes, returnType)
 }
 
 internal fun Dex.getField(fieldId: FieldId): DexField {
-  val declaringType = Descriptor(typeNames()[fieldId.declaringClassIndex])
+  val declaringType = TypeDescriptor(typeNames()[fieldId.declaringClassIndex])
   val name = strings()[fieldId.nameIndex]
-  val type = Descriptor(typeNames()[fieldId.typeIndex])
+  val type = TypeDescriptor(typeNames()[fieldId.typeIndex])
   return DexField(declaringType, name, type)
 }

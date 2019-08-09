@@ -4,8 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class DexMethodTest {
-  private val fooDescriptor = Descriptor("Lcom/example/Foo;")
-  private val barDescriptor = Descriptor("Lcom/example/Bar;")
+  private val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+  private val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
 
   @Test fun toStringCallsRender() {
     val method = DexMethod(fooDescriptor, "bar", emptyList(), barDescriptor)
@@ -18,7 +18,7 @@ class DexMethodTest {
   }
 
   @Test fun renderVoidReturnType() {
-    val method = DexMethod(fooDescriptor, "bar", emptyList(), Descriptor.VOID)
+    val method = DexMethod(fooDescriptor, "bar", emptyList(), TypeDescriptor.VOID)
     assertThat(method.render()).isEqualTo("com.example.Foo bar()")
   }
 
@@ -53,12 +53,12 @@ class DexMethodTest {
   }
 
   @Test fun renderKotlinLambdaClassName() {
-    val synthetic = DexMethod(Descriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", emptyList(), barDescriptor)
+    val synthetic = DexMethod(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", emptyList(), barDescriptor)
     assertThat(synthetic.render()).isEqualTo("com.example.Foo$\$Lambda$26 bar() → Bar")
   }
 
   @Test fun renderKotlinLambdaClassNameHidingSynthetics() {
-    val synthetic = DexMethod(Descriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", emptyList(), barDescriptor)
+    val synthetic = DexMethod(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", emptyList(), barDescriptor)
     assertThat(synthetic.render(hideSyntheticNumbers = true))
         .isEqualTo("com.example.Foo$\$Lambda bar() → Bar")
   }
@@ -86,7 +86,7 @@ class DexMethodTest {
 
   @Test fun compareToDifferentParameterList() {
     val one = DexMethod(fooDescriptor, "bar", emptyList(), barDescriptor)
-    val two = DexMethod(fooDescriptor, "bar", listOf(Descriptor("I")), barDescriptor)
+    val two = DexMethod(fooDescriptor, "bar", listOf(TypeDescriptor("I")), barDescriptor)
     assertThat(one < two).isTrue()
     assertThat(two < one).isFalse()
   }

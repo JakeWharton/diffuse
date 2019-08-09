@@ -1,53 +1,7 @@
 package com.jakewharton.dex
 
-inline class Descriptor(private val value: String) : Comparable<Descriptor> {
-  override fun compareTo(other: Descriptor): Int {
-    return sourceName.compareTo(other.sourceName)
-  }
-
-  val sourceName get() = value.toHumanName()
-  val simpleName get() = sourceName.substringAfterLast('.')
-
-  val arrayArity get() = value.indexOfFirst { it != '[' }
-  val componentDescriptor get() = Descriptor(value.substring(arrayArity))
-  fun asArray(arity: Int = 1) = Descriptor("[".repeat(arity) + value)
-
-  fun withoutLambdaSuffix(): Descriptor {
-    return when (value.matches(LAMBDA_CLASS_SUFFIX)) {
-      true -> Descriptor(value.substringBeforeLast('$') + ";")
-      false -> this
-    }
-  }
-
-  companion object {
-    val VOID = Descriptor("V")
-    private val LAMBDA_CLASS_SUFFIX = ".*?\\$\\\$Lambda\\$\\d+;".toRegex()
-
-    private fun String.toHumanName(): String {
-      if (startsWith("[")) {
-        return substring(1).toHumanName() + "[]"
-      }
-      if (startsWith("L")) {
-        return substring(1, length - 1).replace('/', '.')
-      }
-      return when (this) {
-        "B" -> "byte"
-        "C" -> "char"
-        "D" -> "double"
-        "F" -> "float"
-        "I" -> "int"
-        "J" -> "long"
-        "S" -> "short"
-        "V" -> "void"
-        "Z" -> "boolean"
-        else -> throw IllegalArgumentException("Unknown type $this")
-      }
-    }
-  }
-}
-
 sealed class DexMember : Comparable<DexMember> {
-  abstract val declaringType: Descriptor
+  abstract val declaringType: TypeDescriptor
   abstract val name: String
   abstract fun render(hideSyntheticNumbers: Boolean = false): String
 
@@ -67,9 +21,9 @@ sealed class DexMember : Comparable<DexMember> {
 
 /** Represents a single field reference. */
 data class DexField(
-  override val declaringType: Descriptor,
+  override val declaringType: TypeDescriptor,
   override val name: String,
-  val type: Descriptor
+  val type: TypeDescriptor
 ) : DexMember() {
   override fun render(hideSyntheticNumbers: Boolean): String {
     var displayType = declaringType
@@ -94,10 +48,10 @@ data class DexField(
 
 /** Represents a single method reference. */
 data class DexMethod(
-  override val declaringType: Descriptor,
+  override val declaringType: TypeDescriptor,
   override val name: String,
-  val parameterTypes: List<Descriptor>,
-  val returnType: Descriptor
+  val parameterTypes: List<TypeDescriptor>,
+  val returnType: TypeDescriptor
 ) : DexMember() {
   override fun render(hideSyntheticNumbers: Boolean): String {
     var displayType = declaringType
@@ -121,9 +75,9 @@ data class DexMethod(
       append(' ')
       append(displayName)
       append('(')
-      parameterTypes.joinTo(this, ", ", transform = Descriptor::simpleName)
+      parameterTypes.joinTo(this, ", ", transform = TypeDescriptor::simpleName)
       append(')')
-      if (returnType != Descriptor.VOID) {
+      if (returnType != TypeDescriptor.VOID) {
         append(" → ")
         append(returnType.simpleName)
       }

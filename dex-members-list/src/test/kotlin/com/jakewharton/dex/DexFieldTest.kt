@@ -4,8 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class DexFieldTest {
-  private val fooDescriptor = Descriptor("Lcom/example/Foo;")
-  private val barDescriptor = Descriptor("Lcom/example/Bar;")
+  private val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
+  private val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
 
   @Test fun string() {
     val field = DexField(fooDescriptor, "bar", barDescriptor)
@@ -18,12 +18,12 @@ class DexFieldTest {
   }
 
   @Test fun renderKotlinLambdaClassName() {
-    val field = DexField(Descriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
+    val field = DexField(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
     assertThat(field.render()).isEqualTo("com.example.Foo$\$Lambda$26 bar: Bar")
   }
 
   @Test fun renderKotlinLambdaClassNameHidingSynthetics() {
-    val field = DexField(Descriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
+    val field = DexField(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
     assertThat(field.render(hideSyntheticNumbers = true))
         .isEqualTo("com.example.Foo$\$Lambda bar: Bar")
   }

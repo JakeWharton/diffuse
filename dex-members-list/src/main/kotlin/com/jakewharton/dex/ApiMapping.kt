@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.charset.Charset
 import java.nio.file.Path
 
-class ApiMapping private constructor(private val typeMappings: Map<Descriptor, TypeMapping>) {
+class ApiMapping private constructor(private val typeMappings: Map<TypeDescriptor, TypeMapping>) {
   override fun equals(other: Any?) = other is ApiMapping && typeMappings == other.typeMappings
   override fun hashCode() = typeMappings.hashCode()
   override fun toString() = typeMappings.toString()
@@ -14,12 +14,12 @@ class ApiMapping private constructor(private val typeMappings: Map<Descriptor, T
   val fields get() = typeMappings.values.sumBy { it.fields.size }
 
   /**
-   * Given a [Descriptor] which is typically obfuscated, return a new [Descriptor] for the original
-   * name or return [type] if not included in the mapping.
+   * Given a [TypeDescriptor] which is typically obfuscated, return a new [TypeDescriptor] for the
+   * original name or return [type] if not included in the mapping.
    */
-  operator fun get(type: Descriptor): Descriptor {
+  operator fun get(type: TypeDescriptor): TypeDescriptor {
     return typeMappings[type.componentDescriptor]
-        ?.descriptor
+        ?.typeDescriptor
         ?.asArray(type.arrayArity)
         ?: type
   }
@@ -43,7 +43,7 @@ class ApiMapping private constructor(private val typeMappings: Map<Descriptor, T
     val declaringType = field.declaringType.componentDescriptor
     val declaringTypeMapping = typeMappings[declaringType] ?: return field
 
-    val newDeclaringType = declaringTypeMapping.descriptor
+    val newDeclaringType = declaringTypeMapping.typeDescriptor
         .asArray(field.declaringType.arrayArity)
     val newType = this[field.type]
     val newName = declaringTypeMapping[field.name] ?: field.name
@@ -59,7 +59,7 @@ class ApiMapping private constructor(private val typeMappings: Map<Descriptor, T
     val declaringType = method.declaringType.componentDescriptor
     val declaringTypeMapping = typeMappings[declaringType] ?: return method
 
-    val newDeclaringType = declaringTypeMapping.descriptor
+    val newDeclaringType = declaringTypeMapping.typeDescriptor
         .asArray(method.declaringType.arrayArity)
     val newReturnType = this[method.returnType]
     val newParameters = method.parameterTypes.map(::get)
@@ -89,10 +89,10 @@ class ApiMapping private constructor(private val typeMappings: Map<Descriptor, T
     @JvmStatic
     @JvmName("fromString")
     fun String.toApiMapping(): ApiMapping {
-      val typeMappings = mutableMapOf<Descriptor, TypeMapping>()
+      val typeMappings = mutableMapOf<TypeDescriptor, TypeMapping>()
 
-      var fromDescriptor: Descriptor? = null
-      var toDescriptor: Descriptor? = null
+      var fromDescriptor: TypeDescriptor? = null
+      var toDescriptor: TypeDescriptor? = null
       var fields: MutableMap<String, String>? = null
       var methods: MutableMap<MethodSignature, String>? = null
       split('\n').forEachIndexed { index, line ->
@@ -144,7 +144,7 @@ class ApiMapping private constructor(private val typeMappings: Map<Descriptor, T
     private val typeLine = Regex("(.+?) -> (.+?):")
     private val memberLine = Regex("\\s+(?:\\d+:\\d+:)?(.+?) (.+?)(\\(.*?\\))?(?::\\d+:\\d+)? -> (.+)")
 
-    private fun humanNameToDescriptor(name: String): Descriptor {
+    private fun humanNameToDescriptor(name: String): TypeDescriptor {
       val type = name.trimEnd('[', ']')
       val descriptor = when (type) {
         "void" -> "V"
@@ -159,19 +159,19 @@ class ApiMapping private constructor(private val typeMappings: Map<Descriptor, T
         else -> "L${type.replace('.', '/')};"
       }
       val arrayArity = (name.length - type.length) / 2
-      return Descriptor(descriptor).asArray(arrayArity)
+      return TypeDescriptor(descriptor).asArray(arrayArity)
     }
   }
 }
 
 private data class MethodSignature(
-  val returnType: Descriptor,
+  val returnType: TypeDescriptor,
   val name: String,
-  val parameterTypes: List<Descriptor>
+  val parameterTypes: List<TypeDescriptor>
 )
 
 private data class TypeMapping(
-  val descriptor: Descriptor,
+  val typeDescriptor: TypeDescriptor,
   val fields: Map<String, String>,
   val methods: Map<MethodSignature, String>
 ) {
