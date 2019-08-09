@@ -11,7 +11,7 @@ version = '5.0.0-SNAPSHOT'
 
 dependencies {
   implementation deps.clikt
-  implementation deps.android.dalvikDx
+  implementation deps.androidTools.dalvikDx
   implementation deps.kotlin.stdlibJdk8
 
   implementation deps.r8
@@ -20,6 +20,11 @@ dependencies {
 
   // Truth uses a newer version of Guava than R8.
   implementation deps.guava
+
+  implementation deps.asciitable
+  implementation deps.okio
+  implementation deps.androidTools.binaryResources
+  implementation deps.byteunits
 
   testImplementation deps.junit
   testImplementation deps.truth
@@ -77,10 +82,48 @@ task copyBinaryMembers(type: Copy, dependsOn: binaryMembersJar) {
 }
 assemble.dependsOn(copyBinaryMembers)
 
+task fatDiffuseJar(type: Jar, dependsOn: 'compileJava') {
+  from files(sourceSets.main.output.classesDirs)
+  from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
+
+  classifier 'fat-diffuse'
+
+  manifest {
+    attributes 'Main-Class': 'com.jakewharton.diffuse.Diffuse'
+  }
+}
+
+def binaryDiffuseFile = new File(buildDir, "libs/diffuse-binary.jar")
+task binaryDiffuseJar() {
+  dependsOn(fatDiffuseJar)
+
+  inputs.file(fatDiffuseJar.archivePath)
+  outputs.file(binaryDiffuseFile)
+
+  doLast {
+    def fatJarFile = fatDiffuseJar.archivePath
+
+    binaryDiffuseFile.getParentFile().mkdirs()
+    binaryDiffuseFile.delete()
+    binaryDiffuseFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+    fatJarFile.withInputStream { binaryDiffuseFile.append it }
+
+    binaryDiffuseFile.setExecutable true, false
+  }
+}
+
+task copyDiffuseBinary(type: Copy, dependsOn: binaryDiffuseJar) {
+  from(binaryDiffuseFile)
+  into buildDir
+  rename(".*", 'diffuse')
+}
+assemble.dependsOn(copyDiffuseBinary)
+
 artifacts {
   archives sourcesJar
   archives javadocJar
   archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary'
+  archives file: binaryDiffuseFile, name: 'binary', type: 'jar', builtBy: binaryDiffuseJar, classifier: 'diffuse'
 }
 
 def isReleaseBuild() {
