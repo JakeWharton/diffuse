@@ -7,7 +7,7 @@ apply plugin: 'signing'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = '4.0.0'
+version = '5.0.0-SNAPSHOT'
 
 dependencies {
   implementation deps.clikt
