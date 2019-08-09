@@ -4,8 +4,9 @@ buildscript {
   ]
 
   ext.deps = [
-      'android': [
+      'androidTools': [
           'dalvikDx': 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3',
+          'binaryResources': 'com.android.tools.apkparser:binary-resources:26.4.2',
       ],
       'kotlin': [
           'stdlibJdk8': "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
@@ -16,6 +17,9 @@ buildscript {
       'junit': 'junit:junit:4.13-beta-3',
       'truth': 'com.google.truth:truth:1.0',
       'guava': 'com.google.guava:guava:28.0-jre',
+      'okio': 'com.squareup.okio:okio:2.3.0',
+      'asciitable': 'de.vandermeer:asciitable:0.3.2',
+      'byteunits': 'com.jakewharton.byteunits:byteunits:0.9.1',
   ]
 
   dependencies {
