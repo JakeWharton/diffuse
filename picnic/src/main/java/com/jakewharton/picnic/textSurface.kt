@@ -28,26 +28,12 @@ internal class TextSurface(
   override fun toString() = buffer.toString()
 }
 
-internal interface TextCanvas {
+interface TextCanvas {
   val width: Int
   val height: Int
 
   operator fun set(row: Int, column: Int, char: Char)
   operator fun get(row: Int, column: Int): Char
-
-  fun print(string: String, left: Int = 0, top: Int = 0) {
-    var x = left
-    var y = top
-    for (char in string) {
-      // TODO invisible chars, codepoints, graphemes, etc.
-      if (char != '\n') {
-        this[y, x++] = char
-      } else {
-        y++
-        x = left
-      }
-    }
-  }
 
   fun clip(left: Int, right: Int, top: Int, bottom: Int): TextCanvas {
     val outer = this

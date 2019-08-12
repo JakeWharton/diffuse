@@ -2,33 +2,28 @@
 
 package com.jakewharton.picnic
 
-private val String.width: Int get() {
-  return split('\n').map { it.length }.max() ?: 0
-}
-
-private val String.height: Int get() = 1 + count { it == '\n' }
-
-private fun Cell.textRender(canvas: TextCanvas) {
-  canvas.print(content)
-}
-
 @Suppress("NOTHING_TO_INLINE", "UNUSED_PARAMETER")
 private inline fun debug(message: () -> String) {
   //println(message())
 }
 
+@JvmOverloads
 @JvmName("render")
-fun Table.renderText(): String {
+fun Table.renderText(layoutFactory: (Cell) -> TextLayout = ::SimpleLayout): String {
+  val layouts = positionedCells.associate { it.cell to layoutFactory(it.cell) }
+
   debug { "Measure pass (1/2)..." }
 
   val columnWidths = IntCounts()
   val rowHeights = IntCounts()
 
   positionedCells.forEach { (rowIndex, columnIndex, cell) ->
+    val layout = layouts.getValue(cell)
+
     val columnSpan = cell.columnSpan
     if (columnSpan == 1) {
       val currentWidth = columnWidths[columnIndex]
-      val contentWidth = cell.content.width
+      val contentWidth = layout.measureWidth()
       if (contentWidth > currentWidth) {
         debug { " Increasing column $columnIndex width from $currentWidth to $contentWidth" }
         columnWidths[columnIndex] = contentWidth
@@ -38,7 +33,7 @@ fun Table.renderText(): String {
     val rowSpan = cell.rowSpan
     if (rowSpan == 1) {
       val currentHeight = rowHeights[rowIndex]
-      val contentHeight = cell.content.height
+      val contentHeight = layout.measureHeight()
       if (contentHeight > currentHeight) {
         debug { " Increasing row $rowIndex height from $currentHeight to $contentHeight" }
         rowHeights[rowIndex] = contentHeight
@@ -51,8 +46,9 @@ fun Table.renderText(): String {
   positionedCells.filter { it.cell.columnSpan > 1 }
       .sortedBy { it.cell.columnSpan }
       .forEach { (_, columnIndex, cell) ->
+        val layout = layouts.getValue(cell)
         val columnSpan = cell.columnSpan
-        val contentWidth = cell.content.width
+        val contentWidth = layout.measureWidth()
         val columnSpanIndices = columnIndex until columnIndex + columnSpan
         val currentSpanWidth = columnSpanIndices.sumBy { columnWidths[columnIndex] }
         val remainingSize = contentWidth - currentSpanWidth
@@ -77,8 +73,9 @@ fun Table.renderText(): String {
   positionedCells.filter { it.cell.rowSpan > 1 }
       .sortedBy { it.cell.rowSpan }
       .forEach { (rowIndex, _, cell) ->
+        val layout = layouts.getValue(cell)
         val rowSpan = cell.rowSpan
-        val contentHeight = cell.content.height
+        val contentHeight = layout.measureHeight()
         val rowSpanIndices = rowIndex until rowIndex + rowSpan
         val currentSpanHeight = rowSpanIndices.sumBy { rowHeights[rowIndex] }
         val remainingSize = contentHeight - currentSpanHeight
@@ -132,9 +129,10 @@ fun Table.renderText(): String {
     val cellRight = tableLefts.getOrElse(columnIndex + cell.columnSpan) { tableWidth }
     val cellTop = tableTops[rowIndex]
     val cellBottom = tableTops.getOrElse(rowIndex + cell.rowSpan) { tableHeight }
-
     val canvas = surface.clip(cellLeft, cellRight, cellTop, cellBottom)
-    cell.textRender(canvas)
+
+    val layout = layouts.getValue(cell)
+    layout.draw(canvas)
   }
   return surface.toString()
 }
