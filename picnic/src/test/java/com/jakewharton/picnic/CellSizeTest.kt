@@ -24,6 +24,42 @@ class CellSizeTest {
       |""".trimMargin())
   }
 
+  @Test fun heightWithVerticalPadding() {
+    val table = table {
+      row {
+        cell("1")
+        cell {
+          paddingTop = 1
+          "2"
+        }
+        cell {
+          paddingBottom = 1
+          "3"
+        }
+      }
+      row {
+        cell("1")
+        cell {
+          paddingTop = 1
+          paddingBottom = 1
+          "2"
+        }
+        cell {
+          padding(top = 1, bottom = 1)
+          "3"
+        }
+      }
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |1 3
+      | 2 
+      |1  
+      | 23
+      |   
+      |""".trimMargin())
+  }
+
   @Test fun width() {
     val table = table {
       row("123", "12", "1")
@@ -35,6 +71,39 @@ class CellSizeTest {
       |12312 1  
       |12 1  123
       |1  12312 
+      |""".trimMargin())
+  }
+
+  @Test fun widthWithHorizontalPadding() {
+    val table = table {
+      row {
+        cell("1")
+        cell {
+          paddingLeft = 2
+          "2"
+        }
+        cell {
+          paddingRight = 2
+          "3"
+        }
+      }
+      row {
+        cell("1")
+        cell {
+          paddingLeft = 1
+          paddingRight = 1
+          "2"
+        }
+        cell {
+          padding(left = 1, right = 1)
+          "3"
+        }
+      }
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |1  23  
+      |1 2  3 
       |""".trimMargin())
   }
 

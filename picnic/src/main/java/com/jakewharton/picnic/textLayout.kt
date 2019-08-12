@@ -9,23 +9,28 @@ interface TextLayout {
 
 internal class SimpleLayout(private val cell: Cell) : TextLayout {
   override fun measureWidth(): Int {
-    return cell.content.split('\n').map { it.length }.max() ?: 0
+    return cell.paddingLeft +
+        cell.paddingRight +
+        (cell.content.split('\n').map { it.length }.max() ?: 0)
   }
 
   override fun measureHeight(): Int {
-    return 1 + cell.content.count { it == '\n' }
+    return 1 +
+        cell.paddingTop +
+        cell.paddingBottom +
+        cell.content.count { it == '\n' }
   }
 
   override fun draw(canvas: TextCanvas) {
-    var x = 0
-    var y = 0
+    var x = cell.paddingLeft
+    var y = cell.paddingTop
     for (char in cell.content) {
       // TODO invisible chars, codepoints, graphemes, etc.
       if (char != '\n') {
         canvas[y, x++] = char
       } else {
         y++
-        x = 0
+        x = cell.paddingLeft
       }
     }
   }

@@ -35,5 +35,14 @@ data class Footer(override val rows: List<Row>): TableSection
 
 data class Row(val cells: List<Cell>)
 
-data class Cell(val content: String, val columnSpan: Int = 1, val rowSpan: Int = 1)
+data class Cell(
+  val content: String,
+  val columnSpan: Int = 1,
+  val rowSpan: Int = 1,
+  val paddingLeft: Int = 0,
+  val paddingRight: Int = 0,
+  val paddingTop: Int = 0,
+  val paddingBottom: Int = 0
+)
+
 data class PositionedCell(val rowIndex: Int, val columnIndex: Int, val cell: Cell)

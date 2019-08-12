@@ -35,6 +35,22 @@ interface RowDsl {
 interface CellDsl {
   var columnSpan: Int
   var rowSpan: Int
+  var paddingLeft: Int
+  var paddingRight: Int
+  var paddingTop: Int
+  var paddingBottom: Int
+
+  fun padding(
+    left: Int = paddingLeft,
+    right: Int = paddingRight,
+    top: Int = paddingTop,
+    bottom: Int = paddingBottom
+  ) {
+    paddingLeft = left
+    paddingRight = right
+    paddingTop = top
+    paddingBottom = bottom
+  }
 }
 
 private class TableBuilder : TableDsl {
@@ -88,13 +104,21 @@ private class CellBuilder : CellDsl {
 
   override var columnSpan: Int = 1
   override var rowSpan: Int = 1
+  override var paddingLeft: Int = 0
+  override var paddingRight: Int = 0
+  override var paddingTop: Int = 0
+  override var paddingBottom: Int = 0
 
   fun build(): Cell {
     check(content !== unsetMarker) { "content property not set" }
     return Cell(
         content = content?.toString() ?: "",
         columnSpan = columnSpan,
-        rowSpan = rowSpan
+        rowSpan = rowSpan,
+        paddingLeft = paddingLeft,
+        paddingRight = paddingRight,
+        paddingTop = paddingTop,
+        paddingBottom = paddingBottom
     )
   }
 }
