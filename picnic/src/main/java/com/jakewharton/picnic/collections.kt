@@ -27,9 +27,4 @@ internal class IntCounts(capacity: Int = 10) {
     }
     append(']')
   }
-
-  fun clear() {
-    data = IntArray(10)
-    size = 0
-  }
 }

@@ -8,87 +8,50 @@ private val String.width: Int get() {
 
 private val String.height: Int get() = 1 + count { it == '\n' }
 
-private fun String.renderLine(line: Int, width: Int): String {
-  return split('\n').getOrElse(line) { "" }.padEnd(width)
+private fun Cell.textRender(canvas: TextCanvas) {
+  canvas.print(content)
 }
 
 @Suppress("NOTHING_TO_INLINE", "UNUSED_PARAMETER")
-private inline fun debugln(string: String) {
-  //println(string)
+private inline fun debug(message: () -> String) {
+  //println(message())
 }
 
 @JvmName("render")
 fun Table.renderText(): String {
-  val rows = header.rows + body.rows + footer.rows
+  debug { "Measure pass (1/2)..." }
 
   val columnWidths = IntCounts()
   val rowHeights = IntCounts()
-  val rowSpanCarries = IntCounts()
 
-  debugln("First pass...")
-  rows.forEachIndexed { rowIndex, row ->
-    debugln(" Row $rowIndex:")
-
-    var columnIndex = 0
-    row.cells.forEach { cell ->
-      // Check for any previous rows' cells whose >1 rowSpan carries them into this row.
-      // When found, advance the column index to avoid them, pushing remaining cells to the right.
-      while (columnIndex < rowSpanCarries.size && rowSpanCarries[columnIndex] > 0) {
-        debugln("  Found carry for column $columnIndex")
-        rowSpanCarries[columnIndex]--
-        columnIndex++
-      }
-
-      val columnSpan = cell.columnSpan
-      if (columnSpan == 1) {
-        val currentWidth = columnWidths[columnIndex]
-        val contentWidth = cell.content.width
-        if (contentWidth > currentWidth) {
-          debugln("  Increasing column $columnIndex width from $currentWidth to $contentWidth")
-          columnWidths[columnIndex] = contentWidth
-        }
-      }
-
-      val rowSpan = cell.rowSpan
-      if (rowSpan == 1) {
-        val currentHeight = rowHeights[rowIndex]
-        val contentHeight = cell.content.height
-        if (contentHeight > currentHeight) {
-          debugln("  Increasing row $rowIndex height from $currentHeight to $contentHeight")
-          rowHeights[rowIndex] = contentHeight
-        }
-      }
-
-      val rowSpanCarry = rowSpan - 1
-      repeat(columnSpan) {
-        rowSpanCarries[columnIndex] = rowSpanCarry
-        columnIndex++
+  positionedCells.forEach { (rowIndex, columnIndex, cell) ->
+    val columnSpan = cell.columnSpan
+    if (columnSpan == 1) {
+      val currentWidth = columnWidths[columnIndex]
+      val contentWidth = cell.content.width
+      if (contentWidth > currentWidth) {
+        debug { " Increasing column $columnIndex width from $currentWidth to $contentWidth" }
+        columnWidths[columnIndex] = contentWidth
       }
     }
 
-    debugln("  Row span carry: $rowSpanCarries")
+    val rowSpan = cell.rowSpan
+    if (rowSpan == 1) {
+      val currentHeight = rowHeights[rowIndex]
+      val contentHeight = cell.content.height
+      if (contentHeight > currentHeight) {
+        debug { " Increasing row $rowIndex height from $currentHeight to $contentHeight" }
+        rowHeights[rowIndex] = contentHeight
+      }
+    }
   }
 
-  debugln("Second pass...")
-  rowSpanCarries.clear()
-  rows.forEachIndexed { rowIndex, row ->
-    debugln(" Row $rowIndex:")
+  debug { "Measure pass (2/2)..." }
 
-    var columnIndex = 0
-    row.cells.forEach { cell ->
-      // Check for any previous rows' cells whose >1 rowSpan carries them into this row.
-      // When found, advance the column index to avoid them, pushing remaining cells to the right.
-      while (columnIndex < rowSpanCarries.size && rowSpanCarries[columnIndex] > 0) {
-        debugln("  Found carry for column $columnIndex")
-        rowSpanCarries[columnIndex]--
-        columnIndex++
-      }
-
-      // TODO start with size 2 and work upward. This allows required distribution of extra size
-      //  for smaller spans to be re-used in larger spans (potentially avoiding expansion).
-
-      val columnSpan = cell.columnSpan
-      if (columnSpan > 1) {
+  positionedCells.filter { it.cell.columnSpan > 1 }
+      .sortedBy { it.cell.columnSpan }
+      .forEach { (_, columnIndex, cell) ->
+        val columnSpan = cell.columnSpan
         val contentWidth = cell.content.width
         val columnSpanIndices = columnIndex until columnIndex + columnSpan
         val currentSpanWidth = columnSpanIndices.sumBy { columnWidths[columnIndex] }
@@ -105,14 +68,16 @@ fun Table.renderText(): String {
             }
             val currentWidth = columnWidths[targetColumnIndex]
             val newWidth = currentWidth + additionalSize
-            debugln("Increasing column $targetColumnIndex width from $currentWidth to $newWidth")
+            debug { " Increasing column $targetColumnIndex width from $currentWidth to $newWidth" }
             columnWidths[targetColumnIndex] = newWidth
           }
         }
       }
 
-      val rowSpan = cell.rowSpan
-      if (rowSpan > 1) {
+  positionedCells.filter { it.cell.rowSpan > 1 }
+      .sortedBy { it.cell.rowSpan }
+      .forEach { (rowIndex, _, cell) ->
+        val rowSpan = cell.rowSpan
         val contentHeight = cell.content.height
         val rowSpanIndices = rowIndex until rowIndex + rowSpan
         val currentSpanHeight = rowSpanIndices.sumBy { rowHeights[rowIndex] }
@@ -129,59 +94,47 @@ fun Table.renderText(): String {
             }
             val currentHeight = rowHeights[targetRowIndex]
             val newHeight = currentHeight + additionalSize
-            debugln("Increasing row $targetRowIndex height from $currentHeight to $newHeight")
+            debug { " Increasing row $targetRowIndex height from $currentHeight to $newHeight" }
             rowHeights[targetRowIndex] = newHeight
           }
         }
       }
 
-      val rowSpanCarry = rowSpan - 1
-      repeat(columnSpan) {
-        rowSpanCarries[columnIndex] = rowSpanCarry
-        columnIndex++
-      }
-    }
+  debug { "Layout pass..." }
 
-    debugln("  Row span carry: $rowSpanCarries")
+  val tableLefts = IntArray(columnWidths.size)
+  val tableWidth: Int
+  run {
+    var left = 0
+    for (i in 0 until columnWidths.size) {
+      tableLefts[i] = left
+      left += columnWidths[i]
+    }
+    tableWidth = left
   }
 
-  debugln("Done")
-  debugln(" Column widths: $columnWidths")
-  debugln(" Row heights: $rowHeights")
-
-  rowSpanCarries.clear()
-  return buildString {
-    rows.forEachIndexed { rowIndex, row ->
-      for (rowLine in 0 until rowHeights[rowIndex]) {
-        var columnIndex = 0
-        row.cells.forEach { cell ->
-          // TODO this is super broken because these cells should render in this space!
-          // Check for any previous rows' cells whose >1 rowSpan carries them into this row.
-          // When found, print empty space for the column's width.
-          while (columnIndex < rowSpanCarries.size && rowSpanCarries[columnIndex] > 0) {
-            rowSpanCarries[columnIndex]--
-            repeat(columnWidths[columnIndex]) {
-              append(' ')
-            }
-            columnIndex++
-          }
-
-          val columnSpan = cell.columnSpan
-          val cellWidth = when (columnSpan) {
-            1 -> columnWidths[columnIndex]
-            else -> (columnIndex until columnIndex + columnSpan).sumBy { columnWidths[it] }
-          }
-          append(cell.content.renderLine(rowLine, cellWidth))
-
-
-          val rowSpanCarry = cell.rowSpan - 1
-          repeat(columnSpan) {
-            rowSpanCarries[columnIndex] = rowSpanCarry
-            columnIndex++
-          }
-        }
-        appendln()
-      }
+  val tableTops = IntArray(rowHeights.size)
+  val tableHeight: Int
+  run {
+    var top = 0
+    for (i in 0 until rowHeights.size) {
+      tableTops[i] = top
+      top += rowHeights[i]
     }
+    tableHeight = top
   }
+
+  debug { "Drawing pass..." }
+
+  val surface = TextSurface(tableWidth, tableHeight)
+  positionedCells.forEach { (rowIndex, columnIndex, cell) ->
+    val cellLeft = tableLefts[columnIndex]
+    val cellRight = tableLefts.getOrElse(columnIndex + cell.columnSpan) { tableWidth }
+    val cellTop = tableTops[rowIndex]
+    val cellBottom = tableTops.getOrElse(rowIndex + cell.rowSpan) { tableHeight }
+
+    val canvas = surface.clip(cellLeft, cellRight, cellTop, cellBottom)
+    cell.textRender(canvas)
+  }
+  return surface.toString()
 }

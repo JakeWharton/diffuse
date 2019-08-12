@@ -9,7 +9,7 @@ class CellSpanTest {
       row {
         cell {
           columnSpan = 8
-          "8"
+          "88888888"
         }
         cell("1")
       }
@@ -17,7 +17,7 @@ class CellSpanTest {
         repeat(2) {
           cell {
             columnSpan = 4
-            "4"
+            "4444"
           }
         }
         cell("1")
@@ -26,7 +26,7 @@ class CellSpanTest {
         repeat(4) {
           cell {
             columnSpan = 2
-            "2"
+            "22"
           }
         }
         cell("1")
@@ -38,10 +38,10 @@ class CellSpanTest {
       }
     }
 
-    assertThat(table.render()).isEqualTo("""
-      |8       1
-      |4   4   1
-      |2 2 2 2 1
+    assertThat(table.renderText()).isEqualTo("""
+      |888888881
+      |444444441
+      |222222221
       |111111111
       |""".trimMargin())
   }
@@ -51,15 +51,15 @@ class CellSpanTest {
       row {
         cell {
           rowSpan = 8
-          "8"
+          "8\n8\n8\n8\n8\n8\n8\n8"
         }
         cell {
           rowSpan = 4
-          "4"
+          "4\n4\n4\n4"
         }
         cell {
           rowSpan = 2
-          "2"
+          "2\n2"
         }
         cell("1")
       }
@@ -67,7 +67,7 @@ class CellSpanTest {
       row {
         cell {
           rowSpan = 2
-          "2"
+          "2\n2"
         }
         cell("1")
       }
@@ -75,11 +75,11 @@ class CellSpanTest {
       row {
         cell {
           rowSpan = 4
-          "4"
+          "4\n4\n4\n4"
         }
         cell {
           rowSpan = 2
-          "2"
+          "2\n2"
         }
         cell("1")
       }
@@ -87,7 +87,7 @@ class CellSpanTest {
       row {
         cell {
           rowSpan = 2
-          "2"
+          "2\n2"
         }
         cell("1")
       }
@@ -99,15 +99,15 @@ class CellSpanTest {
       }
     }
 
-    assertThat(table.render()).isEqualTo("""
+    assertThat(table.renderText()).isEqualTo("""
       |8421
-      |   1
-      |  21
-      |   1
-      | 421
-      |   1
-      |  21
-      |   1
+      |8421
+      |8421
+      |8421
+      |8421
+      |8421
+      |8421
+      |8421
       |1111
       |""".trimMargin())
   }
@@ -118,7 +118,7 @@ class CellSpanTest {
         cell {
           rowSpan = 3
           columnSpan = 3
-          "3"
+          "333\n333\n333"
         }
         cell("1")
         cell("1")
@@ -128,7 +128,7 @@ class CellSpanTest {
         cell {
           rowSpan = 2
           columnSpan = 2
-          "2"
+          "22\n22"
         }
         cell("1")
       }
@@ -137,12 +137,12 @@ class CellSpanTest {
         cell {
           rowSpan = 2
           columnSpan = 2
-          "2"
+          "22\n22"
         }
         cell {
           rowSpan = 3
           columnSpan = 3
-          "3"
+          "333\n333\n333"
         }
         cell("1")
       }
@@ -151,13 +151,13 @@ class CellSpanTest {
       row("1", "1", "1", "1", "1", "1")
     }
 
-    assertThat(table.render()).isEqualTo("""
-      |3  111
-      |   2 1
-      |     1
-      |2 3  1
-      |     1
-      |11   1
+    assertThat(table.renderText()).isEqualTo("""
+      |333111
+      |333221
+      |333221
+      |223331
+      |223331
+      |113331
       |111111
       |""".trimMargin())
   }
