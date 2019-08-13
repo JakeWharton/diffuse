@@ -7,11 +7,13 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
 
   init {
     val rows = header.rows + body.rows + footer.rows
+    rowCount = rows.size
+
     val rowSpanCarries = IntCounts()
     val cells = mutableListOf<PositionedCell>()
     rows.forEachIndexed { rowIndex, row ->
       var columnIndex = 0
-      row.cells.forEach { cell ->
+      row.cells.forEachIndexed { rawRowIndex, cell ->
         // Check for any previous rows' cells whose >1 rowSpan carries them into this row.
         // When found, advance the column index to avoid them, pushing remaining cells to the right.
         while (columnIndex < rowSpanCarries.size && rowSpanCarries[columnIndex] > 0) {
@@ -20,14 +22,18 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
 
         cells += PositionedCell(rowIndex, columnIndex, cell)
 
-        val rowSpanCarry = cell.rowSpan - 1
+        val rowSpan = cell.rowSpan
+        require(rowIndex + rowSpan <= rowCount) {
+          "Cell $rawRowIndex in row $rowIndex has rowSpan=$rowSpan but table rowCount=$rowCount"
+        }
+
+        val rowSpanCarry = rowSpan - 1
         repeat(cell.columnSpan) {
           rowSpanCarries[columnIndex++] = rowSpanCarry
         }
       }
     }
 
-    rowCount = rows.size
     columnCount = rowSpanCarries.size
     positionedCells = cells
   }

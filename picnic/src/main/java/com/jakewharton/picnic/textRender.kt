@@ -97,7 +97,7 @@ fun Table.renderText(layoutFactory: (Cell) -> TextLayout = ::SimpleLayout): Stri
 
   debug { "Layout pass..." }
 
-  val tableLefts = IntArray(columnWidths.size)
+  val tableLefts = IntArray(columnWidths.size + 1)
   val tableWidth: Int
   run {
     var left = 0
@@ -105,10 +105,11 @@ fun Table.renderText(layoutFactory: (Cell) -> TextLayout = ::SimpleLayout): Stri
       tableLefts[i] = left
       left += columnWidths[i]
     }
+    tableLefts[columnWidths.size] = left
     tableWidth = left
   }
 
-  val tableTops = IntArray(rowHeights.size)
+  val tableTops = IntArray(rowHeights.size + 1)
   val tableHeight: Int
   run {
     var top = 0
@@ -116,6 +117,7 @@ fun Table.renderText(layoutFactory: (Cell) -> TextLayout = ::SimpleLayout): Stri
       tableTops[i] = top
       top += rowHeights[i]
     }
+    tableTops[rowHeights.size] = top
     tableHeight = top
   }
 
@@ -124,11 +126,19 @@ fun Table.renderText(layoutFactory: (Cell) -> TextLayout = ::SimpleLayout): Stri
   val surface = TextSurface(tableWidth, tableHeight)
   positionedCells.forEach { (rowIndex, columnIndex, cell) ->
     val cellLeft = tableLefts[columnIndex]
-    val cellRight = tableLefts.getOrElse(columnIndex + cell.columnSpan) { tableWidth }
+    val cellRight = tableLefts[columnIndex + cell.columnSpan]
     val cellTop = tableTops[rowIndex]
-    val cellBottom = tableTops.getOrElse(rowIndex + cell.rowSpan) { tableHeight }
-    val canvas = surface.clip(cellLeft, cellRight, cellTop, cellBottom)
+    val cellBottom = tableTops[rowIndex + cell.rowSpan]
 
+    debug {
+      """
+      |  ($rowIndex, $columnIndex) clip:
+      |    horizontal [$cellLeft, $cellRight)
+      |    vertical [$cellTop, $cellBottom)
+      """.trimMargin()
+    }
+
+    val canvas = surface.clip(cellLeft, cellRight, cellTop, cellBottom)
     val layout = layouts.getValue(cell)
     layout.draw(canvas)
   }
