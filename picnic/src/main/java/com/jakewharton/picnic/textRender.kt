@@ -14,14 +14,13 @@ fun Table.renderText(layoutFactory: (Cell) -> TextLayout = ::SimpleLayout): Stri
 
   debug { "Measure pass (1/2)..." }
 
-  val columnWidths = IntCounts()
-  val rowHeights = IntCounts()
+  val columnWidths = IntArray(columnCount)
+  val rowHeights = IntArray(rowCount)
 
   positionedCells.forEach { (rowIndex, columnIndex, cell) ->
     val layout = layouts.getValue(cell)
 
-    val columnSpan = cell.columnSpan
-    if (columnSpan == 1) {
+    if (cell.columnSpan == 1) {
       val currentWidth = columnWidths[columnIndex]
       val contentWidth = layout.measureWidth()
       if (contentWidth > currentWidth) {
@@ -30,8 +29,7 @@ fun Table.renderText(layoutFactory: (Cell) -> TextLayout = ::SimpleLayout): Stri
       }
     }
 
-    val rowSpan = cell.rowSpan
-    if (rowSpan == 1) {
+    if (cell.rowSpan == 1) {
       val currentHeight = rowHeights[rowIndex]
       val contentHeight = layout.measureHeight()
       if (contentHeight > currentHeight) {

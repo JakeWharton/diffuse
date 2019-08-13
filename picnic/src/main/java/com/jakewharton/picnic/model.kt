@@ -1,9 +1,14 @@
 package com.jakewharton.picnic
 
 data class Table(val header: Header, val body: Body, val footer: Footer) {
-  val positionedCells: List<PositionedCell> = mutableListOf<PositionedCell>().apply {
-    val rowSpanCarries = IntCounts()
+  val rowCount: Int
+  val columnCount: Int
+  val positionedCells: List<PositionedCell>
+
+  init {
     val rows = header.rows + body.rows + footer.rows
+    val rowSpanCarries = IntCounts()
+    val cells = mutableListOf<PositionedCell>()
     rows.forEachIndexed { rowIndex, row ->
       var columnIndex = 0
       row.cells.forEach { cell ->
@@ -13,7 +18,7 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
           rowSpanCarries[columnIndex++]--
         }
 
-        this += PositionedCell(rowIndex, columnIndex, cell)
+        cells += PositionedCell(rowIndex, columnIndex, cell)
 
         val rowSpanCarry = cell.rowSpan - 1
         repeat(cell.columnSpan) {
@@ -21,6 +26,10 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
         }
       }
     }
+
+    rowCount = rows.size
+    columnCount = rowSpanCarries.size
+    positionedCells = cells
   }
 
   override fun toString() = renderText()
