@@ -48,7 +48,7 @@ fun Table.renderText(layoutFactory: (Cell) -> TextLayout = ::SimpleLayout): Stri
         val columnSpan = cell.columnSpan
         val contentWidth = layout.measureWidth()
         val columnSpanIndices = columnIndex until columnIndex + columnSpan
-        val currentSpanWidth = columnSpanIndices.sumBy { columnWidths[columnIndex] }
+        val currentSpanWidth = columnSpanIndices.sumBy { columnWidths[it] }
         val remainingSize = contentWidth - currentSpanWidth
         if (remainingSize > 0) {
           // TODO change to distribute remaining size proportionally to the existing widths?
@@ -75,7 +75,7 @@ fun Table.renderText(layoutFactory: (Cell) -> TextLayout = ::SimpleLayout): Stri
         val rowSpan = cell.rowSpan
         val contentHeight = layout.measureHeight()
         val rowSpanIndices = rowIndex until rowIndex + rowSpan
-        val currentSpanHeight = rowSpanIndices.sumBy { rowHeights[rowIndex] }
+        val currentSpanHeight = rowSpanIndices.sumBy { rowHeights[it] }
         val remainingSize = contentHeight - currentSpanHeight
         if (remainingSize > 0) {
           // TODO change to distribute remaining size proportionally to the existing widths?
