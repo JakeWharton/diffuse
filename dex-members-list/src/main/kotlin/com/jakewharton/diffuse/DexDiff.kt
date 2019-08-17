@@ -52,8 +52,8 @@ class DexDiff(
     addDexRow("strings") { it.strings }
     addDexRow("types") { it.types }
     addDexRow("classes") { it.classes }
-    addDexRow("methods") { it.members.filterIsInstance<DexMethod>() }
-    addDexRow("fields") { it.members.filterIsInstance<DexField>() }
+    addDexRow("methods") { it.allMembers.filterIsInstance<DexMethod>() }
+    addDexRow("fields") { it.allMembers.filterIsInstance<DexField>() }
 
     setPaddingLeftRight(1)
     setTextAlignment(TextAlignment.RIGHT)

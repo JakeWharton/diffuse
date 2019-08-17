@@ -11,18 +11,27 @@ class DexParser private constructor(
 ) {
   fun withApiMapping(mapping: ApiMapping) = DexParser(bytes, mapping)
 
-  private val dexes by lazy { dexes(bytes) }
-  private val members by lazy {
-    dexes.flatMap(Dex::listMembers)
-        .map(mapping::get)
-        .toSortedSet()
-        .toList()
+  private val dexes by lazy(bytes::toDexes)
+  private val memberList by lazy {
+    dexes.map(Dex::toMemberList)
+        .reduce(MemberList::plus)
+        .let(mapping::get)
   }
 
-  fun list() = members
+  @Deprecated("Prefer listMembers()", ReplaceWith("this.listMembers()"))
+  fun list(): List<DexMember> = listMembers()
 
-  fun listMethods() = members.filterIsInstance<DexMethod>()
-  fun listFields() = members.filterIsInstance<DexField>()
+  fun listMembers(): List<DexMember> = memberList.all.toSortedSet().toList()
+  fun listMethods(): List<DexMethod> = listMembers().filterIsInstance<DexMethod>()
+  fun listFields(): List<DexField> = listMembers().filterIsInstance<DexField>()
+
+  fun declaredMembers(): List<DexMember> = memberList.declared.toSortedSet().toList()
+  fun declaredMethods(): List<DexMethod> = declaredMembers().filterIsInstance<DexMethod>()
+  fun declaredFields(): List<DexField> = declaredMembers().filterIsInstance<DexField>()
+
+  fun referencedMembers(): List<DexMember> = memberList.referenced.toSortedSet().toList()
+  fun referencedMethods(): List<DexMethod> = referencedMembers().filterIsInstance<DexMethod>()
+  fun referencedFields(): List<DexField> = referencedMembers().filterIsInstance<DexField>()
 
   /** @return the number of dex files parsed. */
   fun dexCount(): Int = dexes.size

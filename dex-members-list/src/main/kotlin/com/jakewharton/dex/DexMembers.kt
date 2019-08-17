@@ -51,7 +51,7 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
     val parser = inputs.toDexParser()
         .withApiMapping(mapping)
     val list = when (mode) {
-      Mode.Members -> parser.list()
+      Mode.Members -> parser.listMembers()
       Mode.Methods -> parser.listMethods()
       Mode.Fields -> parser.listFields()
     }

@@ -11,11 +11,11 @@ import com.android.tools.r8.origin.Origin
 import java.io.ByteArrayInputStream
 import java.util.zip.ZipInputStream
 
-internal fun dexes(inputs: Iterable<ByteArray>): List<Dex> {
+internal fun Iterable<ByteArray>.toDexes(): List<Dex> {
   val classes = mutableListOf<ByteArray>()
   val dexes = mutableListOf<ByteArray>()
 
-  for (input in inputs) {
+  for (input in this) {
     if (input.startsWith(DEX_MAGIC)) {
       dexes += input
     } else if (input.startsWith(CLASS_MAGIC)) {
@@ -70,17 +70,36 @@ private fun compileWithD8(bytes: List<ByteArray>): ByteArray {
   return checkNotNull(out) { "No dex file produced" }
 }
 
-internal fun Dex.listMembers(): List<DexMember> = listMethods() + listFields()
+internal class MemberList(
+  val declared: List<DexMember>,
+  val referenced: List<DexMember>
+) {
+  val all get() = declared + referenced
 
-internal fun Dex.listMethods(): List<DexMethod> {
-  return methodIds().map(::getMethod)
+  operator fun plus(other: MemberList): MemberList {
+    return MemberList(declared + other.declared, referenced + other.referenced)
+  }
 }
 
-internal fun Dex.listFields(): List<DexField> {
-  return fieldIds().map(::getField)
+internal fun ApiMapping.get(memberList: MemberList): MemberList {
+  return MemberList(
+      memberList.declared.map(::get),
+      memberList.referenced.map(::get)
+  )
 }
 
-internal fun Dex.getMethod(methodId: MethodId): DexMethod {
+internal fun Dex.toMemberList(): MemberList {
+  val declaredTypeIndices = classDefs().map { it.typeIndex }.toSet()
+  val (declaredMethods, referencedMethods) = methodIds()
+      .partition { it.declaringClassIndex in declaredTypeIndices }
+      .mapEach { it.map(::getMethod) }
+  val (declaredFields, referencedFields) = fieldIds()
+      .partition { it.declaringClassIndex in declaredTypeIndices }
+      .mapEach { it.map(::getField) }
+  return MemberList(declaredMethods + declaredFields, referencedMethods + referencedFields)
+}
+
+private fun Dex.getMethod(methodId: MethodId): DexMethod {
   val declaringType = TypeDescriptor(typeNames()[methodId.declaringClassIndex])
   val name = strings()[methodId.nameIndex]
   val methodProtoIds = protoIds()[methodId.protoIndex]
@@ -90,7 +109,7 @@ internal fun Dex.getMethod(methodId: MethodId): DexMethod {
   return DexMethod(declaringType, name, parameterTypes, returnType)
 }
 
-internal fun Dex.getField(fieldId: FieldId): DexField {
+private fun Dex.getField(fieldId: FieldId): DexField {
   val declaringType = TypeDescriptor(typeNames()[fieldId.declaringClassIndex])
   val name = strings()[fieldId.nameIndex]
   val type = TypeDescriptor(typeNames()[fieldId.typeIndex])

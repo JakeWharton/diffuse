@@ -44,6 +44,8 @@ internal fun ZipInputStream.entries(): Sequence<ZipEntry> {
   }
 }
 
+internal fun <T, R> Pair<T, T>.mapEach(body: (T) -> R): Pair<R, R> = body(first) to body(second)
+
 // TODO https://youtrack.jetbrains.com/issue/KT-18242
 internal fun Path.readBytes() = Files.readAllBytes(this)
 
