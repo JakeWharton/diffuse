@@ -5,13 +5,19 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
   val columnCount: Int
   val positionedCells: List<PositionedCell>
 
+  private val cellTable: List<List<PositionedCell>>
+
   init {
     val rows = header.rows + body.rows + footer.rows
     rowCount = rows.size
 
     val rowSpanCarries = IntCounts()
-    val cells = mutableListOf<PositionedCell>()
+    val positionedCells = mutableListOf<PositionedCell>()
+    val cellTable = mutableListOf<MutableList<PositionedCell>>()
     rows.forEachIndexed { rowIndex, row ->
+      val cellRow = mutableListOf<PositionedCell>()
+      cellTable += cellRow
+
       var columnIndex = 0
       row.cells.forEachIndexed { rawRowIndex, cell ->
         // Check for any previous rows' cells whose >1 rowSpan carries them into this row.
@@ -20,7 +26,8 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
           rowSpanCarries[columnIndex++]--
         }
 
-        cells += PositionedCell(rowIndex, columnIndex, cell)
+        val positionedCell = PositionedCell(rowIndex, columnIndex, cell)
+        positionedCells += positionedCell
 
         val rowSpan = cell.rowSpan
         require(rowIndex + rowSpan <= rowCount) {
@@ -29,16 +36,24 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
 
         val rowSpanCarry = rowSpan - 1
         repeat(cell.columnSpan) {
+          cellRow += positionedCell
           rowSpanCarries[columnIndex++] = rowSpanCarry
         }
       }
     }
 
     columnCount = rowSpanCarries.size
-    positionedCells = cells
+    this.positionedCells = positionedCells
+    this.cellTable = cellTable
   }
 
+  fun getOrNull(row: Int, column: Int) = cellTable.getOrNull(row)?.getOrNull(column)
+
+  operator fun get(row: Int, column: Int) = cellTable[row][column]
+
   override fun toString() = renderText()
+
+  data class PositionedCell(val rowIndex: Int, val columnIndex: Int, val cell: Cell)
 }
 
 interface TableSection {
@@ -57,7 +72,9 @@ data class Cell(
   val paddingLeft: Int = 0,
   val paddingRight: Int = 0,
   val paddingTop: Int = 0,
-  val paddingBottom: Int = 0
+  val paddingBottom: Int = 0,
+  val borderLeft: Boolean = false,
+  val borderRight: Boolean = false,
+  val borderTop: Boolean = false,
+  val borderBottom: Boolean = false
 )
-
-data class PositionedCell(val rowIndex: Int, val columnIndex: Int, val cell: Cell)

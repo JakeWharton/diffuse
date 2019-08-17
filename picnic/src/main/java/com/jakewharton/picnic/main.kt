@@ -12,6 +12,7 @@ fun main() {
       row {
         cell {
           columnSpan = 2
+          border = true
 
           "Two columns!"
         }

@@ -46,7 +46,7 @@ class CellSpanTest {
       |""".trimMargin())
   }
 
-  @Test fun columnSpanAcrossDifferentSizedRange() {
+  @Test fun columnSpanAcrossDifferentSizedColumnsDoesNotExpand() {
     val table = table {
       row("1", "22", "333")
       row {
@@ -60,6 +60,29 @@ class CellSpanTest {
     assertThat(table.renderText()).isEqualTo("""
       |122333
       |666666
+      |""".trimMargin())
+  }
+
+  @Test fun columnSpanAcrossBorderDoesNotExpand() {
+    val table = table {
+      row {
+        cell {
+          borderRight = true
+          "11"
+        }
+        cell("22")
+      }
+      row {
+        cell {
+          columnSpan = 2
+          "33333"
+        }
+      }
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |11│22
+      |33333
       |""".trimMargin())
   }
 
@@ -129,7 +152,7 @@ class CellSpanTest {
       |""".trimMargin())
   }
 
-  @Test fun rowSpanAcrossDifferentSizedRange() {
+  @Test fun rowSpanAcrossDifferentSizedRowsDoesNotExpand() {
     val table = table {
       row {
         cell {
@@ -149,6 +172,29 @@ class CellSpanTest {
       |63
       |63
       |63
+      |""".trimMargin())
+  }
+
+  @Test fun rowSpanAcrossBorderDoesNotExpand() {
+    val table = table {
+      row {
+        cell {
+          rowSpan = 2
+          "1\n1\n1"
+        }
+        cell {
+          borderBottom = true
+
+          "2"
+        }
+      }
+      row("3")
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |12
+      |1─
+      |13
       |""".trimMargin())
   }
 

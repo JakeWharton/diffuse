@@ -35,10 +35,25 @@ interface RowDsl {
 interface CellDsl {
   var columnSpan: Int
   var rowSpan: Int
+
   var paddingLeft: Int
   var paddingRight: Int
   var paddingTop: Int
   var paddingBottom: Int
+
+  var borderLeft: Boolean
+  var borderRight: Boolean
+  var borderTop: Boolean
+  var borderBottom: Boolean
+
+  var border: Boolean
+    get() = borderLeft || borderRight || borderTop || borderBottom
+    set(value) {
+      borderLeft = value
+      borderRight = value
+      borderTop = value
+      borderBottom = value
+    }
 
   fun padding(
     left: Int = paddingLeft,
@@ -50,6 +65,18 @@ interface CellDsl {
     paddingRight = right
     paddingTop = top
     paddingBottom = bottom
+  }
+
+  fun border(
+    left: Boolean = borderLeft,
+    right: Boolean = borderRight,
+    top: Boolean = borderTop,
+    bottom: Boolean = borderBottom
+  ) {
+    borderLeft = left
+    borderRight = right
+    borderTop = top
+    borderBottom = bottom
   }
 }
 
@@ -108,6 +135,10 @@ private class CellBuilder : CellDsl {
   override var paddingRight: Int = 0
   override var paddingTop: Int = 0
   override var paddingBottom: Int = 0
+  override var borderLeft: Boolean = false
+  override var borderRight: Boolean = false
+  override var borderTop: Boolean = false
+  override var borderBottom: Boolean = false
 
   fun build(): Cell {
     check(content !== unsetMarker) { "content property not set" }
@@ -118,7 +149,11 @@ private class CellBuilder : CellDsl {
         paddingLeft = paddingLeft,
         paddingRight = paddingRight,
         paddingTop = paddingTop,
-        paddingBottom = paddingBottom
+        paddingBottom = paddingBottom,
+        borderLeft = borderLeft,
+        borderRight = borderRight,
+        borderTop = borderTop,
+        borderBottom = borderBottom
     )
   }
 }
