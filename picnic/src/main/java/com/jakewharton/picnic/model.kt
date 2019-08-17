@@ -76,5 +76,12 @@ data class Cell(
   val borderLeft: Boolean = false,
   val borderRight: Boolean = false,
   val borderTop: Boolean = false,
-  val borderBottom: Boolean = false
+  val borderBottom: Boolean = false,
+  val alignment: TextAlignment = TextAlignment.TopLeft
 )
+
+enum class TextAlignment {
+  TopLeft, TopCenter, TopRight,
+  MiddleLeft, MiddleCenter, MiddleRight,
+  BottomLeft, BottomCenter, BottomRight
+}

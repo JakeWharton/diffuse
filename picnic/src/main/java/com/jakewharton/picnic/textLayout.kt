@@ -1,5 +1,15 @@
 package com.jakewharton.picnic
 
+import com.jakewharton.picnic.TextAlignment.BottomCenter
+import com.jakewharton.picnic.TextAlignment.BottomLeft
+import com.jakewharton.picnic.TextAlignment.BottomRight
+import com.jakewharton.picnic.TextAlignment.MiddleCenter
+import com.jakewharton.picnic.TextAlignment.MiddleLeft
+import com.jakewharton.picnic.TextAlignment.MiddleRight
+import com.jakewharton.picnic.TextAlignment.TopCenter
+import com.jakewharton.picnic.TextAlignment.TopLeft
+import com.jakewharton.picnic.TextAlignment.TopRight
+
 interface TextLayout {
   fun measureWidth(): Int
   fun measureHeight(): Int
@@ -22,15 +32,29 @@ internal class SimpleLayout(private val cell: Cell) : TextLayout {
   }
 
   override fun draw(canvas: TextCanvas) {
-    var x = cell.paddingLeft
-    var y = cell.paddingTop
+    val width = measureWidth()
+    val height = measureHeight()
+
+    val left = when (cell.alignment) {
+      TopLeft, MiddleLeft, BottomLeft -> cell.paddingLeft
+      TopCenter, MiddleCenter, BottomCenter -> (canvas.width - width) / 2
+      TopRight, MiddleRight, BottomRight -> canvas.width - width + cell.paddingRight
+    }
+    val top = when (cell.alignment) {
+      TopLeft, TopCenter, TopRight -> cell.paddingTop
+      MiddleLeft, MiddleCenter, MiddleRight -> (canvas.height - height) / 2
+      BottomLeft, BottomCenter, BottomRight -> canvas.height - height + cell.paddingTop
+    }
+
+    var x = left
+    var y = top
     for (char in cell.content) {
       // TODO invisible chars, codepoints, graphemes, etc.
       if (char != '\n') {
         canvas[y, x++] = char
       } else {
         y++
-        x = cell.paddingLeft
+        x = left
       }
     }
   }

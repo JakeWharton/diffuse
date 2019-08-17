@@ -46,6 +46,8 @@ interface CellDsl {
   var borderTop: Boolean
   var borderBottom: Boolean
 
+  var alignment: TextAlignment
+
   var border: Boolean
     get() = borderLeft || borderRight || borderTop || borderBottom
     set(value) {
@@ -139,6 +141,7 @@ private class CellBuilder : CellDsl {
   override var borderRight: Boolean = false
   override var borderTop: Boolean = false
   override var borderBottom: Boolean = false
+  override var alignment: TextAlignment = TextAlignment.TopLeft
 
   fun build(): Cell {
     check(content !== unsetMarker) { "content property not set" }
@@ -153,7 +156,8 @@ private class CellBuilder : CellDsl {
         borderLeft = borderLeft,
         borderRight = borderRight,
         borderTop = borderTop,
-        borderBottom = borderBottom
+        borderBottom = borderBottom,
+        alignment = alignment
     )
   }
 }
