@@ -35,7 +35,9 @@ class DexParserTest {
         "Types valueShort: short",
         "Types valueString: String",
         "Types valueStringArray: String[]",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
     assertThat(dexParser.listMethods().map(DexMethod::toString)).containsExactly(
         "Types <init>()",
@@ -52,6 +54,7 @@ class DexParserTest {
         "Types test(String[])",
         "Types test(long)",
         "Types test(short)",
+        "java.io.PrintStream println(String)",
         "java.lang.Object <init>()"
     ).inOrder()
     assertThat(dexParser.listFields().map(DexField::toString)).containsExactly(
@@ -64,7 +67,8 @@ class DexParserTest {
         "Types valueLong: long",
         "Types valueShort: short",
         "Types valueString: String",
-        "Types valueStringArray: String[]"
+        "Types valueStringArray: String[]",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 
@@ -131,7 +135,9 @@ class DexParserTest {
         "Visibilities test2: String",
         "Visibilities test3: String",
         "Visibilities test4: String",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 
@@ -162,7 +168,9 @@ class DexParserTest {
         "Types valueShort: short",
         "Types valueString: String",
         "Types valueStringArray: String[]",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 
@@ -204,7 +212,9 @@ class DexParserTest {
         "Visibilities test2: String",
         "Visibilities test3: String",
         "Visibilities test4: String",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 
@@ -262,7 +272,9 @@ class DexParserTest {
         "Visibilities test2: String",
         "Visibilities test3: String",
         "Visibilities test4: String",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 
@@ -293,7 +305,9 @@ class DexParserTest {
         "Types valueShort: short",
         "Types valueString: String",
         "Types valueStringArray: String[]",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 
@@ -335,7 +349,9 @@ class DexParserTest {
         "Visibilities test2: String",
         "Visibilities test3: String",
         "Visibilities test4: String",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 
@@ -377,7 +393,9 @@ class DexParserTest {
         "Visibilities test2: String",
         "Visibilities test3: String",
         "Visibilities test4: String",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 
@@ -417,7 +435,9 @@ class DexParserTest {
         "Types valueShort: short",
         "Types valueString: String",
         "Types valueStringArray: String[]",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 
@@ -477,7 +497,9 @@ class DexParserTest {
         "Visibilities test2: String",
         "Visibilities test3: String",
         "Visibilities test4: String",
-        "java.lang.Object <init>()"
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
     ).inOrder()
   }
 }

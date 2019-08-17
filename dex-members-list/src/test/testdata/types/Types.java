@@ -18,7 +18,9 @@ class Types {
   void test(int value) {}
   void test(long value) {}
   void test(short value) {}
-  void test(String value) {}
+  void test(String value) {
+    System.out.println(value);
+  }
   void test(String[] value) {}
 
   Runnable returnsRunnable() { return null; }

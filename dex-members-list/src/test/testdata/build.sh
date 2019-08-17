@@ -6,8 +6,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
 pushd ../resources
-rm *.dex
-rm *.apk
+rm *.dex || true
+rm *.apk || true
 popd
 
 for folder in `find "$DIR" -type d -mindepth 1 -maxdepth 1`; do
