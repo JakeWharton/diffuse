@@ -214,33 +214,33 @@ fun Table.renderText(
         val cornerRightBorder = previousColumnCell !== cell &&
             (previousColumnCell?.borderBottom == true || cell?.borderTop == true)
         if (cornerTopBorder || cornerLeftBorder || cornerBottomBorder || cornerRightBorder) {
-          val border = border.get(
+          val borderChar = border.get(
               down = cornerBottomBorder,
               up = cornerTopBorder,
               left = cornerLeftBorder,
               right = cornerRightBorder)
-          debug { "  ($rowIndex, $columnIndex) corner '$border': ($rowDrawStartIndex, $columnDrawStartIndex)" }
-          surface[rowDrawStartIndex, columnDrawStartIndex] = border
+          debug { "  ($rowIndex, $columnIndex) corner '$borderChar': ($rowDrawStartIndex, $columnDrawStartIndex)" }
+          surface[rowDrawStartIndex, columnDrawStartIndex] = borderChar
         }
       }
 
       if (previousRowCell !== cell &&
           (previousRowCell?.borderRight == true || cell?.borderLeft == true)) {
         val rowDrawEndIndex = tableTops[rowIndex + 1] // Safe given cell != null.
-        val border = border.vertical
-        debug { "  ($rowIndex, $columnIndex) left '$border': (${rowDrawStartIndex + 1}, $columnDrawStartIndex) -> ($rowDrawEndIndex, $columnDrawStartIndex)" }
+        val borderChar = border.vertical
+        debug { "  ($rowIndex, $columnIndex) left '$borderChar': (${rowDrawStartIndex + 1}, $columnDrawStartIndex) -> ($rowDrawEndIndex, $columnDrawStartIndex)" }
         for (rowDrawIndex in rowDrawStartIndex + rowBorderHeight until rowDrawEndIndex) {
-          surface[rowDrawIndex, columnDrawStartIndex] = border
+          surface[rowDrawIndex, columnDrawStartIndex] = borderChar
         }
       }
 
       if (previousColumnCell !== cell &&
           (previousColumnCell?.borderBottom == true || cell?.borderTop == true)) {
         val columnDrawEndIndex = tableLefts[columnIndex + 1] // Safe given cell != null
-        val border = border.horizontal
-        debug { "  ($rowIndex, $columnIndex) top '$border': ($rowDrawStartIndex, ${columnDrawStartIndex + 1}) -> ($rowDrawStartIndex, $columnDrawEndIndex)" }
+        val borderChar = border.horizontal
+        debug { "  ($rowIndex, $columnIndex) top '$borderChar': ($rowDrawStartIndex, ${columnDrawStartIndex + 1}) -> ($rowDrawStartIndex, $columnDrawEndIndex)" }
         for (columnDrawIndex in columnDrawStartIndex + columnBorderWidth until columnDrawEndIndex) {
-          surface[rowDrawStartIndex, columnDrawIndex] = border
+          surface[rowDrawStartIndex, columnDrawIndex] = borderChar
         }
       }
     }
