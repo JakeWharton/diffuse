@@ -130,4 +130,33 @@ class CellBorderTest {
       |3│4
       |""".trimMargin())
   }
+
+  @Test fun rowSpanPushesBordersToTheRight() {
+    val table = table {
+      row {
+        cell {
+          rowSpan = 2
+          borderBottom = true
+          "A"
+        }
+        cell {
+          borderBottom = true
+          "B"
+        }
+      }
+      row {
+        cell {
+          borderBottom = true
+          "C"
+        }
+      }
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |AB
+      | ─
+      | C
+      |──
+      |""".trimMargin())
+  }
 }

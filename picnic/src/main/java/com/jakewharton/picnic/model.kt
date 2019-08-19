@@ -21,9 +21,11 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
       var columnIndex = 0
       row.cells.forEachIndexed { rawRowIndex, cell ->
         // Check for any previous rows' cells whose >1 rowSpan carries them into this row.
-        // When found, advance the column index to avoid them, pushing remaining cells to the right.
+        // When found, add them to the current row, pushing remaining cells to the right.
         while (columnIndex < rowSpanCarries.size && rowSpanCarries[columnIndex] > 0) {
-          rowSpanCarries[columnIndex++]--
+          cellRow += cellTable[rowIndex - 1][columnIndex]
+          rowSpanCarries[columnIndex]--
+          columnIndex++
         }
 
         val positionedCell = PositionedCell(rowIndex, columnIndex, cell)
@@ -37,7 +39,8 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
         val rowSpanCarry = rowSpan - 1
         repeat(cell.columnSpan) {
           cellRow += positionedCell
-          rowSpanCarries[columnIndex++] = rowSpanCarry
+          rowSpanCarries[columnIndex] = rowSpanCarry
+          columnIndex++
         }
       }
     }
