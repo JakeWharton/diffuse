@@ -171,31 +171,31 @@ class CellAlignmentTest {
       |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │XXX │XXX │     │     │XXX  │XXX  │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │  X│  X│   │   │   X│   X│    │    │  X │  X │    │    │   X │   X │     │     │
-      |            │   │   │  X│  X│    │    │   X│   X│    │    │  X │  X │     │     │   X │   X │
+      |TopRight    │  X│  X│   │   │  X │  X │    │    │   X│   X│    │    │   X │   X │     │     │
+      |            │   │   │  X│  X│    │    │  X │  X │    │    │   X│   X│     │     │   X │   X │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │  X│  X│   │   │   X│   X│    │    │  X │  X │    │    │   X │   X │     │     │
-      |            │  X│  X│  X│  X│   X│   X│   X│   X│  X │  X │  X │  X │   X │   X │   X │   X │
-      |            │   │   │  X│  X│    │    │   X│   X│    │    │  X │  X │     │     │   X │   X │
+      |TopRight    │  X│  X│   │   │  X │  X │    │    │   X│   X│    │    │   X │   X │     │     │
+      |            │  X│  X│  X│  X│  X │  X │  X │  X │   X│   X│   X│   X│   X │   X │   X │   X │
+      |            │   │   │  X│  X│    │    │  X │  X │    │    │   X│   X│     │     │   X │   X │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │ XX│ XX│   │   │  XX│  XX│    │    │ XX │ XX │    │    │  XX │  XX │     │     │
-      |            │   │   │ XX│ XX│    │    │  XX│  XX│    │    │ XX │ XX │     │     │  XX │  XX │
+      |TopRight    │ XX│ XX│   │   │ XX │ XX │    │    │  XX│  XX│    │    │  XX │  XX │     │     │
+      |            │   │   │ XX│ XX│    │    │ XX │ XX │    │    │  XX│  XX│     │     │  XX │  XX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │ XX│ XX│   │   │  XX│  XX│    │    │ XX │ XX │    │    │  XX │  XX │     │     │
-      |            │ XX│ XX│ XX│ XX│  XX│  XX│  XX│  XX│ XX │ XX │ XX │ XX │  XX │  XX │  XX │  XX │
-      |            │   │   │ XX│ XX│    │    │  XX│  XX│    │    │ XX │ XX │     │     │  XX │  XX │
+      |TopRight    │ XX│ XX│   │   │ XX │ XX │    │    │  XX│  XX│    │    │  XX │  XX │     │     │
+      |            │ XX│ XX│ XX│ XX│ XX │ XX │ XX │ XX │  XX│  XX│  XX│  XX│  XX │  XX │  XX │  XX │
+      |            │   │   │ XX│ XX│    │    │ XX │ XX │    │    │  XX│  XX│     │     │  XX │  XX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │XXX│XXX│   │   │ XXX│ XXX│    │    │XXX │XXX │    │    │ XXX │ XXX │     │     │
-      |            │   │   │XXX│XXX│    │    │ XXX│ XXX│    │    │XXX │XXX │     │     │ XXX │ XXX │
+      |TopRight    │XXX│XXX│   │   │XXX │XXX │    │    │ XXX│ XXX│    │    │ XXX │ XXX │     │     │
+      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │ XXX│ XXX│     │     │ XXX │ XXX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │XXX│XXX│   │   │ XXX│ XXX│    │    │XXX │XXX │    │    │ XXX │ XXX │     │     │
-      |            │XXX│XXX│XXX│XXX│ XXX│ XXX│ XXX│ XXX│XXX │XXX │XXX │XXX │ XXX │ XXX │ XXX │ XXX │
-      |            │   │   │XXX│XXX│    │    │ XXX│ XXX│    │    │XXX │XXX │     │     │ XXX │ XXX │
+      |TopRight    │XXX│XXX│   │   │XXX │XXX │    │    │ XXX│ XXX│    │    │ XXX │ XXX │     │     │
+      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
+      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │ XXX│ XXX│     │     │ XXX │ XXX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |MiddleLeft  │   │X  │X  │X  │    │X   │X   │X   │    │ X  │ X  │ X  │     │ X   │ X   │ X   │
@@ -252,31 +252,31 @@ class CellAlignmentTest {
       |            │XXX│   │   │   │XXX │    │    │    │XXX │    │    │    │XXX  │     │     │     │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │  X│  X│  X│    │   X│   X│   X│    │  X │  X │  X │     │   X │   X │   X │
-      |            │  X│   │   │   │   X│    │    │    │  X │    │    │    │   X │     │     │     │
+      |MiddleRight │   │  X│  X│  X│    │  X │  X │  X │    │   X│   X│   X│     │   X │   X │   X │
+      |            │  X│   │   │   │  X │    │    │    │   X│    │    │    │   X │     │     │     │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │  X│  X│  X│    │   X│   X│   X│    │  X │  X │  X │     │   X │   X │   X │
-      |            │  X│  X│  X│  X│   X│   X│   X│   X│  X │  X │  X │  X │   X │   X │   X │   X │
-      |            │  X│   │   │   │   X│    │    │    │  X │    │    │    │   X │     │     │     │
+      |MiddleRight │   │  X│  X│  X│    │  X │  X │  X │    │   X│   X│   X│     │   X │   X │   X │
+      |            │  X│  X│  X│  X│  X │  X │  X │  X │   X│   X│   X│   X│   X │   X │   X │   X │
+      |            │  X│   │   │   │  X │    │    │    │   X│    │    │    │   X │     │     │     │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │ XX│ XX│ XX│    │  XX│  XX│  XX│    │ XX │ XX │ XX │     │  XX │  XX │  XX │
-      |            │ XX│   │   │   │  XX│    │    │    │ XX │    │    │    │  XX │     │     │     │
+      |MiddleRight │   │ XX│ XX│ XX│    │ XX │ XX │ XX │    │  XX│  XX│  XX│     │  XX │  XX │  XX │
+      |            │ XX│   │   │   │ XX │    │    │    │  XX│    │    │    │  XX │     │     │     │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │ XX│ XX│ XX│    │  XX│  XX│  XX│    │ XX │ XX │ XX │     │  XX │  XX │  XX │
-      |            │ XX│ XX│ XX│ XX│  XX│  XX│  XX│  XX│ XX │ XX │ XX │ XX │  XX │  XX │  XX │  XX │
-      |            │ XX│   │   │   │  XX│    │    │    │ XX │    │    │    │  XX │     │     │     │
+      |MiddleRight │   │ XX│ XX│ XX│    │ XX │ XX │ XX │    │  XX│  XX│  XX│     │  XX │  XX │  XX │
+      |            │ XX│ XX│ XX│ XX│ XX │ XX │ XX │ XX │  XX│  XX│  XX│  XX│  XX │  XX │  XX │  XX │
+      |            │ XX│   │   │   │ XX │    │    │    │  XX│    │    │    │  XX │     │     │     │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │XXX│XXX│XXX│    │ XXX│ XXX│ XXX│    │XXX │XXX │XXX │     │ XXX │ XXX │ XXX │
-      |            │XXX│   │   │   │ XXX│    │    │    │XXX │    │    │    │ XXX │     │     │     │
+      |MiddleRight │   │XXX│XXX│XXX│    │XXX │XXX │XXX │    │ XXX│ XXX│ XXX│     │ XXX │ XXX │ XXX │
+      |            │XXX│   │   │   │XXX │    │    │    │ XXX│    │    │    │ XXX │     │     │     │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │XXX│XXX│XXX│    │ XXX│ XXX│ XXX│    │XXX │XXX │XXX │     │ XXX │ XXX │ XXX │
-      |            │XXX│XXX│XXX│XXX│ XXX│ XXX│ XXX│ XXX│XXX │XXX │XXX │XXX │ XXX │ XXX │ XXX │ XXX │
-      |            │XXX│   │   │   │ XXX│    │    │    │XXX │    │    │    │ XXX │     │     │     │
+      |MiddleRight │   │XXX│XXX│XXX│    │XXX │XXX │XXX │    │ XXX│ XXX│ XXX│     │ XXX │ XXX │ XXX │
+      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
+      |            │XXX│   │   │   │XXX │    │    │    │ XXX│    │    │    │ XXX │     │     │     │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomLeft  │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
@@ -334,31 +334,31 @@ class CellAlignmentTest {
       |            │XXX│   │XXX│   │XXX │    │XXX │    │XXX │    │XXX │    │XXX  │     │XXX  │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomRight │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │  X│   │  X│    │   X│    │   X│    │  X │    │  X │     │   X │     │   X │
-      |            │  X│   │  X│   │   X│    │   X│    │  X │    │  X │    │   X │     │   X │     │
+      |            │   │  X│   │  X│    │  X │    │  X │    │   X│    │   X│     │   X │     │   X │
+      |            │  X│   │  X│   │  X │    │  X │    │   X│    │   X│    │   X │     │   X │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomRight │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │  X│   │  X│    │   X│    │   X│    │  X │    │  X │     │   X │     │   X │
-      |            │  X│  X│  X│  X│   X│   X│   X│   X│  X │  X │  X │  X │   X │   X │   X │   X │
-      |            │  X│   │  X│   │   X│    │   X│    │  X │    │  X │    │   X │     │   X │     │
+      |            │   │  X│   │  X│    │  X │    │  X │    │   X│    │   X│     │   X │     │   X │
+      |            │  X│  X│  X│  X│  X │  X │  X │  X │   X│   X│   X│   X│   X │   X │   X │   X │
+      |            │  X│   │  X│   │  X │    │  X │    │   X│    │   X│    │   X │     │   X │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomRight │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │ XX│   │ XX│    │  XX│    │  XX│    │ XX │    │ XX │     │  XX │     │  XX │
-      |            │ XX│   │ XX│   │  XX│    │  XX│    │ XX │    │ XX │    │  XX │     │  XX │     │
+      |            │   │ XX│   │ XX│    │ XX │    │ XX │    │  XX│    │  XX│     │  XX │     │  XX │
+      |            │ XX│   │ XX│   │ XX │    │ XX │    │  XX│    │  XX│    │  XX │     │  XX │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomRight │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │ XX│   │ XX│    │  XX│    │  XX│    │ XX │    │ XX │     │  XX │     │  XX │
-      |            │ XX│ XX│ XX│ XX│  XX│  XX│  XX│  XX│ XX │ XX │ XX │ XX │  XX │  XX │  XX │  XX │
-      |            │ XX│   │ XX│   │  XX│    │  XX│    │ XX │    │ XX │    │  XX │     │  XX │     │
+      |            │   │ XX│   │ XX│    │ XX │    │ XX │    │  XX│    │  XX│     │  XX │     │  XX │
+      |            │ XX│ XX│ XX│ XX│ XX │ XX │ XX │ XX │  XX│  XX│  XX│  XX│  XX │  XX │  XX │  XX │
+      |            │ XX│   │ XX│   │ XX │    │ XX │    │  XX│    │  XX│    │  XX │     │  XX │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomRight │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │XXX│   │XXX│    │ XXX│    │ XXX│    │XXX │    │XXX │     │ XXX │     │ XXX │
-      |            │XXX│   │XXX│   │ XXX│    │ XXX│    │XXX │    │XXX │    │ XXX │     │ XXX │     │
+      |            │   │XXX│   │XXX│    │XXX │    │XXX │    │ XXX│    │ XXX│     │ XXX │     │ XXX │
+      |            │XXX│   │XXX│   │XXX │    │XXX │    │ XXX│    │ XXX│    │ XXX │     │ XXX │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomRight │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │XXX│   │XXX│    │ XXX│    │ XXX│    │XXX │    │XXX │     │ XXX │     │ XXX │
-      |            │XXX│XXX│XXX│XXX│ XXX│ XXX│ XXX│ XXX│XXX │XXX │XXX │XXX │ XXX │ XXX │ XXX │ XXX │
-      |            │XXX│   │XXX│   │ XXX│    │ XXX│    │XXX │    │XXX │    │ XXX │     │ XXX │     │
+      |            │   │XXX│   │XXX│    │XXX │    │XXX │    │ XXX│    │ XXX│     │ XXX │     │ XXX │
+      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
+      |            │XXX│   │XXX│   │XXX │    │XXX │    │ XXX│    │ XXX│    │ XXX │     │ XXX │     │
       |            └───┴───┴───┴───┴────┴────┴────┴────┴────┴────┴────┴────┴─────┴─────┴─────┴─────┘
       |""".trimMargin())
   }

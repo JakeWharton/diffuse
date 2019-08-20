@@ -38,7 +38,7 @@ internal class SimpleLayout(private val cell: Cell) : TextLayout {
     val left = when (cell.alignment) {
       TopLeft, MiddleLeft, BottomLeft -> cell.paddingLeft
       TopCenter, MiddleCenter, BottomCenter -> (canvas.width - width) / 2
-      TopRight, MiddleRight, BottomRight -> canvas.width - width + cell.paddingRight
+      TopRight, MiddleRight, BottomRight -> canvas.width - width + cell.paddingLeft
     }
     val top = when (cell.alignment) {
       TopLeft, TopCenter, TopRight -> cell.paddingTop
