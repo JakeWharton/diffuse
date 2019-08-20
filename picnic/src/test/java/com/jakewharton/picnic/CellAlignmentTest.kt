@@ -362,4 +362,48 @@ class CellAlignmentTest {
       |            └───┴───┴───┴───┴────┴────┴────┴────┴────┴────┴────┴────┴─────┴─────┴─────┴─────┘
       |""".trimMargin())
   }
+
+  @Test fun stylePropagation() {
+    val table = table {
+      cellStyle {
+        alignment = TopLeft
+      }
+      header {
+        row("0", "123", "456")
+      }
+      body {
+        cellStyle {
+          alignment = BottomLeft
+        }
+        row {
+          cellStyle {
+            alignment = TopRight
+          }
+          cell("1\n2\n3")
+          cell("TR")
+          cell {
+            alignment = BottomRight
+            "BR"
+          }
+        }
+        row("4\n5\n6", "BL")
+      }
+      footer {
+        row("7\n8\n9", "TL")
+      }
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |0123456
+      |1 TR   
+      |2      
+      |3    BR
+      |4      
+      |5      
+      |6BL    
+      |7TL    
+      |8      
+      |9      
+      |""".trimMargin())
+  }
 }

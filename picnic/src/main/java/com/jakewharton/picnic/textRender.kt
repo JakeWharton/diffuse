@@ -2,6 +2,8 @@
 
 package com.jakewharton.picnic
 
+import com.jakewharton.picnic.Table.PositionedCell
+
 @Suppress("NOTHING_TO_INLINE", "UNUSED_PARAMETER")
 private inline fun debug(message: () -> String) {
   //println(message())
@@ -10,10 +12,10 @@ private inline fun debug(message: () -> String) {
 @JvmOverloads
 @JvmName("render")
 fun Table.renderText(
-  layoutFactory: (Cell) -> TextLayout = ::SimpleLayout,
+  layoutFactory: (PositionedCell) -> TextLayout = ::SimpleLayout,
   border: TextBorder = TextBorder.DEFAULT
 ): String {
-  val layouts = positionedCells.associate { it.cell to layoutFactory(it.cell) }
+  val layouts = positionedCells.associate { it.cell to layoutFactory(it) }
 
   debug { "Measure pass...\n 1/2..." }
 
@@ -22,7 +24,7 @@ fun Table.renderText(
   val rowHeights = IntArray(rowCount)
   val rowBorderHeights = IntArray(rowCount + 1)
 
-  positionedCells.forEach { (rowIndex, columnIndex, cell) ->
+  positionedCells.forEach { (rowIndex, columnIndex, cell, canonicalStyle) ->
     val layout = layouts.getValue(cell)
 
     val columnSpan = cell.columnSpan
@@ -45,28 +47,28 @@ fun Table.renderText(
       }
     }
 
-    if (cell.borderLeft) {
+    if (canonicalStyle?.borderLeft == true) {
       debug {
         val oldValue = if (columnBorderWidths[columnIndex] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Left border $oldValue 1"
       }
       columnBorderWidths[columnIndex] = 1
     }
-    if (cell.borderRight) {
+    if (canonicalStyle?.borderRight == true) {
       debug {
         val oldValue = if (columnBorderWidths[columnIndex + columnSpan] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Right border $oldValue 1"
       }
       columnBorderWidths[columnIndex + columnSpan] = 1
     }
-    if (cell.borderTop) {
+    if (canonicalStyle?.borderTop == true) {
       debug {
         val oldValue = if (rowBorderHeights[rowIndex] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Top border $oldValue 1"
       }
       rowBorderHeights[rowIndex] = 1
     }
-    if (cell.borderBottom) {
+    if (canonicalStyle?.borderBottom == true) {
       debug {
         val oldValue = if (rowBorderHeights[rowIndex + rowSpan] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Bottom border $oldValue 1"
@@ -194,25 +196,38 @@ fun Table.renderText(
     val rowDrawStartIndex = tableTops[rowIndex]
 
     for (columnIndex in 0..columnCount) {
+      val positionedCell = getOrNull(rowIndex, columnIndex)
+      val cell = positionedCell?.cell
+      val cellCanonicalStyle = positionedCell?.canonicalStyle
+
+      val previousRowPositionedCell = getOrNull(rowIndex, columnIndex - 1)
+      val previousRowCell = previousRowPositionedCell?.cell
+      val previousRowCellCanonicalStyle = previousRowPositionedCell?.canonicalStyle
+
+      val previousColumnPositionedCell = getOrNull(rowIndex - 1, columnIndex)
+      val previousColumnCell = previousColumnPositionedCell?.cell
+      val previousColumnCellCanonicalStyle = previousColumnPositionedCell?.canonicalStyle
+
       val columnDrawStartIndex = tableLefts[columnIndex]
-
-      val cell = getOrNull(rowIndex, columnIndex)?.cell
-      val previousRowCell = getOrNull(rowIndex, columnIndex - 1)?.cell
-      val previousColumnCell = getOrNull(rowIndex - 1, columnIndex)?.cell
-
       val rowBorderHeight = rowBorderHeights[rowIndex]
       val columnBorderWidth = columnBorderWidths[columnIndex]
       if (rowBorderHeight != 0 && columnBorderWidth != 0) {
-        val previousRowColumnCell = getOrNull(rowIndex - 1, columnIndex - 1)?.cell
+        val previousRowColumnPositionedCell = getOrNull(rowIndex - 1, columnIndex - 1)
+        val previousRowColumnCell = previousRowColumnPositionedCell?.cell
+        val previousRowColumnCellCanonicalStyle = previousRowColumnPositionedCell?.canonicalStyle
 
         val cornerTopBorder = previousRowColumnCell !== previousColumnCell &&
-            (previousRowColumnCell?.borderRight == true || previousColumnCell?.borderLeft == true)
+            (previousRowColumnCellCanonicalStyle?.borderRight == true ||
+                previousColumnCellCanonicalStyle?.borderLeft == true)
         val cornerLeftBorder = previousRowColumnCell !== previousRowCell &&
-            (previousRowColumnCell?.borderBottom == true || previousRowCell?.borderTop == true)
+            (previousRowColumnCellCanonicalStyle?.borderBottom == true ||
+                previousRowCellCanonicalStyle?.borderTop == true)
         val cornerBottomBorder = previousRowCell !== cell &&
-            (previousRowCell?.borderRight == true || cell?.borderLeft == true)
+            (previousRowCellCanonicalStyle?.borderRight == true ||
+                cellCanonicalStyle?.borderLeft == true)
         val cornerRightBorder = previousColumnCell !== cell &&
-            (previousColumnCell?.borderBottom == true || cell?.borderTop == true)
+            (previousColumnCellCanonicalStyle?.borderBottom == true ||
+                cellCanonicalStyle?.borderTop == true)
         if (cornerTopBorder || cornerLeftBorder || cornerBottomBorder || cornerRightBorder) {
           val borderChar = border.get(
               down = cornerBottomBorder,
@@ -225,7 +240,8 @@ fun Table.renderText(
       }
 
       if (previousRowCell !== cell &&
-          (previousRowCell?.borderRight == true || cell?.borderLeft == true)) {
+          (previousRowCellCanonicalStyle?.borderRight == true ||
+              cellCanonicalStyle?.borderLeft == true)) {
         val rowDrawEndIndex = tableTops[rowIndex + 1] // Safe given cell != null.
         val borderChar = border.vertical
         debug { "  ($rowIndex, $columnIndex) left '$borderChar': (${rowDrawStartIndex + 1}, $columnDrawStartIndex) -> ($rowDrawEndIndex, $columnDrawStartIndex)" }
@@ -235,7 +251,8 @@ fun Table.renderText(
       }
 
       if (previousColumnCell !== cell &&
-          (previousColumnCell?.borderBottom == true || cell?.borderTop == true)) {
+          (previousColumnCellCanonicalStyle?.borderBottom == true ||
+              cellCanonicalStyle?.borderTop == true)) {
         val columnDrawEndIndex = tableLefts[columnIndex + 1] // Safe given cell != null
         val borderChar = border.horizontal
         debug { "  ($rowIndex, $columnIndex) top '$borderChar': ($rowDrawStartIndex, ${columnDrawStartIndex + 1}) -> ($rowDrawStartIndex, $columnDrawEndIndex)" }

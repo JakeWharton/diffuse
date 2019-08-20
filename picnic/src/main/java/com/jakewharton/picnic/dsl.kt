@@ -1,4 +1,10 @@
+@file:JvmName("-DslKt")
+
 package com.jakewharton.picnic
+
+import kotlin.DeprecationLevel.ERROR
+
+// TODO setter-only property trick
 
 @DslMarker
 annotation class PicnicDsl
@@ -21,6 +27,8 @@ interface SectionDsl {
   }
 
   fun row(content: RowDsl.() -> Unit)
+
+  fun cellStyle(content: CellStyleDsl.() -> Unit)
 }
 
 @PicnicDsl
@@ -29,27 +37,34 @@ interface RowDsl {
     cell { content }
   }
   fun cell(content: CellDsl.() -> Any?)
+
+  fun cellStyle(content: CellStyleDsl.() -> Unit)
 }
 
 @PicnicDsl
-interface CellDsl {
+interface CellDsl : CellStyleDsl {
   var columnSpan: Int
   var rowSpan: Int
+}
 
-  var paddingLeft: Int
-  var paddingRight: Int
-  var paddingTop: Int
-  var paddingBottom: Int
+@PicnicDsl
+interface CellStyleDsl {
+  var paddingLeft: Int?
+  var paddingRight: Int?
+  var paddingTop: Int?
+  var paddingBottom: Int?
 
-  var borderLeft: Boolean
-  var borderRight: Boolean
-  var borderTop: Boolean
-  var borderBottom: Boolean
+  var borderLeft: Boolean?
+  var borderRight: Boolean?
+  var borderTop: Boolean?
+  var borderBottom: Boolean?
 
-  var alignment: TextAlignment
+  var alignment: TextAlignment?
 
   var border: Boolean
-    get() = borderLeft || borderRight || borderTop || borderBottom
+    @JvmSynthetic
+    @Deprecated("", level = ERROR)
+    get() = throw UnsupportedOperationException()
     set(value) {
       borderLeft = value
       borderRight = value
@@ -58,34 +73,51 @@ interface CellDsl {
     }
 
   fun padding(
-    left: Int = paddingLeft,
-    right: Int = paddingRight,
-    top: Int = paddingTop,
-    bottom: Int = paddingBottom
+      left: Int? = null,
+      right: Int? = null,
+      top: Int? = null,
+      bottom: Int? = null
   ) {
-    paddingLeft = left
-    paddingRight = right
-    paddingTop = top
-    paddingBottom = bottom
+    if (left != null) {
+      paddingLeft = left
+    }
+    if (right != null) {
+      paddingRight = right
+    }
+    if (top != null) {
+      paddingTop = top
+    }
+    if (bottom != null) {
+      paddingBottom = bottom
+    }
   }
 
   fun border(
-    left: Boolean = borderLeft,
-    right: Boolean = borderRight,
-    top: Boolean = borderTop,
-    bottom: Boolean = borderBottom
+      left: Boolean? = null,
+      right: Boolean? = null,
+      top: Boolean? = null,
+      bottom: Boolean? = null
   ) {
-    borderLeft = left
-    borderRight = right
-    borderTop = top
-    borderBottom = bottom
+    if (left != null) {
+      borderLeft = left
+    }
+    if (right != null) {
+      borderRight = right
+    }
+    if (top != null) {
+      borderTop = top
+    }
+    if (bottom != null) {
+      borderBottom = bottom
+    }
   }
 }
 
 private class TableBuilder : TableDsl {
-  private val headerBuilder = SectionBuilder()
-  private val bodyBuilder = SectionBuilder()
-  private val footerBuilder = SectionBuilder()
+  private val headerBuilder = SectionBuilder(::Header)
+  private val bodyBuilder = SectionBuilder(::Body)
+  private val footerBuilder = SectionBuilder(::Footer)
+  private val cellStyleBuilder = CellStyleBuilder()
 
   override fun header(content: SectionDsl.() -> Unit) {
     headerBuilder.apply(content)
@@ -103,45 +135,61 @@ private class TableBuilder : TableDsl {
     bodyBuilder.row(content)
   }
 
+  override fun cellStyle(content: CellStyleDsl.() -> Unit) {
+    cellStyleBuilder.apply(content)
+  }
+
   fun build() = Table(
-      Header(headerBuilder.build()), Body(bodyBuilder.build()), Footer(footerBuilder.build()))
+      headerBuilder.buildOrNull(),
+      bodyBuilder.build(),
+      footerBuilder.buildOrNull(),
+      cellStyleBuilder.buildOrNull())
 }
 
-private class SectionBuilder : SectionDsl {
+private class SectionBuilder<T : Any>(
+  private val sectionFactory: (List<Row>, CellStyle?) -> T
+) : SectionDsl {
   private val rows = mutableListOf<Row>()
+  private val cellStyleBuilder = CellStyleBuilder()
 
   override fun row(content: RowDsl.() -> Unit) {
     rows += RowBuilder().apply(content).build()
   }
 
-  fun build() = rows.toList()
+  override fun cellStyle(content: CellStyleDsl.() -> Unit) {
+    cellStyleBuilder.apply(content)
+  }
+
+  fun buildOrNull() = if (rows.isEmpty()) null else build()
+  fun build() = sectionFactory(rows.toList(), cellStyleBuilder.buildOrNull())
 }
 
 private class RowBuilder : RowDsl {
   private val cells = mutableListOf<Cell>()
+  private val cellStyleBuilder = CellStyleBuilder()
 
   override fun cell(content: CellDsl.() -> Any?) {
     cells += CellBuilder().also { it.content = content(it) }.build()
   }
 
-  fun build() = Row(cells.toList())
+  override fun cellStyle(content: CellStyleDsl.() -> Unit) {
+    cellStyleBuilder.apply(content)
+  }
+
+  fun build() = Row(cells.toList(), cellStyleBuilder.buildOrNull())
 }
 
-private class CellBuilder : CellDsl {
+private class CellBuilder private constructor(
+  private val cellStyleBuilder: CellStyleBuilder
+) : CellDsl, CellStyleDsl by cellStyleBuilder {
+
+  constructor(): this(CellStyleBuilder())
+
   private val unsetMarker = Any()
   var content: Any? = unsetMarker
 
   override var columnSpan: Int = 1
   override var rowSpan: Int = 1
-  override var paddingLeft: Int = 0
-  override var paddingRight: Int = 0
-  override var paddingTop: Int = 0
-  override var paddingBottom: Int = 0
-  override var borderLeft: Boolean = false
-  override var borderRight: Boolean = false
-  override var borderTop: Boolean = false
-  override var borderBottom: Boolean = false
-  override var alignment: TextAlignment = TextAlignment.TopLeft
 
   fun build(): Cell {
     check(content !== unsetMarker) { "content property not set" }
@@ -149,15 +197,45 @@ private class CellBuilder : CellDsl {
         content = content?.toString() ?: "",
         columnSpan = columnSpan,
         rowSpan = rowSpan,
-        paddingLeft = paddingLeft,
-        paddingRight = paddingRight,
-        paddingTop = paddingTop,
-        paddingBottom = paddingBottom,
-        borderLeft = borderLeft,
-        borderRight = borderRight,
-        borderTop = borderTop,
-        borderBottom = borderBottom,
-        alignment = alignment
+        style = cellStyleBuilder.buildOrNull()
     )
+  }
+}
+
+private class CellStyleBuilder : CellStyleDsl {
+  override var paddingLeft: Int? = null
+  override var paddingRight: Int? = null
+  override var paddingTop: Int? = null
+  override var paddingBottom: Int? = null
+  override var borderLeft: Boolean? = null
+  override var borderRight: Boolean? = null
+  override var borderTop: Boolean? = null
+  override var borderBottom: Boolean? = null
+  override var alignment: TextAlignment? = null
+
+  fun buildOrNull(): CellStyle? {
+    if (paddingLeft != null ||
+        paddingRight != null ||
+        paddingTop != null ||
+        paddingBottom != null ||
+        borderLeft != null ||
+        borderRight != null ||
+        borderTop != null ||
+        borderBottom != null ||
+        alignment != null
+    ) {
+      return CellStyle(
+          paddingLeft = paddingLeft,
+          paddingRight = paddingRight,
+          paddingTop = paddingTop,
+          paddingBottom = paddingBottom,
+          borderLeft = borderLeft,
+          borderRight = borderRight,
+          borderTop = borderTop,
+          borderBottom = borderBottom,
+          alignment = alignment
+      )
+    }
+    return null
   }
 }

@@ -1,47 +1,58 @@
 package com.jakewharton.picnic
 
-data class Table(val header: Header, val body: Body, val footer: Footer) {
-  val rowCount: Int
+data class Table(
+  val header: Header? = null,
+  val body: Body,
+  val footer: Footer? =  null,
+  val cellStyle: CellStyle? = null
+) {
+  val rowCount: Int = (header?.rows?.size ?: 0) + body.rows.size + (footer?.rows?.size ?: 0)
   val columnCount: Int
   val positionedCells: List<PositionedCell>
 
   private val cellTable: List<List<PositionedCell>>
 
   init {
-    val rows = header.rows + body.rows + footer.rows
-    rowCount = rows.size
-
     val rowSpanCarries = IntCounts()
     val positionedCells = mutableListOf<PositionedCell>()
     val cellTable = mutableListOf<MutableList<PositionedCell>>()
-    rows.forEachIndexed { rowIndex, row ->
-      val cellRow = mutableListOf<PositionedCell>()
-      cellTable += cellRow
+    var rowIndex = 0
+    listOfNotNull(header, body, footer).forEach { section ->
+      val sectionStyle = cellStyle + section.cellStyle
 
-      var columnIndex = 0
-      row.cells.forEachIndexed { rawRowIndex, cell ->
-        // Check for any previous rows' cells whose >1 rowSpan carries them into this row.
-        // When found, add them to the current row, pushing remaining cells to the right.
-        while (columnIndex < rowSpanCarries.size && rowSpanCarries[columnIndex] > 0) {
-          cellRow += cellTable[rowIndex - 1][columnIndex]
-          rowSpanCarries[columnIndex]--
-          columnIndex++
+      section.rows.forEach { row ->
+        val rowStyle = sectionStyle + row.cellStyle
+
+        val cellRow = mutableListOf<PositionedCell>()
+        cellTable += cellRow
+
+        var columnIndex = 0
+        row.cells.forEachIndexed { rawColumnIndex, cell ->
+          // Check for any previous rows' cells whose >1 rowSpan carries them into this row.
+          // When found, add them to the current row, pushing remaining cells to the right.
+          while (columnIndex < rowSpanCarries.size && rowSpanCarries[columnIndex] > 0) {
+            cellRow += cellTable[rowIndex - 1][columnIndex]
+            rowSpanCarries[columnIndex]--
+            columnIndex++
+          }
+
+          val canonicalStyle = rowStyle + cell.style
+          val positionedCell = PositionedCell(rowIndex, columnIndex, cell, canonicalStyle)
+          positionedCells += positionedCell
+
+          val rowSpan = cell.rowSpan
+          require(rowIndex + rowSpan <= rowCount) {
+            "Cell $rawColumnIndex in row $rowIndex has rowSpan=$rowSpan but table rowCount=$rowCount"
+          }
+
+          val rowSpanCarry = rowSpan - 1
+          repeat(cell.columnSpan) {
+            cellRow += positionedCell
+            rowSpanCarries[columnIndex] = rowSpanCarry
+            columnIndex++
+          }
         }
-
-        val positionedCell = PositionedCell(rowIndex, columnIndex, cell)
-        positionedCells += positionedCell
-
-        val rowSpan = cell.rowSpan
-        require(rowIndex + rowSpan <= rowCount) {
-          "Cell $rawRowIndex in row $rowIndex has rowSpan=$rowSpan but table rowCount=$rowCount"
-        }
-
-        val rowSpanCarry = rowSpan - 1
-        repeat(cell.columnSpan) {
-          cellRow += positionedCell
-          rowSpanCarries[columnIndex] = rowSpanCarry
-          columnIndex++
-        }
+        rowIndex++
       }
     }
 
@@ -56,32 +67,74 @@ data class Table(val header: Header, val body: Body, val footer: Footer) {
 
   override fun toString() = renderText()
 
-  data class PositionedCell(val rowIndex: Int, val columnIndex: Int, val cell: Cell)
+  data class PositionedCell(
+    val rowIndex: Int,
+    val columnIndex: Int,
+    val cell: Cell,
+    val canonicalStyle: CellStyle?
+  )
 }
 
 interface TableSection {
   val rows: List<Row>
+  val cellStyle: CellStyle?
 }
-data class Header(override val rows: List<Row>) : TableSection
-data class Body(override val rows: List<Row>): TableSection
-data class Footer(override val rows: List<Row>): TableSection
 
-data class Row(val cells: List<Cell>)
+data class Header(
+  override val rows: List<Row>,
+  override val cellStyle: CellStyle? = null
+) : TableSection
+
+data class Body(
+  override val rows: List<Row>,
+  override val cellStyle: CellStyle? = null
+): TableSection
+
+data class Footer(
+  override val rows: List<Row>,
+  override val cellStyle: CellStyle? = null
+): TableSection
+
+data class Row(val cells: List<Cell>, val cellStyle: CellStyle? = null)
 
 data class Cell(
   val content: String,
   val columnSpan: Int = 1,
   val rowSpan: Int = 1,
-  val paddingLeft: Int = 0,
-  val paddingRight: Int = 0,
-  val paddingTop: Int = 0,
-  val paddingBottom: Int = 0,
-  val borderLeft: Boolean = false,
-  val borderRight: Boolean = false,
-  val borderTop: Boolean = false,
-  val borderBottom: Boolean = false,
-  val alignment: TextAlignment = TextAlignment.TopLeft
+  val style: CellStyle? = null
 )
+
+data class CellStyle(
+  val paddingLeft: Int? = null,
+  val paddingRight: Int? = null,
+  val paddingTop: Int? = null,
+  val paddingBottom: Int? = null,
+  val borderLeft: Boolean? = null,
+  val borderRight: Boolean? = null,
+  val borderTop: Boolean? = null,
+  val borderBottom: Boolean? = null,
+  val alignment: TextAlignment? = null
+)
+
+private operator fun CellStyle?.plus(override: CellStyle?): CellStyle? {
+  if (this == null) {
+    return override
+  }
+  if (override == null) {
+    return this
+  }
+  return CellStyle(
+      paddingLeft = override.paddingLeft ?: paddingLeft,
+      paddingRight = override.paddingRight ?: paddingRight,
+      paddingTop = override.paddingTop ?: paddingTop,
+      paddingBottom = override.paddingBottom ?: paddingBottom,
+      borderLeft = override.borderLeft ?: borderLeft,
+      borderRight = override.borderRight ?: borderRight,
+      borderTop = override.borderTop ?: borderTop,
+      borderBottom = override.borderBottom ?: borderBottom,
+      alignment = override.alignment ?: alignment
+  )
+}
 
 enum class TextAlignment {
   TopLeft, TopCenter, TopRight,

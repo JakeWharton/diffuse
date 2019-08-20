@@ -159,4 +159,31 @@ class CellBorderTest {
       |──
       |""".trimMargin())
   }
+
+  @Test fun stylePropagation() {
+    val table = table {
+      cellStyle {
+        border = true
+      }
+      body {
+        cellStyle {
+          borderTop = false
+        }
+        row {
+          cellStyle {
+            borderLeft = false
+          }
+          cell {
+            borderRight = false
+            "A"
+          }
+        }
+      }
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |A
+      |─
+      |""".trimMargin())
+  }
 }
