@@ -33,10 +33,7 @@ interface SectionDsl {
 
 @PicnicDsl
 interface RowDsl {
-  fun cell(content: Any?) {
-    cell { content }
-  }
-  fun cell(content: CellDsl.() -> Any?)
+  fun cell(content: Any?, style: CellDsl.() -> Unit = {})
 
   fun cellStyle(content: CellStyleDsl.() -> Unit)
 }
@@ -168,8 +165,8 @@ private class RowBuilder : RowDsl {
   private val cells = mutableListOf<Cell>()
   private val cellStyleBuilder = CellStyleBuilder()
 
-  override fun cell(content: CellDsl.() -> Any?) {
-    cells += CellBuilder().also { it.content = content(it) }.build()
+  override fun cell(content: Any?, style: CellDsl.() -> Unit) {
+    cells += CellBuilder(content).apply(style).build()
   }
 
   override fun cellStyle(content: CellStyleDsl.() -> Unit) {
@@ -180,19 +177,16 @@ private class RowBuilder : RowDsl {
 }
 
 private class CellBuilder private constructor(
+  private val content: Any?,
   private val cellStyleBuilder: CellStyleBuilder
 ) : CellDsl, CellStyleDsl by cellStyleBuilder {
 
-  constructor(): this(CellStyleBuilder())
-
-  private val unsetMarker = Any()
-  var content: Any? = unsetMarker
+  constructor(content: Any?): this(content, CellStyleBuilder())
 
   override var columnSpan: Int = 1
   override var rowSpan: Int = 1
 
   fun build(): Cell {
-    check(content !== unsetMarker) { "content property not set" }
     return Cell(
         content = content?.toString() ?: "",
         columnSpan = columnSpan,

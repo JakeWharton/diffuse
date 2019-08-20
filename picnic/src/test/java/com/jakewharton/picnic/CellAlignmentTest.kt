@@ -16,45 +16,36 @@ class CellAlignmentTest {
   @Test fun alignmentsDoNotAffectSizing() {
     val table = table {
       row {
-        cell {
+        cell("TL") {
           alignment = TopLeft
-          "TL"
         }
-        cell {
+        cell("TC") {
           alignment = TopCenter
-          "TC"
         }
-        cell {
+        cell("TR") {
           alignment = TopRight
-          "TR"
         }
       }
       row {
-        cell {
+        cell("ML") {
           alignment = MiddleLeft
-          "ML"
         }
-        cell {
+        cell("MC") {
           alignment = MiddleCenter
-          "MC"
         }
-        cell {
+        cell("MR") {
           alignment = MiddleRight
-          "MR"
         }
       }
       row {
-        cell {
+        cell("BL") {
           alignment = BottomLeft
-          "BL"
         }
-        cell {
+        cell("BC") {
           alignment = BottomCenter
-          "BC"
         }
-        cell {
+        cell("BR") {
           alignment = BottomRight
-          "BR"
         }
       }
     }
@@ -79,25 +70,27 @@ class CellAlignmentTest {
                 for (paddingRight in 0..1) {
                   for (paddingTop in 0..1) {
                     for (paddingBottom in 0..1) {
-                      cell {
-                        border = true
-
-                        if (alignment == null) {
-                          this.alignment = TopLeft
-                          """
+                      val text = if (alignment == null) {
+                        """
                             |l$paddingLeft
                             |r$paddingRight
                             |t$paddingTop
                             |b$paddingBottom
                           """.trimMargin()
+                      } else {
+                        ("X".repeat(contentWidth) + '\n').repeat(contentHeight).trimEnd()
+                      }
+                      cell(text) {
+                        border = true
+
+                        if (alignment == null) {
+                          this.alignment = TopLeft
                         } else {
                           this.paddingLeft = paddingLeft
                           this.paddingRight = paddingRight
                           this.paddingTop = paddingTop
                           this.paddingBottom = paddingBottom
                           this.alignment = alignment
-
-                          ("X".repeat(contentWidth) + '\n').repeat(contentHeight).trimEnd()
                         }
                       }
                     }
@@ -381,9 +374,8 @@ class CellAlignmentTest {
           }
           cell("1\n2\n3")
           cell("TR")
-          cell {
+          cell("BR") {
             alignment = BottomRight
-            "BR"
           }
         }
         row("4\n5\n6", "BL")

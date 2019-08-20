@@ -10,11 +10,9 @@ fun main() {
     body {
       row("One", "Two", "Three")
       row {
-        cell {
+        cell("Two columns!") {
           columnSpan = 2
           border = true
-
-          "Two columns!"
         }
         cell("One column")
       }

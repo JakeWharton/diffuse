@@ -7,59 +7,50 @@ class CellBorderTest {
   @Test fun allCorners() {
     val table = table {
       row {
-        cell {
+        cell(" ") {
           borderTop = true
           borderLeft = true
           borderRight = true
-          " "
         }
-        cell {
+        cell(" ") {
           borderTop = true
           borderLeft = true
           borderRight = true
-          " "
         }
-        cell {
+        cell(" ") {
           borderLeft = true
           borderRight = true
-          " "
         }
       }
       row {
-        cell {
+        cell(" ") {
           borderTop = true
           borderLeft = true
           borderRight = true
           borderBottom = true
-          " "
         }
-        cell {
+        cell(" ") {
           borderLeft = true
           borderBottom = true
-          " "
         }
-        cell {
+        cell(" ") {
           borderRight = true
           borderBottom = true
-          " "
         }
       }
       row {
-        cell {
+        cell(" ") {
           borderTop = true
           borderRight = true
           borderBottom = true
-          " "
         }
-        cell {
+        cell(" ") {
           borderTop = true
           borderLeft = true
           borderBottom = true
-          " "
         }
-        cell {
+        cell(" ") {
           borderTop = true
-          " "
         }
       }
     }
@@ -88,16 +79,14 @@ class CellBorderTest {
   @Test fun adjacentRowBordersWithoutCorners() {
     val table = table {
       row {
-        cell {
+        cell(1) {
           borderBottom = true
-          "1"
         }
-        cell {
+        cell(2) {
           borderBottom = true
-          "2"
         }
       }
-      row("3", "4")
+      row(3, 4)
     }
 
     assertThat(table.renderText()).isEqualTo("""
@@ -110,18 +99,16 @@ class CellBorderTest {
   @Test fun adjacentColumnBordersWithoutCorners() {
     val table = table {
       row {
-        cell {
+        cell(1) {
           borderRight = true
-          "1"
         }
-        cell("2")
+        cell(2)
       }
       row {
-        cell {
+        cell(3) {
           borderRight = true
-          "3"
         }
-        cell("4")
+        cell(4)
       }
     }
 
@@ -134,20 +121,17 @@ class CellBorderTest {
   @Test fun rowSpanPushesBordersToTheRight() {
     val table = table {
       row {
-        cell {
+        cell("A") {
           rowSpan = 2
           borderBottom = true
-          "A"
         }
-        cell {
+        cell("B") {
           borderBottom = true
-          "B"
         }
       }
       row {
-        cell {
+        cell("C") {
           borderBottom = true
-          "C"
         }
       }
     }
@@ -173,9 +157,8 @@ class CellBorderTest {
           cellStyle {
             borderLeft = false
           }
-          cell {
+          cell("A") {
             borderRight = false
-            "A"
           }
         }
       }

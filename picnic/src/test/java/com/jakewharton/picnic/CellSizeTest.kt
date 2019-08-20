@@ -27,26 +27,22 @@ class CellSizeTest {
   @Test fun heightWithVerticalPadding() {
     val table = table {
       row {
-        cell("1")
-        cell {
+        cell(1)
+        cell(2) {
           paddingTop = 1
-          "2"
         }
-        cell {
+        cell(3) {
           paddingBottom = 1
-          "3"
         }
       }
       row {
-        cell("1")
-        cell {
+        cell(1)
+        cell(2) {
           paddingTop = 1
           paddingBottom = 1
-          "2"
         }
-        cell {
+        cell(3) {
           padding(top = 1, bottom = 1)
-          "3"
         }
       }
     }
@@ -77,26 +73,22 @@ class CellSizeTest {
   @Test fun widthWithHorizontalPadding() {
     val table = table {
       row {
-        cell("1")
-        cell {
+        cell(1)
+        cell(2) {
           paddingLeft = 2
-          "2"
         }
-        cell {
+        cell(3) {
           paddingRight = 2
-          "3"
         }
       }
       row {
-        cell("1")
-        cell {
+        cell(1)
+        cell(2) {
           paddingLeft = 1
           paddingRight = 1
-          "2"
         }
-        cell {
+        cell(3) {
           padding(left = 1, right = 1)
-          "3"
         }
       }
     }

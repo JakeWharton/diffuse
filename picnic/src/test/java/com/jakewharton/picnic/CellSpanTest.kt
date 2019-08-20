@@ -7,26 +7,23 @@ class CellSpanTest {
   @Test fun columnSpans() {
     val table = table {
       row {
-        cell {
+        cell("88888888") {
           columnSpan = 8
-          "88888888"
         }
         cell("1")
       }
       row {
         repeat(2) {
-          cell {
+          cell("4444") {
             columnSpan = 4
-            "4444"
           }
         }
         cell("1")
       }
       row {
         repeat(4) {
-          cell {
+          cell("22") {
             columnSpan = 2
-            "22"
           }
         }
         cell("1")
@@ -50,9 +47,8 @@ class CellSpanTest {
     val table = table {
       row("1", "22", "333")
       row {
-        cell {
+        cell("666666") {
           columnSpan = 3
-          "666666"
         }
       }
     }
@@ -66,16 +62,14 @@ class CellSpanTest {
   @Test fun columnSpanAcrossBorderDoesNotExpand() {
     val table = table {
       row {
-        cell {
+        cell("11") {
           borderRight = true
-          "11"
         }
         cell("22")
       }
       row {
-        cell {
+        cell("33333") {
           columnSpan = 2
-          "33333"
         }
       }
     }
@@ -89,45 +83,38 @@ class CellSpanTest {
   @Test fun rowSpans() {
     val table = table {
       row {
-        cell {
+        cell("8\n8\n8\n8\n8\n8\n8\n8") {
           rowSpan = 8
-          "8\n8\n8\n8\n8\n8\n8\n8"
         }
-        cell {
+        cell("4\n4\n4\n4") {
           rowSpan = 4
-          "4\n4\n4\n4"
         }
-        cell {
+        cell("2\n2") {
           rowSpan = 2
-          "2\n2"
         }
         cell("1")
       }
       row("1")
       row {
-        cell {
+        cell("2\n2") {
           rowSpan = 2
-          "2\n2"
         }
         cell("1")
       }
       row("1")
       row {
-        cell {
+        cell("4\n4\n4\n4") {
           rowSpan = 4
-          "4\n4\n4\n4"
         }
-        cell {
+        cell("2\n2") {
           rowSpan = 2
-          "2\n2"
         }
         cell("1")
       }
       row("1")
       row {
-        cell {
+        cell("2\n2") {
           rowSpan = 2
-          "2\n2"
         }
         cell("1")
       }
@@ -155,9 +142,8 @@ class CellSpanTest {
   @Test fun rowSpanAcrossDifferentSizedRowsDoesNotExpand() {
     val table = table {
       row {
-        cell {
+        cell("6\n6\n6\n6\n6\n6") {
           rowSpan = 3
-          "6\n6\n6\n6\n6\n6"
         }
         cell("1")
       }
@@ -178,14 +164,11 @@ class CellSpanTest {
   @Test fun rowSpanAcrossBorderDoesNotExpand() {
     val table = table {
       row {
-        cell {
+        cell("1\n1\n1") {
           rowSpan = 2
-          "1\n1\n1"
         }
-        cell {
+        cell("2") {
           borderBottom = true
-
-          "2"
         }
       }
       row("3")
@@ -201,34 +184,30 @@ class CellSpanTest {
   @Test fun rowAndColumnSpans() {
     val table = table {
       row {
-        cell {
+        cell("333\n333\n333") {
           rowSpan = 3
           columnSpan = 3
-          "333\n333\n333"
         }
         cell("1")
         cell("1")
         cell("1")
       }
       row {
-        cell {
+        cell("22\n22") {
           rowSpan = 2
           columnSpan = 2
-          "22\n22"
         }
         cell("1")
       }
       row("1")
       row {
-        cell {
+        cell("22\n22") {
           rowSpan = 2
           columnSpan = 2
-          "22\n22"
         }
-        cell {
+        cell("333\n333\n333") {
           rowSpan = 3
           columnSpan = 3
-          "333\n333\n333"
         }
         cell("1")
       }
