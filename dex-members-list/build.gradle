@@ -43,25 +43,31 @@ task sourcesJar(type: Jar) {
   from sourceSets.main.allSource
 }
 
-task fatMembersJar(type: Jar, dependsOn: 'compileJava') {
-  from files(sourceSets.main.output.classesDirs)
-  from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
+def fatMembersJarProvider = tasks.register('fatMembersJar', Jar) { task ->
+  task.dependsOn(configurations.named('runtimeClasspath'))
+  task.dependsOn(tasks.named('compileJava'))
 
-  classifier 'fat'
+  task.classifier 'fat'
 
-  manifest {
+  task.manifest {
     attributes 'Main-Class': 'com.jakewharton.dex.DexMembers'
+  }
+
+  task.doFirst {
+    task.from files(sourceSets.main.output.classesDirs)
+    task.from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
   }
 }
 
 def binaryMembersFile = new File(buildDir, "libs/dex-member-list-binary.jar")
-task binaryMembersJar() {
-  dependsOn(fatMembersJar)
+def binaryMembersJar = tasks.register('binaryMembersJar') { task ->
+  def fatMembersJar = fatMembersJarProvider.get()
+  task.dependsOn(fatMembersJar)
 
-  inputs.file(fatMembersJar.archivePath)
-  outputs.file(binaryMembersFile)
+  task.inputs.file(fatMembersJar.archivePath)
+  task.outputs.file(binaryMembersFile)
 
-  doLast {
+  task.doLast {
     def fatJarFile = fatMembersJar.archivePath
 
     binaryMembersFile.getParentFile().mkdirs()
@@ -73,32 +79,41 @@ task binaryMembersJar() {
   }
 }
 
-task copyBinaryMembers(type: Copy, dependsOn: binaryMembersJar) {
-  from(binaryMembersFile)
-  into buildDir
-  rename(".*", 'dex-member-list')
+def copyMembersBinary = tasks.register('copyMembersBinary', Copy) { task ->
+  task.from(binaryMembersFile)
+  task.into buildDir
+  task.rename(".*", 'dex-member-list')
 }
-assemble.dependsOn(copyBinaryMembers)
 
-task fatDiffuseJar(type: Jar, dependsOn: 'compileJava') {
-  from files(sourceSets.main.output.classesDirs)
-  from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
+tasks.named('assemble').configure { task ->
+  task.dependsOn(copyMembersBinary)
+}
 
-  classifier 'fat-diffuse'
+def fatDiffuseJarProvider = tasks.register('fatDiffuseJar', Jar) { task ->
+  task.dependsOn(configurations.named('runtimeClasspath'))
+  task.dependsOn(tasks.named('compileJava'))
 
-  manifest {
+  task.classifier 'fat-diffuse'
+
+  task.manifest {
     attributes 'Main-Class': 'com.jakewharton.diffuse.Diffuse'
+  }
+
+  task.doFirst {
+    task.from files(sourceSets.main.output.classesDirs)
+    task.from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
   }
 }
 
 def binaryDiffuseFile = new File(buildDir, "libs/diffuse-binary.jar")
-task binaryDiffuseJar() {
-  dependsOn(fatDiffuseJar)
+def binaryDiffuseJar = tasks.register('binaryDiffuseJar') { task ->
+  def fatDiffuseJar = fatDiffuseJarProvider.get()
+  task.dependsOn(fatDiffuseJar)
 
-  inputs.file(fatDiffuseJar.archivePath)
-  outputs.file(binaryDiffuseFile)
+  task.inputs.file(fatDiffuseJar.archiveFile)
+  task.outputs.file(binaryDiffuseFile)
 
-  doLast {
+  task.doLast {
     def fatJarFile = fatDiffuseJar.archivePath
 
     binaryDiffuseFile.getParentFile().mkdirs()
@@ -110,12 +125,17 @@ task binaryDiffuseJar() {
   }
 }
 
-task copyDiffuseBinary(type: Copy, dependsOn: binaryDiffuseJar) {
-  from(binaryDiffuseFile)
-  into buildDir
-  rename(".*", 'diffuse')
+def copyDiffuseBinary = tasks.register('copyDiffuseBinary', Copy) { task ->
+  task.dependsOn(binaryDiffuseJar)
+
+  task.from(binaryDiffuseFile)
+  task.into buildDir
+  task.rename(".*", 'diffuse')
 }
-assemble.dependsOn(copyDiffuseBinary)
+
+tasks.named('assemble').configure { task ->
+  task.dependsOn(copyDiffuseBinary)
+}
 
 artifacts {
   archives sourcesJar
