@@ -42,7 +42,8 @@ class CellSizeTest {
           paddingBottom = 1
         }
         cell(3) {
-          padding(top = 1, bottom = 1)
+          paddingTop = 1
+          paddingBottom = 1
         }
       }
     }
@@ -88,7 +89,8 @@ class CellSizeTest {
           paddingRight = 1
         }
         cell(3) {
-          padding(left = 1, right = 1)
+          paddingLeft = 1
+          paddingRight = 1
         }
       }
     }

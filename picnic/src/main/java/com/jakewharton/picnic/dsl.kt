@@ -4,8 +4,6 @@ package com.jakewharton.picnic
 
 import kotlin.DeprecationLevel.ERROR
 
-// TODO setter-only property trick
-
 @DslMarker
 annotation class PicnicDsl
 
@@ -60,7 +58,7 @@ interface CellStyleDsl {
 
   var border: Boolean
     @JvmSynthetic
-    @Deprecated("", level = ERROR)
+    @Deprecated("Use individual getters", level = ERROR)
     get() = throw UnsupportedOperationException()
     set(value) {
       borderLeft = value
@@ -69,45 +67,16 @@ interface CellStyleDsl {
       borderBottom = value
     }
 
-  fun padding(
-      left: Int? = null,
-      right: Int? = null,
-      top: Int? = null,
-      bottom: Int? = null
-  ) {
-    if (left != null) {
-      paddingLeft = left
+  var padding: Int
+    @JvmSynthetic
+    @Deprecated("Use individual getters", level = ERROR)
+    get() = throw UnsupportedOperationException()
+    set(value) {
+      paddingLeft = value
+      paddingRight = value
+      paddingTop = value
+      paddingBottom = value
     }
-    if (right != null) {
-      paddingRight = right
-    }
-    if (top != null) {
-      paddingTop = top
-    }
-    if (bottom != null) {
-      paddingBottom = bottom
-    }
-  }
-
-  fun border(
-      left: Boolean? = null,
-      right: Boolean? = null,
-      top: Boolean? = null,
-      bottom: Boolean? = null
-  ) {
-    if (left != null) {
-      borderLeft = left
-    }
-    if (right != null) {
-      borderRight = right
-    }
-    if (top != null) {
-      borderTop = top
-    }
-    if (bottom != null) {
-      borderBottom = bottom
-    }
-  }
 }
 
 private class TableBuilder : TableDsl {
