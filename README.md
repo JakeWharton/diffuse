@@ -70,15 +70,10 @@ Types valueString: String
 Types valueStringArray: String[]
 ```
 
-You can also use the `dex-method-list` or `dex-field-list` binaries for the same effect.
-
-By default the D8 compiler is used to dex any class files. Pass the `--legacy-dx` flag to use the
-old DX compiler.
-
 Use the `--hide-synthetic-numbers` flag to remove number suffix from synthetic accessor
 methods. This is useful to prevent noise when `diff`ing output.
 
-All binaries support the `--help` flag for more information about invocation.
+See the `--help` flag for more information about invocation.
 
 You can also use this tool as a library. Add a dependency on
 `com.jakewharton.dex:dex-member-list:4.0.0` and use `DexParser`.
