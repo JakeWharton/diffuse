@@ -6,11 +6,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.convert
 import com.github.ajalt.clikt.parameters.arguments.multiple
-import com.github.ajalt.clikt.parameters.options.convert
-import com.github.ajalt.clikt.parameters.options.default
-import com.github.ajalt.clikt.parameters.options.flag
-import com.github.ajalt.clikt.parameters.options.option
-import com.github.ajalt.clikt.parameters.options.switch
+import com.github.ajalt.clikt.parameters.options.*
 import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
 import com.jakewharton.dex.DexParser.Companion.toDexParser
 import java.io.File
@@ -26,10 +22,13 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
       help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.")
       .flag()
 
+  private val detail by option(help = "Show detail info").switch("--detail" to "detail")
+
   private val mapping: ApiMapping by option("--mapping",
       help = "Obfuscation mapping file produced by R8 or ProGuard for de-obfuscating names.")
       .convert { File(it).toApiMapping() }
       .default(ApiMapping.EMPTY)
+
 
   private val inputs: List<File> by argument(name = "FILES",
       help = ".apk, .aar, .jar, .dex, and/or .class files to process. STDIN is used when no files are provided.")
@@ -50,6 +49,7 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
         .map { it.use(InputStream::readBytes) }
     val parser = inputs.toDexParser()
         .withApiMapping(mapping)
+    parser.needDetail = detail != null
     val list = when (mode) {
       Mode.Members -> parser.listMembers()
       Mode.Methods -> parser.listMethods()

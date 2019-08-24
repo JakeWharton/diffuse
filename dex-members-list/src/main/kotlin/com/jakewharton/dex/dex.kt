@@ -1,5 +1,6 @@
 package com.jakewharton.dex
 
+import com.android.dex.ClassData
 import com.android.dex.Dex
 import com.android.dex.FieldId
 import com.android.dex.MethodId
@@ -55,10 +56,10 @@ private fun compileWithD8(bytes: List<ByteArray>): ByteArray {
   builder.programConsumer = object : DexIndexedConsumer {
     override fun finished(diagnostics: DiagnosticsHandler) = Unit
     override fun accept(
-      index: Int,
-      bytes: ByteArray,
-      descriptors: Set<String>,
-      diagnostics: DiagnosticsHandler?
+        index: Int,
+        bytes: ByteArray,
+        descriptors: Set<String>,
+        diagnostics: DiagnosticsHandler?
     ) {
       assert(out == null) { "More than one dex file produced" }
       out = bytes
@@ -71,8 +72,8 @@ private fun compileWithD8(bytes: List<ByteArray>): ByteArray {
 }
 
 internal class MemberList(
-  val declared: List<DexMember>,
-  val referenced: List<DexMember>
+    val declared: List<DexMember>,
+    val referenced: List<DexMember>
 ) {
   val all get() = declared + referenced
 
@@ -88,6 +89,16 @@ internal fun ApiMapping.get(memberList: MemberList): MemberList {
   )
 }
 
+internal fun Dex.toMemberDetailList(): MemberList {
+  val classDatas = classDefs().filter { it.classDataOffset!=0 }.map { readClassData(it) }.toSet()
+  val declaredTypeIndices = classDefs().map { it.typeIndex }.toSet()
+  val declaredMethods = classDatas.map(ClassData::allMethods).flatMap { it.map(::getMethod) }
+  val declaredFields = classDatas.map(ClassData::allFields).flatMap { it.map(::getField) }
+  val referencedMethods = methodIds().filter { it.declaringClassIndex !in declaredTypeIndices }.map { getMethod(it) }
+  val referencedFields = fieldIds().filter { it.declaringClassIndex !in declaredTypeIndices }.map { getField(it) }
+  return MemberList(declaredMethods + declaredFields, referencedMethods + referencedFields)
+}
+
 internal fun Dex.toMemberList(): MemberList {
   val declaredTypeIndices = classDefs().map { it.typeIndex }.toSet()
   val (declaredMethods, referencedMethods) = methodIds()
@@ -97,6 +108,18 @@ internal fun Dex.toMemberList(): MemberList {
       .partition { it.declaringClassIndex in declaredTypeIndices }
       .mapEach { it.map(::getField) }
   return MemberList(declaredMethods + declaredFields, referencedMethods + referencedFields)
+}
+
+private fun Dex.getMethod(method: ClassData.Method): DexMethod {
+  val dexMethod = getMethod(methodIds()[method.methodIndex])
+  dexMethod.accessFlags = method.accessFlags
+  return dexMethod;
+}
+
+private fun Dex.getField(field: ClassData.Field): DexField {
+  val dexField = getField(fieldIds()[field.fieldIndex])
+  dexField.accessFlags = field.accessFlags
+  return dexField
 }
 
 private fun Dex.getMethod(methodId: MethodId): DexMethod {

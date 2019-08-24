@@ -1,6 +1,9 @@
 package com.jakewharton.dex
 
+import com.android.tools.r8.graph.ClassAccessFlags
+
 sealed class DexMember : Comparable<DexMember> {
+  var accessFlags: Int? = null
   abstract val declaringType: TypeDescriptor
   abstract val name: String
   abstract fun render(hideSyntheticNumbers: Boolean = false): String
@@ -21,9 +24,9 @@ sealed class DexMember : Comparable<DexMember> {
 
 /** Represents a single field reference. */
 data class DexField(
-  override val declaringType: TypeDescriptor,
-  override val name: String,
-  val type: TypeDescriptor
+    override val declaringType: TypeDescriptor,
+    override val name: String,
+    val type: TypeDescriptor
 ) : DexMember() {
   override fun render(hideSyntheticNumbers: Boolean): String {
     var displayType = declaringType
@@ -48,10 +51,10 @@ data class DexField(
 
 /** Represents a single method reference. */
 data class DexMethod(
-  override val declaringType: TypeDescriptor,
-  override val name: String,
-  val parameterTypes: List<TypeDescriptor>,
-  val returnType: TypeDescriptor
+    override val declaringType: TypeDescriptor,
+    override val name: String,
+    val parameterTypes: List<TypeDescriptor>,
+    val returnType: TypeDescriptor
 ) : DexMember() {
   override fun render(hideSyntheticNumbers: Boolean): String {
     var displayType = declaringType
@@ -71,6 +74,8 @@ data class DexMethod(
     }
 
     return buildString {
+      accessFlags?.let { append(ClassAccessFlags.fromDexAccessFlags(it).toSmaliString()) }
+      append(' ')
       append(displayType.sourceName)
       append(' ')
       append(displayName)
