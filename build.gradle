@@ -17,7 +17,6 @@ buildscript {
       'truth': 'com.google.truth:truth:1.0',
       'guava': 'com.google.guava:guava:28.1-jre',
       'okio': 'com.squareup.okio:okio:2.3.0',
-      'asciitable': 'de.vandermeer:asciitable:0.3.2',
       'byteunits': 'com.jakewharton.byteunits:byteunits:0.9.1',
   ]
 

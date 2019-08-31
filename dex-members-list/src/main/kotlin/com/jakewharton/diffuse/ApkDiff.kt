@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse
 
 import com.jakewharton.dex.ApiMapping
-import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment
+import com.jakewharton.picnic.TextAlignment
 
 class ApkDiff(
   val oldApk: Apk,
@@ -14,15 +14,15 @@ class ApkDiff(
   val arsc: ArscDiff by lazy { ArscDiff(oldApk.arsc, newApk.arsc) }
 
   override fun toTextReport() = buildString {
-    appendln(asciiTable {
-      addRow("OLD/NEW", oldApk.filename, newApk.filename)
-      addRule()
-      addRow("md5", oldApk.bytes.md5().hex(), newApk.bytes.md5().hex())
-      addRow("sha1", oldApk.bytes.sha1().hex(), newApk.bytes.sha1().hex())
-      addRow("mapping", oldMapping.toSummaryString(), newMapping.toSummaryString())
-
-      setPaddingLeftRight(1)
-      setTextAlignment(TextAlignment.LEFT)
+    appendln(diffuseTable {
+      header {
+        row("OLD/NEW", oldApk.filename, newApk.filename)
+      }
+      body {
+        row("md5", oldApk.bytes.md5().hex(), newApk.bytes.md5().hex())
+        row("sha1", oldApk.bytes.sha1().hex(), newApk.bytes.sha1().hex())
+        row("mapping", oldMapping.toSummaryString(), newMapping.toSummaryString())
+      }
     })
     appendln()
     appendln()

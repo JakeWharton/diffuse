@@ -19,7 +19,7 @@ dependencies {
   // Truth uses a newer version of Guava than R8.
   implementation deps.guava
 
-  implementation deps.asciitable
+  implementation project(':picnic')
   implementation deps.okio
   implementation deps.androidTools.binaryResources
   implementation deps.byteunits
