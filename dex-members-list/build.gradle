@@ -15,8 +15,6 @@ dependencies {
   implementation deps.kotlin.stdlibJdk8
 
   implementation deps.r8
-  // TODO remove explicit metadata-jvm dependency on next major r8 update
-  implementation deps.kotlin.metadata
 
   // Truth uses a newer version of Guava than R8.
   implementation deps.guava

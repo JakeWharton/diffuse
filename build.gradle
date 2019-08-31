@@ -10,9 +10,8 @@ buildscript {
       ],
       'kotlin': [
           'stdlibJdk8': "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
-          'metadata': 'org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.0.5',
       ],
-      'r8': 'com.android.tools:r8:1.4.93',
+      'r8': 'com.android.tools:r8:1.5.68',
       'clikt': 'com.github.ajalt:clikt:2.1.0',
       'junit': 'junit:junit:4.13-beta-3',
       'truth': 'com.google.truth:truth:1.0',
