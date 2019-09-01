@@ -7,11 +7,13 @@ import java.nio.file.Path
 /** Parser for method and field references inside of a dex file. */
 class DexParser private constructor(
   private val bytes: List<ByteArray>,
-  val mapping: ApiMapping = ApiMapping.EMPTY
+  private val mapping: ApiMapping = ApiMapping.EMPTY,
+  private val libraryJar: Path? = null
 ) {
-  fun withApiMapping(mapping: ApiMapping) = DexParser(bytes, mapping)
+  fun withApiMapping(mapping: ApiMapping) = DexParser(bytes, mapping, libraryJar)
+  fun withDesugaring(libraryJar: Path?) = DexParser(bytes, mapping, libraryJar)
 
-  private val dexes by lazy(bytes::toDexes)
+  private val dexes by lazy { bytes.toDexes(libraryJar) }
   private val memberList by lazy {
     dexes.map(Dex::toMemberList)
         .reduce(MemberList::plus)

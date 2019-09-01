@@ -9,9 +9,10 @@ import com.android.tools.r8.DexIndexedConsumer
 import com.android.tools.r8.DiagnosticsHandler
 import com.android.tools.r8.origin.Origin
 import java.io.ByteArrayInputStream
+import java.nio.file.Path
 import java.util.zip.ZipInputStream
 
-internal fun Iterable<ByteArray>.toDexes(): List<Dex> {
+internal fun Iterable<ByteArray>.toDexes(libraryJar: Path?): List<Dex> {
   val classes = mutableListOf<ByteArray>()
   val dexes = mutableListOf<ByteArray>()
 
@@ -42,13 +43,24 @@ internal fun Iterable<ByteArray>.toDexes(): List<Dex> {
   }
 
   if (classes.isNotEmpty()) {
-    dexes += compileWithD8(classes)
+    dexes += compileClassesWithD8(classes, libraryJar)
   }
   return dexes.map(::Dex)
 }
 
-private fun compileWithD8(bytes: List<ByteArray>): ByteArray {
+private fun compileClassesWithD8(
+  bytes: List<ByteArray>,
+  libraryJar: Path?
+): ByteArray {
   val builder = D8Command.builder()
+
+  if (libraryJar != null) {
+    builder.addLibraryFiles(libraryJar)
+  } else {
+    builder.minApiLevel = 29
+    builder.disableDesugaring = true
+  }
+
   bytes.forEach { builder.addClassProgramData(it, Origin.unknown()) }
 
   var out: ByteArray? = null

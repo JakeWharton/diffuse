@@ -30,6 +30,10 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
       help = "Obfuscation mapping file produced by R8 or ProGuard for de-obfuscating names.")
       .path(exists = true, folderOkay = false, readable = true)
 
+  private val desugaringAndroidApiJar by option("--desugar",
+      help = "Enable desugaring when dex-compiling class files using the supplied Android API .jar.\n\n(e.g., SDK/platforms/android-29/android.jar)")
+      .path(exists = true, folderOkay = false, readable = true)
+
   private val inputs: List<File> by argument(name = "FILES",
       help = ".apk, .aar, .jar, .dex, and/or .class files to process. STDIN is used when no files are provided.")
       .convert { File(it) }
@@ -49,6 +53,7 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
         .map { it.use(InputStream::readBytes) }
     val parser = inputs.toDexParser()
         .withApiMapping(mapping?.toApiMapping() ?: ApiMapping.EMPTY)
+        .withDesugaring(desugaringAndroidApiJar)
     val list = when (mode) {
       Mode.Members -> parser.listMembers()
       Mode.Methods -> parser.listMethods()

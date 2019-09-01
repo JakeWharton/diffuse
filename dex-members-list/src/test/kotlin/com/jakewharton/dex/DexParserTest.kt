@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.jakewharton.dex.DexParser.Companion.toDexParser
 import org.junit.Test
 import java.io.File
+import java.nio.file.Paths
 
 class DexParserTest {
   @Test fun types() {
@@ -565,6 +566,40 @@ class DexParserTest {
         "Visibilities test4: String",
         "java.io.PrintStream println(String)",
         "java.lang.Object <init>()",
+        "java.lang.System out: PrintStream"
+    ).inOrder()
+  }
+
+  @Test fun desugaring() {
+    val dexParser = File(Resources.getResource("Desugaring.class").file).toDexParser()
+    assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
+        "Desugaring <init>(Runnable)",
+        "Desugaring lambda\$main$0()",
+        "Desugaring main(String[])",
+        "Desugaring run()",
+        "Desugaring delegate: Runnable",
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.Runnable run()",
+        "java.lang.System out: PrintStream",
+        "java.lang.invoke.LambdaMetafactory metafactory(MethodHandles\$Lookup, String, MethodType, MethodType, MethodHandle, MethodType) → CallSite"
+    ).inOrder()
+
+    val desugaringParser = dexParser
+        .withDesugaring(Paths.get(Resources.getResource("android-api-2.jar").file))
+    assertThat(desugaringParser.listMembers().map(DexMember::toString)).containsExactly(
+        "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ <clinit>()",
+        "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ <init>()",
+        "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ run()",
+        "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ INSTANCE: -$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ",
+        "Desugaring <init>(Runnable)",
+        "Desugaring lambda\$main$0()",
+        "Desugaring main(String[])",
+        "Desugaring run()",
+        "Desugaring delegate: Runnable",
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.Runnable run()",
         "java.lang.System out: PrintStream"
     ).inOrder()
   }
