@@ -12,8 +12,15 @@ class DexParser private constructor(
   private val mapping: ApiMapping = ApiMapping.EMPTY,
   private val desugaring: Desugaring = Desugaring.DISABLED
 ) {
+  /** Configuration for language feature and newer API call desugaring. */
   data class Desugaring(
+    /** The minimum API level supported. This affects how much desugaring will occur. */
     val minApiLevel: Int,
+    /**
+     * The library jar(s) for use in desugaring.
+     *
+     * Typically this is an `android.jar` from the Android SDK or `rt.jar` from the JDK.
+     */
     val libraryJars: List<Path>
   ) {
     companion object {
@@ -32,7 +39,10 @@ class DexParser private constructor(
 
   /**
    * Return a new [DexParser] which will desugar language features and newer API calls using the
-   * supplied [Desugaring] configuration.
+   * supplied [Desugaring] configuration. This is only used for `.jar`, `.aar`, and/or `.class`
+   * inputs.
+   *
+   * @see Desugaring
    */
   fun withDesugaring(desugaring: Desugaring) = DexParser(bytes, mapping, desugaring)
 
