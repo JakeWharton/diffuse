@@ -3,6 +3,7 @@ package com.jakewharton.dex
 import com.google.common.io.Resources
 import com.google.common.truth.Truth.assertThat
 import com.jakewharton.dex.DexParser.Companion.toDexParser
+import com.jakewharton.dex.DexParser.Desugaring
 import org.junit.Test
 import java.nio.file.Paths
 
@@ -581,12 +582,13 @@ class DexParserTest {
         "java.lang.Object <init>()",
         "java.lang.Runnable run()",
         "java.lang.System out: PrintStream",
-        "java.lang.invoke.LambdaMetafactory metafactory(MethodHandles\$Lookup, String, MethodType, MethodType, MethodHandle, MethodType) → CallSite"
+        "java.lang.invoke.LambdaMetafactory metafactory(MethodHandles\$Lookup, String, MethodType, MethodType, MethodHandle, MethodType) → CallSite",
+        "java.util.Objects requireNonNull(Object) → Object"
     ).inOrder()
 
-    val desugaringParser = dexParser
-        .withDesugaring(loadResource("android-api-2.jar"))
-    assertThat(desugaringParser.listMembers().map(DexMember::toString)).containsExactly(
+    val androidApi2Jar = loadResource("android-api-2.jar")
+    val api24Parser = dexParser.withDesugaring(Desugaring(24, listOf(androidApi2Jar)))
+    assertThat(api24Parser.listMembers().map(DexMember::toString)).containsExactly(
         "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ <clinit>()",
         "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ <init>()",
         "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ run()",
@@ -598,6 +600,25 @@ class DexParserTest {
         "Desugaring delegate: Runnable",
         "java.io.PrintStream println(String)",
         "java.lang.Object <init>()",
+        "java.lang.Runnable run()",
+        "java.lang.System out: PrintStream",
+        "java.util.Objects requireNonNull(Object) → Object"
+    ).inOrder()
+
+    val api14Parser = dexParser.withDesugaring(Desugaring(14, listOf(androidApi2Jar)))
+    assertThat(api14Parser.listMembers().map(DexMember::toString)).containsExactly(
+        "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ <clinit>()",
+        "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ <init>()",
+        "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ run()",
+        "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ INSTANCE: -$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ",
+        "Desugaring <init>(Runnable)",
+        "Desugaring lambda\$main$0()",
+        "Desugaring main(String[])",
+        "Desugaring run()",
+        "Desugaring delegate: Runnable",
+        "java.io.PrintStream println(String)",
+        "java.lang.Object <init>()",
+        "java.lang.Object getClass() → Class",
         "java.lang.Runnable run()",
         "java.lang.System out: PrintStream"
     ).inOrder()

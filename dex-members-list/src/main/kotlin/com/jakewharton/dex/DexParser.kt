@@ -10,23 +10,33 @@ import java.nio.file.Path
 class DexParser private constructor(
   private val bytes: List<ByteArray>,
   private val mapping: ApiMapping = ApiMapping.EMPTY,
-  private val libraryJar: Path? = null
+  private val desugaring: Desugaring = Desugaring.DISABLED
 ) {
+  data class Desugaring(
+    val minApiLevel: Int,
+    val libraryJars: List<Path>
+  ) {
+    companion object {
+      @JvmField
+      val DISABLED = Desugaring(29, emptyList())
+    }
+  }
+
   /**
    * Return a new [DexParser] which uses the supplied [mapping] to translate types and names.
    * These mappings are produced by tools like R8 and ProGuard.
    *
    * @see ApiMapping
    */
-  fun withApiMapping(mapping: ApiMapping) = DexParser(bytes, mapping, libraryJar)
+  fun withApiMapping(mapping: ApiMapping) = DexParser(bytes, mapping, desugaring)
 
   /**
-   * Return a new [DexParser] which will desugar language feature and API calls using the supplied
-   * [libraryJar]. This is usually the `android.jar` from the Android SDK or `rt.jar` from the JDK.
+   * Return a new [DexParser] which will desugar language features and newer API calls using the
+   * supplied [Desugaring] configuration.
    */
-  fun withDesugaring(libraryJar: Path?) = DexParser(bytes, mapping, libraryJar)
+  fun withDesugaring(desugaring: Desugaring) = DexParser(bytes, mapping, desugaring)
 
-  private val dexes by lazy { bytes.toDexes(libraryJar) }
+  private val dexes by lazy { bytes.toDexes(desugaring) }
   private val memberList by lazy {
     dexes.map(Dex::toMemberList)
         .reduce(MemberList::plus)

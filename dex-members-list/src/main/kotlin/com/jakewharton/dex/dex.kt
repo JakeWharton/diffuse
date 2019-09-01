@@ -8,11 +8,11 @@ import com.android.tools.r8.D8Command
 import com.android.tools.r8.DexIndexedConsumer
 import com.android.tools.r8.DiagnosticsHandler
 import com.android.tools.r8.origin.Origin
+import com.jakewharton.dex.DexParser.Desugaring
 import java.io.ByteArrayInputStream
-import java.nio.file.Path
 import java.util.zip.ZipInputStream
 
-internal fun Iterable<ByteArray>.toDexes(libraryJar: Path?): List<Dex> {
+internal fun Iterable<ByteArray>.toDexes(desugaring: Desugaring): List<Dex> {
   val classes = mutableListOf<ByteArray>()
   val dexes = mutableListOf<ByteArray>()
 
@@ -43,21 +43,21 @@ internal fun Iterable<ByteArray>.toDexes(libraryJar: Path?): List<Dex> {
   }
 
   if (classes.isNotEmpty()) {
-    dexes += compileClassesWithD8(classes, libraryJar)
+    dexes += compileClassesWithD8(classes, desugaring)
   }
   return dexes.map(::Dex)
 }
 
 private fun compileClassesWithD8(
   bytes: List<ByteArray>,
-  libraryJar: Path?
+  desugaring: Desugaring
 ): List<ByteArray> {
   val builder = D8Command.builder()
 
-  if (libraryJar != null) {
-    builder.addLibraryFiles(libraryJar)
-  } else {
-    builder.minApiLevel = 29
+  builder.minApiLevel = desugaring.minApiLevel
+  builder.addLibraryFiles(desugaring.libraryJars)
+
+  if (desugaring === Desugaring.DISABLED) {
     builder.disableDesugaring = true
   }
 

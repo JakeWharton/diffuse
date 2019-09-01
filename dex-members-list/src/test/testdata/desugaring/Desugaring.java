@@ -1,8 +1,10 @@
+import java.util.Objects;
+
 public final class Desugaring implements Runnable {
   private final Runnable delegate;
 
   private Desugaring(Runnable delegate) {
-    this.delegate = delegate;
+    this.delegate = Objects.requireNonNull(delegate);
   }
 
   @Override public void run() {
