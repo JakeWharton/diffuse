@@ -4,12 +4,11 @@ import com.google.common.io.Resources
 import com.google.common.truth.Truth.assertThat
 import com.jakewharton.dex.DexParser.Companion.toDexParser
 import org.junit.Test
-import java.io.File
 import java.nio.file.Paths
 
 class DexParserTest {
   @Test fun types() {
-    val dexParser = File(Resources.getResource("types.dex").file).toDexParser()
+    val dexParser = loadResource("types.dex").toDexParser()
     assertThat(dexParser.dexCount()).isEqualTo(1)
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Types <init>()",
@@ -140,7 +139,7 @@ class DexParserTest {
   }
 
   @Test fun paramsJoined() {
-    val dexParser = File(Resources.getResource("params_joined.dex").file).toDexParser()
+    val dexParser = loadResource("params_joined.dex").toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -149,7 +148,7 @@ class DexParserTest {
   }
 
   @Test fun visibilities() {
-    val dexParser = File(Resources.getResource("visibilities.dex").file).toDexParser()
+    val dexParser = loadResource("visibilities.dex").toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Visibilities <init>()",
         "Visibilities test1()",
@@ -165,8 +164,8 @@ class DexParserTest {
   }
 
   @Test fun multipleDexFiles() {
-    val types = File(Resources.getResource("types.dex").file)
-    val visibilities = File(Resources.getResource("visibilities.dex").file)
+    val types = loadResource("types.dex")
+    val visibilities = loadResource("visibilities.dex")
     val dexParser = listOf(types, visibilities).toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Types <init>()",
@@ -209,7 +208,7 @@ class DexParserTest {
   }
 
   @Test fun apk() {
-    val dexParser = File(Resources.getResource("one.apk").file).toDexParser()
+    val dexParser = loadResource("one.apk").toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Types <init>()",
         "Types returnsBoolean() → boolean",
@@ -242,7 +241,7 @@ class DexParserTest {
   }
 
   @Test fun apkMultipleDex() {
-    val dexParser = File(Resources.getResource("three.apk").file).toDexParser()
+    val dexParser = loadResource("three.apk").toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -286,7 +285,7 @@ class DexParserTest {
   }
 
   @Test fun classFile() {
-    val dexParser = File(Resources.getResource("Visibilities.class").file).toDexParser()
+    val dexParser = loadResource("Visibilities.class").toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Visibilities <init>()",
         "Visibilities test1()",
@@ -302,8 +301,8 @@ class DexParserTest {
   }
 
   @Test fun multipleClassFiles() {
-    val params = File(Resources.getResource("Types.class").file)
-    val visibilities = File(Resources.getResource("Visibilities.class").file)
+    val params = loadResource("Types.class")
+    val visibilities = loadResource("Visibilities.class")
     val dexParser = listOf(params, visibilities).toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Types <init>()",
@@ -346,7 +345,7 @@ class DexParserTest {
   }
 
   @Test fun jarFile() {
-    val dexParser = File(Resources.getResource("types.jar").file).toDexParser()
+    val dexParser = loadResource("types.jar").toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Types <init>()",
         "Types returnsBoolean() → boolean",
@@ -379,8 +378,8 @@ class DexParserTest {
   }
 
   @Test fun multipleJarFiles() {
-    val types = File(Resources.getResource("types.jar").file)
-    val visibilities = File(Resources.getResource("visibilities.jar").file)
+    val types = loadResource("types.jar")
+    val visibilities = loadResource("visibilities.jar")
     val dexParser = listOf(types, visibilities).toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Types <init>()",
@@ -423,7 +422,7 @@ class DexParserTest {
   }
 
   @Test fun jarMultipleClasses() {
-    val dexParser = File(Resources.getResource("three.jar").file).toDexParser()
+    val dexParser = loadResource("three.jar").toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -467,7 +466,7 @@ class DexParserTest {
   }
 
   @Test fun dexBytes() {
-    val dexParser = Resources.toByteArray(Resources.getResource("params_joined.dex")).toDexParser()
+    val dexParser = loadResource("params_joined.dex").readBytes().toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -476,7 +475,7 @@ class DexParserTest {
   }
 
   @Test fun apkBytes() {
-    val dexParser = Resources.toByteArray(Resources.getResource("one.apk")).toDexParser()
+    val dexParser = loadResource("one.apk").readBytes().toDexParser()
     assertThat(dexParser.listMembers().map { it.toString() }).containsExactly(
         "Types <init>()",
         "Types returnsBoolean() → boolean",
@@ -509,7 +508,7 @@ class DexParserTest {
   }
 
   @Test fun classBytes() {
-    val dexParser = Resources.toByteArray(Resources.getResource("Params.class")).toDexParser()
+    val dexParser = loadResource("Params.class").readBytes().toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -518,7 +517,7 @@ class DexParserTest {
   }
 
   @Test fun jarBytes() {
-    val dexParser = Resources.toByteArray(Resources.getResource("params_joined.jar")).toDexParser()
+    val dexParser = loadResource("params_joined.jar").readBytes().toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -527,7 +526,7 @@ class DexParserTest {
   }
 
   @Test fun aarExtractsJars() {
-    val dexParser = File(Resources.getResource("three.aar").file).toDexParser()
+    val dexParser = loadResource("three.aar").toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Params <init>()",
         "Params test(String, String, String, String)",
@@ -571,7 +570,7 @@ class DexParserTest {
   }
 
   @Test fun desugaring() {
-    val dexParser = File(Resources.getResource("Desugaring.class").file).toDexParser()
+    val dexParser = loadResource("Desugaring.class").toDexParser()
     assertThat(dexParser.listMembers().map(DexMember::toString)).containsExactly(
         "Desugaring <init>(Runnable)",
         "Desugaring lambda\$main$0()",
@@ -586,7 +585,7 @@ class DexParserTest {
     ).inOrder()
 
     val desugaringParser = dexParser
-        .withDesugaring(Paths.get(Resources.getResource("android-api-2.jar").file))
+        .withDesugaring(loadResource("android-api-2.jar"))
     assertThat(desugaringParser.listMembers().map(DexMember::toString)).containsExactly(
         "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ <clinit>()",
         "-$\$Lambda\$Desugaring\$6rYBk5woQz1Eg9tpH9D8Lr-uUbQ <init>()",
@@ -603,4 +602,7 @@ class DexParserTest {
         "java.lang.System out: PrintStream"
     ).inOrder()
   }
+
+  private fun loadResource(resourceName: String) =
+      Paths.get(Resources.getResource(resourceName).file)
 }
