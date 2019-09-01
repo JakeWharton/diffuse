@@ -4,13 +4,26 @@ import com.android.dex.Dex
 import java.io.File
 import java.nio.file.Path
 
-/** Parser for method and field references inside of a dex file. */
+/**
+ * Parser for method and field references inside of a `.dex`, `.class`, `.jar`, `.aar`, or `.apk`.
+ */
 class DexParser private constructor(
   private val bytes: List<ByteArray>,
   private val mapping: ApiMapping = ApiMapping.EMPTY,
   private val libraryJar: Path? = null
 ) {
+  /**
+   * Return a new [DexParser] which uses the supplied [mapping] to translate types and names.
+   * These mappings are produced by tools like R8 and ProGuard.
+   *
+   * @see ApiMapping
+   */
   fun withApiMapping(mapping: ApiMapping) = DexParser(bytes, mapping, libraryJar)
+
+  /**
+   * Return a new [DexParser] which will desugar language feature and API calls using the supplied
+   * [libraryJar]. This is usually the `android.jar` from the Android SDK or `rt.jar` from the JDK.
+   */
   fun withDesugaring(libraryJar: Path?) = DexParser(bytes, mapping, libraryJar)
 
   private val dexes by lazy { bytes.toDexes(libraryJar) }
