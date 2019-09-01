@@ -76,7 +76,7 @@ methods. This is useful to prevent noise when `diff`ing output.
 See the `--help` flag for more information about invocation.
 
 You can also use this tool as a library. Add a dependency on
-`com.jakewharton.dex:dex-member-list:4.0.0` and use `DexParser`.
+`com.jakewharton.dex:dex-member-list:4.1.0` and use `DexParser`.
 
 
 License

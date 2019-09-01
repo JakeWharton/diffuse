@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 4.1.0 *(2019-08-31)*
+----------------------------
+
+ * New: Add support for desugaring language features and API levels based on a target minimum API
+   level. This requires supplying library jars such as `android.jar` or `rt.jar`.
+ * New: Expose declared and referenced methods separately. The former always impact the final APK
+   whereas the latter are a shared cost that is de-duplicated across all libraries.
+ * New: Update D8 dex compiler to vv1.5.x.
+ * Fix: Support dexing jar, aar, and class inputs which produce more than one dex file.
+
+
 Version 4.0.0 *(2019-08-08)*
 ----------------------------
 

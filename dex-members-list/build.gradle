@@ -7,7 +7,14 @@ apply plugin: 'signing'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = '5.0.0-SNAPSHOT'
+version = '4.1.0'
+
+sourceSets {
+  main {
+    kotlin.exclude('**/com/jakewharton/diffuse/**')
+    java.exclude('**/com/jakewharton/diffuse/**')
+  }
+}
 
 dependencies {
   implementation deps.clikt
@@ -19,10 +26,10 @@ dependencies {
   // Truth uses a newer version of Guava than R8.
   implementation deps.guava
 
-  implementation deps.asciitable
-  implementation deps.okio
-  implementation deps.androidTools.binaryResources
-  implementation deps.byteunits
+//  implementation deps.asciitable
+//  implementation deps.okio
+//  implementation deps.androidTools.binaryResources
+//  implementation deps.byteunits
 
   testImplementation deps.junit
   testImplementation deps.truth
