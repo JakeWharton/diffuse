@@ -8,12 +8,12 @@ class ApkDiff(
   val oldMapping: ApiMapping = ApiMapping.EMPTY,
   val newApk: Apk,
   val newMapping: ApiMapping = ApiMapping.EMPTY
-) {
+) : Diff {
   val archive: ArchiveDiff by lazy { ArchiveDiff(oldApk.files, newApk.files) }
   val dex: DexDiff by lazy { DexDiff(oldApk.dexes, oldMapping, newApk.dexes, newMapping) }
   val arsc: ArscDiff by lazy { ArscDiff(oldApk.arsc, newApk.arsc) }
 
-  fun toTextReport() = buildString {
+  override fun toTextReport() = buildString {
     appendln(asciiTable {
       addRow("OLD/NEW", oldApk.filename, newApk.filename)
       addRule()
