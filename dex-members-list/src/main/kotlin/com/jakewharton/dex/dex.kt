@@ -51,7 +51,7 @@ internal fun Iterable<ByteArray>.toDexes(libraryJar: Path?): List<Dex> {
 private fun compileClassesWithD8(
   bytes: List<ByteArray>,
   libraryJar: Path?
-): ByteArray {
+): List<ByteArray> {
   val builder = D8Command.builder()
 
   if (libraryJar != null) {
@@ -63,7 +63,7 @@ private fun compileClassesWithD8(
 
   bytes.forEach { builder.addClassProgramData(it, Origin.unknown()) }
 
-  var out: ByteArray? = null
+  val bytesList = mutableListOf<ByteArray>()
   builder.programConsumer = object : DexIndexedConsumer {
     override fun finished(diagnostics: DiagnosticsHandler) = Unit
     override fun accept(
@@ -72,14 +72,14 @@ private fun compileClassesWithD8(
       descriptors: Set<String>,
       diagnostics: DiagnosticsHandler?
     ) {
-      assert(out == null) { "More than one dex file produced" }
-      out = bytes
+      bytesList += bytes
     }
   }
 
   D8.run(builder.build())
 
-  return checkNotNull(out) { "No dex file produced" }
+  check(bytesList.isNotEmpty()) { "No dex file produced" }
+  return bytesList
 }
 
 internal class MemberList(
