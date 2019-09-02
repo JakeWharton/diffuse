@@ -226,4 +226,51 @@ class CellSpanTest {
       |111111
       |""".trimMargin())
   }
+
+  @Test fun rowSpanAtEndOfRow() {
+    // This test ensures that row span carries at the end of a row are decremented properly
+    // even when there are no remaining cells.
+
+    val table = table {
+      row {
+        cell("1")
+        cell("2\n2") {
+          rowSpan = 2
+        }
+      }
+      row("1")
+      row("1", "1")
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |12
+      |12
+      |11
+      |""".trimMargin())
+  }
+
+  @Test fun rowSpanLeaveHole() {
+    val table = table {
+      row {
+        cell("1")
+        cell("2\n2") {
+          rowSpan = 2
+        }
+        cell("1")
+        cell("2\n2") {
+          rowSpan = 2
+        }
+      }
+      row("1")
+      row("1", "1", "1", "1")
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |1212
+      |12 2
+      |1111
+      |""".trimMargin())
+    assertThat(table.getOrNull(1, 2)).isNull()
+    assertThat(table.getOrNull(1, 3)).isNotNull()
+  }
 }
