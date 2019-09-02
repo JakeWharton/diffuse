@@ -19,9 +19,9 @@ fun Table.renderText(
 
   debug { "Measure pass...\n 1/2..." }
 
-  val columnWidths = IntArray(columnCount)
+  val columnWidths = IntArray(columnCount) { 1 }
   val columnBorderWidths = IntArray(columnCount + 1)
-  val rowHeights = IntArray(rowCount)
+  val rowHeights = IntArray(rowCount) { 1 }
   val rowBorderHeights = IntArray(rowCount + 1)
 
   positionedCells.forEach { (rowIndex, columnIndex, cell, canonicalStyle) ->

@@ -273,4 +273,29 @@ class CellSpanTest {
     assertThat(table.getOrNull(1, 2)).isNull()
     assertThat(table.getOrNull(1, 3)).isNotNull()
   }
+
+  @Test fun rowSpanPartialOverlaps() {
+    val table = table {
+      row {
+        cell("1")
+        cell("2\n2") {
+          rowSpan = 2
+        }
+      }
+      row {
+        cell("2\n2") {
+          rowSpan = 2
+        }
+      }
+      row("1")
+      row("1", "1")
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |12
+      |22
+      |21
+      |11
+      |""".trimMargin())
+  }
 }
