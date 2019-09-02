@@ -6,7 +6,7 @@ import com.jakewharton.picnic.Table
 import com.jakewharton.picnic.TableDsl
 import com.jakewharton.picnic.table
 
-fun diffuseTable(content: TableDsl.() -> Unit): Table = table {
+internal fun diffuseTable(content: TableDsl.() -> Unit): Table = table {
   cellStyle {
     paddingLeft = 1
     paddingRight = 1
