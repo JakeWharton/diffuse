@@ -163,7 +163,7 @@ fun Table.renderText(
   val tableWidth: Int
   run {
     var left = 0
-    for (i in 0 until columnWidths.size) {
+    for (i in columnWidths.indices) {
       tableLefts[i] = left
       left += columnWidths[i] + columnBorderWidths[i]
     }
@@ -175,7 +175,7 @@ fun Table.renderText(
   val tableHeight: Int
   run {
     var top = 0
-    for (i in 0 until rowHeights.size) {
+    for (i in rowHeights.indices) {
       tableTops[i] = top
       top += rowHeights[i] + rowBorderHeights[i]
     }
