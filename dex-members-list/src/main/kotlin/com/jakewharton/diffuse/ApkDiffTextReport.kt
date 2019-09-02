@@ -158,8 +158,8 @@ private fun DexDiff.toTextReport(): String = diffuseTable {
         borderRight = false
       }
 
-      val addedSize = diff.added.size.toDiffString()
-      val removedSize = (-diff.removed.size).toDiffString()
+      val addedSize = diff.added.size.toDiffString(zeroSign = '+')
+      val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
       cell("($addedSize $removedSize)") {
         borderLeft = false
         paddingLeft = 0
@@ -203,8 +203,8 @@ private fun ArscDiff.toTextReport() = diffuseTable {
       }
 
       val delta = if (configsDelta > 0) {
-        val added = configsAdded.size.toDiffString()
-        val removed = (-configsRemoved.size).toDiffString()
+        val added = configsAdded.size.toDiffString(zeroSign = '+')
+        val removed = (-configsRemoved.size).toDiffString(zeroSign = '-')
         "($added $removed)"
       } else {
         ""
@@ -227,8 +227,8 @@ private fun ArscDiff.toTextReport() = diffuseTable {
       }
 
       val delta = if (entriesDelta > 0) {
-        val added = entriesAdded.size.toDiffString()
-        val removed = (-entriesRemoved.size).toDiffString()
+        val added = entriesAdded.size.toDiffString(zeroSign = '+')
+        val removed = (-entriesRemoved.size).toDiffString(zeroSign = '-')
         "($added $removed)"
       } else {
         ""

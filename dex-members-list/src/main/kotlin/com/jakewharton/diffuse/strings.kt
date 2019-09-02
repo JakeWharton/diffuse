@@ -8,9 +8,11 @@ internal fun Int.toUnitString(unit: String, vararg specializations: Pair<Int, St
   }
 }
 
-internal fun Int.toDiffString() = buildString {
+internal fun Int.toDiffString(zeroSign: Char? = null) = buildString {
   if (this@toDiffString > 0) {
     append('+')
+  } else if (this@toDiffString == 0 && zeroSign != null) {
+    append(zeroSign)
   }
   append(this@toDiffString)
 }
