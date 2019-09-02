@@ -210,8 +210,10 @@ fun Table.renderText(
 
       val columnDrawStartIndex = tableLefts[columnIndex]
       val rowBorderHeight = rowBorderHeights[rowIndex]
+      val hasRowBorder = rowBorderHeight != 0
       val columnBorderWidth = columnBorderWidths[columnIndex]
-      if (rowBorderHeight != 0 && columnBorderWidth != 0) {
+      val hasColumnBorder = columnBorderWidth != 0
+      if (hasRowBorder && hasColumnBorder) {
         val previousRowColumnPositionedCell = getOrNull(rowIndex - 1, columnIndex - 1)
         val previousRowColumnCell = previousRowColumnPositionedCell?.cell
         val previousRowColumnCellCanonicalStyle = previousRowColumnPositionedCell?.canonicalStyle
@@ -239,7 +241,8 @@ fun Table.renderText(
         }
       }
 
-      if (previousRowCell !== cell &&
+      if (hasColumnBorder &&
+          previousRowCell !== cell &&
           (previousRowCellCanonicalStyle?.borderRight == true ||
               cellCanonicalStyle?.borderLeft == true)) {
         val rowDrawEndIndex = tableTops[rowIndex + 1] // Safe given cell != null.
@@ -250,7 +253,8 @@ fun Table.renderText(
         }
       }
 
-      if (previousColumnCell !== cell &&
+      if (hasRowBorder &&
+          previousColumnCell !== cell &&
           (previousColumnCellCanonicalStyle?.borderBottom == true ||
               cellCanonicalStyle?.borderTop == true)) {
         val columnDrawEndIndex = tableLefts[columnIndex + 1] // Safe given cell != null
