@@ -232,4 +232,148 @@ class CellBorderTest {
       |   │1│1
       |""".trimMargin())
   }
+
+  @Test fun borderLeftCalculationWithTableBorderHidden() {
+    val table = table {
+      style {
+        borderStyle = BorderStyle.Hidden
+      }
+      cellStyle {
+        borderLeft = true
+      }
+      row("1", "2", "3")
+      row {
+        cell("4") {
+          columnSpan = 2
+        }
+        cell("5")
+      }
+      row {
+        cell("6")
+        cell("7") {
+          columnSpan = 2
+        }
+      }
+      row {
+        cell("8") {
+          columnSpan = 3
+        }
+      }
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |1│2│3
+      |4  │5
+      |6│7  
+      |8    
+      |""".trimMargin())
+  }
+
+  @Test fun borderRightCalculationWithTableBorderHidden() {
+    val table = table {
+      style {
+        borderStyle = BorderStyle.Hidden
+      }
+      cellStyle {
+        borderRight = true
+      }
+      row("1", "2", "3")
+      row {
+        cell("4") {
+          columnSpan = 2
+        }
+        cell("5")
+      }
+      row {
+        cell("6")
+        cell("7") {
+          columnSpan = 2
+        }
+      }
+      row {
+        cell("8") {
+          columnSpan = 3
+        }
+      }
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |1│2│3
+      |4  │5
+      |6│7  
+      |8    
+      |""".trimMargin())
+  }
+
+  @Test fun borderTopCalculationWithTableBorderHidden() {
+    val table = table {
+      style {
+        borderStyle = BorderStyle.Hidden
+      }
+      cellStyle {
+        borderTop = true
+      }
+      row {
+        cell("1")
+        cell("2") {
+          rowSpan = 2
+        }
+        cell("3")
+        cell("4") {
+          rowSpan = 3
+        }
+      }
+      row {
+        cell("5")
+        cell("6") {
+          rowSpan = 2
+        }
+      }
+      row("7", "8")
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |1234
+      |─ ─ 
+      |5 6 
+      |──  
+      |78  
+      |""".trimMargin())
+  }
+
+  @Test fun borderBottomCalculationWithTableBorderHidden() {
+    val table = table {
+      style {
+        borderStyle = BorderStyle.Hidden
+      }
+      cellStyle {
+        borderBottom = true
+      }
+      row {
+        cell("1")
+        cell("2") {
+          rowSpan = 2
+        }
+        cell("3")
+        cell("4") {
+          rowSpan = 3
+        }
+      }
+      row {
+        cell("5")
+        cell("6") {
+          rowSpan = 2
+        }
+      }
+      row("7", "8")
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |1234
+      |─ ─ 
+      |5 6 
+      |──  
+      |78  
+      |""".trimMargin())
+  }
 }

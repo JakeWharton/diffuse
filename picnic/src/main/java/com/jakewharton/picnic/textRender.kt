@@ -56,7 +56,7 @@ fun Table.renderText(
       columnBorderWidths[columnIndex] = 1
     }
     if (canonicalStyle?.borderRight == true &&
-        (columnIndex + columnSpan < columnCount - 1 || tableStyle?.borderStyle != BorderStyle.Hidden)) {
+        (columnIndex + columnSpan < columnCount || tableStyle?.borderStyle != BorderStyle.Hidden)) {
       debug {
         val oldValue = if (columnBorderWidths[columnIndex + columnSpan] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Right border $oldValue 1"
@@ -72,7 +72,7 @@ fun Table.renderText(
       rowBorderHeights[rowIndex] = 1
     }
     if (canonicalStyle?.borderBottom == true &&
-        (rowIndex + rowSpan < rowCount - 1 || tableStyle?.borderStyle != BorderStyle.Hidden)) {
+        (rowIndex + rowSpan < rowCount || tableStyle?.borderStyle != BorderStyle.Hidden)) {
       debug {
         val oldValue = if (rowBorderHeights[rowIndex + rowSpan] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Bottom border $oldValue 1"
