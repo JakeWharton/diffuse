@@ -57,8 +57,8 @@ class ArchiveDiff(
     val new = if (type != null) newFiles.filter { it.type == type } else newFiles
     val oldSize = old.fold(Size.ZERO) { acc, file -> acc + file.size }
     val newSize = new.fold(Size.ZERO) { acc, file -> acc + file.size }
-    val oldUncompressedSize = old.fold(Size.ZERO) { acc, file -> acc + file.size }
-    val newUncompressedSize = new.fold(Size.ZERO) { acc, file -> acc + file.size }
+    val oldUncompressedSize = old.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
+    val newUncompressedSize = new.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
     row(name, oldSize, newSize, (newSize - oldSize).toDiffString(), oldUncompressedSize,
         newUncompressedSize, (newUncompressedSize - oldUncompressedSize).toDiffString())
   }
