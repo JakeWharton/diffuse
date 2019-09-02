@@ -14,6 +14,12 @@ interface TableDsl : SectionDsl {
   fun header(content: SectionDsl.() -> Unit)
   fun body(content: SectionDsl.() -> Unit)
   fun footer(content: SectionDsl.() -> Unit)
+  fun style(content: TableStyleDsl.() -> Unit)
+}
+
+@PicnicDsl
+interface TableStyleDsl {
+  var borderStyle: BorderStyle?
 }
 
 @PicnicDsl
@@ -84,6 +90,7 @@ private class TableBuilder : TableDsl {
   private val bodyBuilder = SectionBuilder(::Body)
   private val footerBuilder = SectionBuilder(::Footer)
   private val cellStyleBuilder = CellStyleBuilder()
+  private val tableStyleBuilder = TableStyleBuilder()
 
   override fun header(content: SectionDsl.() -> Unit) {
     headerBuilder.apply(content)
@@ -105,11 +112,16 @@ private class TableBuilder : TableDsl {
     cellStyleBuilder.apply(content)
   }
 
+  override fun style(content: TableStyleDsl.() -> Unit) {
+    tableStyleBuilder.apply(content)
+  }
+
   fun build() = Table(
       headerBuilder.buildOrNull(),
       bodyBuilder.build(),
       footerBuilder.buildOrNull(),
-      cellStyleBuilder.buildOrNull())
+      cellStyleBuilder.buildOrNull(),
+      tableStyleBuilder.buildOrNull())
 }
 
 private class SectionBuilder<T : Any>(
@@ -198,6 +210,17 @@ private class CellStyleBuilder : CellStyleDsl {
           borderBottom = borderBottom,
           alignment = alignment
       )
+    }
+    return null
+  }
+}
+
+private class TableStyleBuilder : TableStyleDsl {
+  override var borderStyle: BorderStyle? = null
+
+  fun buildOrNull(): TableStyle? {
+    if (borderStyle != null) {
+      return TableStyle(borderStyle)
     }
     return null
   }

@@ -169,4 +169,67 @@ class CellBorderTest {
       |─
       |""".trimMargin())
   }
+
+  @Test fun tableStyleTakesPrecedenceOverCell() {
+    val table = table {
+      style {
+        borderStyle = BorderStyle.Hidden
+      }
+      cellStyle {
+        border = true
+      }
+      body {
+        row("A", "B", "C")
+        row("D", "E", "F")
+        row("G", "H", "I")
+      }
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |A│B│C
+      |─┼─┼─
+      |D│E│F
+      |─┼─┼─
+      |G│H│I
+      |""".trimMargin())
+  }
+
+  @Test fun tableStyleTakesPrecedenceOverCellWithRowAndColumnSpans() {
+    val table = table {
+      style {
+        borderStyle = BorderStyle.Hidden
+      }
+      cellStyle {
+        border = true
+      }
+      row {
+        cell("1")
+        cell("1")
+        cell("2") {
+          rowSpan = 2
+          columnSpan = 2
+        }
+      }
+      row("1", "1")
+      row {
+        cell("2") {
+          rowSpan = 2
+          columnSpan = 2
+        }
+        cell("1")
+        cell("1")
+      }
+      row("1", "1")
+    }
+
+    assertThat(table.renderText()).isEqualTo("""
+      |1│1│2  
+      |─┼─┤   
+      |1│1│   
+      |─┴─┼─┬─
+      |2  │1│1
+      |   ├─┼─
+      |   │1│1
+      |""".trimMargin())
+  }
 }

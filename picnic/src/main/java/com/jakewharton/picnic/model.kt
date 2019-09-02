@@ -4,7 +4,8 @@ data class Table(
   val header: Header? = null,
   val body: Body,
   val footer: Footer? =  null,
-  val cellStyle: CellStyle? = null
+  val cellStyle: CellStyle? = null,
+  val tableStyle: TableStyle? = null
 ) {
   val rowCount: Int = (header?.rows?.size ?: 0) + body.rows.size + (footer?.rows?.size ?: 0)
   val columnCount: Int
@@ -88,6 +89,14 @@ data class Table(
     val cell: Cell,
     val canonicalStyle: CellStyle?
   )
+}
+
+data class TableStyle(
+  val borderStyle: BorderStyle? = null
+)
+
+enum class BorderStyle {
+  Hidden, Solid
 }
 
 interface TableSection {

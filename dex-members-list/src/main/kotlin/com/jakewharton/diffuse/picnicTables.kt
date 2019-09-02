@@ -1,5 +1,6 @@
 package com.jakewharton.diffuse
 
+import com.jakewharton.picnic.BorderStyle
 import com.jakewharton.picnic.SectionDsl
 import com.jakewharton.picnic.Table
 import com.jakewharton.picnic.TableDsl
@@ -11,6 +12,9 @@ fun diffuseTable(content: TableDsl.() -> Unit): Table = table {
     paddingRight = 1
     borderLeft = true
     borderRight = true
+  }
+  style {
+    borderStyle = BorderStyle.Hidden
   }
   DiffuseTableDsl(this).content()
 }

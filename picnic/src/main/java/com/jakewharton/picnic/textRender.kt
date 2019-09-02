@@ -47,28 +47,32 @@ fun Table.renderText(
       }
     }
 
-    if (canonicalStyle?.borderLeft == true) {
+    if (canonicalStyle?.borderLeft == true &&
+        (columnIndex > 0 || tableStyle?.borderStyle != BorderStyle.Hidden)) {
       debug {
         val oldValue = if (columnBorderWidths[columnIndex] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Left border $oldValue 1"
       }
       columnBorderWidths[columnIndex] = 1
     }
-    if (canonicalStyle?.borderRight == true) {
+    if (canonicalStyle?.borderRight == true &&
+        (columnIndex + columnSpan < columnCount - 1 || tableStyle?.borderStyle != BorderStyle.Hidden)) {
       debug {
         val oldValue = if (columnBorderWidths[columnIndex + columnSpan] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Right border $oldValue 1"
       }
       columnBorderWidths[columnIndex + columnSpan] = 1
     }
-    if (canonicalStyle?.borderTop == true) {
+    if (canonicalStyle?.borderTop == true &&
+        (rowIndex > 0 || tableStyle?.borderStyle != BorderStyle.Hidden)) {
       debug {
         val oldValue = if (rowBorderHeights[rowIndex] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Top border $oldValue 1"
       }
       rowBorderHeights[rowIndex] = 1
     }
-    if (canonicalStyle?.borderBottom == true) {
+    if (canonicalStyle?.borderBottom == true &&
+        (rowIndex + rowSpan < rowCount - 1 || tableStyle?.borderStyle != BorderStyle.Hidden)) {
       debug {
         val oldValue = if (rowBorderHeights[rowIndex + rowSpan] == 0) "0 ->" else "already"
         "  ($rowIndex, $columnIndex) Bottom border $oldValue 1"

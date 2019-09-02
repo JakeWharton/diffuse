@@ -57,7 +57,20 @@ class DexDiff(
         alignment = MiddleRight
       }
 
-      row("count", oldDexes.size, newDexes.size, (newDexes.size - oldDexes.size).toDiffString())
+      row {
+        cell("count")
+        cell(oldDexes.size)
+        cell(newDexes.size)
+        cell((newDexes.size - oldDexes.size).toDiffString())
+        if (isMultidex) {
+          // Add empty cells to ensure borders get drawn
+          cell("")
+          cell("")
+          cell("") {
+            columnSpan = 2
+          }
+        }
+      }
 
       fun addDexRow(name: String, selector: (Dex) -> Collection<Any>) = row {
         cell(name)

@@ -1,7 +1,6 @@
 package com.jakewharton.diffuse
 
 import com.jakewharton.dex.ApiMapping
-import com.jakewharton.picnic.TextAlignment
 
 class ApkDiff(
   val oldApk: Apk,
@@ -25,12 +24,9 @@ class ApkDiff(
       }
     })
     appendln()
-    appendln()
     appendln(archive.toTextReport())
     appendln()
-    appendln()
     appendln(dex.toTextReport())
-    appendln()
     appendln()
     appendln(arsc.toTextReport())
   }
