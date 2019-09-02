@@ -130,7 +130,11 @@ private fun DexDiff.toTextReport(): String = diffuseTable {
       cell("count")
       cell(oldDexes.size)
       cell(newDexes.size)
-      cell((newDexes.size - oldDexes.size).toDiffString())
+      cell((newDexes.size - oldDexes.size).toDiffString()) {
+        if (!isMultidex) {
+          borderRight = false
+        }
+      }
       if (isMultidex) {
         // Add empty cells to ensure borders get drawn
         cell("")
