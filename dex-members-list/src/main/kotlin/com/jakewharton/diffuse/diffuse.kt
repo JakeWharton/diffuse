@@ -16,6 +16,13 @@ fun main(vararg args: String) {
   Command().main(args.toList())
 }
 
+fun apkDiff(
+  oldApk: Apk,
+  oldMapping: ApiMapping = ApiMapping.EMPTY,
+  newApk: Apk,
+  newMapping: ApiMapping = ApiMapping.EMPTY
+): Diff = ApkDiff(oldApk, oldMapping, newApk, newMapping)
+
 private class Command : CliktCommand(name = "diffuse") {
   private val old by argument("OLD", help = "Old input file.")
       .path(exists = true, folderOkay = false, readable = true)
@@ -44,7 +51,7 @@ private class Command : CliktCommand(name = "diffuse") {
     val newMapping = newMappingPath?.toApiMapping() ?: ApiMapping.EMPTY
     val diff = when (mode) {
       Mode.Apk -> {
-        ApkDiff(old.toApk(), oldMapping, new.toApk(), newMapping)
+        apkDiff(old.toApk(), oldMapping, new.toApk(), newMapping)
       }
       Mode.Aab -> {
         TODO(".aab files not yet supported")

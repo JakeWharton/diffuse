@@ -13,7 +13,7 @@ class Dex private constructor(private val bytes: ByteString) {
   val strings: List<String> get() = dex.strings()
   val types: List<String> get() = dex.typeNames()
   val classes: List<String> by lazy { dex.classDefs().map { dex.typeNames()[it.typeIndex] }}
-  val allMembers: List<DexMember> get() = memberList.all
+  val members: List<DexMember> get() = memberList.all
   val declaredMembers: List<DexMember> get() = memberList.declared
   val referencedMembers: List<DexMember> get() = memberList.referenced
 
