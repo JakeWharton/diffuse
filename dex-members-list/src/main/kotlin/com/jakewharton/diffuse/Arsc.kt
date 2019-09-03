@@ -16,7 +16,7 @@ class Arsc private constructor(private val bytes: ByteString) {
   val configs get() = arscBlamer.typeChunks.map { it.typeName }
 
   // TODO map this to model object?
-  val entries get() = arscBlamer.resourceEntries.keySet().map { "${it.packageName()} ${it.typeName()} ${it.entryName()}" }
+  val entries get() = arscBlamer.resourceEntries.keySet().map { "@${it.typeName()}/${it.entryName()}" }
 
   companion object {
     @JvmStatic

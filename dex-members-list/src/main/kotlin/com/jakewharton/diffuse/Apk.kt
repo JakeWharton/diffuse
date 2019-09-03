@@ -9,21 +9,22 @@ import okio.Buffer
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
 import java.nio.file.Path
+import java.util.SortedMap
 import java.util.zip.ZipInputStream
 
 class Apk private constructor(
   val filename: String?,
   val bytes: ByteString
 ) {
-  val files: List<ArchiveFile> by lazy {
+  val files: SortedMap<String, ArchiveFile> by lazy {
     ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
       zis.entries()
-          .map { entry ->
-            ArchiveFile(entry.name, entry.name.toApkFileType(),
+          .associate { entry ->
+            entry.name to ArchiveFile(entry.name, entry.name.toApkFileType(),
                 Size(entry.compressedSize),
                 Size(entry.size))
           }
-          .toList()
+          .toSortedMap()
     }
   }
   val dexes: List<Dex> by lazy {

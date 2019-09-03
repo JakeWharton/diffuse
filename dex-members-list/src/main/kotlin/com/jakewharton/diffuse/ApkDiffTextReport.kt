@@ -1,6 +1,7 @@
 package com.jakewharton.diffuse
 
 import com.jakewharton.dex.ApiMapping
+import com.jakewharton.diffuse.ArchiveDiff.Change
 import com.jakewharton.diffuse.ArchiveFile.Type
 import com.jakewharton.diffuse.DexDiff.ComponentDiff
 import com.jakewharton.picnic.SectionDsl
@@ -24,18 +25,30 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
         }
       }.toString())
       appendln()
-      appendln(apkDiff.archive.toTextReport())
+      appendln(apkDiff.archive.toSummaryTable())
       appendln()
-      appendln(apkDiff.dex.toTextReport())
+      appendln(apkDiff.dex.toSummaryTable())
       appendln()
-      appendln(apkDiff.arsc.toTextReport())
+      appendln(apkDiff.arsc.toSummaryTable())
+      if (apkDiff.archive.changed) {
+        appendln()
+        appendln(apkDiff.archive.toDetailReport())
+      }
+      if (apkDiff.dex.changed) {
+        appendln()
+        appendln(apkDiff.dex.toDetailReport())
+      }
+      if (apkDiff.arsc.changed) {
+        appendln()
+        appendln(apkDiff.arsc.toDetailReport())
+      }
     }
   }
 
   override fun toString() = buildString { write(this) }
 }
 
-private fun ArchiveDiff.toTextReport(): String = diffuseTable {
+private fun ArchiveDiff.toSummaryTable() = diffuseTable {
   header {
     row {
       cell("APK") {
@@ -55,12 +68,12 @@ private fun ArchiveDiff.toTextReport(): String = diffuseTable {
   }
 
   fun SectionDsl.addApkRow(name: String, type: Type? = null) {
-    val old = if (type != null) oldFiles.filter { it.type == type } else oldFiles
-    val new = if (type != null) newFiles.filter { it.type == type } else newFiles
-    val oldSize = old.fold(Size.ZERO) { acc, file -> acc + file.size }
-    val newSize = new.fold(Size.ZERO) { acc, file -> acc + file.size }
-    val oldUncompressedSize = old.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
-    val newUncompressedSize = new.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
+    val old = if (type != null) oldFiles.filterValues { it.type == type } else oldFiles
+    val new = if (type != null) newFiles.filterValues { it.type == type } else newFiles
+    val oldSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.size }
+    val newSize = new.values.fold(Size.ZERO) { acc, file -> acc + file.size }
+    val oldUncompressedSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
+    val newUncompressedSize = new.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
     row(name, oldSize, newSize, (newSize - oldSize).toDiffString(), oldUncompressedSize,
         newUncompressedSize, (newUncompressedSize - oldUncompressedSize).toDiffString())
   }
@@ -87,7 +100,48 @@ private fun ArchiveDiff.toTextReport(): String = diffuseTable {
   }
 }.renderText()
 
-private fun DexDiff.toTextReport(): String = diffuseTable {
+private fun ArchiveDiff.toDetailReport() = buildString {
+  appendln("=================")
+  appendln("====   APK   ====")
+  appendln("=================")
+  appendln()
+  appendln(diffuseTable {
+    header {
+      row("diff", "diff (u)", "path")
+    }
+    footer {
+      val totalDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.sizeDiff }
+      val totalUncompressedDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSizeDiff }
+      row {
+        cell(totalDiff.toDiffString()) {
+          alignment = MiddleRight
+        }
+        cell(totalUncompressedDiff.toDiffString()) {
+          alignment = MiddleRight
+        }
+        cell("(total)")
+      }
+    }
+    for ((path, sizeDiff, uncompressedSizeDiff, type) in changes) {
+      val typeChar = when (type) {
+        Change.Type.Added -> '+'
+        Change.Type.Removed -> '-'
+        Change.Type.Changed -> '∆'
+      }
+      row {
+        cell(sizeDiff.toDiffString()) {
+          alignment = MiddleRight
+        }
+        cell(uncompressedSizeDiff.toDiffString()) {
+          alignment = MiddleRight
+        }
+        cell("$typeChar $path")
+      }
+    }
+  }.renderText())
+}
+
+private fun DexDiff.toSummaryTable() = diffuseTable {
   header {
     if (isMultidex) {
       row {
@@ -175,7 +229,50 @@ private fun DexDiff.toTextReport(): String = diffuseTable {
   }
 }.renderText()
 
-private fun ArscDiff.toTextReport() = diffuseTable {
+private fun DexDiff.toDetailReport() = buildString {
+  fun appendComponentDiff(name: String, diff: ComponentDiff<*>) {
+    if (diff.changed) {
+      appendln()
+      appendln("$name:")
+      appendln()
+      appendln(buildString {
+        appendln(diffuseTable {
+          header {
+            row {
+              cell("old")
+              cell("new")
+              cell("diff")
+            }
+          }
+
+          val diffSize = (diff.added.size - diff.removed.size).toDiffString()
+          val addedSize = diff.added.size.toDiffString(zeroSign = '+')
+          val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
+          row(diff.oldCount, diff.newCount, "$diffSize ($addedSize $removedSize)")
+        }.renderText())
+        diff.added.forEach {
+          appendln("+ $it")
+        }
+        if (diff.added.isNotEmpty() && diff.removed.isNotEmpty()) {
+          appendln()
+        }
+        diff.removed.forEach {
+          appendln("- $it")
+        }
+      }.prependIndent("  "))
+    }
+  }
+
+  appendln("=================")
+  appendln("====   DEX   ====")
+  appendln("=================")
+  appendComponentDiff("STRINGS", strings)
+  appendComponentDiff("TYPES", types)
+  appendComponentDiff("METHODS", methods)
+  appendComponentDiff("FIELDS", fields)
+}
+
+private fun ArscDiff.toSummaryTable() = diffuseTable {
   header {
     row {
       cell("ARSC")
@@ -241,6 +338,47 @@ private fun ArscDiff.toTextReport() = diffuseTable {
     }
   }
 }.renderText()
+
+private fun ArscDiff.toDetailReport() = buildString {
+  fun <T> appendComponentDiff(name: String, added: List<T>, removed: List<T>) {
+    if (added.isNotEmpty() || removed.isNotEmpty()) {
+      appendln()
+      appendln("$name:")
+      appendln()
+      appendln(buildString {
+        appendln(diffuseTable {
+          header {
+            row {
+              cell("old")
+              cell("new")
+              cell("diff")
+            }
+          }
+
+          val diffSize = (added.size - removed.size).toDiffString()
+          val addedSize = added.size.toDiffString(zeroSign = '+')
+          val removedSize = (-removed.size).toDiffString(zeroSign = '-')
+          row(added.size, removed.size, "$diffSize ($addedSize $removedSize)")
+        }.renderText())
+        added.forEach {
+          appendln("+ $it")
+        }
+        if (added.isNotEmpty() && removed.isNotEmpty()) {
+          appendln()
+        }
+        removed.forEach {
+          appendln("- $it")
+        }
+      }.prependIndent("  "))
+    }
+  }
+
+  appendln("==================")
+  appendln("====   ARSC   ====")
+  appendln("==================")
+  appendComponentDiff("CONFIGS", configsAdded, configsRemoved)
+  appendComponentDiff("ENTRIES", entriesAdded, entriesRemoved)
+}
 
 private fun ApiMapping.toSummaryString(): String {
   if (this === ApiMapping.EMPTY) {
