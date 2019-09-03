@@ -1,5 +1,7 @@
 package com.jakewharton.diffuse
 
+import com.android.apksig.ApkVerifier
+import com.android.apksig.util.DataSources
 import com.jakewharton.dex.entries
 import com.jakewharton.dex.readBytes
 import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toApkFileType
@@ -41,6 +43,21 @@ class Apk private constructor(
       zis.readBytes().toByteString().toArsc()
     }
   }
+  val signatures: Signatures by lazy {
+    val result = ApkVerifier.Builder(DataSources.asDataSource(bytes.asByteBuffer())).build()
+        .verify()
+    Signatures(
+      result.v1SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
+      result.v2SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
+      result.v3SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted()
+    )
+  }
+
+  data class Signatures(
+    val v1: List<ByteString>,
+    val v2: List<ByteString>,
+    val v3: List<ByteString>
+  )
 
   companion object {
     @JvmStatic

@@ -3,6 +3,7 @@ package com.jakewharton.diffuse
 import com.jakewharton.dex.ApiMapping
 import com.jakewharton.dex.DexField
 import com.jakewharton.dex.DexMethod
+import com.jakewharton.diffuse.Apk.Signatures
 import java.util.SortedMap
 
 internal class ApkDiff(
@@ -12,6 +13,7 @@ internal class ApkDiff(
   val newMapping: ApiMapping
 ) : Diff {
   val archive = ArchiveDiff(oldApk.files, newApk.files)
+  val signatures = SignaturesDiff(oldApk.signatures, newApk.signatures)
   val dex = DexDiff(oldApk.dexes, oldMapping, newApk.dexes, newMapping)
   val arsc = ArscDiff(oldApk.arsc, newApk.arsc)
 
@@ -60,6 +62,13 @@ internal class ArchiveDiff(
   }
 
   val changed = oldFiles != newFiles
+}
+
+internal class SignaturesDiff(
+  val oldSignatures: Signatures,
+  val newSignatures: Signatures
+) {
+  val changed = oldSignatures != newSignatures
 }
 
 internal class DexDiff(

@@ -10,6 +10,7 @@ import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleLeft
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
+import okio.ByteString
 
 internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
   override fun write(appendable: Appendable) {
@@ -21,6 +22,7 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
         body {
           row("md5", apkDiff.oldApk.bytes.md5().hex(), apkDiff.newApk.bytes.md5().hex())
           row("sha1", apkDiff.oldApk.bytes.sha1().hex(), apkDiff.newApk.bytes.sha1().hex())
+          row("signature", apkDiff.oldApk.signatures.toSummaryString(), apkDiff.newApk.signatures.toSummaryString())
           row("mapping", apkDiff.oldMapping.toSummaryString(), apkDiff.newMapping.toSummaryString())
         }
       }.toString())
@@ -30,16 +32,30 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
       appendln(apkDiff.dex.toSummaryTable())
       appendln()
       appendln(apkDiff.arsc.toSummaryTable())
-      if (apkDiff.archive.changed) {
+      if (apkDiff.archive.changed || apkDiff.signatures.changed) {
         appendln()
-        appendln(apkDiff.archive.toDetailReport())
+        appendln("=================")
+        appendln("====   APK   ====")
+        appendln("=================")
+        if (apkDiff.archive.changed) {
+          appendln(apkDiff.archive.toDetailReport())
+        }
+        if (apkDiff.signatures.changed) {
+          appendln(apkDiff.signatures.toDetailReport())
+        }
       }
       if (apkDiff.dex.changed) {
         appendln()
+        appendln("=================")
+        appendln("====   DEX   ====")
+        appendln("=================")
         appendln(apkDiff.dex.toDetailReport())
       }
       if (apkDiff.arsc.changed) {
         appendln()
+        appendln("==================")
+        appendln("====   ARSC   ====")
+        appendln("==================")
         appendln(apkDiff.arsc.toDetailReport())
       }
     }
@@ -101,9 +117,6 @@ private fun ArchiveDiff.toSummaryTable() = diffuseTable {
 }.renderText()
 
 private fun ArchiveDiff.toDetailReport() = buildString {
-  appendln("=================")
-  appendln("====   APK   ====")
-  appendln("=================")
   appendln()
   appendln(diffuseTable {
     header {
@@ -139,6 +152,30 @@ private fun ArchiveDiff.toDetailReport() = buildString {
       }
     }
   }.renderText())
+}
+
+private fun SignaturesDiff.toDetailReport() = buildString {
+  appendln()
+  appendln(diffuseTable {
+    header {
+      row("", "old", "new")
+    }
+    if (oldSignatures.v1.isNotEmpty() || newSignatures.v1.isNotEmpty()) {
+      row("V1",
+          oldSignatures.v1.joinToString("\n", transform = ByteString::hex),
+          newSignatures.v1.joinToString("\n", transform = ByteString::hex))
+    }
+    if (oldSignatures.v2.isNotEmpty() || newSignatures.v2.isNotEmpty()) {
+      row("V2",
+          oldSignatures.v2.joinToString("\n", transform = ByteString::hex),
+          newSignatures.v2.joinToString("\n", transform = ByteString::hex))
+    }
+    if (oldSignatures.v3.isNotEmpty() || newSignatures.v3.isNotEmpty()) {
+      row("V3",
+          oldSignatures.v2.joinToString("\n", transform = ByteString::hex),
+          newSignatures.v2.joinToString("\n", transform = ByteString::hex))
+    }
+  })
 }
 
 private fun DexDiff.toSummaryTable() = diffuseTable {
@@ -263,9 +300,6 @@ private fun DexDiff.toDetailReport() = buildString {
     }
   }
 
-  appendln("=================")
-  appendln("====   DEX   ====")
-  appendln("=================")
   appendComponentDiff("STRINGS", strings)
   appendComponentDiff("TYPES", types)
   appendComponentDiff("METHODS", methods)
@@ -373,9 +407,6 @@ private fun ArscDiff.toDetailReport() = buildString {
     }
   }
 
-  appendln("==================")
-  appendln("====   ARSC   ====")
-  appendln("==================")
   appendComponentDiff("CONFIGS", configsAdded, configsRemoved)
   appendComponentDiff("ENTRIES", entriesAdded, entriesRemoved)
 }
@@ -391,6 +422,44 @@ private fun ApiMapping.toSummaryString(): String {
       append(fields.toUnitString("fields", 1 to "field"))
       append(", ")
       append(methods.toUnitString("methods", 1 to "method"))
+    }
+  }
+}
+
+private fun Apk.Signatures.toSummaryString(): String {
+  if (v1.isEmpty() && v2.isEmpty() && v3.isEmpty()) {
+    return "none"
+  }
+  return buildString {
+    if (v1.isNotEmpty()) {
+      append("V1")
+      if (v1.size > 1) {
+        append(" (x")
+        append(v1.size)
+        append(')')
+      }
+    }
+    if (v2.isNotEmpty()) {
+      if (length > 0) {
+        append(", ")
+      }
+      append("V2")
+      if (v2.size > 1) {
+        append(" (x")
+        append(v2.size)
+        append(')')
+      }
+    }
+    if (v3.isNotEmpty()) {
+      if (length > 0) {
+        append(", ")
+      }
+      append("V3")
+      if (v3.size > 1) {
+        append(" (x")
+        append(v3.size)
+        append(')')
+      }
     }
   }
 }
