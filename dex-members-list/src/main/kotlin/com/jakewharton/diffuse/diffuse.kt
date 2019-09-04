@@ -10,6 +10,7 @@ import com.github.ajalt.clikt.parameters.options.switch
 import com.github.ajalt.clikt.parameters.types.path
 import com.jakewharton.dex.ApiMapping
 import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.Aar.Companion.toAar
 import com.jakewharton.diffuse.Apk.Companion.toApk
 
 fun main(vararg args: String) {
@@ -22,6 +23,13 @@ fun apkDiff(
   newApk: Apk,
   newMapping: ApiMapping = ApiMapping.EMPTY
 ): Diff = ApkDiff(oldApk, oldMapping, newApk, newMapping)
+
+fun aarDiff(
+  oldAar: Aar,
+  oldMapping: ApiMapping = ApiMapping.EMPTY,
+  newAar: Aar,
+  newMapping: ApiMapping = ApiMapping.EMPTY
+): Diff = AarDiff(oldAar, oldMapping, newAar, newMapping)
 
 private class Command : CliktCommand(name = "diffuse") {
   private val old by argument("OLD", help = "Old input file.")
@@ -57,7 +65,7 @@ private class Command : CliktCommand(name = "diffuse") {
         TODO(".aab files not yet supported")
       }
       Mode.Aar -> {
-        TODO(".aar files not yet supported")
+        aarDiff(old.toAar(), oldMapping, new.toAar(), newMapping)
       }
       Mode.Jar -> {
         TODO(".jar files not yet supported")
