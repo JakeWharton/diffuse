@@ -2,7 +2,7 @@ package com.jakewharton.diffuse
 
 import com.jakewharton.dex.entries
 import com.jakewharton.dex.readBytes
-import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toApkFileType
+import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toAarFileType
 import okio.Buffer
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
@@ -18,7 +18,7 @@ class Aar private constructor(
     ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
       zis.entries()
           .associate { entry ->
-            entry.name to ArchiveFile(entry.name, entry.name.toApkFileType(),
+            entry.name to ArchiveFile(entry.name, entry.name.toAarFileType(),
                 Size(entry.compressedSize),
                 Size(entry.size))
           }

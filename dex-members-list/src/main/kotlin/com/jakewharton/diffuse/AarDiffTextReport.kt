@@ -1,5 +1,7 @@
 package com.jakewharton.diffuse
 
+import com.jakewharton.diffuse.ArchiveFile.Type
+
 internal class AarDiffTextReport(private val aarDiff: AarDiff) : DiffReport {
   override fun write(appendable: Appendable) {
     appendable.apply {
@@ -14,7 +16,8 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : DiffReport {
         }
       }.toString())
       appendln()
-      appendln(aarDiff.archive.toSummaryTable("AAR"))
+      appendln(aarDiff.archive.toSummaryTable("AAR", Type.AAR_TYPES,
+          skipIfEmptyTypes = setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res)))
       if (aarDiff.archive.changed) {
         appendln()
         appendln("=================")

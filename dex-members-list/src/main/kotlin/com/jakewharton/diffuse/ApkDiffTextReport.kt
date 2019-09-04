@@ -1,5 +1,7 @@
 package com.jakewharton.diffuse
 
+import com.jakewharton.diffuse.ArchiveFile.Type
+
 internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
   override fun write(appendable: Appendable) {
     appendable.apply {
@@ -15,7 +17,8 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
         }
       }.toString())
       appendln()
-      appendln(apkDiff.archive.toSummaryTable("APK"))
+      appendln(apkDiff.archive.toSummaryTable("APK", Type.APK_TYPES,
+          skipIfEmptyTypes = setOf(Type.Native)))
       appendln()
       appendln(apkDiff.dex.toSummaryTable())
       appendln()

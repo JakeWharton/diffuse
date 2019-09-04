@@ -53,7 +53,11 @@ internal class ArchiveDiff(
   val changed = oldFiles != newFiles
 }
 
-internal fun ArchiveDiff.toSummaryTable(name: String) = diffuseTable {
+internal fun ArchiveDiff.toSummaryTable(
+  name: String,
+  displayTypes: List<Type>,
+  skipIfEmptyTypes: Set<Type> = emptySet()
+) = diffuseTable {
   header {
     row {
       cell(name) {
@@ -79,22 +83,19 @@ internal fun ArchiveDiff.toSummaryTable(name: String) = diffuseTable {
     val newSize = new.values.fold(Size.ZERO) { acc, file -> acc + file.size }
     val oldUncompressedSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
     val newUncompressedSize = new.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
-    row(name, oldSize, newSize, (newSize - oldSize).toDiffString(), oldUncompressedSize,
-        newUncompressedSize, (newUncompressedSize - oldUncompressedSize).toDiffString())
+    if (oldSize != Size.ZERO || newSize != Size.ZERO || type !in skipIfEmptyTypes) {
+      row(name, oldSize, newSize, (newSize - oldSize).toDiffString(), oldUncompressedSize,
+          newUncompressedSize, (newUncompressedSize - oldUncompressedSize).toDiffString())
+    }
   }
 
   body {
     cellStyle {
       alignment = MiddleRight
     }
-
-    addApkRow("dex", Type.Dex)
-    addApkRow("arsc", Type.Arsc)
-    addApkRow("manifest", Type.Manifest)
-    addApkRow("res", Type.Res)
-    addApkRow("native", Type.Native)
-    addApkRow("asset", Type.Asset)
-    addApkRow("other", Type.Other)
+    for (type in displayTypes) {
+      addApkRow(type.displayName, type)
+    }
   }
 
   footer {
