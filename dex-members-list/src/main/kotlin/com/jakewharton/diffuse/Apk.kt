@@ -19,15 +19,7 @@ class Apk private constructor(
   override val bytes: ByteString
 ) : Binary {
   val files: SortedMap<String, ArchiveFile> by lazy {
-    ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
-      zis.entries()
-          .associate { entry ->
-            entry.name to ArchiveFile(entry.name, entry.name.toApkFileType(),
-                Size(entry.compressedSize),
-                Size(entry.size))
-          }
-          .toSortedMap()
-    }
+    bytes.parseArchiveFiles { it.toApkFileType() }
   }
   val dexes: List<Dex> by lazy {
     ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
