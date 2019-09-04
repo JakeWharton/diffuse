@@ -4,6 +4,7 @@ import com.jakewharton.dex.entries
 import com.jakewharton.diffuse.ArchiveFile.Type
 import okio.Buffer
 import okio.ByteString
+import okio.utf8Size
 import java.util.Locale
 import java.util.SortedMap
 import java.util.zip.ZipInputStream
@@ -74,14 +75,29 @@ data class ArchiveFile(
 }
 
 internal fun ByteString.parseArchiveFiles(
-  nameToType: (String) -> Type
+  classifier: (String) -> Type
 ): SortedMap<String, ArchiveFile> {
   return ZipInputStream(Buffer().write(this).inputStream()).use { zis ->
     zis.entries()
         .associate { entry ->
-          entry.name to ArchiveFile(entry.name, nameToType(entry.name), Size(entry.compressedSize),
+          val nameSize = entry.name.utf8Size()
+          val extraSize = entry.extra?.size ?: 0
+          val commentSize = entry.comment?.utf8Size() ?: 0
+
+          // Calculate the actual compressed size impact in the zip, not just compressed data size.
+          // See https://en.wikipedia.org/wiki/Zip_(file_format)#File_headers for details. There is
+          // no way of knowing whether a trailing data descriptor was present, but it's unlikely.
+          val compressedSize = entry.compressedSize +
+              // Local file header.
+              30 + nameSize + extraSize +
+              // Central directory file header.
+              46 + nameSize + extraSize + commentSize
+
+          entry.name to ArchiveFile(entry.name, classifier(entry.name), Size(compressedSize),
               Size(entry.size))
         }
+        // Include a dummy root entry to account for the end of central directory record.
+        .plus("/" to ArchiveFile("/", Type.Other, Size(22), Size.ZERO))
         .toSortedMap()
   }
 }
