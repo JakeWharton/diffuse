@@ -5,6 +5,7 @@ import com.jakewharton.diffuse.ArchiveFile.Type
 import com.jakewharton.picnic.SectionDsl
 import com.jakewharton.picnic.TextAlignment.BottomCenter
 import com.jakewharton.picnic.TextAlignment.BottomLeft
+import com.jakewharton.picnic.TextAlignment.MiddleCenter
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
 import java.util.SortedMap
@@ -15,7 +16,9 @@ internal class ArchiveDiff(
 ) {
   data class Change(
     val path: String,
+    val size: Size,
     val sizeDiff: Size,
+    val uncompressedSize: Size,
     val uncompressedSizeDiff: Size,
     val type: Type
   ) {
@@ -26,14 +29,16 @@ internal class ArchiveDiff(
   init {
     val added = newFiles.mapNotNull { (path, newFile) ->
       if (path !in oldFiles) {
-        Change(path, newFile.size, newFile.uncompressedSize, Change.Type.Added)
+        Change(path, newFile.size, newFile.size, newFile.uncompressedSize, newFile.uncompressedSize,
+            Change.Type.Added)
       } else {
         null
       }
     }
     val removed = oldFiles.mapNotNull { (path, oldFile) ->
       if (path !in newFiles) {
-        Change(path, -oldFile.size, -oldFile.uncompressedSize, Change.Type.Removed)
+        Change(path, Size.ZERO, -oldFile.size, Size.ZERO, -oldFile.uncompressedSize,
+            Change.Type.Removed)
       } else {
         null
       }
@@ -41,8 +46,9 @@ internal class ArchiveDiff(
     val changed = oldFiles.mapNotNull { (path, oldFile) ->
       val newFile = newFiles[path]
       if (newFile != null && newFile != oldFile) {
-        Change(path, newFile.size - oldFile.size,
-            newFile.uncompressedSize - oldFile.uncompressedSize, Change.Type.Changed)
+        Change(path, newFile.size, newFile.size - oldFile.size,
+            newFile.uncompressedSize, newFile.uncompressedSize - oldFile.uncompressedSize,
+            Change.Type.Changed)
       } else {
         null
       }
@@ -110,13 +116,35 @@ internal fun ArchiveDiff.toDetailReport() = buildString {
   appendln()
   appendln(diffuseTable {
     header {
-      row("diff", "diff (u)", "path")
+      row {
+        cell("compressed") {
+          columnSpan = 2
+          alignment = MiddleCenter
+        }
+        cell("uncompressed") {
+          columnSpan = 2
+          alignment = MiddleCenter
+        }
+        cell("path") {
+          rowSpan = 2
+          alignment = BottomLeft
+        }
+      }
+      row("size", "diff", "size", "diff")
     }
     footer {
+      val totalSize = changes.fold(Size.ZERO) { acc, change -> acc + change.size }
       val totalDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.sizeDiff }
+      val totalUncompressedSize = changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSize }
       val totalUncompressedDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSizeDiff }
       row {
+        cell(totalSize) {
+          alignment = MiddleRight
+        }
         cell(totalDiff.toDiffString()) {
+          alignment = MiddleRight
+        }
+        cell(totalUncompressedSize) {
           alignment = MiddleRight
         }
         cell(totalUncompressedDiff.toDiffString()) {
@@ -125,14 +153,20 @@ internal fun ArchiveDiff.toDetailReport() = buildString {
         cell("(total)")
       }
     }
-    for ((path, sizeDiff, uncompressedSizeDiff, type) in changes) {
+    for ((path, size, sizeDiff, uncompressedSize, uncompressedSizeDiff, type) in changes) {
       val typeChar = when (type) {
         Change.Type.Added -> '+'
         Change.Type.Removed -> '-'
         Change.Type.Changed -> '∆'
       }
       row {
+        cell(if (type != Change.Type.Removed) size else "") {
+          alignment = MiddleRight
+        }
         cell(sizeDiff.toDiffString()) {
+          alignment = MiddleRight
+        }
+        cell(if (type != Change.Type.Removed) uncompressedSize else "") {
           alignment = MiddleRight
         }
         cell(uncompressedSizeDiff.toDiffString()) {
