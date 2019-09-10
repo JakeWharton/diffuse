@@ -35,6 +35,9 @@ zip three.apk params_joined.dex types.dex visibilities.dex
 zip one.apk types.dex
 zip three.jar Params.class Types.class Visibilities.class
 
+zip empty.jar Params.class
+zip -d empty.jar Params.class
+
 cp three.jar classes.jar
 zip three.aar classes.jar
 rm classes.jar

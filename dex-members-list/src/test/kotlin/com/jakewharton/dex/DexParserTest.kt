@@ -624,6 +624,11 @@ class DexParserTest {
     ).inOrder()
   }
 
+  @Test fun emptyJar() {
+    val dexParser = loadResource("empty.jar").readBytes().toDexParser()
+    assertThat(dexParser.listMembers().map(DexMember::toString)).isEmpty()
+  }
+
   private fun loadResource(resourceName: String) =
       Paths.get(Resources.getResource(resourceName).file)
 }

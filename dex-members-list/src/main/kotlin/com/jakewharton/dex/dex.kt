@@ -78,7 +78,6 @@ private fun compileClassesWithD8(
 
   D8.run(builder.build())
 
-  check(bytesList.isNotEmpty()) { "No dex file produced" }
   return bytesList
 }
 
@@ -90,6 +89,10 @@ internal class MemberList(
 
   operator fun plus(other: MemberList): MemberList {
     return MemberList(declared + other.declared, referenced + other.referenced)
+  }
+
+  companion object {
+    val EMPTY = MemberList(emptyList(), emptyList())
   }
 }
 

@@ -49,8 +49,10 @@ class DexParser private constructor(
   private val dexes by lazy { bytes.toDexes(desugaring) }
   private val memberList by lazy {
     dexes.map(Dex::toMemberList)
-        .reduce(MemberList::plus)
-        .let(mapping::get)
+        .takeIf { it.isNotEmpty() } // TODO https://youtrack.jetbrains.com/issue/KT-33761
+        ?.reduce(MemberList::plus)
+        ?.let(mapping::get)
+        ?: MemberList.EMPTY
   }
 
   @Deprecated("Prefer listMembers()", ReplaceWith("this.listMembers()"))
