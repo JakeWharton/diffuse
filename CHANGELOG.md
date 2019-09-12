@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 4.1.1 *(2019-09-11)*
+----------------------------
+
+ * Fix: Do not crash on inputs that have no code.
+
+
 Version 4.1.0 *(2019-08-31)*
 ----------------------------
 
