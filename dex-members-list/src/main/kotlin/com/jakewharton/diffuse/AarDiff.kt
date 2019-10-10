@@ -10,5 +10,7 @@ internal class AarDiff(
 ) : Diff {
   val archive = ArchiveDiff(oldAar.files, newAar.files)
 
+  val manifest = AndroidManifestDiff(oldAar.manifest, newAar.manifest)
+
   override fun toTextReport(): DiffReport = AarDiffTextReport(this)
 }

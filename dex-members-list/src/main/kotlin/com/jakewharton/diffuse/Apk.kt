@@ -4,6 +4,7 @@ import com.android.apksig.ApkVerifier
 import com.android.apksig.util.DataSources
 import com.jakewharton.dex.entries
 import com.jakewharton.dex.readBytes
+import com.jakewharton.diffuse.AndroidManifest.Companion.toAndroidManifest
 import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toApkFileType
 import com.jakewharton.diffuse.Arsc.Companion.toArsc
 import com.jakewharton.diffuse.Dex.Companion.toDex
@@ -33,6 +34,12 @@ class Apk private constructor(
     ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
       zis.entries().first { it.name.endsWith(".arsc") }
       zis.readBytes().toByteString().toArsc()
+    }
+  }
+  val manifest: AndroidManifest by lazy {
+    ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
+      zis.entries().first { it.name == "AndroidManifest.xml" }
+      zis.readBytes().toByteString().toAndroidManifest()
     }
   }
   val signatures: Signatures by lazy {

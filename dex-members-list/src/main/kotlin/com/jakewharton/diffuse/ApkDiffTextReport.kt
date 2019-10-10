@@ -35,6 +35,13 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
           appendln(apkDiff.signatures.toDetailReport())
         }
       }
+      if (apkDiff.manifest.changed) {
+        appendln()
+        appendln("======================")
+        appendln("====   MANIFEST   ====")
+        appendln("======================")
+        appendln(apkDiff.manifest.toDetailReport())
+      }
       if (apkDiff.dex.changed) {
         appendln()
         appendln("=================")

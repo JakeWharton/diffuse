@@ -25,6 +25,13 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : DiffReport {
         appendln("=================")
         appendln(aarDiff.archive.toDetailReport())
       }
+      if (aarDiff.manifest.changed) {
+        appendln()
+        appendln("======================")
+        appendln("====   MANIFEST   ====")
+        appendln("======================")
+        appendln(aarDiff.manifest.toDetailReport())
+      }
     }
   }
 
