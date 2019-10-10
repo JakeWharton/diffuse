@@ -4,12 +4,12 @@ Dex Member List
 A simple utility which lists all method or field references in an `.apk`, `.aar`, `.dex`, `.jar`,
 and/or `.class` files (and any combination of those).
 
-Build by calling `./gradlew clean assemble`. Run `./build/dex-member-list` or by passing in one or
+Build by calling `./gradlew clean assemble`. Run `./dex-members-list/build/dex-member-list` or by passing in one or
 more arguments or by piping data through stdin.
 
 For example:
 ```
-$ ./build/dex-member-list src/test/resources/types.dex
+$ ./dex-members-list/build/dex-member-list src/test/resources/types.dex
 Types <init>()
 Types returnsBoolean() → boolean
 Types returnsRunnable() → Runnable
