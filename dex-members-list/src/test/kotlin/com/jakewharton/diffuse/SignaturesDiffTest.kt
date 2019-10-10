@@ -1,0 +1,48 @@
+package com.jakewharton.diffuse
+
+import com.google.common.truth.Truth.assertThat
+import okio.ByteString.Companion.encodeUtf8
+import org.junit.Test
+
+class SignaturesDiffTest {
+  private val signatureEmpty = Apk.Signatures(emptyList(), emptyList(), emptyList())
+  private val signatureV1Only = Apk.Signatures(listOf("v1v1".encodeUtf8()), emptyList(), emptyList())
+  private val signatureV1AndV2 = Apk.Signatures(listOf("v1v1".encodeUtf8()), listOf("v2v2".encodeUtf8()), emptyList())
+  private val signatureV1AndV3 = Apk.Signatures(listOf("v1v1".encodeUtf8()), emptyList(), listOf("v3v3".encodeUtf8()))
+
+  @Test fun emptyToV1() {
+    val diff = SignaturesDiff(signatureEmpty, signatureV1Only)
+    assertThat(diff.toDetailReport()).isEqualTo("""
+      |
+      |    │ old │ new      
+      |────┼─────┼──────────
+      | V1 │     │ 76317631 
+      |
+      |""".trimMargin())
+  }
+
+  @Test fun v1ToV1AndV2() {
+    val diff = SignaturesDiff(signatureV1Only, signatureV1AndV2)
+    assertThat(diff.toDetailReport()).isEqualTo("""
+      |
+      |    │ old      │ new      
+      |────┼──────────┼──────────
+      | V1 │ 76317631 │ 76317631 
+      | V2 │          │ 76327632 
+      |
+      |""".trimMargin())
+  }
+
+  @Test fun v1AndV2ToV1AndV3() {
+    val diff = SignaturesDiff(signatureV1AndV2, signatureV1AndV3)
+    assertThat(diff.toDetailReport()).isEqualTo("""
+      |
+      |    │ old      │ new      
+      |────┼──────────┼──────────
+      | V1 │ 76317631 │ 76317631 
+      | V2 │ 76327632 │          
+      | V3 │          │ 76337633 
+      |
+      |""".trimMargin())
+  }
+}

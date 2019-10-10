@@ -28,8 +28,8 @@ internal fun SignaturesDiff.toDetailReport() = buildString {
     }
     if (oldSignatures.v3.isNotEmpty() || newSignatures.v3.isNotEmpty()) {
       row("V3",
-          oldSignatures.v2.joinToString("\n", transform = ByteString::hex),
-          newSignatures.v2.joinToString("\n", transform = ByteString::hex))
+          oldSignatures.v3.joinToString("\n", transform = ByteString::hex),
+          newSignatures.v3.joinToString("\n", transform = ByteString::hex))
     }
   })
 }
