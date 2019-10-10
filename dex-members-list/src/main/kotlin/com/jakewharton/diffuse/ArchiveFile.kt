@@ -85,10 +85,10 @@ internal fun ByteString.parseArchiveFiles(
           val commentSize = entry.comment?.utf8Size() ?: 0
 
           // Calculate the actual compressed size impact in the zip, not just compressed data size.
-          // See https://en.wikipedia.org/wiki/Zip_(file_format)#File_headers for details. There is
-          // no way of knowing whether a trailing data descriptor was present, but it's unlikely.
+          // See https://en.wikipedia.org/wiki/Zip_(file_format)#File_headers for details.
           val compressedSize = entry.compressedSize +
-              // Local file header.
+              // Local file header. There is no way of knowing whether a trailing data descriptor
+              // was present since the general flags field is not exposed, but it's unlikely.
               30 + nameSize + extraSize +
               // Central directory file header.
               46 + nameSize + extraSize + commentSize
@@ -96,7 +96,8 @@ internal fun ByteString.parseArchiveFiles(
           entry.name to ArchiveFile(entry.name, classifier(entry.name), Size(compressedSize),
               Size(entry.size))
         }
-        // Include a dummy root entry to account for the end of central directory record.
+        // Include a dummy root entry to account for the end of central directory record. There is
+        // no way of accessing the zip comment using ZipInputStream, but it's likely empty.
         .plus("/" to ArchiveFile("/", Type.Other, Size(22), Size.ZERO))
         .toSortedMap()
   }
