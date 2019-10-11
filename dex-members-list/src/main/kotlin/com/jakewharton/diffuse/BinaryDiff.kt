@@ -1,6 +1,6 @@
 package com.jakewharton.diffuse
 
-interface Diff {
+interface BinaryDiff {
   fun toTextReport(): DiffReport
 }
 

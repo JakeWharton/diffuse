@@ -7,7 +7,7 @@ internal class ApkDiff(
   val oldMapping: ApiMapping,
   val newApk: Apk,
   val newMapping: ApiMapping
-) : Diff {
+) : BinaryDiff {
   val archive = ArchiveFilesDiff(oldApk.files, newApk.files)
   val signatures = SignaturesDiff(oldApk.signatures, newApk.signatures)
   val dex = DexDiff(oldApk.dexes, oldMapping, newApk.dexes, newMapping)

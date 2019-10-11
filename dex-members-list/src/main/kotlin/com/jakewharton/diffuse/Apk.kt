@@ -8,10 +8,8 @@ import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
 import com.jakewharton.diffuse.Arsc.Companion.toArsc
 import com.jakewharton.diffuse.Dex.Companion.toDex
 import com.jakewharton.diffuse.Signatures.Companion.toSignatures
-import okio.Buffer
 import okio.ByteString.Companion.toByteString
 import java.nio.file.Path
-import java.util.zip.ZipInputStream
 
 class Apk private constructor(
   override val filename: String?,
@@ -27,19 +25,19 @@ class Apk private constructor(
     fun Path.toApk(): Apk {
       val bytes = readBytes().toByteString()
       val files = bytes.toArchiveFiles { it.toApkFileType() }
-      val dexes = ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
+      val dexes = bytes.asInputStream().asZip().use { zis ->
         zis.entries()
             .filter { it.name.endsWith(".dex") }
-            .map { zis.readBytes().toByteString().toDex() }
+            .map { zis.readByteString().toDex() }
             .toList()
       }
-      val arsc = ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
+      val arsc = bytes.asInputStream().asZip().use { zis ->
         zis.entries().first { it.name.endsWith(".arsc") }
-        zis.readBytes().toByteString().toArsc()
+        zis.readByteString().toArsc()
       }
-      val manifest = ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
+      val manifest = bytes.asInputStream().asZip().use { zis ->
         zis.entries().first { it.name == "AndroidManifest.xml" }
-        zis.readBytes().toByteString().toAndroidManifest()
+        zis.readByteString().toAndroidManifest()
       }
       val signatures = toSignatures()
       return Apk(fileName.toString(), files, dexes, arsc, manifest, signatures)

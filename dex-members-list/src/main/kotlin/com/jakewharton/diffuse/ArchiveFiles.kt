@@ -3,10 +3,8 @@ package com.jakewharton.diffuse
 import com.jakewharton.dex.entries
 import com.jakewharton.diffuse.ArchiveFile.Type
 import com.jakewharton.diffuse.ArchiveFile.Type.Other
-import okio.Buffer
 import okio.ByteString
 import okio.utf8Size
-import java.util.zip.ZipInputStream
 
 class ArchiveFiles internal constructor(
   private val files: Map<String, ArchiveFile>
@@ -15,7 +13,7 @@ class ArchiveFiles internal constructor(
     @JvmStatic
     @JvmName("parse")
     fun ByteString.toArchiveFiles(classifier: (String) -> Type) : ArchiveFiles {
-      return ZipInputStream(Buffer().write(this).inputStream()).use { zis ->
+      return asInputStream().asZip().use { zis ->
         zis.entries()
             .associate { entry ->
               val nameSize = entry.name.utf8Size()

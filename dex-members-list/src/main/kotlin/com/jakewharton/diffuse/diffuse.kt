@@ -22,14 +22,14 @@ fun apkDiff(
   oldMapping: ApiMapping = ApiMapping.EMPTY,
   newApk: Apk,
   newMapping: ApiMapping = ApiMapping.EMPTY
-): Diff = ApkDiff(oldApk, oldMapping, newApk, newMapping)
+): BinaryDiff = ApkDiff(oldApk, oldMapping, newApk, newMapping)
 
 fun aarDiff(
   oldAar: Aar,
   oldMapping: ApiMapping = ApiMapping.EMPTY,
   newAar: Aar,
   newMapping: ApiMapping = ApiMapping.EMPTY
-): Diff = AarDiff(oldAar, oldMapping, newAar, newMapping)
+): BinaryDiff = AarDiff(oldAar, oldMapping, newAar, newMapping)
 
 private class Command : CliktCommand(name = "diffuse") {
   private val old by argument("OLD", help = "Old input file.")

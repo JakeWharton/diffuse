@@ -1,11 +1,9 @@
 package com.jakewharton.diffuse
 
 import com.android.apksig.ApkVerifier
-import com.android.apksig.util.DataSources
+import com.jakewharton.dex.readBytes
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
-import java.nio.ByteBuffer
-import java.nio.file.Files
 import java.nio.file.Path
 
 data class Signatures(
@@ -17,8 +15,7 @@ data class Signatures(
     @JvmStatic
     @JvmName("parse")
     fun Path.toSignatures(): Signatures {
-      val byteBuffer = ByteBuffer.wrap(Files.readAllBytes(this))
-      val result = ApkVerifier.Builder(DataSources.asDataSource(byteBuffer))
+      val result = ApkVerifier.Builder(readBytes().asByteBuffer().asDataSource())
           .build()
           .verify()
       return Signatures(
