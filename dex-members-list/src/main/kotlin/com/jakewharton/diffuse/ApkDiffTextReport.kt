@@ -10,8 +10,9 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
           row("OLD/NEW", apkDiff.oldApk.filename, apkDiff.newApk.filename)
         }
         body {
-          row("md5", apkDiff.oldApk.bytes.md5().hex(), apkDiff.newApk.bytes.md5().hex())
-          row("sha1", apkDiff.oldApk.bytes.sha1().hex(), apkDiff.newApk.bytes.sha1().hex())
+          // TODO do we care about showing a hash?
+          //  row("md5", apkDiff.oldApk.bytes.md5().hex(), apkDiff.newApk.bytes.md5().hex())
+          //  row("sha1", apkDiff.oldApk.bytes.sha1().hex(), apkDiff.newApk.bytes.sha1().hex())
           row("signature", apkDiff.oldApk.signatures.toSummaryString(), apkDiff.newApk.signatures.toSummaryString())
           row("mapping", apkDiff.oldMapping.toSummaryString(), apkDiff.newMapping.toSummaryString())
         }

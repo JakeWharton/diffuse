@@ -1,6 +1,5 @@
 package com.jakewharton.diffuse
 
-import com.jakewharton.diffuse.Apk.Signatures
 import okio.ByteString
 
 internal class SignaturesDiff(

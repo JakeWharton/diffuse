@@ -10,62 +10,54 @@ import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
 import com.jakewharton.diffuse.Arsc.Companion.toArsc
 import com.jakewharton.diffuse.Dex.Companion.toDex
 import okio.Buffer
-import okio.ByteString
 import okio.ByteString.Companion.toByteString
 import java.nio.file.Path
 import java.util.zip.ZipInputStream
 
 class Apk private constructor(
   override val filename: String?,
-  override val bytes: ByteString
+  val files: ArchiveFiles,
+  val dexes: List<Dex>,
+  val arsc: Arsc,
+  val manifest: AndroidManifest,
+  val signatures: Signatures
 ) : Binary {
-  val files: ArchiveFiles by lazy {
-    bytes.toArchiveFiles { it.toApkFileType() }
-  }
-  val dexes: List<Dex> by lazy {
-    ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
-      zis.entries()
-          .filter { it.name.endsWith(".dex") }
-          .map { zis.readBytes().toByteString().toDex() }
-          .toList()
-    }
-  }
-  val arsc: Arsc by lazy {
-    ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
-      zis.entries().first { it.name.endsWith(".arsc") }
-      zis.readBytes().toByteString().toArsc()
-    }
-  }
-  val manifest: AndroidManifest by lazy {
-    ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
-      zis.entries().first { it.name == "AndroidManifest.xml" }
-      zis.readBytes().toByteString().toAndroidManifest()
-    }
-  }
-  val signatures: Signatures by lazy {
-    val result = ApkVerifier.Builder(DataSources.asDataSource(bytes.asByteBuffer())).build()
-        .verify()
-    Signatures(
-      result.v1SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
-      result.v2SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
-      result.v3SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted()
-    )
-  }
-
-  data class Signatures(
-    val v1: List<ByteString>,
-    val v2: List<ByteString>,
-    val v3: List<ByteString>
-  )
-
   companion object {
     @JvmStatic
     @JvmName("create")
-    fun Path.toApk() = Apk(fileName.toString(), readBytes().toByteString())
+    fun Path.toApk(): Apk {
+      val bytes = readBytes().toByteString()
+      val files = bytes.toArchiveFiles { it.toApkFileType() }
+      val dexes = ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
+        zis.entries()
+            .filter { it.name.endsWith(".dex") }
+            .map { zis.readBytes().toByteString().toDex() }
+            .toList()
+      }
+      val arsc = ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
+        zis.entries().first { it.name.endsWith(".arsc") }
+        zis.readBytes().toByteString().toArsc()
+      }
+      val manifest = ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->
+        zis.entries().first { it.name == "AndroidManifest.xml" }
+        zis.readBytes().toByteString().toAndroidManifest()
+      }
+      val signatures = run {
+        val result = ApkVerifier.Builder(DataSources.asDataSource(bytes.asByteBuffer()))
+            .build()
+            .verify()
+        Signatures(
+            result.v1SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
+            result.v2SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
+            result.v3SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted()
+        )
+      }
+      return Apk(fileName.toString(), files, dexes, arsc, manifest, signatures)
+    }
   }
 }
 
-internal fun Apk.Signatures.toSummaryString(): String {
+internal fun Signatures.toSummaryString(): String {
   if (v1.isEmpty() && v2.isEmpty() && v3.isEmpty()) {
     return "none"
   }

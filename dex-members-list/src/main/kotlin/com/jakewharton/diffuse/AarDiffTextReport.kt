@@ -10,8 +10,9 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : DiffReport {
           row("OLD/NEW", aarDiff.oldAar.filename, aarDiff.newAar.filename)
         }
         body {
-          row("md5", aarDiff.oldAar.bytes.md5().hex(), aarDiff.newAar.bytes.md5().hex())
-          row("sha1", aarDiff.oldAar.bytes.sha1().hex(), aarDiff.newAar.bytes.sha1().hex())
+          // TODO do we care about showing a hash?
+          //  row("md5", aarDiff.oldAar.bytes.md5().hex(), aarDiff.newAar.bytes.md5().hex())
+          //  row("sha1", aarDiff.oldAar.bytes.sha1().hex(), aarDiff.newAar.bytes.sha1().hex())
           row("mapping", aarDiff.oldMapping.toSummaryString(), aarDiff.newMapping.toSummaryString())
         }
       }.toString())

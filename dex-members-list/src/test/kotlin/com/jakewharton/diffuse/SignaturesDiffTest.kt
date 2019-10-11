@@ -5,10 +5,10 @@ import okio.ByteString.Companion.encodeUtf8
 import org.junit.Test
 
 class SignaturesDiffTest {
-  private val signatureEmpty = Apk.Signatures(emptyList(), emptyList(), emptyList())
-  private val signatureV1Only = Apk.Signatures(listOf("v1v1".encodeUtf8()), emptyList(), emptyList())
-  private val signatureV1AndV2 = Apk.Signatures(listOf("v1v1".encodeUtf8()), listOf("v2v2".encodeUtf8()), emptyList())
-  private val signatureV1AndV3 = Apk.Signatures(listOf("v1v1".encodeUtf8()), emptyList(), listOf("v3v3".encodeUtf8()))
+  private val signatureEmpty = Signatures(emptyList(), emptyList(), emptyList())
+  private val signatureV1Only = Signatures(listOf("v1v1".encodeUtf8()), emptyList(), emptyList())
+  private val signatureV1AndV2 = Signatures(listOf("v1v1".encodeUtf8()), listOf("v2v2".encodeUtf8()), emptyList())
+  private val signatureV1AndV3 = Signatures(listOf("v1v1".encodeUtf8()), emptyList(), listOf("v3v3".encodeUtf8()))
 
   @Test fun emptyToV1() {
     val diff = SignaturesDiff(signatureEmpty, signatureV1Only)
