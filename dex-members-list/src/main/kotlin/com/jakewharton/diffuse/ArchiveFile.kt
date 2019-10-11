@@ -20,6 +20,7 @@ data class ArchiveFile(
     JarLibs {
       override val displayName get() = "libs"
     },
+    Class,
     Arsc,
     Manifest,
     Res,
@@ -35,6 +36,9 @@ data class ArchiveFile(
 
       @JvmField
       val AAR_TYPES = listOf(Jar, Manifest, Res, Native, JarLibs, ApiJar, LintJar, Other)
+
+      @JvmField
+      val JAR_TYPES = listOf(Class, Other)
 
       private val dexRegex = Regex("classes\\d*\\.dex")
 
@@ -63,7 +67,13 @@ data class ArchiveFile(
         startsWith("res/") -> Res
         else -> Other
       }
+
+      @JvmStatic
+      @JvmName("fromJarName")
+      fun String.toJarFileType() = when {
+        endsWith(".class") -> Class
+        else -> Other
+      }
     }
   }
 }
-

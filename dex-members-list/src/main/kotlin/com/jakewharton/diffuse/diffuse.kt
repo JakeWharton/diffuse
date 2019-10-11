@@ -12,6 +12,7 @@ import com.jakewharton.dex.ApiMapping
 import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
 import com.jakewharton.diffuse.Aar.Companion.toAar
 import com.jakewharton.diffuse.Apk.Companion.toApk
+import com.jakewharton.diffuse.Jar.Companion.toJar
 
 fun main(vararg args: String) {
   Command().main(args.toList())
@@ -30,6 +31,13 @@ fun aarDiff(
   newAar: Aar,
   newMapping: ApiMapping = ApiMapping.EMPTY
 ): BinaryDiff = AarDiff(oldAar, oldMapping, newAar, newMapping)
+
+fun jarDiff(
+  oldJar: Jar,
+  oldMapping: ApiMapping = ApiMapping.EMPTY,
+  newJar: Jar,
+  newMapping: ApiMapping = ApiMapping.EMPTY
+): BinaryDiff = JarDiff(oldJar, oldMapping, newJar, newMapping)
 
 private class Command : CliktCommand(name = "diffuse") {
   private val old by argument("OLD", help = "Old input file.")
@@ -68,7 +76,7 @@ private class Command : CliktCommand(name = "diffuse") {
         aarDiff(old.toAar(), oldMapping, new.toAar(), newMapping)
       }
       Mode.Jar -> {
-        TODO(".jar files not yet supported")
+        jarDiff(old.toJar(), oldMapping, new.toJar(), newMapping)
       }
     }
     println(diff.toTextReport())
