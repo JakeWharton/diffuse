@@ -1,7 +1,5 @@
 package com.jakewharton.diffuse
 
-import com.android.apksig.ApkVerifier
-import com.android.apksig.util.DataSources
 import com.jakewharton.dex.entries
 import com.jakewharton.dex.readBytes
 import com.jakewharton.diffuse.AndroidManifest.Companion.toAndroidManifest
@@ -9,6 +7,7 @@ import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toApkFileType
 import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
 import com.jakewharton.diffuse.Arsc.Companion.toArsc
 import com.jakewharton.diffuse.Dex.Companion.toDex
+import com.jakewharton.diffuse.Signatures.Companion.toSignatures
 import okio.Buffer
 import okio.ByteString.Companion.toByteString
 import java.nio.file.Path
@@ -42,16 +41,7 @@ class Apk private constructor(
         zis.entries().first { it.name == "AndroidManifest.xml" }
         zis.readBytes().toByteString().toAndroidManifest()
       }
-      val signatures = run {
-        val result = ApkVerifier.Builder(DataSources.asDataSource(bytes.asByteBuffer()))
-            .build()
-            .verify()
-        Signatures(
-            result.v1SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
-            result.v2SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
-            result.v3SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted()
-        )
-      }
+      val signatures = toSignatures()
       return Apk(fileName.toString(), files, dexes, arsc, manifest, signatures)
     }
   }
