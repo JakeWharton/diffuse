@@ -8,11 +8,10 @@ import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleCenter
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
-import java.util.SortedMap
 
 internal class ArchiveDiff(
-  val oldFiles: SortedMap<String, ArchiveFile>,
-  val newFiles: SortedMap<String, ArchiveFile>
+  val oldFiles: ArchiveFiles,
+  val newFiles: ArchiveFiles
 ) {
   data class Change(
     val path: String,

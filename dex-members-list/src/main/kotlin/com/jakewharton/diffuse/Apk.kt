@@ -6,21 +6,21 @@ import com.jakewharton.dex.entries
 import com.jakewharton.dex.readBytes
 import com.jakewharton.diffuse.AndroidManifest.Companion.toAndroidManifest
 import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toApkFileType
+import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
 import com.jakewharton.diffuse.Arsc.Companion.toArsc
 import com.jakewharton.diffuse.Dex.Companion.toDex
 import okio.Buffer
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
 import java.nio.file.Path
-import java.util.SortedMap
 import java.util.zip.ZipInputStream
 
 class Apk private constructor(
   override val filename: String?,
   override val bytes: ByteString
 ) : Binary {
-  val files: SortedMap<String, ArchiveFile> by lazy {
-    bytes.parseArchiveFiles { it.toApkFileType() }
+  val files: ArchiveFiles by lazy {
+    bytes.toArchiveFiles { it.toApkFileType() }
   }
   val dexes: List<Dex> by lazy {
     ZipInputStream(Buffer().write(bytes).inputStream()).use { zis ->

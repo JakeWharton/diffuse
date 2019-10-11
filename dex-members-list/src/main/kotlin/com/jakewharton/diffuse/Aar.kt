@@ -4,20 +4,20 @@ import com.jakewharton.dex.entries
 import com.jakewharton.dex.readBytes
 import com.jakewharton.diffuse.AndroidManifest.Companion.toAndroidManifest
 import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toAarFileType
+import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
 import okio.Buffer
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Path
-import java.util.SortedMap
 import java.util.zip.ZipInputStream
 
 class Aar private constructor(
   override val filename: String?,
   override val bytes: ByteString
 ) : Binary {
-  val files: SortedMap<String, ArchiveFile> by lazy {
-    bytes.parseArchiveFiles { it.toAarFileType() }
+  val files: ArchiveFiles by lazy {
+    bytes.toArchiveFiles { it.toAarFileType() }
   }
 
   // TODO val classes.jar = TODO()
