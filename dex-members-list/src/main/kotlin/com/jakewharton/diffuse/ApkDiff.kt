@@ -8,7 +8,7 @@ internal class ApkDiff(
   val newApk: Apk,
   val newMapping: ApiMapping
 ) : Diff {
-  val archive = ArchiveDiff(oldApk.files, newApk.files)
+  val archive = ArchiveFilesDiff(oldApk.files, newApk.files)
   val signatures = SignaturesDiff(oldApk.signatures, newApk.signatures)
   val dex = DexDiff(oldApk.dexes, oldMapping, newApk.dexes, newMapping)
   val arsc = ArscDiff(oldApk.arsc, newApk.arsc)

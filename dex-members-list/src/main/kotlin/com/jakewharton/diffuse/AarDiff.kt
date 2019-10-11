@@ -8,7 +8,7 @@ internal class AarDiff(
   val newAar: Aar,
   val newMapping: ApiMapping
 ) : Diff {
-  val archive = ArchiveDiff(oldAar.files, newAar.files)
+  val archive = ArchiveFilesDiff(oldAar.files, newAar.files)
 
   val manifest = AndroidManifestDiff(oldAar.manifest, newAar.manifest)
 

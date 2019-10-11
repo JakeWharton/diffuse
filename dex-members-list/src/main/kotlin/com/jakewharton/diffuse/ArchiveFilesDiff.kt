@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse
 
-import com.jakewharton.diffuse.ArchiveDiff.Change
 import com.jakewharton.diffuse.ArchiveFile.Type
+import com.jakewharton.diffuse.ArchiveFilesDiff.Change
 import com.jakewharton.picnic.SectionDsl
 import com.jakewharton.picnic.TextAlignment.BottomCenter
 import com.jakewharton.picnic.TextAlignment.BottomLeft
@@ -9,7 +9,7 @@ import com.jakewharton.picnic.TextAlignment.MiddleCenter
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
 
-internal class ArchiveDiff(
+internal class ArchiveFilesDiff(
   val oldFiles: ArchiveFiles,
   val newFiles: ArchiveFiles
 ) {
@@ -58,7 +58,7 @@ internal class ArchiveDiff(
   val changed = oldFiles != newFiles
 }
 
-internal fun ArchiveDiff.toSummaryTable(
+internal fun ArchiveFilesDiff.toSummaryTable(
   name: String,
   displayTypes: List<Type>,
   skipIfEmptyTypes: Set<Type> = emptySet()
@@ -111,7 +111,7 @@ internal fun ArchiveDiff.toSummaryTable(
   }
 }.renderText()
 
-internal fun ArchiveDiff.toDetailReport() = buildString {
+internal fun ArchiveFilesDiff.toDetailReport() = buildString {
   appendln()
   appendln(diffuseTable {
     header {
