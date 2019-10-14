@@ -1,6 +1,6 @@
 package com.jakewharton.dex
 
-inline class TypeDescriptor(private val value: String) : Comparable<TypeDescriptor> {
+inline class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
   override fun compareTo(other: TypeDescriptor): Int {
     return sourceName.compareTo(other.sourceName)
   }
@@ -12,16 +12,8 @@ inline class TypeDescriptor(private val value: String) : Comparable<TypeDescript
   val componentDescriptor get() = TypeDescriptor(value.substring(arrayArity))
   fun asArray(arity: Int = 1) = TypeDescriptor("[".repeat(arity) + value)
 
-  fun withoutLambdaSuffix(): TypeDescriptor {
-    return when (value.matches(LAMBDA_CLASS_SUFFIX)) {
-      true -> TypeDescriptor(value.substringBeforeLast('$') + ";")
-      false -> this
-    }
-  }
-
   companion object {
     val VOID = TypeDescriptor("V")
-    private val LAMBDA_CLASS_SUFFIX = ".*?\\$\\\$Lambda\\$\\d+;".toRegex()
 
     private fun String.toHumanName(): String {
       if (startsWith("[")) {
@@ -43,5 +35,14 @@ inline class TypeDescriptor(private val value: String) : Comparable<TypeDescript
         else -> throw IllegalArgumentException("Unknown type $this")
       }
     }
+  }
+}
+
+private val LAMBDA_CLASS_SUFFIX = ".*?\\$\\\$Lambda\\$\\d+;".toRegex()
+
+internal fun TypeDescriptor.withoutLambdaSuffix(): TypeDescriptor {
+  return when (value.matches(LAMBDA_CLASS_SUFFIX)) {
+    true -> TypeDescriptor(value.substringBeforeLast('$') + ";")
+    false -> this
   }
 }
