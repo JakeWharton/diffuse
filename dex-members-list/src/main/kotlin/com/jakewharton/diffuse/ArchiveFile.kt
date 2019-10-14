@@ -40,12 +40,10 @@ data class ArchiveFile(
       @JvmField
       val JAR_TYPES = listOf(Class, Other)
 
-      private val dexRegex = Regex("classes\\d*\\.dex")
-
       @JvmStatic
       @JvmName("fromApkName")
       fun String.toApkFileType() = when {
-        matches(dexRegex) -> Dex
+        matches(Apk.classesDexRegex) -> Dex
         equals("AndroidManifest.xml") -> Manifest
         equals("resources.arsc") -> Arsc
         startsWith("lib/") -> Native
@@ -62,7 +60,7 @@ data class ArchiveFile(
         equals("lint.jar") -> LintJar
         equals("AndroidManifest.xml") -> Manifest
         startsWith("jni/") -> Native
-        startsWith("libs/") -> JarLibs
+        matches(Aar.libsJarRegex) -> JarLibs
         startsWith("assets/") -> Asset
         startsWith("res/") -> Res
         else -> Other

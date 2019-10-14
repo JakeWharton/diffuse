@@ -3,7 +3,6 @@ package com.jakewharton.diffuse
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
 import com.google.devrel.gmscore.tools.apk.arsc.XmlChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlStartElementChunk
-import okio.ByteString
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
 import java.io.StringReader
@@ -17,9 +16,8 @@ class AndroidManifest private constructor(
   companion object {
     @JvmStatic
     @JvmName("parse")
-    fun ByteString.toAndroidManifest(): AndroidManifest {
-      val binaryResourceFile = BinaryResourceFile(toByteArray())
-      val rootChunk = requireNotNull(binaryResourceFile.chunks.singleOrNull() as XmlChunk?) {
+    fun BinaryResourceFile.toAndroidManifest(): AndroidManifest {
+      val rootChunk = requireNotNull(chunks.singleOrNull() as XmlChunk?) {
         "Unable to parse manifest from binary XML"
       }
 

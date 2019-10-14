@@ -3,6 +3,8 @@ package com.jakewharton.diffuse
 import com.jakewharton.dex.DexMember
 import com.jakewharton.dex.MemberList
 import com.jakewharton.dex.toMemberList
+import com.jakewharton.diffuse.io.Input
+import okio.BufferedSource
 import okio.ByteString
 import com.android.dex.Dex as AndroidDex
 
@@ -19,7 +21,7 @@ class Dex private constructor(private val bytes: ByteString) {
 
   companion object {
     @JvmStatic
-    @JvmName("create")
-    fun ByteString.toDex() = Dex(this)
+    @JvmName("parse")
+    fun Input.toDex() = Dex(source().use(BufferedSource::readByteString))
   }
 }

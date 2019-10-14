@@ -10,6 +10,7 @@ import com.github.ajalt.clikt.parameters.options.switch
 import com.github.ajalt.clikt.parameters.types.path
 import com.jakewharton.dex.ApiMapping
 import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.io.asInput
 import com.jakewharton.diffuse.Aar.Companion.toAar
 import com.jakewharton.diffuse.Apk.Companion.toApk
 import com.jakewharton.diffuse.Jar.Companion.toJar
@@ -67,16 +68,16 @@ private class Command : CliktCommand(name = "diffuse") {
     val newMapping = newMappingPath?.toApiMapping() ?: ApiMapping.EMPTY
     val diff = when (mode) {
       Mode.Apk -> {
-        apkDiff(old.toApk(), oldMapping, new.toApk(), newMapping)
+        apkDiff(old.asInput().toApk(), oldMapping, new.asInput().toApk(), newMapping)
       }
       Mode.Aab -> {
         TODO(".aab files not yet supported")
       }
       Mode.Aar -> {
-        aarDiff(old.toAar(), oldMapping, new.toAar(), newMapping)
+        aarDiff(old.asInput().toAar(), oldMapping, new.asInput().toAar(), newMapping)
       }
       Mode.Jar -> {
-        jarDiff(old.toJar(), oldMapping, new.toJar(), newMapping)
+        jarDiff(old.asInput().toJar(), oldMapping, new.asInput().toJar(), newMapping)
       }
     }
     println(diff.toTextReport())

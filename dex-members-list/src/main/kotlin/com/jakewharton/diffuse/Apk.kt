@@ -1,15 +1,12 @@
 package com.jakewharton.diffuse
 
-import com.jakewharton.dex.entries
-import com.jakewharton.dex.readBytes
 import com.jakewharton.diffuse.AndroidManifest.Companion.toAndroidManifest
 import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toApkFileType
 import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
 import com.jakewharton.diffuse.Arsc.Companion.toArsc
 import com.jakewharton.diffuse.Dex.Companion.toDex
 import com.jakewharton.diffuse.Signatures.Companion.toSignatures
-import okio.ByteString.Companion.toByteString
-import java.nio.file.Path
+import com.jakewharton.diffuse.io.Input
 
 class Apk private constructor(
   override val filename: String?,
@@ -20,27 +17,19 @@ class Apk private constructor(
   val signatures: Signatures
 ) : Binary {
   companion object {
-    @JvmStatic
-    @JvmName("create")
-    fun Path.toApk(): Apk {
-      val bytes = readBytes().toByteString()
-      val files = bytes.toArchiveFiles { it.toApkFileType() }
-      val dexes = bytes.asInputStream().asZip().use { zis ->
-        zis.entries()
-            .filter { it.name.endsWith(".dex") }
-            .map { zis.readByteString().toDex() }
-            .toList()
-      }
-      val arsc = bytes.asInputStream().asZip().use { zis ->
-        zis.entries().first { it.name.endsWith(".arsc") }
-        zis.readByteString().toArsc()
-      }
-      val manifest = bytes.asInputStream().asZip().use { zis ->
-        zis.entries().first { it.name == "AndroidManifest.xml" }
-        zis.readByteString().toAndroidManifest()
-      }
+    internal val classesDexRegex = Regex("classes\\d*\\.dex")
+
+    fun Input.toApk(): Apk {
       val signatures = toSignatures()
-      return Apk(fileName.toString(), files, dexes, arsc, manifest, signatures)
+      toZip().use { zip ->
+        val files = zip.toArchiveFiles { it.toApkFileType() }
+        val manifest = zip["AndroidManifest.xml"].input().toBinaryResourceFile().toAndroidManifest()
+        val dexes = zip.entries
+            .filter { it.path.matches(classesDexRegex) }
+            .map { it.input().toDex() }
+        val arsc = zip["resources.arsc"].input().toBinaryResourceFile().toArsc()
+        return Apk(name, files, dexes, arsc, manifest, signatures)
+      }
     }
   }
 }
