@@ -1,4 +1,4 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.report
 
 import com.jakewharton.dex.ApiMapping
 

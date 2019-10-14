@@ -1,5 +1,8 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.diff
 
+import com.jakewharton.diffuse.Arsc
+import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TextAlignment.MiddleLeft
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText

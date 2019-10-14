@@ -1,4 +1,7 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.diff
+
+import com.jakewharton.diffuse.AndroidManifest
+import com.jakewharton.diffuse.diffuseTable
 
 internal class AndroidManifestDiff(
   val oldManifest: AndroidManifest,

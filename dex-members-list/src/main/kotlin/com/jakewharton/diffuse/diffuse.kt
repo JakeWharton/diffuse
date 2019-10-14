@@ -14,6 +14,10 @@ import com.jakewharton.diffuse.io.asInput
 import com.jakewharton.diffuse.Aar.Companion.toAar
 import com.jakewharton.diffuse.Apk.Companion.toApk
 import com.jakewharton.diffuse.Jar.Companion.toJar
+import com.jakewharton.diffuse.diff.AarDiff
+import com.jakewharton.diffuse.diff.ApkDiff
+import com.jakewharton.diffuse.diff.BinaryDiff
+import com.jakewharton.diffuse.diff.JarDiff
 
 fun main(vararg args: String) {
   Command().main(args.toList())

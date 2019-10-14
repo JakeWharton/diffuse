@@ -1,4 +1,4 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.diff
 
 interface BinaryDiff {
   fun toTextReport(): DiffReport

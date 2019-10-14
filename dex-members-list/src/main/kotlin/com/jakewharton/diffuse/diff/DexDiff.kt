@@ -1,9 +1,12 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.diff
 
 import com.jakewharton.dex.ApiMapping
 import com.jakewharton.dex.DexField
 import com.jakewharton.dex.DexMethod
-import com.jakewharton.diffuse.DexDiff.ComponentDiff
+import com.jakewharton.diffuse.Dex
+import com.jakewharton.diffuse.diff.DexDiff.ComponentDiff
+import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TextAlignment.BottomCenter
 import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleLeft

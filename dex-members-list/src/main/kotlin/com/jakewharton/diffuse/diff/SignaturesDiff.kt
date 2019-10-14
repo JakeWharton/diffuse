@@ -1,5 +1,7 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.diff
 
+import com.jakewharton.diffuse.Signatures
+import com.jakewharton.diffuse.diffuseTable
 import okio.ByteString
 
 internal class SignaturesDiff(

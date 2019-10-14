@@ -1,6 +1,8 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.diff
 
 import com.jakewharton.dex.ApiMapping
+import com.jakewharton.diffuse.Apk
+import com.jakewharton.diffuse.report.text.ApkDiffTextReport
 
 internal class ApkDiff(
   val oldApk: Apk,

@@ -1,6 +1,8 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.diff
 
 import com.jakewharton.dex.ApiMapping
+import com.jakewharton.diffuse.Jar
+import com.jakewharton.diffuse.report.text.JarDiffTextReport
 
 internal class JarDiff(
   val oldJar: Jar,

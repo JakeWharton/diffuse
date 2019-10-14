@@ -1,6 +1,12 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.report.text
 
 import com.jakewharton.diffuse.ArchiveFile.Type
+import com.jakewharton.diffuse.diff.ApkDiff
+import com.jakewharton.diffuse.diff.DiffReport
+import com.jakewharton.diffuse.diff.toDetailReport
+import com.jakewharton.diffuse.diff.toSummaryTable
+import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.report.toSummaryString
 
 internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
   override fun write(appendable: Appendable) {
