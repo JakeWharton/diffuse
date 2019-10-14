@@ -7,6 +7,7 @@ import com.jakewharton.diffuse.asZip
 import com.jakewharton.diffuse.asZipFileSystem
 import com.jakewharton.diffuse.exists
 import com.jakewharton.diffuse.inputStream
+import com.jakewharton.diffuse.io.Input.Companion.asInput
 import com.jakewharton.diffuse.readByteString
 import okio.ByteString
 import okio.utf8Size

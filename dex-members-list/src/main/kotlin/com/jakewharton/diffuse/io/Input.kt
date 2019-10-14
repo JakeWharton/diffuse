@@ -12,9 +12,18 @@ interface Input {
   fun source(): BufferedSource
 
   fun toZip() = source().readByteString().toZip()
+
+  companion object {
+    @JvmStatic
+    @JvmName("of")
+    fun Path.asInput() = PathInput(this)
+
+    @JvmStatic
+    @JvmName("of")
+    fun ByteString.asInput(name: String) = BytesInput(name, this)
+  }
 }
 
-fun Path.asInput() = PathInput(this)
 class PathInput internal constructor(
   val path: Path
 ) : Input {
@@ -24,7 +33,6 @@ class PathInput internal constructor(
   override fun toZip() = path.toZip()
 }
 
-fun ByteString.asInput(name: String) = BytesInput(name, this)
 class BytesInput internal constructor(
   override val name: String,
   val bytes: ByteString

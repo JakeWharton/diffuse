@@ -10,7 +10,6 @@ import com.github.ajalt.clikt.parameters.options.switch
 import com.github.ajalt.clikt.parameters.types.path
 import com.jakewharton.dex.ApiMapping
 import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
-import com.jakewharton.diffuse.io.asInput
 import com.jakewharton.diffuse.Aar.Companion.toAar
 import com.jakewharton.diffuse.Apk.Companion.toApk
 import com.jakewharton.diffuse.Jar.Companion.toJar
@@ -18,6 +17,7 @@ import com.jakewharton.diffuse.diff.AarDiff
 import com.jakewharton.diffuse.diff.ApkDiff
 import com.jakewharton.diffuse.diff.BinaryDiff
 import com.jakewharton.diffuse.diff.JarDiff
+import com.jakewharton.diffuse.io.Input.Companion.asInput
 
 fun main(vararg args: String) {
   Command().main(args.toList())
