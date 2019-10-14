@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse.report.text
 
 import com.jakewharton.diffuse.diff.AabDiff
-import com.jakewharton.diffuse.diff.DiffReport
+import com.jakewharton.diffuse.report.DiffReport
 import com.jakewharton.diffuse.diffuseTable
 
 internal class AabDiffTextReport(private val jarDiff: AabDiff) : DiffReport {
