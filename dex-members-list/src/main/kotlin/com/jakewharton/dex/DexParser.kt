@@ -55,9 +55,6 @@ class DexParser private constructor(
         ?: MemberList.EMPTY
   }
 
-  @Deprecated("Prefer listMembers()", ReplaceWith("this.listMembers()"))
-  fun list(): List<DexMember> = listMembers()
-
   fun listMembers(): List<DexMember> = memberList.all.toSortedSet().toList()
   fun listMethods(): List<DexMethod> = listMembers().filterIsInstance<DexMethod>()
   fun listFields(): List<DexField> = listMembers().filterIsInstance<DexField>()
