@@ -17,7 +17,7 @@ class Arsc private constructor(
     override fun toString() = "$type/$name"
 
     private companion object {
-      private val comparable = compareBy(Entry::type).thenBy(Entry::name)
+      private val comparable = compareBy(Entry::type, Entry::name)
     }
   }
 
