@@ -10,9 +10,11 @@ import com.github.ajalt.clikt.parameters.options.switch
 import com.github.ajalt.clikt.parameters.types.path
 import com.jakewharton.dex.ApiMapping
 import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.Aab.Companion.toAab
 import com.jakewharton.diffuse.Aar.Companion.toAar
 import com.jakewharton.diffuse.Apk.Companion.toApk
 import com.jakewharton.diffuse.Jar.Companion.toJar
+import com.jakewharton.diffuse.diff.AabDiff
 import com.jakewharton.diffuse.diff.AarDiff
 import com.jakewharton.diffuse.diff.ApkDiff
 import com.jakewharton.diffuse.diff.BinaryDiff
@@ -29,6 +31,11 @@ fun apkDiff(
   newApk: Apk,
   newMapping: ApiMapping = ApiMapping.EMPTY
 ): BinaryDiff = ApkDiff(oldApk, oldMapping, newApk, newMapping)
+
+fun aabDiff(
+  oldAab: Aab,
+  newAab: Aab
+): BinaryDiff = AabDiff(oldAab, newAab)
 
 fun aarDiff(
   oldAar: Aar,
@@ -75,7 +82,7 @@ private class Command : CliktCommand(name = "diffuse") {
         apkDiff(old.asInput().toApk(), oldMapping, new.asInput().toApk(), newMapping)
       }
       Mode.Aab -> {
-        TODO(".aab files not yet supported")
+        aabDiff(old.asInput().toAab(), new.asInput().toAab())
       }
       Mode.Aar -> {
         aarDiff(old.asInput().toAar(), oldMapping, new.asInput().toAar(), newMapping)
