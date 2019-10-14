@@ -4,7 +4,7 @@ import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toJarFileType
 import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
 import com.jakewharton.diffuse.io.Input
 
-class Jar(
+class Jar private constructor(
   override val filename: String?,
   val files: ArchiveFiles
 ) : Binary {
