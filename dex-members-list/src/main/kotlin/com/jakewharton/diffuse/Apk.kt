@@ -1,10 +1,10 @@
 package com.jakewharton.diffuse
 
-import com.jakewharton.diffuse.AndroidManifest.Companion.toAndroidManifest
 import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toApkFileType
 import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
 import com.jakewharton.diffuse.Arsc.Companion.toArsc
 import com.jakewharton.diffuse.Dex.Companion.toDex
+import com.jakewharton.diffuse.Manifest.Companion.toManifest
 import com.jakewharton.diffuse.Signatures.Companion.toSignatures
 import com.jakewharton.diffuse.io.Input
 
@@ -13,7 +13,7 @@ class Apk private constructor(
   val files: ArchiveFiles,
   val dexes: List<Dex>,
   val arsc: Arsc,
-  val manifest: AndroidManifest,
+  val manifest: Manifest,
   val signatures: Signatures
 ) : Binary {
   companion object {
@@ -23,7 +23,7 @@ class Apk private constructor(
       val signatures = toSignatures()
       toZip().use { zip ->
         val files = zip.toArchiveFiles { it.toApkFileType() }
-        val manifest = zip["AndroidManifest.xml"].input().toBinaryResourceFile().toAndroidManifest()
+        val manifest = zip["AndroidManifest.xml"].input().toBinaryResourceFile().toManifest()
         val dexes = zip.entries
             .filter { it.path.matches(classesDexRegex) }
             .map { it.input().toDex() }

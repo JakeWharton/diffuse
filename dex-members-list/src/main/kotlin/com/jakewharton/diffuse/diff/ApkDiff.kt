@@ -15,7 +15,7 @@ internal class ApkDiff(
   val signatures = SignaturesDiff(oldApk.signatures, newApk.signatures)
   val dex = DexDiff(oldApk.dexes, oldMapping, newApk.dexes, newMapping)
   val arsc = ArscDiff(oldApk.arsc, newApk.arsc)
-  val manifest = AndroidManifestDiff(oldApk.manifest, newApk.manifest)
+  val manifest = ManifestDiff(oldApk.manifest, newApk.manifest)
 
   override fun toTextReport(): DiffReport = ApkDiffTextReport(this)
 }

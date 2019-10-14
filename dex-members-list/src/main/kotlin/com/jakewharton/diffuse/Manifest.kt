@@ -8,7 +8,7 @@ import org.xml.sax.InputSource
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
 
-class AndroidManifest private constructor(
+class Manifest private constructor(
   val packageName: String,
   val versionName: String?,
   val versionCode: Long?
@@ -16,7 +16,7 @@ class AndroidManifest private constructor(
   companion object {
     @JvmStatic
     @JvmName("parse")
-    fun BinaryResourceFile.toAndroidManifest(): AndroidManifest {
+    fun BinaryResourceFile.toManifest(): Manifest {
       val rootChunk = requireNotNull(chunks.singleOrNull() as XmlChunk?) {
         "Unable to parse manifest from binary XML"
       }
@@ -42,7 +42,7 @@ class AndroidManifest private constructor(
 
       val versionCode = (versionCodeMajor.toLong() shl 32) +
           requireNotNull(versionCodeMinor) { "<manifest> missing 'versionCode' attribute." }
-      return AndroidManifest(
+      return Manifest(
           requireNotNull(packageName) { "<manifest> missing 'package' attribute." },
           requireNotNull(versionName) { "<manifest> missing 'versionName' attribute." },
           versionCode)
@@ -50,7 +50,7 @@ class AndroidManifest private constructor(
 
     @JvmStatic
     @JvmName("parse")
-    fun String.toAndroidManifest(): AndroidManifest {
+    fun String.toManifest(): Manifest {
       val documentBuilderFactory = DocumentBuilderFactory.newInstance()
       documentBuilderFactory.isNamespaceAware = true
       val documentBuilder = documentBuilderFactory.newDocumentBuilder()
@@ -70,7 +70,7 @@ class AndroidManifest private constructor(
         null
       }
 
-      return AndroidManifest(packageName, versionName, versionCode)
+      return Manifest(packageName, versionName, versionCode)
     }
 
     private fun Element.getAttributeOrNull(namespace: String?, name: String): String? {

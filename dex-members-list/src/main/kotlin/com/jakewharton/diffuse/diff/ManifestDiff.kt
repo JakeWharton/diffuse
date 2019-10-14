@@ -1,18 +1,18 @@
 package com.jakewharton.diffuse.diff
 
-import com.jakewharton.diffuse.AndroidManifest
+import com.jakewharton.diffuse.Manifest
 import com.jakewharton.diffuse.diffuseTable
 
-internal class AndroidManifestDiff(
-  val oldManifest: AndroidManifest,
-  val newManifest: AndroidManifest
+internal class ManifestDiff(
+  val oldManifest: Manifest,
+  val newManifest: Manifest
 ) {
   val changed get() = oldManifest.packageName != newManifest.packageName ||
       oldManifest.versionName != newManifest.versionName ||
       oldManifest.versionCode != newManifest.versionCode
 }
 
-internal fun AndroidManifestDiff.toDetailReport() = buildString {
+internal fun ManifestDiff.toDetailReport() = buildString {
   appendln()
   appendln(diffuseTable {
     header {
