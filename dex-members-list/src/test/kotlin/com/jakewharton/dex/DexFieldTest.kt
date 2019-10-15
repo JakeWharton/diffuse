@@ -9,17 +9,12 @@ class DexFieldTest {
 
   @Test fun string() {
     val field = DexField(fooDescriptor, "bar", barDescriptor)
-    assertThat(field.toString()).apply {
-      isEqualTo("com.example.Foo bar: Bar")
-      isEqualTo(field.toString(false))
-    }
+    assertThat(field.toString()).isEqualTo("com.example.Foo bar: Bar")
   }
 
   @Test fun renderKotlinLambdaClassName() {
     val field = DexField(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
     assertThat(field.toString()).isEqualTo("com.example.Foo$\$Lambda$26 bar: Bar")
-    assertThat(field.toString(hideSyntheticNumbers = true))
-        .isEqualTo("com.example.Foo$\$Lambda bar: Bar")
   }
 
   @Test fun compareToSame() {

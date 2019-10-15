@@ -78,8 +78,56 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
       Mode.Methods -> parser.listMethods()
       Mode.Fields -> parser.listFields()
     }
-    list.map { it.toString(hideSyntheticNumbers) }
-        .sorted() // Re-sort because rendering may subtly change ordering.
-        .forEach(::println)
+    val displayList = if (hideSyntheticNumbers) {
+      list.map { it.withoutSyntheticSuffix() }
+    } else {
+      list
+    }
+    // Re-sort because rendering may subtly change ordering.
+    displayList.sorted().forEach(::println)
+  }
+}
+
+internal fun DexMember.withoutSyntheticSuffix() = when (this) {
+  is DexField -> withoutSyntheticSuffix()
+  is DexMethod -> withoutSyntheticSuffix()
+}
+
+private fun DexField.withoutSyntheticSuffix(): DexField {
+  val newDeclaredType = declaringType.withoutSyntheticSuffix()
+  if (newDeclaredType == declaringType) {
+    return this
+  }
+  return copy(declaringType = newDeclaredType)
+}
+
+private val SYNTHETIC_METHOD_SUFFIX = ".*?\\$\\d+".toRegex()
+private val LAMBDA_METHOD_NUMBER = "\\$\\d+\\$".toRegex()
+
+private fun DexMethod.withoutSyntheticSuffix(): DexMethod {
+  val newDeclaredType = declaringType.withoutSyntheticSuffix()
+  val lambdaName = name.startsWith("lambda$")
+  val syntheticName = name.matches(SYNTHETIC_METHOD_SUFFIX)
+
+  if (declaringType == newDeclaredType && !lambdaName && !syntheticName) {
+    return this
+  }
+
+  val newName = when {
+    lambdaName -> LAMBDA_METHOD_NUMBER.find(name)!!.let { match ->
+      name.removeRange(match.range.first, match.range.last)
+    }
+    syntheticName -> name.substring(0, name.lastIndexOf('$'))
+    else -> name
+  }
+  return copy(declaringType = newDeclaredType, name = newName)
+}
+
+private val LAMBDA_CLASS_SUFFIX = ".*?\\$\\\$Lambda\\$\\d+;".toRegex()
+
+private fun TypeDescriptor.withoutSyntheticSuffix(): TypeDescriptor {
+  return when (value.matches(LAMBDA_CLASS_SUFFIX)) {
+    true -> TypeDescriptor(value.substringBeforeLast('$') + ";")
+    false -> this
   }
 }

@@ -9,10 +9,7 @@ class DexMethodTest {
 
   @Test fun string() {
     val method = DexMethod(fooDescriptor, "bar", emptyList(), barDescriptor)
-    assertThat(method.toString()).apply {
-      isEqualTo("com.example.Foo bar() → Bar")
-      isEqualTo(method.toString(false))
-    }
+    assertThat(method.toString()).isEqualTo("com.example.Foo bar() → Bar")
   }
 
   @Test fun renderVoidReturnType() {
@@ -25,40 +22,14 @@ class DexMethodTest {
     assertThat(synthetic.toString()).isEqualTo("com.example.Foo access$000() → Bar")
   }
 
-  @Test fun renderHidingSynthetics() {
-    val method = DexMethod(fooDescriptor, "bar", emptyList(), barDescriptor)
-    assertThat(method.toString(hideSyntheticNumbers = true))
-        .isEqualTo("com.example.Foo bar() → Bar")
-
-    val synthetic = DexMethod(fooDescriptor, "access$000", emptyList(), barDescriptor)
-    assertThat(synthetic.toString(hideSyntheticNumbers = true))
-        .isEqualTo("com.example.Foo access() → Bar")
-  }
-
   @Test fun renderKotlinLambdaFunctionName() {
     val synthetic = DexMethod(fooDescriptor, "lambda\$refreshSessionToken$14\$MainActivity", emptyList(), barDescriptor)
     assertThat(synthetic.toString()).isEqualTo("com.example.Foo lambda\$refreshSessionToken$14\$MainActivity() → Bar")
   }
 
-  @Test fun renderKotlinLambdaFunctionNameHidingSynthetics() {
-    val method = DexMethod(fooDescriptor, "bar", emptyList(), barDescriptor)
-    assertThat(method.toString(hideSyntheticNumbers = true))
-        .isEqualTo("com.example.Foo bar() → Bar")
-
-    val synthetic = DexMethod(fooDescriptor, "lambda\$refreshSessionToken$14\$MainActivity", emptyList(), barDescriptor)
-    assertThat(synthetic.toString(hideSyntheticNumbers = true))
-        .isEqualTo("com.example.Foo lambda\$refreshSessionToken\$MainActivity() → Bar")
-  }
-
   @Test fun renderKotlinLambdaClassName() {
     val synthetic = DexMethod(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", emptyList(), barDescriptor)
     assertThat(synthetic.toString()).isEqualTo("com.example.Foo$\$Lambda$26 bar() → Bar")
-  }
-
-  @Test fun renderKotlinLambdaClassNameHidingSynthetics() {
-    val synthetic = DexMethod(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", emptyList(), barDescriptor)
-    assertThat(synthetic.toString(hideSyntheticNumbers = true))
-        .isEqualTo("com.example.Foo$\$Lambda bar() → Bar")
   }
 
   @Test fun compareToSame() {

@@ -36,11 +36,3 @@ inline class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
   }
 }
 
-private val LAMBDA_CLASS_SUFFIX = ".*?\\$\\\$Lambda\\$\\d+;".toRegex()
-
-internal fun TypeDescriptor.withoutLambdaSuffix(): TypeDescriptor {
-  return when (value.matches(LAMBDA_CLASS_SUFFIX)) {
-    true -> TypeDescriptor(value.substringBeforeLast('$') + ";")
-    false -> this
-  }
-}

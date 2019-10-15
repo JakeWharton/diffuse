@@ -4,9 +4,6 @@ sealed class DexMember : Comparable<DexMember> {
   abstract val declaringType: TypeDescriptor
   abstract val name: String
 
-  final override fun toString() = toString(false)
-  abstract fun toString(hideSyntheticNumbers: Boolean): String
-
   override fun compareTo(other: DexMember): Int {
     val typeResult = declaringType.compareTo(other.declaringType)
     if (typeResult != 0) {
@@ -25,13 +22,7 @@ data class DexField(
   override val name: String,
   val type: TypeDescriptor
 ) : DexMember() {
-  override fun toString(hideSyntheticNumbers: Boolean): String {
-    var displayType = declaringType
-    if (hideSyntheticNumbers) {
-      displayType = displayType.withoutLambdaSuffix()
-    }
-    return "${displayType.sourceName} $name: ${type.simpleName}"
-  }
+  override fun toString() = "${declaringType.sourceName} $name: ${type.simpleName}"
 
   override fun compareTo(other: DexMember): Int {
     val superResult = super.compareTo(other)
@@ -53,34 +44,16 @@ data class DexMethod(
   val parameterTypes: List<TypeDescriptor>,
   val returnType: TypeDescriptor
 ) : DexMember() {
-  override fun toString(hideSyntheticNumbers: Boolean): String {
-    var displayType = declaringType
-    if (hideSyntheticNumbers) {
-      displayType = displayType.withoutLambdaSuffix()
-    }
-
-    var displayName = name
-    if (hideSyntheticNumbers) {
-      if (name.startsWith("lambda$")) {
-        LAMBDA_METHOD_NUMBER.find(name)?.let { match ->
-          displayName = name.removeRange(match.range.first, match.range.last)
-        }
-      } else if (name.matches(SYNTHETIC_METHOD_SUFFIX)) {
-        displayName = displayName.substring(0, name.lastIndexOf('$'))
-      }
-    }
-
-    return buildString {
-      append(displayType.sourceName)
-      append(' ')
-      append(displayName)
-      append('(')
-      parameterTypes.joinTo(this, ", ", transform = TypeDescriptor::simpleName)
-      append(')')
-      if (returnType != VOID) {
-        append(" → ")
-        append(returnType.simpleName)
-      }
+  override fun toString() = buildString {
+    append(declaringType.sourceName)
+    append(' ')
+    append(name)
+    append('(')
+    parameterTypes.joinTo(this, ", ", transform = TypeDescriptor::simpleName)
+    append(')')
+    if (returnType != VOID) {
+      append(" → ")
+      append(returnType.simpleName)
     }
   }
 
@@ -94,8 +67,6 @@ data class DexMethod(
 
   private companion object {
     val VOID = TypeDescriptor("V")
-    val SYNTHETIC_METHOD_SUFFIX = ".*?\\$\\d+".toRegex()
-    val LAMBDA_METHOD_NUMBER = "\\$\\d+\\$".toRegex()
     val COMPARATOR = compareBy(DexMethod::name)
         .thenBy(comparingValues(), DexMethod::parameterTypes)
         .thenBy(DexMethod::returnType)
