@@ -16,7 +16,7 @@ class DexMethodTest {
   }
 
   @Test fun renderVoidReturnType() {
-    val method = DexMethod(fooDescriptor, "bar", emptyList(), TypeDescriptor.VOID)
+    val method = DexMethod(fooDescriptor, "bar", emptyList(), TypeDescriptor("V"))
     assertThat(method.toString()).isEqualTo("com.example.Foo bar()")
   }
 

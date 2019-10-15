@@ -77,7 +77,7 @@ data class DexMethod(
       append('(')
       parameterTypes.joinTo(this, ", ", transform = TypeDescriptor::simpleName)
       append(')')
-      if (returnType != TypeDescriptor.VOID) {
+      if (returnType != VOID) {
         append(" → ")
         append(returnType.simpleName)
       }
@@ -93,6 +93,7 @@ data class DexMethod(
   }
 
   private companion object {
+    val VOID = TypeDescriptor("V")
     val SYNTHETIC_METHOD_SUFFIX = ".*?\\$\\d+".toRegex()
     val LAMBDA_METHOD_NUMBER = "\\$\\d+\\$".toRegex()
     val COMPARATOR = compareBy(DexMethod::name)

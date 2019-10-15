@@ -13,8 +13,6 @@ inline class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
   fun asArray(arity: Int = 1) = TypeDescriptor("[".repeat(arity) + value)
 
   companion object {
-    val VOID = TypeDescriptor("V")
-
     private fun String.toHumanName(): String {
       if (startsWith("[")) {
         return substring(1).toHumanName() + "[]"

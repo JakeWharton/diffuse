@@ -174,10 +174,10 @@ class ApiMappingTest {
     """.trimIndent().toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
-    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), TypeDescriptor.VOID)
+    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), voidDescriptor)
 
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
-    val barField = DexMethod(fooDescriptor, "bar", emptyList(), TypeDescriptor.VOID)
+    val barField = DexMethod(fooDescriptor, "bar", emptyList(), voidDescriptor)
 
     assertEquals(barField, mapping[aMethod])
   }
@@ -209,11 +209,11 @@ class ApiMappingTest {
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aabDescriptor = TypeDescriptor("La/a/b;")
-    val aMethod = DexMethod(aaaDescriptor, "a", listOf(aabDescriptor), TypeDescriptor.VOID)
+    val aMethod = DexMethod(aaaDescriptor, "a", listOf(aabDescriptor), voidDescriptor)
 
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
-    val barField = DexMethod(fooDescriptor, "bar", listOf(barDescriptor), TypeDescriptor.VOID)
+    val barField = DexMethod(fooDescriptor, "bar", listOf(barDescriptor), voidDescriptor)
 
     assertEquals(barField, mapping[aMethod])
   }
@@ -225,10 +225,10 @@ class ApiMappingTest {
     """.trimIndent().toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
-    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), TypeDescriptor.VOID)
+    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), voidDescriptor)
 
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
-    val barField = DexMethod(fooDescriptor, "bar", emptyList(), TypeDescriptor.VOID)
+    val barField = DexMethod(fooDescriptor, "bar", emptyList(), voidDescriptor)
 
     assertEquals(barField, mapping[aMethod])
   }
@@ -240,10 +240,10 @@ class ApiMappingTest {
     """.trimIndent().toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
-    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), TypeDescriptor.VOID)
+    val aMethod = DexMethod(aaaDescriptor, "a", emptyList(), voidDescriptor)
 
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
-    val barField = DexMethod(fooDescriptor, "bar", emptyList(), TypeDescriptor.VOID)
+    val barField = DexMethod(fooDescriptor, "bar", emptyList(), voidDescriptor)
 
     assertEquals(barField, mapping[aMethod])
   }
@@ -300,12 +300,12 @@ class ApiMappingTest {
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aMethod = DexMethod(aaaDescriptor, "a",
         listOf(booleanDescriptor, byteDescriptor, charDescriptor, doubleDescriptor, floatDescriptor,
-            intDescriptor, longDescriptor, shortDescriptor), TypeDescriptor.VOID)
+            intDescriptor, longDescriptor, shortDescriptor), voidDescriptor)
 
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val barMethod = DexMethod(fooDescriptor, "bar",
         listOf(booleanDescriptor, byteDescriptor, charDescriptor, doubleDescriptor, floatDescriptor,
-            intDescriptor, longDescriptor, shortDescriptor), TypeDescriptor.VOID)
+            intDescriptor, longDescriptor, shortDescriptor), voidDescriptor)
 
     assertEquals(barMethod, mapping[aMethod])
   }
@@ -347,13 +347,13 @@ class ApiMappingTest {
     val aabDescriptor = TypeDescriptor("La/a/b;")
     val aMethod = DexMethod(aaaDescriptor, "a",
         listOf(byteDescriptor.asArray(1), aabDescriptor.asArray(1), stringDescriptor.asArray(6)),
-        TypeDescriptor.VOID)
+        voidDescriptor)
 
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
     val barMethod = DexMethod(fooDescriptor, "bar",
         listOf(byteDescriptor.asArray(1), barDescriptor.asArray(1), stringDescriptor.asArray(6)),
-        TypeDescriptor.VOID)
+        voidDescriptor)
 
     assertEquals(barMethod, mapping[aMethod])
   }
@@ -387,4 +387,5 @@ class ApiMappingTest {
   private val longDescriptor = TypeDescriptor("J")
   private val shortDescriptor = TypeDescriptor("S")
   private val stringDescriptor = TypeDescriptor("Ljava/lang/String;")
+  private val voidDescriptor = TypeDescriptor("V")
 }
