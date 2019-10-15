@@ -9,22 +9,16 @@ class DexFieldTest {
 
   @Test fun string() {
     val field = DexField(fooDescriptor, "bar", barDescriptor)
-    assertThat(field.toString()).isEqualTo(field.render())
-  }
-
-  @Test fun render() {
-    val field = DexField(fooDescriptor, "bar", barDescriptor)
-    assertThat(field.render()).isEqualTo("com.example.Foo bar: Bar")
+    assertThat(field.toString()).apply {
+      isEqualTo("com.example.Foo bar: Bar")
+      isEqualTo(field.toString(false))
+    }
   }
 
   @Test fun renderKotlinLambdaClassName() {
     val field = DexField(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
-    assertThat(field.render()).isEqualTo("com.example.Foo$\$Lambda$26 bar: Bar")
-  }
-
-  @Test fun renderKotlinLambdaClassNameHidingSynthetics() {
-    val field = DexField(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
-    assertThat(field.render(hideSyntheticNumbers = true))
+    assertThat(field.toString()).isEqualTo("com.example.Foo$\$Lambda$26 bar: Bar")
+    assertThat(field.toString(hideSyntheticNumbers = true))
         .isEqualTo("com.example.Foo$\$Lambda bar: Bar")
   }
 

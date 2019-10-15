@@ -3,9 +3,9 @@ package com.jakewharton.dex
 sealed class DexMember : Comparable<DexMember> {
   abstract val declaringType: TypeDescriptor
   abstract val name: String
-  abstract fun render(hideSyntheticNumbers: Boolean = false): String
 
-  final override fun toString() = render()
+  final override fun toString() = toString(false)
+  abstract fun toString(hideSyntheticNumbers: Boolean): String
 
   override fun compareTo(other: DexMember): Int {
     val typeResult = declaringType.compareTo(other.declaringType)
@@ -25,7 +25,7 @@ data class DexField(
   override val name: String,
   val type: TypeDescriptor
 ) : DexMember() {
-  override fun render(hideSyntheticNumbers: Boolean): String {
+  override fun toString(hideSyntheticNumbers: Boolean): String {
     var displayType = declaringType
     if (hideSyntheticNumbers) {
       displayType = displayType.withoutLambdaSuffix()
@@ -53,7 +53,7 @@ data class DexMethod(
   val parameterTypes: List<TypeDescriptor>,
   val returnType: TypeDescriptor
 ) : DexMember() {
-  override fun render(hideSyntheticNumbers: Boolean): String {
+  override fun toString(hideSyntheticNumbers: Boolean): String {
     var displayType = declaringType
     if (hideSyntheticNumbers) {
       displayType = displayType.withoutLambdaSuffix()

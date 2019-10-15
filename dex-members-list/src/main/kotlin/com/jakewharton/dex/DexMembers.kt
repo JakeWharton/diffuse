@@ -78,7 +78,7 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
       Mode.Methods -> parser.listMethods()
       Mode.Fields -> parser.listFields()
     }
-    list.map { it.render(hideSyntheticNumbers) }
+    list.map { it.toString(hideSyntheticNumbers) }
         .sorted() // Re-sort because rendering may subtly change ordering.
         .forEach(::println)
   }
