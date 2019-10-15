@@ -1,6 +1,5 @@
 package com.jakewharton.diffuse
 
-import com.jakewharton.dex.DexMember
 import com.jakewharton.dex.toMemberList
 import com.jakewharton.diffuse.io.Input
 import okio.BufferedSource

@@ -9,6 +9,11 @@ import com.android.tools.r8.DexIndexedConsumer
 import com.android.tools.r8.DiagnosticsHandler
 import com.android.tools.r8.origin.Origin
 import com.jakewharton.dex.DexParser.Desugaring
+import com.jakewharton.diffuse.ApiMapping
+import com.jakewharton.diffuse.DexField
+import com.jakewharton.diffuse.DexMember
+import com.jakewharton.diffuse.DexMethod
+import com.jakewharton.diffuse.TypeDescriptor
 import java.io.ByteArrayInputStream
 import java.util.zip.ZipInputStream
 

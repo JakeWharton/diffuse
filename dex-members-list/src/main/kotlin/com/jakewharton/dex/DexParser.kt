@@ -1,6 +1,10 @@
 package com.jakewharton.dex
 
 import com.android.dex.Dex
+import com.jakewharton.diffuse.ApiMapping
+import com.jakewharton.diffuse.DexField
+import com.jakewharton.diffuse.DexMember
+import com.jakewharton.diffuse.DexMethod
 import java.io.File
 import java.nio.file.Path
 

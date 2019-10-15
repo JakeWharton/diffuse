@@ -1,9 +1,9 @@
 package com.jakewharton.diffuse.diff
 
-import com.jakewharton.dex.ApiMapping
-import com.jakewharton.dex.DexField
-import com.jakewharton.dex.DexMethod
+import com.jakewharton.diffuse.ApiMapping
 import com.jakewharton.diffuse.Dex
+import com.jakewharton.diffuse.DexField
+import com.jakewharton.diffuse.DexMethod
 import com.jakewharton.diffuse.diff.DexDiff.ComponentDiff
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.report.toDiffString

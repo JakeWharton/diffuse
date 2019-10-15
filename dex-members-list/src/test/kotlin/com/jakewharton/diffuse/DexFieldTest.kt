@@ -1,4 +1,4 @@
-package com.jakewharton.dex
+package com.jakewharton.diffuse
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test

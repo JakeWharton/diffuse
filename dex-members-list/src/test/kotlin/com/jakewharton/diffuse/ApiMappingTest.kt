@@ -1,6 +1,6 @@
-package com.jakewharton.dex
+package com.jakewharton.diffuse
 
-import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame

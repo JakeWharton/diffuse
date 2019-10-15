@@ -1,6 +1,6 @@
 package com.jakewharton.diffuse.report
 
-import com.jakewharton.dex.ApiMapping
+import com.jakewharton.diffuse.ApiMapping
 
 internal fun ApiMapping.toSummaryString(): String {
   if (this === ApiMapping.EMPTY) {

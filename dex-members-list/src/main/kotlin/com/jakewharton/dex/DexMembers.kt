@@ -14,9 +14,14 @@ import com.github.ajalt.clikt.parameters.options.switch
 import com.github.ajalt.clikt.parameters.options.validate
 import com.github.ajalt.clikt.parameters.types.int
 import com.github.ajalt.clikt.parameters.types.path
-import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
 import com.jakewharton.dex.DexParser.Companion.toDexParser
 import com.jakewharton.dex.DexParser.Desugaring
+import com.jakewharton.diffuse.ApiMapping
+import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.DexField
+import com.jakewharton.diffuse.DexMember
+import com.jakewharton.diffuse.DexMethod
+import com.jakewharton.diffuse.TypeDescriptor
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream

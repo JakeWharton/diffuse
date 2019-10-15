@@ -8,8 +8,7 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.switch
 import com.github.ajalt.clikt.parameters.types.path
-import com.jakewharton.dex.ApiMapping
-import com.jakewharton.dex.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
 import com.jakewharton.diffuse.Aab.Companion.toAab
 import com.jakewharton.diffuse.Aar.Companion.toAar
 import com.jakewharton.diffuse.Apk.Companion.toApk

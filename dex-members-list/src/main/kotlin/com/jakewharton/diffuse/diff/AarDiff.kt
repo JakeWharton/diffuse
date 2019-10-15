@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse.diff
 
-import com.jakewharton.dex.ApiMapping
 import com.jakewharton.diffuse.Aar
+import com.jakewharton.diffuse.ApiMapping
 import com.jakewharton.diffuse.report.DiffReport
 import com.jakewharton.diffuse.report.text.AarDiffTextReport
 

@@ -1,4 +1,4 @@
-package com.jakewharton.dex
+package com.jakewharton.diffuse
 
 inline class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
   override fun compareTo(other: TypeDescriptor): Int {
