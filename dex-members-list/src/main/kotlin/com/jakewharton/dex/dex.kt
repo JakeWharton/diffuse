@@ -7,6 +7,7 @@ import com.android.tools.r8.DexIndexedConsumer
 import com.android.tools.r8.DiagnosticsHandler
 import com.android.tools.r8.origin.Origin
 import com.jakewharton.dex.DexParser.Desugaring
+import com.jakewharton.diffuse.entries
 import java.io.ByteArrayInputStream
 import java.util.zip.ZipInputStream
 
@@ -47,6 +48,16 @@ internal fun Iterable<ByteArray>.toDexes(desugaring: Desugaring): List<Dex> {
     dexes += compileClassesWithD8(classes, desugaring)
   }
   return dexes.map(::Dex)
+}
+
+private fun ByteArray.startsWith(value: ByteArray): Boolean {
+  if (value.size > size) return false
+  value.forEachIndexed { i, byte ->
+    if (get(i) != byte) {
+      return false
+    }
+  }
+  return true
 }
 
 private fun compileClassesWithD8(

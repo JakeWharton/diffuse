@@ -1,7 +1,5 @@
 package com.jakewharton.diffuse
 
-import com.jakewharton.dex.comparingValues
-
 sealed class DexMember : Comparable<DexMember> {
   abstract val declaringType: TypeDescriptor
   abstract val name: String

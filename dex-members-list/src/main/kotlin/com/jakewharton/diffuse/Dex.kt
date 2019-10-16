@@ -3,7 +3,6 @@ package com.jakewharton.diffuse
 import com.android.dex.ClassDef
 import com.android.dex.FieldId
 import com.android.dex.MethodId
-import com.jakewharton.dex.mapEach
 import com.jakewharton.diffuse.io.Input
 import okio.BufferedSource
 import com.android.dex.Dex as AndroidDex

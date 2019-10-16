@@ -1,6 +1,5 @@
 package com.jakewharton.diffuse
 
-import com.jakewharton.dex.readBytes
 import java.io.File
 import java.nio.charset.Charset
 import java.nio.file.Path

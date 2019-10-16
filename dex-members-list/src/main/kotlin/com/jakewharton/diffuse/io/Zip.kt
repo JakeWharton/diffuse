@@ -1,10 +1,10 @@
 package com.jakewharton.diffuse.io
 
-import com.jakewharton.dex.entries
 import com.jakewharton.diffuse.Size
 import com.jakewharton.diffuse.asInputStream
 import com.jakewharton.diffuse.asZip
 import com.jakewharton.diffuse.asZipFileSystem
+import com.jakewharton.diffuse.entries
 import com.jakewharton.diffuse.exists
 import com.jakewharton.diffuse.inputStream
 import com.jakewharton.diffuse.io.Input.Companion.asInput
