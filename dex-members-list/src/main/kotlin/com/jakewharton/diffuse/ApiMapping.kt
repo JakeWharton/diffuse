@@ -10,6 +10,8 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
   override fun hashCode() = typeMappings.hashCode()
   override fun toString() = typeMappings.toString()
 
+  fun isEmpty() = typeMappings.isEmpty()
+
   val types get() = typeMappings.size
   val methods get() = typeMappings.values.sumBy { it.methods.size }
   val fields get() = typeMappings.values.sumBy { it.fields.size }

@@ -1,19 +1,12 @@
 package com.jakewharton.dex
 
 import com.android.dex.Dex
-import com.android.dex.FieldId
-import com.android.dex.MethodId
 import com.android.tools.r8.D8
 import com.android.tools.r8.D8Command
 import com.android.tools.r8.DexIndexedConsumer
 import com.android.tools.r8.DiagnosticsHandler
 import com.android.tools.r8.origin.Origin
 import com.jakewharton.dex.DexParser.Desugaring
-import com.jakewharton.diffuse.ApiMapping
-import com.jakewharton.diffuse.DexField
-import com.jakewharton.diffuse.DexMember
-import com.jakewharton.diffuse.DexMethod
-import com.jakewharton.diffuse.TypeDescriptor
 import java.io.ByteArrayInputStream
 import java.util.zip.ZipInputStream
 
@@ -87,54 +80,4 @@ private fun compileClassesWithD8(
   D8.run(builder.build())
 
   return bytesList
-}
-
-internal class MemberList(
-  val declared: List<DexMember>,
-  val referenced: List<DexMember>
-) {
-  val all get() = declared + referenced
-
-  operator fun plus(other: MemberList): MemberList {
-    return MemberList(declared + other.declared, referenced + other.referenced)
-  }
-
-  companion object {
-    val EMPTY = MemberList(emptyList(), emptyList())
-  }
-}
-
-internal fun ApiMapping.get(memberList: MemberList): MemberList {
-  return MemberList(
-      memberList.declared.map(::get),
-      memberList.referenced.map(::get)
-  )
-}
-
-internal fun Dex.toMemberList(): MemberList {
-  val declaredTypeIndices = classDefs().map { it.typeIndex }.toSet()
-  val (declaredMethods, referencedMethods) = methodIds()
-      .partition { it.declaringClassIndex in declaredTypeIndices }
-      .mapEach { it.map(::getMethod) }
-  val (declaredFields, referencedFields) = fieldIds()
-      .partition { it.declaringClassIndex in declaredTypeIndices }
-      .mapEach { it.map(::getField) }
-  return MemberList(declaredMethods + declaredFields, referencedMethods + referencedFields)
-}
-
-private fun Dex.getMethod(methodId: MethodId): DexMethod {
-  val declaringType = TypeDescriptor(typeNames()[methodId.declaringClassIndex])
-  val name = strings()[methodId.nameIndex]
-  val methodProtoIds = protoIds()[methodId.protoIndex]
-  val parameterTypes = readTypeList(methodProtoIds.parametersOffset).types
-      .map { TypeDescriptor(typeNames()[it.toInt()]) }
-  val returnType = TypeDescriptor(typeNames()[methodProtoIds.returnTypeIndex])
-  return DexMethod(declaringType, name, parameterTypes, returnType)
-}
-
-private fun Dex.getField(fieldId: FieldId): DexField {
-  val declaringType = TypeDescriptor(typeNames()[fieldId.declaringClassIndex])
-  val name = strings()[fieldId.nameIndex]
-  val type = TypeDescriptor(typeNames()[fieldId.typeIndex])
-  return DexField(declaringType, name, type)
 }

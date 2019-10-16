@@ -1,7 +1,7 @@
 package com.jakewharton.dex
 
-import com.android.dex.Dex
 import com.jakewharton.diffuse.ApiMapping
+import com.jakewharton.diffuse.Dex.Companion.toDex
 import com.jakewharton.diffuse.DexField
 import com.jakewharton.diffuse.DexMember
 import com.jakewharton.diffuse.DexMethod
@@ -50,29 +50,48 @@ class DexParser private constructor(
    */
   fun withDesugaring(desugaring: Desugaring) = DexParser(bytes, mapping, desugaring)
 
-  private val dexes by lazy { bytes.toDexes(desugaring) }
-  private val memberList by lazy {
-    dexes.map(Dex::toMemberList)
+  private val dexMembers by lazy {
+    bytes.toDexes(desugaring)
+        .map {
+          val dex = it.toDex().withMapping(mapping)
+          DexMembers(dex.members, dex.declaredMembers, dex.referencedMembers)
+        }
         .takeIf { it.isNotEmpty() } // TODO https://youtrack.jetbrains.com/issue/KT-33761
-        ?.reduce(MemberList::plus)
-        ?.let(mapping::get)
-        ?: MemberList.EMPTY
+        ?.reduce(DexMembers::plus)
+        ?.let {
+          DexMembers(
+              it.all.toSortedSet().toList(),
+              it.declared.toSortedSet().toList(),
+              it.referenced.toSortedSet().toList()
+          )
+        }
+        ?: DexMembers(emptyList(), emptyList(), emptyList())
   }
 
-  fun listMembers(): List<DexMember> = memberList.all.toSortedSet().toList()
+  private class DexMembers(
+    val all: List<DexMember>,
+    val declared: List<DexMember>,
+    val referenced: List<DexMember>
+  ) {
+    operator fun plus(other: DexMembers): DexMembers {
+      return DexMembers(all + other.all, declared + other.declared, referenced + other.referenced)
+    }
+  }
+
+  fun listMembers(): List<DexMember> = dexMembers.all
   fun listMethods(): List<DexMethod> = listMembers().filterIsInstance<DexMethod>()
   fun listFields(): List<DexField> = listMembers().filterIsInstance<DexField>()
 
-  fun declaredMembers(): List<DexMember> = memberList.declared.toSortedSet().toList()
+  fun declaredMembers(): List<DexMember> = dexMembers.declared
   fun declaredMethods(): List<DexMethod> = declaredMembers().filterIsInstance<DexMethod>()
   fun declaredFields(): List<DexField> = declaredMembers().filterIsInstance<DexField>()
 
-  fun referencedMembers(): List<DexMember> = memberList.referenced.toSortedSet().toList()
+  fun referencedMembers(): List<DexMember> = dexMembers.referenced
   fun referencedMethods(): List<DexMethod> = referencedMembers().filterIsInstance<DexMethod>()
   fun referencedFields(): List<DexField> = referencedMembers().filterIsInstance<DexField>()
 
   /** @return the number of dex files parsed. */
-  fun dexCount(): Int = dexes.size
+  fun dexCount(): Int = bytes.size
 
   companion object {
     /** Create a [DexParser] from of any `.dex`, `.class`, `.jar`, `.aar`, or `.apk`. */
