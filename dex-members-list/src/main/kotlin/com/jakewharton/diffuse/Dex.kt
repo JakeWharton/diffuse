@@ -32,25 +32,20 @@ class Dex private constructor(
     fun Input.toDex(): Dex {
       val bytes = source().use(BufferedSource::readByteArray)
       val dex = AndroidDex(bytes)
-      return dex.toDex()
-    }
-
-    internal fun AndroidDex.toDex(): Dex {
-      val classes = classDefs()
-          .map { TypeDescriptor(typeNames()[it.typeIndex]) }
-      val declaredTypeIndices = classDefs()
+      val classes = dex.classDefs()
+          .map { TypeDescriptor(dex.typeNames()[it.typeIndex]) }
+      val declaredTypeIndices = dex.classDefs()
           .map(ClassDef::getTypeIndex)
           .toSet()
-      val (declaredMethods, referencedMethods) = methodIds()
+      val (declaredMethods, referencedMethods) = dex.methodIds()
           .partition { it.declaringClassIndex in declaredTypeIndices }
-          .mapEach { it.map(::getMethod) }
-      val (declaredFields, referencedFields) = fieldIds()
+          .mapEach<List<MethodId>, List<DexMethod>> { it.map(dex::getMethod) }
+      val (declaredFields, referencedFields) = dex.fieldIds()
           .partition { it.declaringClassIndex in declaredTypeIndices }
-          .mapEach { it.map(::getField) }
+          .mapEach<List<FieldId>, List<DexField>> { it.map(dex::getField) }
       val declaredMembers = declaredMethods + declaredFields
       val referencedMembers = referencedMethods + referencedFields
-
-      return Dex(strings(), typeNames(), classes, declaredMembers, referencedMembers)
+      return Dex(dex.strings(), dex.typeNames(), classes, declaredMembers, referencedMembers)
     }
   }
 }
