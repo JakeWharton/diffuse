@@ -1,13 +1,8 @@
 apply plugin: 'java-library'
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'org.jetbrains.dokka'
-apply plugin: 'maven'
-apply plugin: 'signing'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
-
-version = '5.0.0-SNAPSHOT'
 
 dependencies {
   implementation deps.clikt
@@ -22,21 +17,6 @@ dependencies {
 
   testImplementation deps.junit
   testImplementation deps.truth
-}
-
-dokka {
-  outputFormat 'javadoc'
-  outputDirectory "$buildDir/javadoc"
-}
-
-task javadocJar(type: Jar, dependsOn: 'dokka') {
-  classifier 'javadoc'
-  from "$buildDir/javadoc"
-}
-
-task sourcesJar(type: Jar) {
-  classifier = 'sources'
-  from sourceSets.main.allSource
 }
 
 def fatMembersJarProvider = tasks.register('fatMembersJar', Jar) { task ->
@@ -86,68 +66,7 @@ tasks.named('assemble').configure { task ->
 }
 
 artifacts {
-  archives sourcesJar
-  archives javadocJar
   archives file: binaryMembersFile, name: 'binary', type: 'jar', builtBy: binaryMembersJar, classifier: 'binary'
 }
 
-def isReleaseBuild() {
-  return version.contains("SNAPSHOT") == false
-}
-
-def getRepositoryUsername() {
-  return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
-}
-
-def getRepositoryPassword() {
-  return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
-}
-
-signing {
-  required { isReleaseBuild() && gradle.taskGraph.hasTask('uploadArchives') }
-  sign configurations.archives
-}
-
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-      repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-        authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-      }
-      snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-        authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-      }
-
-      pom.groupId = 'com.jakewharton.dex'
-      pom.artifactId = 'dex-member-list'
-
-      pom.project {
-        name 'Dex Member List'
-        packaging 'jar'
-        description 'A utility which lists all method and/or field references in a dex file.'
-        url 'https://github.com/JakeWharton/dex-member-list'
-
-        scm {
-          connection 'git@github.com:JakeWharton/dex-member-list.git'
-          url 'https://github.com/JakeWharton/dex-member-list'
-        }
-
-        licenses {
-          license {
-            name 'Apache 2.0'
-            url 'http://opensource.org/licenses/Apache-2.0'
-          }
-        }
-
-        developers {
-          developer {
-            id 'jakewharton'
-            name 'Jake Wharton'
-          }
-        }
-      }
-    }
-  }
-}
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

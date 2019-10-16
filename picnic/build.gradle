@@ -10,3 +10,5 @@ dependencies {
   testImplementation deps.junit
   testImplementation deps.truth
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

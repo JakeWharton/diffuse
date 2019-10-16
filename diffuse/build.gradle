@@ -70,3 +70,5 @@ tasks.named('assemble').configure { task ->
 artifacts {
   archives file: binaryDiffuseFile, name: 'binary', type: 'jar', builtBy: binaryDiffuseJar, classifier: 'diffuse'
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
