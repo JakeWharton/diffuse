@@ -1,0 +1,72 @@
+apply plugin: 'java-library'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
+
+dependencies {
+  implementation deps.clikt
+  implementation deps.androidTools.dalvikDx
+  api deps.kotlin.stdlibJdk8
+
+  implementation project(':picnic')
+  api deps.okio
+  implementation deps.androidTools.binaryResources
+  implementation deps.androidTools.apkSigner
+  implementation deps.byteunits
+
+  testImplementation deps.junit
+  testImplementation deps.truth
+}
+
+def fatDiffuseJarProvider = tasks.register('fatDiffuseJar', Jar) { task ->
+  task.dependsOn(configurations.named('runtimeClasspath'))
+  task.dependsOn(tasks.named('compileJava'))
+
+  task.classifier 'fat-diffuse'
+
+  task.manifest {
+    attributes 'Main-Class': 'com.jakewharton.diffuse.Diffuse'
+  }
+
+  task.doFirst {
+    task.from files(sourceSets.main.output.classesDirs)
+    task.from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
+  }
+}
+
+def binaryDiffuseFile = new File(buildDir, "libs/diffuse-binary.jar")
+def binaryDiffuseJar = tasks.register('binaryDiffuseJar') { task ->
+  def fatDiffuseJar = fatDiffuseJarProvider.get()
+  task.dependsOn(fatDiffuseJar)
+
+  task.inputs.file(fatDiffuseJar.archiveFile)
+  task.outputs.file(binaryDiffuseFile)
+
+  task.doLast {
+    def fatJarFile = fatDiffuseJar.archivePath
+
+    binaryDiffuseFile.getParentFile().mkdirs()
+    binaryDiffuseFile.delete()
+    binaryDiffuseFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+    fatJarFile.withInputStream { binaryDiffuseFile.append it }
+
+    binaryDiffuseFile.setExecutable true, false
+  }
+}
+
+def copyDiffuseBinary = tasks.register('copyDiffuseBinary', Copy) { task ->
+  task.dependsOn(binaryDiffuseJar)
+
+  task.from(binaryDiffuseFile)
+  task.into buildDir
+  task.rename(".*", 'diffuse')
+}
+
+tasks.named('assemble').configure { task ->
+  task.dependsOn(copyDiffuseBinary)
+}
+
+artifacts {
+  archives file: binaryDiffuseFile, name: 'binary', type: 'jar', builtBy: binaryDiffuseJar, classifier: 'diffuse'
+}

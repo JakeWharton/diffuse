@@ -6,7 +6,6 @@ import com.android.tools.r8.DexIndexedConsumer
 import com.android.tools.r8.DiagnosticsHandler
 import com.android.tools.r8.origin.Origin
 import com.jakewharton.dex.DexParser.Desugaring
-import com.jakewharton.diffuse.entries
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Input.Companion.asInput
 import okio.ByteString.Companion.toByteString

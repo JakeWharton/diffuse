@@ -7,7 +7,6 @@ import com.jakewharton.dex.DexParser.Desugaring
 import com.jakewharton.diffuse.DexField
 import com.jakewharton.diffuse.DexMember
 import com.jakewharton.diffuse.DexMethod
-import com.jakewharton.diffuse.readBytes
 import org.junit.Test
 import java.nio.file.Paths
 

@@ -5,7 +5,6 @@ import com.jakewharton.diffuse.Dex.Companion.toDex
 import com.jakewharton.diffuse.DexField
 import com.jakewharton.diffuse.DexMember
 import com.jakewharton.diffuse.DexMethod
-import com.jakewharton.diffuse.readBytes
 import java.io.File
 import java.nio.file.Path
 
