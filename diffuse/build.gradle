@@ -23,7 +23,7 @@ def fatDiffuseJarProvider = tasks.register('fatDiffuseJar', Jar) { task ->
   task.dependsOn(configurations.named('runtimeClasspath'))
   task.dependsOn(tasks.named('compileJava'))
 
-  task.classifier 'fat-diffuse'
+  task.classifier 'fat'
 
   task.manifest {
     attributes 'Main-Class': 'com.jakewharton.diffuse.Diffuse'
