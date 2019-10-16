@@ -35,7 +35,7 @@ def fatDiffuseJarProvider = tasks.register('fatDiffuseJar', Jar) { task ->
   }
 }
 
-def binaryDiffuseFile = new File(buildDir, "libs/diffuse-binary.jar")
+def binaryDiffuseFile = new File(buildDir, "libs/$archivesBaseName-$version-binary.jar")
 def binaryDiffuseJar = tasks.register('binaryDiffuseJar') { task ->
   def fatDiffuseJar = fatDiffuseJarProvider.get()
   task.dependsOn(fatDiffuseJar)

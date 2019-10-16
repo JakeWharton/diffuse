@@ -35,7 +35,7 @@ def fatMembersJarProvider = tasks.register('fatMembersJar', Jar) { task ->
   }
 }
 
-def binaryMembersFile = new File(buildDir, "libs/dex-member-list-binary.jar")
+def binaryMembersFile = new File(buildDir, "libs/$archivesBaseName-$version-binary.jar")
 def binaryMembersJar = tasks.register('binaryMembersJar') { task ->
   def fatMembersJar = fatMembersJarProvider.get()
   task.dependsOn(fatMembersJar)
