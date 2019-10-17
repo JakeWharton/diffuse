@@ -11,8 +11,8 @@ class Dex private constructor(
   val strings: List<String>,
   val types: List<String>,
   val classes: List<TypeDescriptor>,
-  val declaredMembers: List<DexMember>,
-  val referencedMembers: List<DexMember>
+  val declaredMembers: List<Member>,
+  val referencedMembers: List<Member>
 ) {
   val members = declaredMembers + referencedMembers
 
@@ -39,10 +39,10 @@ class Dex private constructor(
           .toSet()
       val (declaredMethods, referencedMethods) = dex.methodIds()
           .partition { it.declaringClassIndex in declaredTypeIndices }
-          .mapEach<List<MethodId>, List<DexMethod>> { it.map(dex::getMethod) }
+          .mapEach { it.map(dex::getMethod) }
       val (declaredFields, referencedFields) = dex.fieldIds()
           .partition { it.declaringClassIndex in declaredTypeIndices }
-          .mapEach<List<FieldId>, List<DexField>> { it.map(dex::getField) }
+          .mapEach { it.map(dex::getField) }
       val declaredMembers = declaredMethods + declaredFields
       val referencedMembers = referencedMethods + referencedFields
       return Dex(dex.strings(), dex.typeNames(), classes, declaredMembers, referencedMembers)
@@ -50,19 +50,19 @@ class Dex private constructor(
   }
 }
 
-private fun AndroidDex.getMethod(methodId: MethodId): DexMethod {
+private fun AndroidDex.getMethod(methodId: MethodId): Method {
   val declaringType = TypeDescriptor(typeNames()[methodId.declaringClassIndex])
   val name = strings()[methodId.nameIndex]
   val methodProtoIds = protoIds()[methodId.protoIndex]
   val parameterTypes = readTypeList(methodProtoIds.parametersOffset).types
       .map { TypeDescriptor(typeNames()[it.toInt()]) }
   val returnType = TypeDescriptor(typeNames()[methodProtoIds.returnTypeIndex])
-  return DexMethod(declaringType, name, parameterTypes, returnType)
+  return Method(declaringType, name, parameterTypes, returnType)
 }
 
-private fun AndroidDex.getField(fieldId: FieldId): DexField {
+private fun AndroidDex.getField(fieldId: FieldId): Field {
   val declaringType = TypeDescriptor(typeNames()[fieldId.declaringClassIndex])
   val name = strings()[fieldId.nameIndex]
   val type = TypeDescriptor(typeNames()[fieldId.typeIndex])
-  return DexField(declaringType, name, type)
+  return Field(declaringType, name, type)
 }

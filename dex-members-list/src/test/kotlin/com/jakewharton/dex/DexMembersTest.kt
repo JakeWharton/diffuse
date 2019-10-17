@@ -1,8 +1,8 @@
 package com.jakewharton.dex
 
 import com.google.common.truth.Truth.assertThat
-import com.jakewharton.diffuse.DexField
-import com.jakewharton.diffuse.DexMethod
+import com.jakewharton.diffuse.Field
+import com.jakewharton.diffuse.Method
 import com.jakewharton.diffuse.TypeDescriptor
 import org.junit.Test
 
@@ -11,26 +11,26 @@ class DexMembersTest {
   private val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
 
   @Test fun fieldTypeLambdaNumberRemoved() {
-    val field = DexField(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
-    val fieldWithoutLambdaNumber = DexField(TypeDescriptor("Lcom/example/Foo$\$Lambda;"), "bar", barDescriptor)
+    val field = Field(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
+    val fieldWithoutLambdaNumber = Field(TypeDescriptor("Lcom/example/Foo$\$Lambda;"), "bar", barDescriptor)
     assertThat(field.withoutSyntheticSuffix()).isEqualTo(fieldWithoutLambdaNumber)
   }
 
   @Test fun methodNameSyntheticNumberRemoved() {
-    val method = DexMethod(fooDescriptor, "access$000", emptyList(), barDescriptor)
-    val methodWithoutSyntheticNumber = DexMethod(fooDescriptor, "access", emptyList(), barDescriptor)
+    val method = Method(fooDescriptor, "access$000", emptyList(), barDescriptor)
+    val methodWithoutSyntheticNumber = Method(fooDescriptor, "access", emptyList(), barDescriptor)
     assertThat(method.withoutSyntheticSuffix()).isEqualTo(methodWithoutSyntheticNumber)
   }
 
   @Test fun methodNameLambdaNumberRemoved() {
-    val method = DexMethod(fooDescriptor, "lambda\$refreshSessionToken$14\$MainActivity", emptyList(), barDescriptor)
-    val methodWithoutLambdaNumber = DexMethod(fooDescriptor, "lambda\$refreshSessionToken\$MainActivity", emptyList(), barDescriptor)
+    val method = Method(fooDescriptor, "lambda\$refreshSessionToken$14\$MainActivity", emptyList(), barDescriptor)
+    val methodWithoutLambdaNumber = Method(fooDescriptor, "lambda\$refreshSessionToken\$MainActivity", emptyList(), barDescriptor)
     assertThat(method.withoutSyntheticSuffix()).isEqualTo(methodWithoutLambdaNumber)
   }
 
   @Test fun methodTypeLambdaNumberRemoved() {
-    val method = DexMethod(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", emptyList(), barDescriptor)
-    val methodWithoutLambdaNumber = DexMethod(TypeDescriptor("Lcom/example/Foo$\$Lambda;"), "bar", emptyList(), barDescriptor)
+    val method = Method(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", emptyList(), barDescriptor)
+    val methodWithoutLambdaNumber = Method(TypeDescriptor("Lcom/example/Foo$\$Lambda;"), "bar", emptyList(), barDescriptor)
     assertThat(method.withoutSyntheticSuffix()).isEqualTo(methodWithoutLambdaNumber)
   }
 }

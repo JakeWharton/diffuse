@@ -2,9 +2,9 @@ package com.jakewharton.dex
 
 import com.jakewharton.diffuse.ApiMapping
 import com.jakewharton.diffuse.Dex.Companion.toDex
-import com.jakewharton.diffuse.DexField
-import com.jakewharton.diffuse.DexMember
-import com.jakewharton.diffuse.DexMethod
+import com.jakewharton.diffuse.Field
+import com.jakewharton.diffuse.Member
+import com.jakewharton.diffuse.Method
 import java.io.File
 import java.nio.file.Path
 
@@ -69,26 +69,26 @@ class DexParser private constructor(
   }
 
   private class DexMembers(
-    val all: List<DexMember>,
-    val declared: List<DexMember>,
-    val referenced: List<DexMember>
+    val all: List<Member>,
+    val declared: List<Member>,
+    val referenced: List<Member>
   ) {
     operator fun plus(other: DexMembers): DexMembers {
       return DexMembers(all + other.all, declared + other.declared, referenced + other.referenced)
     }
   }
 
-  fun listMembers(): List<DexMember> = dexMembers.all
-  fun listMethods(): List<DexMethod> = listMembers().filterIsInstance<DexMethod>()
-  fun listFields(): List<DexField> = listMembers().filterIsInstance<DexField>()
+  fun listMembers(): List<Member> = dexMembers.all
+  fun listMethods(): List<Method> = listMembers().filterIsInstance<Method>()
+  fun listFields(): List<Field> = listMembers().filterIsInstance<Field>()
 
-  fun declaredMembers(): List<DexMember> = dexMembers.declared
-  fun declaredMethods(): List<DexMethod> = declaredMembers().filterIsInstance<DexMethod>()
-  fun declaredFields(): List<DexField> = declaredMembers().filterIsInstance<DexField>()
+  fun declaredMembers(): List<Member> = dexMembers.declared
+  fun declaredMethods(): List<Method> = declaredMembers().filterIsInstance<Method>()
+  fun declaredFields(): List<Field> = declaredMembers().filterIsInstance<Field>()
 
-  fun referencedMembers(): List<DexMember> = dexMembers.referenced
-  fun referencedMethods(): List<DexMethod> = referencedMembers().filterIsInstance<DexMethod>()
-  fun referencedFields(): List<DexField> = referencedMembers().filterIsInstance<DexField>()
+  fun referencedMembers(): List<Member> = dexMembers.referenced
+  fun referencedMethods(): List<Method> = referencedMembers().filterIsInstance<Method>()
+  fun referencedFields(): List<Field> = referencedMembers().filterIsInstance<Field>()
 
   /** @return the number of dex files parsed. */
   fun dexCount(): Int = bytes.size

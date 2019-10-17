@@ -27,21 +27,21 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
   }
 
   /**
-   * Given a [DexMember] which is typically obfuscated, return a new [DexMember] with the types and
+   * Given a [Member] which is typically obfuscated, return a new [Member] with the types and
    * name mapped back to their original values or return [member] if the declaring type is not
    * included in the mapping.
    */
-  operator fun get(member: DexMember) = when (member) {
-    is DexField -> this[member]
-    is DexMethod -> this[member]
+  operator fun get(member: Member) = when (member) {
+    is Field -> this[member]
+    is Method -> this[member]
   }
 
   /**
-   * Given a [DexField] which is typically obfuscated, return a new [DexField] with the types and
+   * Given a [Field] which is typically obfuscated, return a new [Field] with the types and
    * name mapped back to their original values or return [field] if the declaring type is not
    * included in the mapping.
    */
-  operator fun get(field: DexField): DexField {
+  operator fun get(field: Field): Field {
     val declaringType = field.declaringType.componentDescriptor
     val declaringTypeMapping = typeMappings[declaringType] ?: return field
 
@@ -49,15 +49,15 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
         .asArray(field.declaringType.arrayArity)
     val newType = this[field.type]
     val newName = declaringTypeMapping[field.name] ?: field.name
-    return DexField(newDeclaringType, newName, newType)
+    return Field(newDeclaringType, newName, newType)
   }
 
   /**
-   * Given a [DexMethod] which is typically obfuscated, return a new [DexMethod] with the types and
+   * Given a [Method] which is typically obfuscated, return a new [Method] with the types and
    * name mapped back to their original values or return [method] if the declaring type is not
    * included in the mapping.
    */
-  operator fun get(method: DexMethod): DexMethod {
+  operator fun get(method: Method): Method {
     val declaringType = method.declaringType.componentDescriptor
     val declaringTypeMapping = typeMappings[declaringType] ?: return method
 
@@ -67,7 +67,7 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
     val newParameters = method.parameterTypes.map(::get)
     val signature = MethodSignature(newReturnType, method.name, newParameters)
     val newName = declaringTypeMapping[signature] ?: method.name
-    return DexMethod(newDeclaringType, newName, newParameters, newReturnType)
+    return Method(newDeclaringType, newName, newParameters, newReturnType)
   }
 
   companion object {

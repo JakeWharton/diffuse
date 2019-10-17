@@ -2,8 +2,8 @@ package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.ApiMapping
 import com.jakewharton.diffuse.Dex
-import com.jakewharton.diffuse.DexField
-import com.jakewharton.diffuse.DexMethod
+import com.jakewharton.diffuse.Field
+import com.jakewharton.diffuse.Method
 import com.jakewharton.diffuse.diff.DexDiff.ComponentDiff
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.report.toDiffString
@@ -24,12 +24,12 @@ internal class DexDiff(
   val strings = componentDiff { it.strings }
   val types = componentDiff { it.types }
   val classes = componentDiff { it.classes }
-  val methods = componentDiff { it.members.filterIsInstance<DexMethod>() }
-  val declaredMethods = componentDiff { it.declaredMembers.filterIsInstance<DexMethod>() }
-  val referencedMethods = componentDiff { it.referencedMembers.filterIsInstance<DexMethod>() }
-  val fields = componentDiff { it.members.filterIsInstance<DexField>() }
-  val declaredFields = componentDiff { it.declaredMembers.filterIsInstance<DexField>() }
-  val referencedFields = componentDiff { it.referencedMembers.filterIsInstance<DexField>() }
+  val methods = componentDiff { it.members.filterIsInstance<Method>() }
+  val declaredMethods = componentDiff { it.declaredMembers.filterIsInstance<Method>() }
+  val referencedMethods = componentDiff { it.referencedMembers.filterIsInstance<Method>() }
+  val fields = componentDiff { it.members.filterIsInstance<Field>() }
+  val declaredFields = componentDiff { it.declaredMembers.filterIsInstance<Field>() }
+  val referencedFields = componentDiff { it.referencedMembers.filterIsInstance<Field>() }
 
   val changed = strings.changed || types.changed || methods.changed || fields.changed
 

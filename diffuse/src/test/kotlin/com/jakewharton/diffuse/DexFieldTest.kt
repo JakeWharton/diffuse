@@ -8,39 +8,39 @@ class DexFieldTest {
   private val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
 
   @Test fun string() {
-    val field = DexField(fooDescriptor, "bar", barDescriptor)
+    val field = Field(fooDescriptor, "bar", barDescriptor)
     assertThat(field.toString()).isEqualTo("com.example.Foo bar: Bar")
   }
 
   @Test fun renderKotlinLambdaClassName() {
-    val field = DexField(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
+    val field = Field(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
     assertThat(field.toString()).isEqualTo("com.example.Foo$\$Lambda$26 bar: Bar")
   }
 
   @Test fun compareToSame() {
-    val one = DexField(fooDescriptor, "bar", barDescriptor)
-    val two = DexField(fooDescriptor, "bar", barDescriptor)
+    val one = Field(fooDescriptor, "bar", barDescriptor)
+    val two = Field(fooDescriptor, "bar", barDescriptor)
     assertThat(one < two).isFalse()
     assertThat(two < one).isFalse()
   }
 
   @Test fun compareToDifferentDeclaringType() {
-    val one = DexField(barDescriptor, "bar", barDescriptor)
-    val two = DexField(fooDescriptor, "bar", barDescriptor)
+    val one = Field(barDescriptor, "bar", barDescriptor)
+    val two = Field(fooDescriptor, "bar", barDescriptor)
     assertThat(one < two).isTrue()
     assertThat(two < one).isFalse()
   }
 
   @Test fun compareToDifferentName() {
-    val one = DexField(fooDescriptor, "bar", barDescriptor)
-    val two = DexField(fooDescriptor, "foo", barDescriptor)
+    val one = Field(fooDescriptor, "bar", barDescriptor)
+    val two = Field(fooDescriptor, "foo", barDescriptor)
     assertThat(one < two).isTrue()
     assertThat(two < one).isFalse()
   }
 
   @Test fun compareToDifferentType() {
-    val one = DexField(fooDescriptor, "bar", barDescriptor)
-    val two = DexField(fooDescriptor, "bar", fooDescriptor)
+    val one = Field(fooDescriptor, "bar", barDescriptor)
+    val two = Field(fooDescriptor, "bar", fooDescriptor)
     assertThat(one < two).isTrue()
     assertThat(two < one).isFalse()
   }

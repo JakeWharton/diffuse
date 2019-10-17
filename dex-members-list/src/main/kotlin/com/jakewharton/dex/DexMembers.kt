@@ -18,9 +18,9 @@ import com.jakewharton.dex.DexParser.Companion.toDexParser
 import com.jakewharton.dex.DexParser.Desugaring
 import com.jakewharton.diffuse.ApiMapping
 import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
-import com.jakewharton.diffuse.DexField
-import com.jakewharton.diffuse.DexMember
-import com.jakewharton.diffuse.DexMethod
+import com.jakewharton.diffuse.Field
+import com.jakewharton.diffuse.Member
+import com.jakewharton.diffuse.Method
 import com.jakewharton.diffuse.TypeDescriptor
 import java.io.File
 import java.io.FileInputStream
@@ -93,12 +93,12 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
   }
 }
 
-internal fun DexMember.withoutSyntheticSuffix() = when (this) {
-  is DexField -> withoutSyntheticSuffix()
-  is DexMethod -> withoutSyntheticSuffix()
+internal fun Member.withoutSyntheticSuffix() = when (this) {
+  is Field -> withoutSyntheticSuffix()
+  is Method -> withoutSyntheticSuffix()
 }
 
-private fun DexField.withoutSyntheticSuffix(): DexField {
+private fun Field.withoutSyntheticSuffix(): Field {
   val newDeclaredType = declaringType.withoutSyntheticSuffix()
   if (newDeclaredType == declaringType) {
     return this
@@ -109,7 +109,7 @@ private fun DexField.withoutSyntheticSuffix(): DexField {
 private val SYNTHETIC_METHOD_SUFFIX = ".*?\\$\\d+".toRegex()
 private val LAMBDA_METHOD_NUMBER = "\\$\\d+\\$".toRegex()
 
-private fun DexMethod.withoutSyntheticSuffix(): DexMethod {
+private fun Method.withoutSyntheticSuffix(): Method {
   val newDeclaredType = declaringType.withoutSyntheticSuffix()
   val lambdaName = name.startsWith("lambda$")
   val syntheticName = name.matches(SYNTHETIC_METHOD_SUFFIX)
