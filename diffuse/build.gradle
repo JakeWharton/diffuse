@@ -4,6 +4,10 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
+configurations {
+  r8
+}
+
 dependencies {
   implementation deps.clikt
   implementation deps.androidTools.dalvikDx
@@ -17,21 +21,49 @@ dependencies {
 
   testImplementation deps.junit
   testImplementation deps.truth
+
+  r8 deps.r8
+}
+
+def shrunkDiffuseFile = new File(buildDir, "libs/$archivesBaseName-$version-shrunk.jar")
+def shrinkDiffuse = tasks.register('shrinkDiffuse', JavaExec) { task ->
+  def runtimeClasspath = configurations.named('runtimeClasspath')
+  task.dependsOn(runtimeClasspath)
+  task.dependsOn(tasks.getByName('jar'))
+
+  task.classpath(configurations.named('r8'))
+  task.main('com.android.tools.r8.R8')
+
+  task.doFirst {
+    def arguments = [
+        '--release',
+        '--classfile',
+        '--no-desugaring',
+        '--output', shrunkDiffuseFile.absolutePath,
+        '--pg-conf', file('r8-rules.pro').absolutePath,
+        '--lib', "${System.getProperty('java.home')}/lib/rt.jar"
+    ]
+    arguments.addAll(runtimeClasspath.get().files.collect { it.absolutePath })
+    arguments.addAll(jar.archivePath.absolutePath)
+    task.args(arguments)
+  }
 }
 
 def fatDiffuseJarProvider = tasks.register('fatDiffuseJar', Jar) { task ->
-  task.dependsOn(configurations.named('runtimeClasspath'))
-  task.dependsOn(tasks.named('compileJava'))
+  task.dependsOn(shrinkDiffuse)
+  task.from(zipTree(shrunkDiffuseFile))
+
+  task.exclude("**/*.kotlin_metadata")
+  task.exclude("**/*.kotlin_module")
+  task.exclude("**/*.kotlin_builtins")
+  task.exclude("**/pom.xml")
+  task.exclude("**/pom.properties")
+  task.exclude("META-INF/proguard/**")
 
   task.classifier 'fat'
 
   task.manifest {
     attributes 'Main-Class': 'com.jakewharton.diffuse.Diffuse'
-  }
-
-  task.doFirst {
-    task.from files(sourceSets.main.output.classesDirs)
-    task.from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
   }
 }
 
