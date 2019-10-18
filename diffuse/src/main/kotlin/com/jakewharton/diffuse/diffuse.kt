@@ -8,9 +8,9 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.switch
 import com.github.ajalt.clikt.parameters.types.path
-import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
 import com.jakewharton.diffuse.Aab.Companion.toAab
 import com.jakewharton.diffuse.Aar.Companion.toAar
+import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
 import com.jakewharton.diffuse.Apk.Companion.toApk
 import com.jakewharton.diffuse.Jar.Companion.toJar
 import com.jakewharton.diffuse.diff.AabDiff
@@ -74,8 +74,8 @@ private class Command : CliktCommand(name = "diffuse") {
   }
 
   override fun run() {
-    val oldMapping = oldMappingPath?.toApiMapping() ?: ApiMapping.EMPTY
-    val newMapping = newMappingPath?.toApiMapping() ?: ApiMapping.EMPTY
+    val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
+    val newMapping = newMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
     val diff = when (mode) {
       Mode.Apk -> {
         apkDiff(old.asInput().toApk(), oldMapping, new.asInput().toApk(), newMapping)

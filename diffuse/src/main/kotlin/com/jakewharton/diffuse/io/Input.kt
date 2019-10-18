@@ -3,6 +3,7 @@ package com.jakewharton.diffuse.io
 import okio.Buffer
 import okio.BufferedSource
 import okio.ByteString
+import okio.ByteString.Companion.encodeUtf8
 import okio.buffer
 import okio.source
 import java.nio.file.Path
@@ -26,6 +27,10 @@ interface Input {
     @JvmStatic
     @JvmName("of")
     fun ByteString.asInput(name: String) = BytesInput(name, this)
+
+    @JvmStatic
+    @JvmName("of")
+    fun String.asInput(name: String) = StringInput(name, this)
   }
 }
 
@@ -46,4 +51,16 @@ class BytesInput internal constructor(
   override fun toByteArray() = bytes.toByteArray()
   override fun toByteString() = bytes
   override fun toUtf8() = bytes.utf8()
+}
+
+class StringInput internal constructor(
+  override val name: String,
+  private val string: String
+) : Input {
+  private val bytes = string.encodeUtf8()
+
+  override fun source() = Buffer().write(bytes)
+  override fun toByteArray() = bytes.toByteArray()
+  override fun toByteString() = bytes
+  override fun toUtf8() = string
 }

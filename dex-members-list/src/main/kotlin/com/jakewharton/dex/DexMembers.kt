@@ -22,6 +22,7 @@ import com.jakewharton.diffuse.Field
 import com.jakewharton.diffuse.Member
 import com.jakewharton.diffuse.Method
 import com.jakewharton.diffuse.TypeDescriptor
+import com.jakewharton.diffuse.io.Input.Companion.asInput
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -72,7 +73,7 @@ private class MembersCommand : CliktCommand(name = "dex-members-list") {
         .ifEmpty { listOf(System.`in`) }
         .map { it.use(InputStream::readBytes) }
     val parser = inputs.toDexParser()
-        .withApiMapping(mapping?.toApiMapping() ?: ApiMapping.EMPTY)
+        .withApiMapping(mapping?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY)
         .apply {
           if (desugaring) {
             withDesugaring(Desugaring(minApiLevel, libraryJars))

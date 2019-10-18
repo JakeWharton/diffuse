@@ -1,8 +1,6 @@
 package com.jakewharton.diffuse
 
-import java.io.File
-import java.nio.charset.Charset
-import java.nio.file.Path
+import com.jakewharton.diffuse.io.Input
 
 class ApiMapping private constructor(private val typeMappings: Map<TypeDescriptor, TypeMapping>) {
   override fun equals(other: Any?) = other is ApiMapping && typeMappings == other.typeMappings
@@ -75,29 +73,15 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
     val EMPTY = ApiMapping(emptyMap())
 
     @JvmStatic
-    @JvmOverloads
-    @JvmName("fromPath")
-    fun Path.toApiMapping(charset: Charset = Charsets.UTF_8): ApiMapping {
-      return readBytes().toString(charset).toApiMapping()
-    }
-
-    @JvmStatic
-    @JvmOverloads
-    @JvmName("fromFile")
-    fun File.toApiMapping(charset: Charset = Charsets.UTF_8): ApiMapping {
-      return readText(charset).toApiMapping()
-    }
-
-    @JvmStatic
-    @JvmName("fromString")
-    fun String.toApiMapping(): ApiMapping {
+    @JvmName("parse")
+    fun Input.toApiMapping(): ApiMapping {
       val typeMappings = mutableMapOf<TypeDescriptor, TypeMapping>()
 
       var fromDescriptor: TypeDescriptor? = null
       var toDescriptor: TypeDescriptor? = null
       var fields: MutableMap<String, String>? = null
       var methods: MutableMap<MethodSignature, String>? = null
-      split('\n').forEachIndexed { index, line ->
+      toUtf8().split('\n').forEachIndexed { index, line ->
         if (line.startsWith('#') || line.isBlank()) {
           return@forEachIndexed
         }

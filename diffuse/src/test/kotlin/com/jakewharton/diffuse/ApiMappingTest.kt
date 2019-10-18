@@ -1,6 +1,7 @@
 package com.jakewharton.diffuse
 
 import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.io.Input.Companion.asInput
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
@@ -12,7 +13,7 @@ class ApiMappingTest {
         # Leading comment
 
         # Comment after empty line
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     assertNotNull(mapping)
   }
@@ -21,7 +22,7 @@ class ApiMappingTest {
     val mapping = """
       com.example.Foo -> a.a.a:
       com.example.Bar -> a.a.b:
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
@@ -37,7 +38,7 @@ class ApiMappingTest {
     val mapping = """
       com.example.Foo -> a.a.a:
           java.lang.String bar -> a
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aField = Field(aaaDescriptor, "a", stringDescriptor)
@@ -53,7 +54,7 @@ class ApiMappingTest {
       com.example.Foo -> a.a.a:
           com.example.Bar bar -> a
       com.example.Bar -> a.a.b:
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aabDescriptor = TypeDescriptor("La/a/b;")
@@ -69,7 +70,7 @@ class ApiMappingTest {
   @Test fun fieldUnmappedName() {
     val mapping = """
       com.example.Foo -> a.a.a:
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val unmappedField = Field(aaaDescriptor, "bar", stringDescriptor)
@@ -81,7 +82,7 @@ class ApiMappingTest {
   }
 
   @Test fun fieldUnmappedDeclaringType() {
-    val mapping = "".toApiMapping()
+    val mapping = "".asInput("mapping.txt").toApiMapping()
 
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
     val field = Field(fooDescriptor, "bar", stringDescriptor)
@@ -89,7 +90,7 @@ class ApiMappingTest {
   }
 
   @Test fun fieldUnmappedArrayDeclaringType() {
-    val mapping = "".toApiMapping()
+    val mapping = "".asInput("mapping.txt").toApiMapping()
 
     val byteArrayLength = Field(byteDescriptor.asArray(1), "length", intDescriptor)
     assertSame(byteArrayLength, mapping[byteArrayLength])
@@ -109,7 +110,7 @@ class ApiMappingTest {
           int aInt -> f
           long aLong -> g
           short aShort -> h
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aField = Field(aaaDescriptor, "a", booleanDescriptor)
@@ -148,7 +149,7 @@ class ApiMappingTest {
           com.example.Bar[] bars -> b
           java.lang.String[][][][][][] strings -> c
       com.example.Bar -> a.a.b:
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aabDescriptor = TypeDescriptor("La/a/b;")
@@ -171,7 +172,7 @@ class ApiMappingTest {
     val mapping = """
       com.example.Foo -> a.a.a:
           void bar() -> a
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aMethod = Method(aaaDescriptor, "a", emptyList(), voidDescriptor)
@@ -187,7 +188,7 @@ class ApiMappingTest {
       com.example.Foo -> a.a.a:
           com.example.Bar bar() -> a
       com.example.Bar -> a.a.b:
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aabDescriptor = TypeDescriptor("La/a/b;")
@@ -205,7 +206,7 @@ class ApiMappingTest {
       com.example.Foo -> a.a.a:
           void bar(com.example.Bar) -> a
       com.example.Bar -> a.a.b:
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aabDescriptor = TypeDescriptor("La/a/b;")
@@ -222,7 +223,7 @@ class ApiMappingTest {
     val mapping = """
       com.example.Foo -> a.a.a:
           1:1:void bar() -> a
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aMethod = Method(aaaDescriptor, "a", emptyList(), voidDescriptor)
@@ -237,7 +238,7 @@ class ApiMappingTest {
     val mapping = """
       com.example.Foo -> a.a.a:
           1:1:void bar():12:12 -> a
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aMethod = Method(aaaDescriptor, "a", emptyList(), voidDescriptor)
@@ -259,7 +260,7 @@ class ApiMappingTest {
           int aInt() -> f
           long aLong() -> g
           short aShort() -> h
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aMethod = Method(aaaDescriptor, "a", emptyList(), booleanDescriptor)
@@ -295,7 +296,7 @@ class ApiMappingTest {
     val mapping = """
       com.example.Foo -> a.a.a:
           void bar(boolean,byte,char,double,float,int,long,short) -> a
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aMethod = Method(aaaDescriptor, "a",
@@ -317,7 +318,7 @@ class ApiMappingTest {
           com.example.Bar[] bars() -> b
           java.lang.String[][][][][][] strings() -> c
       com.example.Bar -> a.a.b:
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aabDescriptor = TypeDescriptor("La/a/b;")
@@ -341,7 +342,7 @@ class ApiMappingTest {
       com.example.Foo -> a.a.a:
           void bar(byte[],com.example.Bar[],java.lang.String[][][][][][]) -> a
       com.example.Bar -> a.a.b:
-    """.trimIndent().toApiMapping()
+    """.trimIndent().asInput("mapping.txt").toApiMapping()
 
     val aaaDescriptor = TypeDescriptor("La/a/a;")
     val aabDescriptor = TypeDescriptor("La/a/b;")
@@ -359,7 +360,7 @@ class ApiMappingTest {
   }
 
   @Test fun methodUnmappedSignatures() {
-    val mapping = "".toApiMapping()
+    val mapping = "".asInput("mapping.txt").toApiMapping()
 
     val boxedByteToString = Method(TypeDescriptor("Ljava/lang/Byte;"), "toString", emptyList(),
         stringDescriptor)
@@ -367,7 +368,7 @@ class ApiMappingTest {
   }
 
   @Test fun methodUnmappedDeclaringType() {
-    val mapping = "".toApiMapping()
+    val mapping = "".asInput("mapping.txt").toApiMapping()
 
     val byteArrayClone = Method(byteDescriptor.asArray(1), "clone", emptyList(),
         byteDescriptor.asArray(1))
