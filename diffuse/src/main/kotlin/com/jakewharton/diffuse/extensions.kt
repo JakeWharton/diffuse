@@ -34,8 +34,7 @@ internal fun ByteArray.asByteBuffer(offset: Int = 0, length: Int = size - offset
 
 internal fun ByteBuffer.asDataSource(): DataSource = DataSources.asDataSource(this)
 
-internal fun Input.toBinaryResourceFile(): BinaryResourceFile =
-  BinaryResourceFile(source().use(BufferedSource::readByteArray))
+internal fun Input.toBinaryResourceFile() = BinaryResourceFile(toByteArray())
 
 internal fun <T, R> Pair<T, T>.mapEach(body: (T) -> R): Pair<R, R> = body(first) to body(second)
 

@@ -11,7 +11,12 @@ interface Input {
   val name: String
   fun source(): BufferedSource
 
-  fun toZip() = source().readByteString().toZip()
+  // Fast-paths to common formats that can be optimized by directly returning or converting inputs.
+  fun toByteArray(): ByteArray = source().use(BufferedSource::readByteArray)
+  fun toByteString(): ByteString = source().use(BufferedSource::readByteString)
+  fun toUtf8(): String = source().use(BufferedSource::readUtf8)
+
+  fun toZip() = toByteString().toZip()
 
   companion object {
     @JvmStatic
@@ -38,4 +43,7 @@ class BytesInput internal constructor(
   val bytes: ByteString
 ) : Input {
   override fun source(): BufferedSource = Buffer().write(bytes)
+  override fun toByteArray() = bytes.toByteArray()
+  override fun toByteString() = bytes
+  override fun toUtf8() = bytes.utf8()
 }

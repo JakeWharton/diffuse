@@ -14,9 +14,7 @@ data class Signatures(
     @JvmStatic
     @JvmName("parse")
     fun Input.toSignatures(): Signatures {
-      val dataSource = source().use { source ->
-        source.readByteArray().asByteBuffer().asDataSource()
-      }
+      val dataSource = toByteArray().asByteBuffer().asDataSource()
       val result = ApkVerifier.Builder(dataSource).build().verify()
       return Signatures(
           result.v1SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),

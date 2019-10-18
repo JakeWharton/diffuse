@@ -29,7 +29,7 @@ class Jar private constructor(
         zip.entries
             .filter { it.path.endsWith(".class") }
             .forEach { entry ->
-              val reader = ClassReader(entry.input().source().use { it.readByteArray() })
+              val reader = ClassReader(entry.input().toByteArray())
               val type = TypeDescriptor("L${reader.className};")
               reader.accept(object : ClassVisitor(Opcodes.ASM7) {
                 override fun visitMethod(

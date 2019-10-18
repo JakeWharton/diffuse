@@ -4,7 +4,6 @@ import com.android.dex.ClassDef
 import com.android.dex.FieldId
 import com.android.dex.MethodId
 import com.jakewharton.diffuse.io.Input
-import okio.BufferedSource
 import com.android.dex.Dex as AndroidDex
 
 class Dex private constructor(
@@ -30,8 +29,7 @@ class Dex private constructor(
     @JvmStatic
     @JvmName("parse")
     fun Input.toDex(): Dex {
-      val bytes = source().use(BufferedSource::readByteArray)
-      val dex = AndroidDex(bytes)
+      val dex = AndroidDex(toByteArray())
       val classes = dex.classDefs()
           .map { TypeDescriptor(dex.typeNames()[it.typeIndex]) }
       val declaredTypeIndices = dex.classDefs()
