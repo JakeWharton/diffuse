@@ -34,7 +34,7 @@ interface Zip : Closeable {
     /** The impact on the overall zip size. This is [compressedSize] plus metadata. */
     val zipSize: Size
 
-    fun input(): Input
+    fun asInput(): Input
   }
 }
 
@@ -84,7 +84,7 @@ internal class PathZip(
     override val compressedSize: Size,
     override val zipSize: Size
   ) : Zip.Entry {
-    override fun input(): Input {
+    override fun asInput(): Input {
       val child = root.resolve(path)
       if (!child.exists) {
         throw FileNotFoundException("No entry: $path")
@@ -111,7 +111,7 @@ internal class BytesZip(
     override val compressedSize: Size,
     override val zipSize: Size
   ) : Zip.Entry {
-    override fun input(): Input {
+    override fun asInput(): Input {
       val zis = bytes.asInputStream().asZip()
       while (true) {
         val entry = zis.nextEntry ?: break

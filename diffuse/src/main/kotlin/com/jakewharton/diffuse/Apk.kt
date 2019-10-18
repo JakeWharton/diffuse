@@ -23,11 +23,11 @@ class Apk private constructor(
       val signatures = toSignatures()
       toZip().use { zip ->
         val files = zip.toArchiveFiles { it.toApkFileType() }
-        val manifest = zip["AndroidManifest.xml"].input().toBinaryResourceFile().toManifest()
+        val manifest = zip["AndroidManifest.xml"].asInput().toBinaryResourceFile().toManifest()
         val dexes = zip.entries
             .filter { it.path.matches(classesDexRegex) }
-            .map { it.input().toDex() }
-        val arsc = zip["resources.arsc"].input().toBinaryResourceFile().toArsc()
+            .map { it.asInput().toDex() }
+        val arsc = zip["resources.arsc"].asInput().toBinaryResourceFile().toArsc()
         return Apk(name, files, dexes, arsc, manifest, signatures)
       }
     }
