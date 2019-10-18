@@ -17,7 +17,7 @@ class Aar private constructor(
     internal val libsJarRegex = Regex("libs/[^/]\\.jar")
 
     @JvmStatic
-    @JvmName("create")
+    @JvmName("parse")
     fun Input.toAar(): Aar {
       toZip().use { zip ->
         val files = zip.toArchiveFiles { it.toAarFileType() }
