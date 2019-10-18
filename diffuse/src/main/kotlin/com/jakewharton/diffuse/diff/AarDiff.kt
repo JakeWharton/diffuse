@@ -12,7 +12,7 @@ internal class AarDiff(
   val newMapping: ApiMapping
 ) : BinaryDiff {
   val archive = ArchiveFilesDiff(oldAar.files, newAar.files)
-
+  val jar = JarDiff(oldAar.classes, oldMapping, newAar.classes, newMapping)
   val manifest = ManifestDiff(oldAar.manifest, newAar.manifest)
 
   override fun toTextReport(): DiffReport = AarDiffTextReport(this)

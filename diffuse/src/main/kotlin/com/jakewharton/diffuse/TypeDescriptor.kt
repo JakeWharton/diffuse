@@ -12,6 +12,8 @@ inline class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
   val componentDescriptor get() = TypeDescriptor(value.substring(arrayArity))
   fun asArray(arity: Int = 1) = TypeDescriptor("[".repeat(arity) + value)
 
+  override fun toString() = sourceName
+
   companion object {
     private fun String.toHumanName(): String {
       if (startsWith("[")) {
@@ -35,4 +37,3 @@ inline class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
     }
   }
 }
-

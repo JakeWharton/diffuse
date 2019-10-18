@@ -8,12 +8,12 @@ dependencies {
   implementation deps.clikt
   implementation deps.androidTools.dalvikDx
   api deps.kotlin.stdlibJdk8
-
   implementation project(':picnic')
   api deps.okio
   implementation deps.androidTools.binaryResources
   implementation deps.androidTools.apkSigner
   implementation deps.byteunits
+  implementation deps.asm
 
   testImplementation deps.junit
   testImplementation deps.truth

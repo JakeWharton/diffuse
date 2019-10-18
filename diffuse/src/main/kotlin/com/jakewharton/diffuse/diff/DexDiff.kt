@@ -4,7 +4,6 @@ import com.jakewharton.diffuse.ApiMapping
 import com.jakewharton.diffuse.Dex
 import com.jakewharton.diffuse.Field
 import com.jakewharton.diffuse.Method
-import com.jakewharton.diffuse.diff.DexDiff.ComponentDiff
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TextAlignment.BottomCenter
@@ -21,38 +20,17 @@ internal class DexDiff(
 ) {
   val isMultidex = oldDexes.size > 1 || newDexes.size > 1
 
-  val strings = componentDiff { it.strings }
-  val types = componentDiff { it.types }
-  val classes = componentDiff { it.classes }
-  val methods = componentDiff { it.members.filterIsInstance<Method>() }
-  val declaredMethods = componentDiff { it.declaredMembers.filterIsInstance<Method>() }
-  val referencedMethods = componentDiff { it.referencedMembers.filterIsInstance<Method>() }
-  val fields = componentDiff { it.members.filterIsInstance<Field>() }
-  val declaredFields = componentDiff { it.declaredMembers.filterIsInstance<Field>() }
-  val referencedFields = componentDiff { it.referencedMembers.filterIsInstance<Field>() }
+  val strings = componentDiff(oldDexes, newDexes) { it.strings }
+  val types = componentDiff(oldDexes, newDexes) { it.types }
+  val classes = componentDiff(oldDexes, newDexes) { it.classes }
+  val methods = componentDiff(oldDexes, newDexes) { it.members.filterIsInstance<Method>() }
+  val declaredMethods = componentDiff(oldDexes, newDexes) { it.declaredMembers.filterIsInstance<Method>() }
+  val referencedMethods = componentDiff(oldDexes, newDexes) { it.referencedMembers.filterIsInstance<Method>() }
+  val fields = componentDiff(oldDexes, newDexes) { it.members.filterIsInstance<Field>() }
+  val declaredFields = componentDiff(oldDexes, newDexes) { it.declaredMembers.filterIsInstance<Field>() }
+  val referencedFields = componentDiff(oldDexes, newDexes) { it.referencedMembers.filterIsInstance<Field>() }
 
   val changed = strings.changed || types.changed || methods.changed || fields.changed
-
-  private fun <T> componentDiff(selector: (Dex) -> Collection<T>): ComponentDiff<T> {
-    val oldRawCount = oldDexes.sumBy { selector(it).size }
-    val newRawCount = newDexes.sumBy { selector(it).size }
-    val old = oldDexes.flatMapTo(mutableSetOf(), selector)
-    val new = newDexes.flatMapTo(mutableSetOf(), selector)
-    val added = new - old
-    val removed = old - new
-    return ComponentDiff(oldRawCount, old.size, newRawCount, new.size, added, removed)
-  }
-
-  class ComponentDiff<T>(
-    val oldRawCount: Int,
-    val oldCount: Int,
-    val newRawCount: Int,
-    val newCount: Int,
-    val added: Set<T>,
-    val removed: Set<T>
-  ) {
-    val changed get() = added.isNotEmpty() || removed.isNotEmpty()
-  }
 }
 
 internal fun DexDiff.toSummaryTable() = diffuseTable {
@@ -144,39 +122,6 @@ internal fun DexDiff.toSummaryTable() = diffuseTable {
 }.renderText()
 
 internal fun DexDiff.toDetailReport() = buildString {
-  fun appendComponentDiff(name: String, diff: ComponentDiff<*>) {
-    if (diff.changed) {
-      appendln()
-      appendln("$name:")
-      appendln()
-      appendln(buildString {
-        appendln(diffuseTable {
-          header {
-            row {
-              cell("old")
-              cell("new")
-              cell("diff")
-            }
-          }
-
-          val diffSize = (diff.added.size - diff.removed.size).toDiffString()
-          val addedSize = diff.added.size.toDiffString(zeroSign = '+')
-          val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
-          row(diff.oldCount, diff.newCount, "$diffSize ($addedSize $removedSize)")
-        }.renderText())
-        diff.added.forEach {
-          appendln("+ $it")
-        }
-        if (diff.added.isNotEmpty() && diff.removed.isNotEmpty()) {
-          appendln()
-        }
-        diff.removed.forEach {
-          appendln("- $it")
-        }
-      }.prependIndent("  "))
-    }
-  }
-
   appendComponentDiff("STRINGS", strings)
   appendComponentDiff("TYPES", types)
   appendComponentDiff("METHODS", methods)
