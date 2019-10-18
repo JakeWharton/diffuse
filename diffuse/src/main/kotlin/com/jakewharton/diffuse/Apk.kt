@@ -19,6 +19,8 @@ class Apk private constructor(
   companion object {
     internal val classesDexRegex = Regex("classes\\d*\\.dex")
 
+    @JvmStatic
+    @JvmName("parse")
     fun Input.toApk(): Apk {
       val signatures = toSignatures()
       toZip().use { zip ->
