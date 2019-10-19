@@ -21,7 +21,7 @@ import com.jakewharton.diffuse.diff.JarDiff
 import com.jakewharton.diffuse.io.Input.Companion.asInput
 
 fun main(vararg args: String) {
-  Command().main(args.toList())
+  DiffuseCommand().main(args.toList())
 }
 
 fun apkDiff(
@@ -50,7 +50,7 @@ fun jarDiff(
   newMapping: ApiMapping = ApiMapping.EMPTY
 ): BinaryDiff = JarDiff(oldJar, oldMapping, newJar, newMapping)
 
-private class Command : CliktCommand(name = "diffuse") {
+private class DiffuseCommand : CliktCommand(name = "diffuse") {
   private val old by argument("OLD", help = "Old input file.")
       .path(exists = true, folderOkay = false, readable = true)
 
