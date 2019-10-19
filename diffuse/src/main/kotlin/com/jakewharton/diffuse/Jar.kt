@@ -122,14 +122,14 @@ class Jar private constructor(
                     while (descriptor[typeIndex] == '[') {
                       typeIndex++
                     }
-                    val value = if (descriptor[typeIndex] == 'L') {
-                      val end = descriptor.indexOf(';', startIndex = i)
-                      descriptor.substring(startIndex = i, endIndex = end + 1)
+                    val end = if (descriptor[typeIndex] == 'L') {
+                      descriptor.indexOf(';', startIndex = typeIndex)
                     } else {
-                      descriptor.substring(startIndex = i, endIndex = typeIndex + 1)
+                      typeIndex
                     }
-                    parameterTypes += TypeDescriptor(value)
-                    i += value.length
+                    val parameterDescriptor = descriptor.substring(i, end + 1)
+                    parameterTypes += TypeDescriptor(parameterDescriptor)
+                    i += parameterDescriptor.length
                   }
                   val returnType = TypeDescriptor(descriptor.substring(i + 1))
                   return Method(owner, name, parameterTypes, returnType)
