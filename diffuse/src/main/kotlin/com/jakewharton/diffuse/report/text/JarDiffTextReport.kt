@@ -1,11 +1,11 @@
 package com.jakewharton.diffuse.report.text
 
 import com.jakewharton.diffuse.ArchiveFile.Type
-import com.jakewharton.diffuse.report.DiffReport
 import com.jakewharton.diffuse.diff.JarDiff
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.diff.toSummaryTable
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.report.DiffReport
 import com.jakewharton.diffuse.report.toSummaryString
 
 internal class JarDiffTextReport(private val jarDiff: JarDiff) : DiffReport {
@@ -24,12 +24,21 @@ internal class JarDiffTextReport(private val jarDiff: JarDiff) : DiffReport {
       }.toString())
       appendln()
       appendln(jarDiff.archive.toSummaryTable("JAR", Type.JAR_TYPES))
+      appendln()
+      appendln(jarDiff.toSummaryTable())
       if (jarDiff.archive.changed) {
         appendln()
         appendln("=================")
         appendln("====   JAR   ====")
         appendln("=================")
         appendln(jarDiff.archive.toDetailReport())
+      }
+      if (jarDiff.changed) {
+        appendln()
+        appendln("=================")
+        appendln("====   JAR   ====")
+        appendln("=================")
+        appendln(jarDiff.toDetailReport())
       }
     }
   }

@@ -87,19 +87,28 @@ class Jar private constructor(
                 ): Method {
                   val parameterTypes = mutableListOf<TypeDescriptor>()
                   val returnType: TypeDescriptor
+                  var arity = 0
                   var i = 1
                   loop@ while (true) {
-                    parameterTypes += when (val char = descriptor[i]) {
-                      ')' -> break@loop
+                    when (val char = descriptor[i]) {
+                      '[' -> {
+                        arity++
+                        i++
+                      }
+                      ')' -> {
+                        check(arity == 0)
+                        break@loop
+                      }
                       'L' -> {
-                        val start = i
                         val end = descriptor.indexOf(';', startIndex = i)
+                        parameterTypes += TypeDescriptor(descriptor.substring(i, end + 1)).asArray(arity)
                         i = end + 1
-                        TypeDescriptor(descriptor.substring(start, end))
+                        arity = 0
                       }
                       else -> {
+                        parameterTypes += TypeDescriptor(char.toString()).asArray(arity)
                         i++
-                        TypeDescriptor(char.toString())
+                        arity = 0
                       }
                     }
                   }
