@@ -50,7 +50,7 @@ class Jar private constructor(
                       descriptor: String,
                       isInterface: Boolean
                     ) {
-                      val ownerType = TypeDescriptor("L$owner;")
+                      val ownerType = parseOwner(owner)
                       val referencedMethod = parseMethod(ownerType, name, descriptor)
                       referencedMembers += referencedMethod
                     }
@@ -61,9 +61,18 @@ class Jar private constructor(
                       name: String,
                       descriptor: String
                     ) {
-                      val ownerType = TypeDescriptor("L$owner;")
+                      val ownerType = parseOwner(owner)
                       val referencedField = Field(ownerType, name, TypeDescriptor(descriptor))
                       referencedMembers += referencedField
+                    }
+
+                    private fun parseOwner(owner: String): TypeDescriptor {
+                      val ownerDescriptor = if (owner.startsWith('[')) {
+                        owner
+                      } else {
+                        "L$owner;"
+                      }
+                      return TypeDescriptor(ownerDescriptor)
                     }
                   }
                 }
