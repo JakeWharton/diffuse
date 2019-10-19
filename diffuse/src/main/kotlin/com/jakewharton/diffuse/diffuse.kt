@@ -65,11 +65,11 @@ private class DiffuseCommand : CliktCommand(name = "diffuse") {
       help = "Mapping file produced by R8 or ProGuard.", metavar = "FILE")
       .path(exists = true, folderOkay = false, readable = true)
 
-  private val mode by option(help = "File type of OLD and NEW. Default is 'apk'.")
-      .switch("--apk" to Mode.Apk, "--aar" to Mode.Aar, "--aab" to Mode.Aab, "--jar" to Mode.Jar)
-      .default(Mode.Apk)
+  private val type by option(help = "File type of OLD and NEW. Default is 'apk'.")
+      .switch("--apk" to Type.Apk, "--aar" to Type.Aar, "--aab" to Type.Aab, "--jar" to Type.Jar)
+      .default(Type.Apk)
 
-  enum class Mode {
+  enum class Type {
     Apk, Aar, Aab, Jar
   }
 
@@ -78,17 +78,17 @@ private class DiffuseCommand : CliktCommand(name = "diffuse") {
     val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
     val newInput = new.asInput()
     val newMapping = newMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
-    val diff = when (mode) {
-      Mode.Apk -> {
+    val diff = when (type) {
+      Type.Apk -> {
         apkDiff(oldInput.toApk(), oldMapping, newInput.toApk(), newMapping)
       }
-      Mode.Aab -> {
+      Type.Aab -> {
         aabDiff(oldInput.toAab(), newInput.toAab())
       }
-      Mode.Aar -> {
+      Type.Aar -> {
         aarDiff(oldInput.toAar(), oldMapping, newInput.toAar(), newMapping)
       }
-      Mode.Jar -> {
+      Type.Jar -> {
         jarDiff(oldInput.toJar(), oldMapping, newInput.toJar(), newMapping)
       }
     }
