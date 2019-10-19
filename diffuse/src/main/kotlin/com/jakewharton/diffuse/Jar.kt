@@ -6,6 +6,7 @@ import com.jakewharton.diffuse.io.Input
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.FieldVisitor
+import org.objectweb.asm.Handle
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
@@ -53,6 +54,23 @@ class Jar private constructor(
                       val ownerType = parseOwner(owner)
                       val referencedMethod = parseMethod(ownerType, name, descriptor)
                       referencedMembers += referencedMethod
+                    }
+
+                    override fun visitInvokeDynamicInsn(
+                      name: String?,
+                      descriptor: String?,
+                      bootstrapMethodHandle: Handle,
+                      vararg bootstrapMethodArguments: Any?
+                    ) {
+                      val handlerOwner = parseOwner(bootstrapMethodHandle.owner)
+                      val handlerName = bootstrapMethodHandle.name
+                      val handlerDescriptor = bootstrapMethodHandle.desc
+                      val member = if (handlerDescriptor.startsWith('(')) {
+                        parseMethod(handlerOwner, handlerName, handlerDescriptor)
+                      } else {
+                        Field(handlerOwner, handlerName, TypeDescriptor(handlerDescriptor))
+                      }
+                      referencedMembers += member
                     }
 
                     override fun visitFieldInsn(
