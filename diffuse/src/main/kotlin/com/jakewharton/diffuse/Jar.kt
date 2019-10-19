@@ -95,35 +95,28 @@ class Jar private constructor(
                   descriptor: String
                 ): Method {
                   val parameterTypes = mutableListOf<TypeDescriptor>()
-                  val returnType: TypeDescriptor
-                  var arity = 0
                   var i = 1
-                  loop@ while (true) {
-                    when (val char = descriptor[i]) {
-                      '[' -> {
-                        arity++
-                        i++
-                      }
-                      ')' -> {
-                        check(arity == 0)
-                        break@loop
-                      }
-                      'L' -> {
-                        val end = descriptor.indexOf(';', startIndex = i)
-                        parameterTypes += TypeDescriptor(descriptor.substring(i, end + 1)).asArray(arity)
-                        i = end + 1
-                        arity = 0
-                      }
-                      else -> {
-                        parameterTypes += TypeDescriptor(char.toString()).asArray(arity)
-                        i++
-                        arity = 0
-                      }
+                  while (true) {
+                    if (descriptor[i] == ')') {
+                      break
                     }
+                    var typeIndex = i
+                    while (descriptor[typeIndex] == '[') {
+                      typeIndex++
+                    }
+                    val value = if (descriptor[typeIndex] == 'L') {
+                      val end = descriptor.indexOf(';', startIndex = i)
+                      descriptor.substring(startIndex = i, endIndex = end + 1)
+                    } else {
+                      descriptor.substring(startIndex = i, endIndex = typeIndex + 1)
+                    }
+                    parameterTypes += TypeDescriptor(value)
+                    i += value.length
                   }
-                  returnType = TypeDescriptor(descriptor.substring(i + 1))
+                  val returnType = TypeDescriptor(descriptor.substring(i + 1))
                   return Method(owner, name, parameterTypes, returnType)
                 }
+
               }, 0)
             }
 
