@@ -74,20 +74,22 @@ private class DiffuseCommand : CliktCommand(name = "diffuse") {
   }
 
   override fun run() {
+    val oldInput = old.asInput()
     val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
+    val newInput = new.asInput()
     val newMapping = newMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
     val diff = when (mode) {
       Mode.Apk -> {
-        apkDiff(old.asInput().toApk(), oldMapping, new.asInput().toApk(), newMapping)
+        apkDiff(oldInput.toApk(), oldMapping, newInput.toApk(), newMapping)
       }
       Mode.Aab -> {
-        aabDiff(old.asInput().toAab(), new.asInput().toAab())
+        aabDiff(oldInput.toAab(), newInput.toAab())
       }
       Mode.Aar -> {
-        aarDiff(old.asInput().toAar(), oldMapping, new.asInput().toAar(), newMapping)
+        aarDiff(oldInput.toAar(), oldMapping, newInput.toAar(), newMapping)
       }
       Mode.Jar -> {
-        jarDiff(old.asInput().toJar(), oldMapping, new.asInput().toJar(), newMapping)
+        jarDiff(oldInput.toJar(), oldMapping, newInput.toJar(), newMapping)
       }
     }
     println(diff.toTextReport())
