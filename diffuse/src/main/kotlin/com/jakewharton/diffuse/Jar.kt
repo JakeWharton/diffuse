@@ -2,13 +2,8 @@ package com.jakewharton.diffuse
 
 import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toJarFileType
 import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
+import com.jakewharton.diffuse.Class.Companion.toClass
 import com.jakewharton.diffuse.io.Input
-import org.objectweb.asm.ClassReader
-import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.FieldVisitor
-import org.objectweb.asm.Handle
-import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.Opcodes
 
 class Jar private constructor(
   override val filename: String?,
@@ -30,137 +25,16 @@ class Jar private constructor(
         zip.entries
             .filter { it.path.endsWith(".class") }
             .forEach { entry ->
-              val reader = ClassReader(entry.asInput().toByteArray())
-              val type = TypeDescriptor("L${reader.className};")
-              reader.accept(object : ClassVisitor(Opcodes.ASM7) {
-                override fun visitMethod(
-                  access: Int,
-                  name: String,
-                  descriptor: String,
-                  signature: String?,
-                  exceptions: Array<out String>?
-                ): MethodVisitor? {
-                  val method = parseMethod(type, name, descriptor)
-                  declaredMembers += method
-
-                  return object : MethodVisitor(Opcodes.ASM7) {
-                    override fun visitMethodInsn(
-                      opcode: Int,
-                      owner: String,
-                      name: String,
-                      descriptor: String,
-                      isInterface: Boolean
-                    ) {
-                      val ownerType = parseOwner(owner)
-                      val referencedMethod = parseMethod(ownerType, name, descriptor)
-                      referencedMembers += referencedMethod
-                    }
-
-                    override fun visitInvokeDynamicInsn(
-                      name: String?,
-                      descriptor: String?,
-                      bootstrapMethodHandle: Handle,
-                      vararg bootstrapMethodArguments: Any?
-                    ) {
-                      referencedMembers += parseHandle(bootstrapMethodHandle)
-
-                      if (bootstrapMethodHandle == lambdaMetaFactory) {
-                        // LambdaMetaFactory.metafactory accepts 6 arguments. The first 3 are
-                        // provided automatically and the latter 3 are supplied as the arguments to
-                        // this method. The second of those is a MethodHandle to the lambda
-                        // implementation which needs to be counted as a method reference.
-                        val implementationHandle = bootstrapMethodArguments[1] as Handle
-                        referencedMembers += parseHandle(implementationHandle)
-                      }
-                    }
-
-                    private fun parseHandle(bootstrapMethodHandle: Handle): Member {
-                      val handlerOwner = parseOwner(bootstrapMethodHandle.owner)
-                      val handlerName = bootstrapMethodHandle.name
-                      val handlerDescriptor = bootstrapMethodHandle.desc
-                      return if (handlerDescriptor.startsWith('(')) {
-                        parseMethod(handlerOwner, handlerName, handlerDescriptor)
-                      } else {
-                        Field(handlerOwner, handlerName, TypeDescriptor(handlerDescriptor))
-                      }
-                    }
-
-                    override fun visitFieldInsn(
-                      opcode: Int,
-                      owner: String,
-                      name: String,
-                      descriptor: String
-                    ) {
-                      val ownerType = parseOwner(owner)
-                      val referencedField = Field(ownerType, name, TypeDescriptor(descriptor))
-                      referencedMembers += referencedField
-                    }
-
-                    private fun parseOwner(owner: String): TypeDescriptor {
-                      val ownerDescriptor = if (owner.startsWith('[')) {
-                        owner
-                      } else {
-                        "L$owner;"
-                      }
-                      return TypeDescriptor(ownerDescriptor)
-                    }
-                  }
-                }
-
-                override fun visitField(
-                  access: Int,
-                  name: String,
-                  descriptor: String,
-                  signature: String?,
-                  value: Any?
-                ): FieldVisitor? {
-                  val field = Field(type, name, TypeDescriptor(descriptor))
-                  declaredMembers += field
-                  return null
-                }
-
-                private fun parseMethod(
-                  owner: TypeDescriptor,
-                  name: String,
-                  descriptor: String
-                ): Method {
-                  val parameterTypes = mutableListOf<TypeDescriptor>()
-                  var i = 1
-                  while (true) {
-                    if (descriptor[i] == ')') {
-                      break
-                    }
-                    var typeIndex = i
-                    while (descriptor[typeIndex] == '[') {
-                      typeIndex++
-                    }
-                    val end = if (descriptor[typeIndex] == 'L') {
-                      descriptor.indexOf(';', startIndex = typeIndex)
-                    } else {
-                      typeIndex
-                    }
-                    val parameterDescriptor = descriptor.substring(i, end + 1)
-                    parameterTypes += TypeDescriptor(parameterDescriptor)
-                    i += parameterDescriptor.length
-                  }
-                  val returnType = TypeDescriptor(descriptor.substring(i + 1))
-                  return Method(owner, name, parameterTypes, returnType)
-                }
-              }, 0)
+              val cls = entry.asInput().toClass()
+              declaredMembers += cls.declaredMembers
+              referencedMembers += cls.referencedMembers
             }
 
         // Declared methods are likely to reference other declared members.
         referencedMembers -= declaredMembers
 
-        return Jar(name, files, declaredMembers.sorted(), referencedMembers.toList().sorted())
+        return Jar(name, files, declaredMembers.sorted(), referencedMembers.sorted())
       }
     }
   }
 }
-
-private val lambdaMetaFactory = Handle(
-    Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory",
-    "metafactory",
-    "(Ljava/lang/invoke/MethodHandles\$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
-    false
-)
