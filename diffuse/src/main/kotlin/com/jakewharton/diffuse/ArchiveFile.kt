@@ -6,7 +6,8 @@ data class ArchiveFile(
   val path: String,
   val type: Type,
   val size: Size,
-  val uncompressedSize: Size
+  val uncompressedSize: Size,
+  val isCompressed: Boolean
 ) {
   enum class Type {
     Dex,
