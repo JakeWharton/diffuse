@@ -62,15 +62,27 @@ class Jar private constructor(
                       bootstrapMethodHandle: Handle,
                       vararg bootstrapMethodArguments: Any?
                     ) {
+                      referencedMembers += parseHandle(bootstrapMethodHandle)
+
+                      if (bootstrapMethodHandle == lambdaMetaFactory) {
+                        // LambdaMetaFactory.metafactory accepts 6 arguments. The first 3 are
+                        // provided automatically and the latter 3 are supplied as the arguments to
+                        // this method. The second of those is a MethodHandle to the lambda
+                        // implementation which needs to be counted as a method reference.
+                        val implementationHandle = bootstrapMethodArguments[1] as Handle
+                        referencedMembers += parseHandle(implementationHandle)
+                      }
+                    }
+
+                    private fun parseHandle(bootstrapMethodHandle: Handle): Member {
                       val handlerOwner = parseOwner(bootstrapMethodHandle.owner)
                       val handlerName = bootstrapMethodHandle.name
                       val handlerDescriptor = bootstrapMethodHandle.desc
-                      val member = if (handlerDescriptor.startsWith('(')) {
+                      return if (handlerDescriptor.startsWith('(')) {
                         parseMethod(handlerOwner, handlerName, handlerDescriptor)
                       } else {
                         Field(handlerOwner, handlerName, TypeDescriptor(handlerDescriptor))
                       }
-                      referencedMembers += member
                     }
 
                     override fun visitFieldInsn(
@@ -134,7 +146,6 @@ class Jar private constructor(
                   val returnType = TypeDescriptor(descriptor.substring(i + 1))
                   return Method(owner, name, parameterTypes, returnType)
                 }
-
               }, 0)
             }
 
@@ -146,3 +157,10 @@ class Jar private constructor(
     }
   }
 }
+
+private val lambdaMetaFactory = Handle(
+    Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory",
+    "metafactory",
+    "(Ljava/lang/invoke/MethodHandles\$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
+    false
+)
