@@ -137,139 +137,139 @@ class CellAlignmentTest {
       |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │ XXX│ XXX│     │     │ XXX │ XXX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopCenter   │ X │ X │   │   │ X  │ X  │    │    │ X  │ X  │    │    │ X   │ X   │     │     │
-      |            │   │   │ X │ X │    │    │ X  │ X  │    │    │ X  │ X  │     │     │ X   │ X   │
+      |TopCenter   │ X │ X │   │   │ X  │ X  │    │    │  X │  X │    │    │  X  │  X  │     │     │
+      |            │   │   │ X │ X │    │    │ X  │ X  │    │    │  X │  X │     │     │  X  │  X  │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopCenter   │ X │ X │   │   │ X  │ X  │    │    │ X  │ X  │    │    │ X   │ X   │     │     │
-      |            │ X │ X │ X │ X │ X  │ X  │ X  │ X  │ X  │ X  │ X  │ X  │ X   │ X   │ X   │ X   │
-      |            │   │   │ X │ X │    │    │ X  │ X  │    │    │ X  │ X  │     │     │ X   │ X   │
+      |TopCenter   │ X │ X │   │   │ X  │ X  │    │    │  X │  X │    │    │  X  │  X  │     │     │
+      |            │ X │ X │ X │ X │ X  │ X  │ X  │ X  │  X │  X │  X │  X │  X  │  X  │  X  │  X  │
+      |            │   │   │ X │ X │    │    │ X  │ X  │    │    │  X │  X │     │     │  X  │  X  │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopCenter   │XX │XX │   │   │XX  │XX  │    │    │XX  │XX  │    │    │XX   │XX   │     │     │
-      |            │   │   │XX │XX │    │    │XX  │XX  │    │    │XX  │XX  │     │     │XX   │XX   │
+      |TopCenter   │XX │XX │   │   │XX  │XX  │    │    │ XX │ XX │    │    │ XX  │ XX  │     │     │
+      |            │   │   │XX │XX │    │    │XX  │XX  │    │    │ XX │ XX │     │     │ XX  │ XX  │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopCenter   │XX │XX │   │   │XX  │XX  │    │    │XX  │XX  │    │    │XX   │XX   │     │     │
-      |            │XX │XX │XX │XX │XX  │XX  │XX  │XX  │XX  │XX  │XX  │XX  │XX   │XX   │XX   │XX   │
-      |            │   │   │XX │XX │    │    │XX  │XX  │    │    │XX  │XX  │     │     │XX   │XX   │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopCenter   │XXX│XXX│   │   │XXX │XXX │    │    │XXX │XXX │    │    │XXX  │XXX  │     │     │
-      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │XXX │XXX │     │     │XXX  │XXX  │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopCenter   │XXX│XXX│   │   │XXX │XXX │    │    │XXX │XXX │    │    │XXX  │XXX  │     │     │
-      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │XXX │XXX │XXX │XXX │XXX  │XXX  │XXX  │XXX  │
-      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │XXX │XXX │     │     │XXX  │XXX  │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │  X│  X│   │   │  X │  X │    │    │   X│   X│    │    │   X │   X │     │     │
-      |            │   │   │  X│  X│    │    │  X │  X │    │    │   X│   X│     │     │   X │   X │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │  X│  X│   │   │  X │  X │    │    │   X│   X│    │    │   X │   X │     │     │
-      |            │  X│  X│  X│  X│  X │  X │  X │  X │   X│   X│   X│   X│   X │   X │   X │   X │
-      |            │   │   │  X│  X│    │    │  X │  X │    │    │   X│   X│     │     │   X │   X │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │ XX│ XX│   │   │ XX │ XX │    │    │  XX│  XX│    │    │  XX │  XX │     │     │
-      |            │   │   │ XX│ XX│    │    │ XX │ XX │    │    │  XX│  XX│     │     │  XX │  XX │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │ XX│ XX│   │   │ XX │ XX │    │    │  XX│  XX│    │    │  XX │  XX │     │     │
-      |            │ XX│ XX│ XX│ XX│ XX │ XX │ XX │ XX │  XX│  XX│  XX│  XX│  XX │  XX │  XX │  XX │
-      |            │   │   │ XX│ XX│    │    │ XX │ XX │    │    │  XX│  XX│     │     │  XX │  XX │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │XXX│XXX│   │   │XXX │XXX │    │    │ XXX│ XXX│    │    │ XXX │ XXX │     │     │
-      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │ XXX│ XXX│     │     │ XXX │ XXX │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |TopRight    │XXX│XXX│   │   │XXX │XXX │    │    │ XXX│ XXX│    │    │ XXX │ XXX │     │     │
-      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
-      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │ XXX│ XXX│     │     │ XXX │ XXX │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleLeft  │   │X  │X  │X  │    │X   │X   │X   │    │ X  │ X  │ X  │     │ X   │ X   │ X   │
-      |            │X  │   │   │   │X   │    │    │    │ X  │    │    │    │ X   │     │     │     │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleLeft  │   │X  │X  │X  │    │X   │X   │X   │    │ X  │ X  │ X  │     │ X   │ X   │ X   │
-      |            │X  │X  │X  │X  │X   │X   │X   │X   │ X  │ X  │ X  │ X  │ X   │ X   │ X   │ X   │
-      |            │X  │   │   │   │X   │    │    │    │ X  │    │    │    │ X   │     │     │     │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleLeft  │   │XX │XX │XX │    │XX  │XX  │XX  │    │ XX │ XX │ XX │     │ XX  │ XX  │ XX  │
-      |            │XX │   │   │   │XX  │    │    │    │ XX │    │    │    │ XX  │     │     │     │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleLeft  │   │XX │XX │XX │    │XX  │XX  │XX  │    │ XX │ XX │ XX │     │ XX  │ XX  │ XX  │
+      |TopCenter   │XX │XX │   │   │XX  │XX  │    │    │ XX │ XX │    │    │ XX  │ XX  │     │     │
       |            │XX │XX │XX │XX │XX  │XX  │XX  │XX  │ XX │ XX │ XX │ XX │ XX  │ XX  │ XX  │ XX  │
-      |            │XX │   │   │   │XX  │    │    │    │ XX │    │    │    │ XX  │     │     │     │
+      |            │   │   │XX │XX │    │    │XX  │XX  │    │    │ XX │ XX │     │     │ XX  │ XX  │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleLeft  │   │XXX│XXX│XXX│    │XXX │XXX │XXX │    │ XXX│ XXX│ XXX│     │ XXX │ XXX │ XXX │
-      |            │XXX│   │   │   │XXX │    │    │    │ XXX│    │    │    │ XXX │     │     │     │
+      |TopCenter   │XXX│XXX│   │   │XXX │XXX │    │    │ XXX│ XXX│    │    │ XXX │ XXX │     │     │
+      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │ XXX│ XXX│     │     │ XXX │ XXX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleLeft  │   │XXX│XXX│XXX│    │XXX │XXX │XXX │    │ XXX│ XXX│ XXX│     │ XXX │ XXX │ XXX │
+      |TopCenter   │XXX│XXX│   │   │XXX │XXX │    │    │ XXX│ XXX│    │    │ XXX │ XXX │     │     │
       |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
-      |            │XXX│   │   │   │XXX │    │    │    │ XXX│    │    │    │ XXX │     │     │     │
+      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │ XXX│ XXX│     │     │ XXX │ XXX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleCenter│   │ X │ X │ X │    │ X  │ X  │ X  │    │ X  │ X  │ X  │     │ X   │ X   │ X   │
-      |            │ X │   │   │   │ X  │    │    │    │ X  │    │    │    │ X   │     │     │     │
+      |TopRight    │  X│  X│   │   │  X │  X │    │    │   X│   X│    │    │   X │   X │     │     │
+      |            │   │   │  X│  X│    │    │  X │  X │    │    │   X│   X│     │     │   X │   X │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleCenter│   │ X │ X │ X │    │ X  │ X  │ X  │    │ X  │ X  │ X  │     │ X   │ X   │ X   │
-      |            │ X │ X │ X │ X │ X  │ X  │ X  │ X  │ X  │ X  │ X  │ X  │ X   │ X   │ X   │ X   │
-      |            │ X │   │   │   │ X  │    │    │    │ X  │    │    │    │ X   │     │     │     │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleCenter│   │XX │XX │XX │    │XX  │XX  │XX  │    │XX  │XX  │XX  │     │XX   │XX   │XX   │
-      |            │XX │   │   │   │XX  │    │    │    │XX  │    │    │    │XX   │     │     │     │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleCenter│   │XX │XX │XX │    │XX  │XX  │XX  │    │XX  │XX  │XX  │     │XX   │XX   │XX   │
-      |            │XX │XX │XX │XX │XX  │XX  │XX  │XX  │XX  │XX  │XX  │XX  │XX   │XX   │XX   │XX   │
-      |            │XX │   │   │   │XX  │    │    │    │XX  │    │    │    │XX   │     │     │     │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleCenter│   │XXX│XXX│XXX│    │XXX │XXX │XXX │    │XXX │XXX │XXX │     │XXX  │XXX  │XXX  │
-      |            │XXX│   │   │   │XXX │    │    │    │XXX │    │    │    │XXX  │     │     │     │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleCenter│   │XXX│XXX│XXX│    │XXX │XXX │XXX │    │XXX │XXX │XXX │     │XXX  │XXX  │XXX  │
-      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │XXX │XXX │XXX │XXX │XXX  │XXX  │XXX  │XXX  │
-      |            │XXX│   │   │   │XXX │    │    │    │XXX │    │    │    │XXX  │     │     │     │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │  X│  X│  X│    │  X │  X │  X │    │   X│   X│   X│     │   X │   X │   X │
-      |            │  X│   │   │   │  X │    │    │    │   X│    │    │    │   X │     │     │     │
-      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │  X│  X│  X│    │  X │  X │  X │    │   X│   X│   X│     │   X │   X │   X │
+      |TopRight    │  X│  X│   │   │  X │  X │    │    │   X│   X│    │    │   X │   X │     │     │
       |            │  X│  X│  X│  X│  X │  X │  X │  X │   X│   X│   X│   X│   X │   X │   X │   X │
-      |            │  X│   │   │   │  X │    │    │    │   X│    │    │    │   X │     │     │     │
+      |            │   │   │  X│  X│    │    │  X │  X │    │    │   X│   X│     │     │   X │   X │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │ XX│ XX│ XX│    │ XX │ XX │ XX │    │  XX│  XX│  XX│     │  XX │  XX │  XX │
-      |            │ XX│   │   │   │ XX │    │    │    │  XX│    │    │    │  XX │     │     │     │
+      |TopRight    │ XX│ XX│   │   │ XX │ XX │    │    │  XX│  XX│    │    │  XX │  XX │     │     │
+      |            │   │   │ XX│ XX│    │    │ XX │ XX │    │    │  XX│  XX│     │     │  XX │  XX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │ XX│ XX│ XX│    │ XX │ XX │ XX │    │  XX│  XX│  XX│     │  XX │  XX │  XX │
+      |TopRight    │ XX│ XX│   │   │ XX │ XX │    │    │  XX│  XX│    │    │  XX │  XX │     │     │
       |            │ XX│ XX│ XX│ XX│ XX │ XX │ XX │ XX │  XX│  XX│  XX│  XX│  XX │  XX │  XX │  XX │
-      |            │ XX│   │   │   │ XX │    │    │    │  XX│    │    │    │  XX │     │     │     │
+      |            │   │   │ XX│ XX│    │    │ XX │ XX │    │    │  XX│  XX│     │     │  XX │  XX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │XXX│XXX│XXX│    │XXX │XXX │XXX │    │ XXX│ XXX│ XXX│     │ XXX │ XXX │ XXX │
-      |            │XXX│   │   │   │XXX │    │    │    │ XXX│    │    │    │ XXX │     │     │     │
+      |TopRight    │XXX│XXX│   │   │XXX │XXX │    │    │ XXX│ XXX│    │    │ XXX │ XXX │     │     │
+      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │ XXX│ XXX│     │     │ XXX │ XXX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
-      |MiddleRight │   │XXX│XXX│XXX│    │XXX │XXX │XXX │    │ XXX│ XXX│ XXX│     │ XXX │ XXX │ XXX │
+      |TopRight    │XXX│XXX│   │   │XXX │XXX │    │    │ XXX│ XXX│    │    │ XXX │ XXX │     │     │
       |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
-      |            │XXX│   │   │   │XXX │    │    │    │ XXX│    │    │    │ XXX │     │     │     │
+      |            │   │   │XXX│XXX│    │    │XXX │XXX │    │    │ XXX│ XXX│     │     │ XXX │ XXX │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleLeft  │   │X  │   │   │    │X   │    │    │    │ X  │    │    │     │ X   │     │     │
+      |            │X  │   │X  │X  │X   │    │X   │X   │ X  │    │ X  │ X  │ X   │     │ X   │ X   │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleLeft  │   │X  │   │   │    │X   │    │    │    │ X  │    │    │     │ X   │     │     │
+      |            │X  │X  │X  │X  │X   │X   │X   │X   │ X  │ X  │ X  │ X  │ X   │ X   │ X   │ X   │
+      |            │X  │   │X  │X  │X   │    │X   │X   │ X  │    │ X  │ X  │ X   │     │ X   │ X   │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleLeft  │   │XX │   │   │    │XX  │    │    │    │ XX │    │    │     │ XX  │     │     │
+      |            │XX │   │XX │XX │XX  │    │XX  │XX  │ XX │    │ XX │ XX │ XX  │     │ XX  │ XX  │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleLeft  │   │XX │   │   │    │XX  │    │    │    │ XX │    │    │     │ XX  │     │     │
+      |            │XX │XX │XX │XX │XX  │XX  │XX  │XX  │ XX │ XX │ XX │ XX │ XX  │ XX  │ XX  │ XX  │
+      |            │XX │   │XX │XX │XX  │    │XX  │XX  │ XX │    │ XX │ XX │ XX  │     │ XX  │ XX  │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleLeft  │   │XXX│   │   │    │XXX │    │    │    │ XXX│    │    │     │ XXX │     │     │
+      |            │XXX│   │XXX│XXX│XXX │    │XXX │XXX │ XXX│    │ XXX│ XXX│ XXX │     │ XXX │ XXX │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleLeft  │   │XXX│   │   │    │XXX │    │    │    │ XXX│    │    │     │ XXX │     │     │
+      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
+      |            │XXX│   │XXX│XXX│XXX │    │XXX │XXX │ XXX│    │ XXX│ XXX│ XXX │     │ XXX │ XXX │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleCenter│   │ X │   │   │    │ X  │    │    │    │  X │    │    │     │  X  │     │     │
+      |            │ X │   │ X │ X │ X  │    │ X  │ X  │  X │    │  X │  X │  X  │     │  X  │  X  │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleCenter│   │ X │   │   │    │ X  │    │    │    │  X │    │    │     │  X  │     │     │
+      |            │ X │ X │ X │ X │ X  │ X  │ X  │ X  │  X │  X │  X │  X │  X  │  X  │  X  │  X  │
+      |            │ X │   │ X │ X │ X  │    │ X  │ X  │  X │    │  X │  X │  X  │     │  X  │  X  │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleCenter│   │XX │   │   │    │XX  │    │    │    │ XX │    │    │     │ XX  │     │     │
+      |            │XX │   │XX │XX │XX  │    │XX  │XX  │ XX │    │ XX │ XX │ XX  │     │ XX  │ XX  │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleCenter│   │XX │   │   │    │XX  │    │    │    │ XX │    │    │     │ XX  │     │     │
+      |            │XX │XX │XX │XX │XX  │XX  │XX  │XX  │ XX │ XX │ XX │ XX │ XX  │ XX  │ XX  │ XX  │
+      |            │XX │   │XX │XX │XX  │    │XX  │XX  │ XX │    │ XX │ XX │ XX  │     │ XX  │ XX  │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleCenter│   │XXX│   │   │    │XXX │    │    │    │ XXX│    │    │     │ XXX │     │     │
+      |            │XXX│   │XXX│XXX│XXX │    │XXX │XXX │ XXX│    │ XXX│ XXX│ XXX │     │ XXX │ XXX │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleCenter│   │XXX│   │   │    │XXX │    │    │    │ XXX│    │    │     │ XXX │     │     │
+      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
+      |            │XXX│   │XXX│XXX│XXX │    │XXX │XXX │ XXX│    │ XXX│ XXX│ XXX │     │ XXX │ XXX │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleRight │   │  X│   │   │    │  X │    │    │    │   X│    │    │     │   X │     │     │
+      |            │  X│   │  X│  X│  X │    │  X │  X │   X│    │   X│   X│   X │     │   X │   X │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleRight │   │  X│   │   │    │  X │    │    │    │   X│    │    │     │   X │     │     │
+      |            │  X│  X│  X│  X│  X │  X │  X │  X │   X│   X│   X│   X│   X │   X │   X │   X │
+      |            │  X│   │  X│  X│  X │    │  X │  X │   X│    │   X│   X│   X │     │   X │   X │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleRight │   │ XX│   │   │    │ XX │    │    │    │  XX│    │    │     │  XX │     │     │
+      |            │ XX│   │ XX│ XX│ XX │    │ XX │ XX │  XX│    │  XX│  XX│  XX │     │  XX │  XX │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleRight │   │ XX│   │   │    │ XX │    │    │    │  XX│    │    │     │  XX │     │     │
+      |            │ XX│ XX│ XX│ XX│ XX │ XX │ XX │ XX │  XX│  XX│  XX│  XX│  XX │  XX │  XX │  XX │
+      |            │ XX│   │ XX│ XX│ XX │    │ XX │ XX │  XX│    │  XX│  XX│  XX │     │  XX │  XX │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleRight │   │XXX│   │   │    │XXX │    │    │    │ XXX│    │    │     │ XXX │     │     │
+      |            │XXX│   │XXX│XXX│XXX │    │XXX │XXX │ XXX│    │ XXX│ XXX│ XXX │     │ XXX │ XXX │
+      |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
+      |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
+      |MiddleRight │   │XXX│   │   │    │XXX │    │    │    │ XXX│    │    │     │ XXX │     │     │
+      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
+      |            │XXX│   │XXX│XXX│XXX │    │XXX │XXX │ XXX│    │ XXX│ XXX│ XXX │     │ XXX │ XXX │
       |            │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomLeft  │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
@@ -300,31 +300,31 @@ class CellAlignmentTest {
       |            │XXX│   │XXX│   │XXX │    │XXX │    │ XXX│    │ XXX│    │ XXX │     │ XXX │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomCenter│   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │ X │   │ X │    │ X  │    │ X  │    │ X  │    │ X  │     │ X   │     │ X   │
-      |            │ X │   │ X │   │ X  │    │ X  │    │ X  │    │ X  │    │ X   │     │ X   │     │
+      |            │   │ X │   │ X │    │ X  │    │ X  │    │  X │    │  X │     │  X  │     │  X  │
+      |            │ X │   │ X │   │ X  │    │ X  │    │  X │    │  X │    │  X  │     │  X  │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomCenter│   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │ X │   │ X │    │ X  │    │ X  │    │ X  │    │ X  │     │ X   │     │ X   │
-      |            │ X │ X │ X │ X │ X  │ X  │ X  │ X  │ X  │ X  │ X  │ X  │ X   │ X   │ X   │ X   │
-      |            │ X │   │ X │   │ X  │    │ X  │    │ X  │    │ X  │    │ X   │     │ X   │     │
+      |            │   │ X │   │ X │    │ X  │    │ X  │    │  X │    │  X │     │  X  │     │  X  │
+      |            │ X │ X │ X │ X │ X  │ X  │ X  │ X  │  X │  X │  X │  X │  X  │  X  │  X  │  X  │
+      |            │ X │   │ X │   │ X  │    │ X  │    │  X │    │  X │    │  X  │     │  X  │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomCenter│   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │XX │   │XX │    │XX  │    │XX  │    │XX  │    │XX  │     │XX   │     │XX   │
-      |            │XX │   │XX │   │XX  │    │XX  │    │XX  │    │XX  │    │XX   │     │XX   │     │
+      |            │   │XX │   │XX │    │XX  │    │XX  │    │ XX │    │ XX │     │ XX  │     │ XX  │
+      |            │XX │   │XX │   │XX  │    │XX  │    │ XX │    │ XX │    │ XX  │     │ XX  │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomCenter│   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │XX │   │XX │    │XX  │    │XX  │    │XX  │    │XX  │     │XX   │     │XX   │
-      |            │XX │XX │XX │XX │XX  │XX  │XX  │XX  │XX  │XX  │XX  │XX  │XX   │XX   │XX   │XX   │
-      |            │XX │   │XX │   │XX  │    │XX  │    │XX  │    │XX  │    │XX   │     │XX   │     │
+      |            │   │XX │   │XX │    │XX  │    │XX  │    │ XX │    │ XX │     │ XX  │     │ XX  │
+      |            │XX │XX │XX │XX │XX  │XX  │XX  │XX  │ XX │ XX │ XX │ XX │ XX  │ XX  │ XX  │ XX  │
+      |            │XX │   │XX │   │XX  │    │XX  │    │ XX │    │ XX │    │ XX  │     │ XX  │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomCenter│   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │XXX│   │XXX│    │XXX │    │XXX │    │XXX │    │XXX │     │XXX  │     │XXX  │
-      |            │XXX│   │XXX│   │XXX │    │XXX │    │XXX │    │XXX │    │XXX  │     │XXX  │     │
+      |            │   │XXX│   │XXX│    │XXX │    │XXX │    │ XXX│    │ XXX│     │ XXX │     │ XXX │
+      |            │XXX│   │XXX│   │XXX │    │XXX │    │ XXX│    │ XXX│    │ XXX │     │ XXX │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomCenter│   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
-      |            │   │XXX│   │XXX│    │XXX │    │XXX │    │XXX │    │XXX │     │XXX  │     │XXX  │
-      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │XXX │XXX │XXX │XXX │XXX  │XXX  │XXX  │XXX  │
-      |            │XXX│   │XXX│   │XXX │    │XXX │    │XXX │    │XXX │    │XXX  │     │XXX  │     │
+      |            │   │XXX│   │XXX│    │XXX │    │XXX │    │ XXX│    │ XXX│     │ XXX │     │ XXX │
+      |            │XXX│XXX│XXX│XXX│XXX │XXX │XXX │XXX │ XXX│ XXX│ XXX│ XXX│ XXX │ XXX │ XXX │ XXX │
+      |            │XXX│   │XXX│   │XXX │    │XXX │    │ XXX│    │ XXX│    │ XXX │     │ XXX │     │
       |            ├───┼───┼───┼───┼────┼────┼────┼────┼────┼────┼────┼────┼─────┼─────┼─────┼─────┤
       |BottomRight │   │   │   │   │    │    │    │    │    │    │    │    │     │     │     │     │
       |            │   │  X│   │  X│    │  X │    │  X │    │   X│    │   X│     │   X │     │   X │

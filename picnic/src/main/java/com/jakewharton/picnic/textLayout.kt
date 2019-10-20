@@ -19,15 +19,18 @@ interface TextLayout {
 }
 
 internal class SimpleLayout(private val cell: PositionedCell) : TextLayout {
+  private val leftPadding = cell.canonicalStyle?.paddingLeft ?: 0
+  private val topPadding = cell.canonicalStyle?.paddingTop ?: 0
+
   override fun measureWidth(): Int {
-    return (cell.canonicalStyle?.paddingLeft ?: 0) +
+    return leftPadding +
         (cell.canonicalStyle?.paddingRight ?: 0) +
         (cell.cell.content.split('\n').map { it.length }.max() ?: 0)
   }
 
   override fun measureHeight(): Int {
     return 1 +
-        (cell.canonicalStyle?.paddingTop ?: 0) +
+        topPadding +
         (cell.canonicalStyle?.paddingBottom ?: 0) +
         cell.cell.content.count { it == '\n' }
   }
@@ -38,18 +41,14 @@ internal class SimpleLayout(private val cell: PositionedCell) : TextLayout {
 
     val alignment = cell.canonicalStyle?.alignment ?: TopLeft
     val left = when (alignment) {
-      TopLeft, MiddleLeft, BottomLeft -> (cell.canonicalStyle?.paddingLeft ?: 0)
-      TopCenter, MiddleCenter, BottomCenter -> (canvas.width - width) / 2
-      TopRight, MiddleRight, BottomRight -> {
-        canvas.width - width + (cell.canonicalStyle?.paddingLeft ?: 0)
-      }
+      TopLeft, MiddleLeft, BottomLeft -> leftPadding
+      TopCenter, MiddleCenter, BottomCenter -> ((canvas.width - width) / 2) + leftPadding
+      TopRight, MiddleRight, BottomRight -> canvas.width - width + leftPadding
     }
     val top = when (alignment) {
-      TopLeft, TopCenter, TopRight -> (cell.canonicalStyle?.paddingTop ?: 0)
-      MiddleLeft, MiddleCenter, MiddleRight -> (canvas.height - height) / 2
-      BottomLeft, BottomCenter, BottomRight -> {
-        canvas.height - height + (cell.canonicalStyle?.paddingTop ?: 0)
-      }
+      TopLeft, TopCenter, TopRight -> topPadding
+      MiddleLeft, MiddleCenter, MiddleRight -> ((canvas.height - height) / 2) + topPadding
+      BottomLeft, BottomCenter, BottomRight -> canvas.height - height + topPadding
     }
 
     var x = left
