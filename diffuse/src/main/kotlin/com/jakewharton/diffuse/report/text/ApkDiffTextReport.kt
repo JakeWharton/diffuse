@@ -24,6 +24,15 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
         }
       }.toString())
       appendln()
+      if (apkDiff.lintMessages.isNotEmpty()) {
+        appendln("NOTICE:")
+        apkDiff.lintMessages.forEach {
+          append(" · ")
+          appendln(it)
+        }
+        appendln()
+        appendln()
+      }
       appendln(apkDiff.archive.toSummaryTable("APK", Type.APK_TYPES,
           skipIfEmptyTypes = setOf(Type.Native)))
       appendln()
