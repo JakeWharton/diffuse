@@ -28,8 +28,7 @@ internal class ArchiveFilesDiff(
     enum class Type { Added, Removed, Changed }
   }
 
-  val changes: List<Change>
-  init {
+  val changes: List<Change> = run {
     val added = newFiles.mapNotNull { (path, newFile) ->
       if (path !in oldFiles) {
         Change(path, newFile.size, newFile.size, newFile.uncompressedSize, newFile.uncompressedSize,
@@ -56,7 +55,8 @@ internal class ArchiveFilesDiff(
         null
       }
     }
-    changes = (added + removed + changed).sortedByDescending { it.sizeDiff.absoluteValue }
+
+    (added + removed + changed).sortedByDescending { it.sizeDiff.absoluteValue }
   }
 
   val changed = oldFiles != newFiles
