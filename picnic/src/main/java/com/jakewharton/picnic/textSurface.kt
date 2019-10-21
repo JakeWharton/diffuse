@@ -36,22 +36,29 @@ interface TextCanvas {
   operator fun get(row: Int, column: Int): Char
 
   fun clip(left: Int, right: Int, top: Int, bottom: Int): TextCanvas {
-    val outer = this
-    return object : TextCanvas {
-      override val width = right - left
-      override val height = bottom - top
+    return ClippedTextCanvas(this, left, right, top, bottom)
+  }
+}
 
-      override fun set(row: Int, column: Int, char: Char) {
-        require(row in 0 until height) { "Row $row not in range [0, $height)" }
-        require(column in 0 until width) { "Column $column not in range [0, $width)" }
-        outer[top + row, left + column] = char
-      }
+private class ClippedTextCanvas(
+  private val canvas: TextCanvas,
+  private val left: Int,
+  right: Int,
+  private val top: Int,
+  bottom: Int
+) : TextCanvas {
+  override val width = right - left
+  override val height = bottom - top
 
-      override fun get(row: Int, column: Int): Char {
-        require(row in 0 until height) { "Row $row not in range [0, $height)" }
-        require(column in 0 until width) { "Column $column not in range [0, $width)" }
-        return outer[top + row, left + column]
-      }
-    }
+  override fun set(row: Int, column: Int, char: Char) {
+    require(row in 0 until height) { "Row $row not in range [0, $height)" }
+    require(column in 0 until width) { "Column $column not in range [0, $width)" }
+    canvas[top + row, left + column] = char
+  }
+
+  override fun get(row: Int, column: Int): Char {
+    require(row in 0 until height) { "Row $row not in range [0, $height)" }
+    require(column in 0 until width) { "Column $column not in range [0, $width)" }
+    return canvas[top + row, left + column]
   }
 }
