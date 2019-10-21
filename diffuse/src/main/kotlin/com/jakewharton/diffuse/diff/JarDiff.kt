@@ -74,7 +74,6 @@ internal fun JarDiff.toSummaryTable() = diffuseTable {
   }
 }.renderText()
 
-
 internal fun JarDiff.toDetailReport() = buildString {
   // TODO appendComponentDiff("STRINGS", strings)
   // TODO appendComponentDiff("TYPES", types)

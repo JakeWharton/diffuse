@@ -1,10 +1,10 @@
 package com.jakewharton.diffuse
 
 import com.android.dex.ClassDef
+import com.android.dex.Dex as AndroidDex
 import com.android.dex.FieldId
 import com.android.dex.MethodId
 import com.jakewharton.diffuse.io.Input
-import com.android.dex.Dex as AndroidDex
 
 class Dex private constructor(
   val strings: List<String>,

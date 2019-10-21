@@ -3,7 +3,7 @@ package com.jakewharton.picnic
 data class Table(
   val header: Header? = null,
   val body: Body,
-  val footer: Footer? =  null,
+  val footer: Footer? = null,
   val cellStyle: CellStyle? = null,
   val tableStyle: TableStyle? = null
 ) {
@@ -112,12 +112,12 @@ data class Header(
 data class Body(
   override val rows: List<Row>,
   override val cellStyle: CellStyle? = null
-): TableSection
+) : TableSection
 
 data class Footer(
   override val rows: List<Row>,
   override val cellStyle: CellStyle? = null
-): TableSection
+) : TableSection
 
 data class Row(val cells: List<Cell>, val cellStyle: CellStyle? = null)
 

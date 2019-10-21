@@ -9,14 +9,14 @@ import com.jakewharton.diffuse.exists
 import com.jakewharton.diffuse.inputStream
 import com.jakewharton.diffuse.io.Input.Companion.asInput
 import com.jakewharton.diffuse.readByteString
-import okio.ByteString
-import okio.utf8Size
 import java.io.Closeable
 import java.io.FileNotFoundException
 import java.nio.file.FileSystem
 import java.nio.file.Path
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
+import okio.ByteString
+import okio.utf8Size
 
 interface Zip : Closeable {
   val entries: List<Entry>

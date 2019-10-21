@@ -61,9 +61,9 @@ class CellAlignmentTest {
     val table = table {
       for (alignment in arrayOf<TextAlignment?>(null) + TextAlignment.values()) {
         for (contentWidth in 1..3) {
-          if (alignment == null && contentWidth != 1) continue;
+          if (alignment == null && contentWidth != 1) continue
           for (contentHeight in 1..2) {
-            if (alignment == null && contentHeight != 1) continue;
+            if (alignment == null && contentHeight != 1) continue
             row {
               cell(alignment ?: "padding >\n\nalignment\n    v")
               for (paddingLeft in 0..1) {

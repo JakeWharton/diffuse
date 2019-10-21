@@ -4,10 +4,6 @@ import com.android.apksig.util.DataSource
 import com.android.apksig.util.DataSources
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
 import com.jakewharton.diffuse.io.Input
-import okio.Buffer
-import okio.BufferedSource
-import okio.ByteString
-import okio.ByteString.Companion.toByteString
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
@@ -17,6 +13,9 @@ import java.nio.file.OpenOption
 import java.nio.file.Path
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
+import okio.Buffer
+import okio.ByteString
+import okio.ByteString.Companion.toByteString
 
 internal fun InputStream.asZip(charset: Charset = Charsets.UTF_8) = ZipInputStream(this, charset)
 internal fun InputStream.readByteString() = readBytes().toByteString()

@@ -162,7 +162,7 @@ private class CellBuilder private constructor(
   private val cellStyleBuilder: CellStyleBuilder
 ) : CellDsl, CellStyleDsl by cellStyleBuilder {
 
-  constructor(content: Any?): this(content, CellStyleBuilder())
+  constructor(content: Any?) : this(content, CellStyleBuilder())
 
   override var columnSpan: Int = 1
   override var rowSpan: Int = 1

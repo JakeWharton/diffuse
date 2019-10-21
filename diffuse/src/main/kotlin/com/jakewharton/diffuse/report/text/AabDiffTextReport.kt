@@ -1,8 +1,8 @@
 package com.jakewharton.diffuse.report.text
 
 import com.jakewharton.diffuse.diff.AabDiff
-import com.jakewharton.diffuse.report.DiffReport
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.report.DiffReport
 
 internal class AabDiffTextReport(private val jarDiff: AabDiff) : DiffReport {
   override fun write(appendable: Appendable) {

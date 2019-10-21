@@ -6,7 +6,7 @@ import com.jakewharton.picnic.Table.PositionedCell
 
 @Suppress("NOTHING_TO_INLINE", "UNUSED_PARAMETER")
 private inline fun debug(message: () -> String) {
-  //println(message())
+  // println(message())
 }
 
 @JvmOverloads

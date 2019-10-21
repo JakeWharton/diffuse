@@ -3,10 +3,10 @@ package com.jakewharton.diffuse
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
 import com.google.devrel.gmscore.tools.apk.arsc.XmlChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlStartElementChunk
-import org.w3c.dom.Element
-import org.xml.sax.InputSource
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
+import org.w3c.dom.Element
+import org.xml.sax.InputSource
 
 class Manifest private constructor(
   val packageName: String,

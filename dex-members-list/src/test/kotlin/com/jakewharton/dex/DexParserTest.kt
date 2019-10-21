@@ -7,8 +7,8 @@ import com.jakewharton.dex.DexParser.Desugaring
 import com.jakewharton.diffuse.Field
 import com.jakewharton.diffuse.Member
 import com.jakewharton.diffuse.Method
-import org.junit.Test
 import java.nio.file.Paths
+import org.junit.Test
 
 class DexParserTest {
   @Test fun types() {

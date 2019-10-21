@@ -1,12 +1,12 @@
 package com.jakewharton.diffuse.io
 
+import java.nio.file.Path
 import okio.Buffer
 import okio.BufferedSource
 import okio.ByteString
 import okio.ByteString.Companion.encodeUtf8
 import okio.buffer
 import okio.source
-import java.nio.file.Path
 
 interface Input {
   val name: String

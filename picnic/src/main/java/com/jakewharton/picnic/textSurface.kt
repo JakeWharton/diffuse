@@ -3,7 +3,7 @@ package com.jakewharton.picnic
 internal class TextSurface(
   override val width: Int,
   override val height: Int
-): TextCanvas {
+) : TextCanvas {
   private val buffer = StringBuilder(height * (width + 1)).apply {
     repeat(height) {
       repeat(width) {
@@ -14,14 +14,14 @@ internal class TextSurface(
   }
 
   override operator fun set(row: Int, column: Int, char: Char) {
-    require(row in 0 until height) { "Row $row not in range [0, $height)"}
-    require(column in 0 until width) { "Column $column not in range [0, $width)"}
+    require(row in 0 until height) { "Row $row not in range [0, $height)" }
+    require(column in 0 until width) { "Column $column not in range [0, $width)" }
     buffer[row * (width + 1) + column] = char
   }
 
   override fun get(row: Int, column: Int): Char {
-    require(row in 0 until height) { "Row $row not in range [0, $height)"}
-    require(column in 0 until width) { "Column $column not in range [0, $width)"}
+    require(row in 0 until height) { "Row $row not in range [0, $height)" }
+    require(column in 0 until width) { "Column $column not in range [0, $width)" }
     return buffer[row * (width + 1) + column]
   }
 
@@ -42,14 +42,14 @@ interface TextCanvas {
       override val height = bottom - top
 
       override fun set(row: Int, column: Int, char: Char) {
-        require(row in 0 until height) { "Row $row not in range [0, $height)"}
-        require(column in 0 until width) { "Column $column not in range [0, $width)"}
+        require(row in 0 until height) { "Row $row not in range [0, $height)" }
+        require(column in 0 until width) { "Column $column not in range [0, $width)" }
         outer[top + row, left + column] = char
       }
 
       override fun get(row: Int, column: Int): Char {
-        require(row in 0 until height) { "Row $row not in range [0, $height)"}
-        require(column in 0 until width) { "Column $column not in range [0, $width)"}
+        require(row in 0 until height) { "Row $row not in range [0, $height)" }
+        require(column in 0 until width) { "Column $column not in range [0, $width)" }
         return outer[top + row, left + column]
       }
     }

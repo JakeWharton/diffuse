@@ -8,9 +8,9 @@ import com.android.tools.r8.origin.Origin
 import com.jakewharton.dex.DexParser.Desugaring
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Input.Companion.asInput
-import okio.ByteString.Companion.toByteString
 import java.io.ByteArrayInputStream
 import java.util.zip.ZipInputStream
+import okio.ByteString.Companion.toByteString
 
 private val CLASS_MAGIC = byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(), 0xBE.toByte())
 private val DEX_MAGIC = byteArrayOf(0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x35, 0x00)

@@ -19,7 +19,7 @@ internal fun diffuseTable(content: TableDsl.() -> Unit): Table = table {
   DiffuseTableDsl(this).content()
 }
 
-private class DiffuseTableDsl(private val delegate: TableDsl): TableDsl by delegate {
+private class DiffuseTableDsl(private val delegate: TableDsl) : TableDsl by delegate {
   override fun header(content: SectionDsl.() -> Unit) {
     delegate.header {
       cellStyle {

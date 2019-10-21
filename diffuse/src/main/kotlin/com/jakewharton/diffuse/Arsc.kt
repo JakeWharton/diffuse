@@ -28,7 +28,7 @@ class Arsc private constructor(
     @JvmName("create")
     fun BinaryResourceFile.toArsc(): Arsc {
       val chunk = chunks.single()
-      check(chunk is ResourceTableChunk) { "Root arsc chunk is not a resource table "}
+      check(chunk is ResourceTableChunk) { "Root arsc chunk is not a resource table " }
       val arscBlamer = ArscBlamer(chunk).apply { blame() }
       val configs = arscBlamer.typeChunks.map { it.typeName }
       val entries = arscBlamer.resourceEntries.keySet().map { it.toEntry() }
