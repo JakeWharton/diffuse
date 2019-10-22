@@ -98,10 +98,10 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
     }
   }
 
-  private fun parseHandle(bootstrapMethodHandle: Handle): Member {
-    val handlerOwner = parseOwner(bootstrapMethodHandle.owner)
-    val handlerName = bootstrapMethodHandle.name
-    val handlerDescriptor = bootstrapMethodHandle.desc
+  private fun parseHandle(handle: Handle): Member {
+    val handlerOwner = parseOwner(handle.owner)
+    val handlerName = handle.name
+    val handlerDescriptor = handle.desc
     return if (handlerDescriptor.startsWith('(')) {
       parseMethod(handlerOwner, handlerName, handlerDescriptor)
     } else {
