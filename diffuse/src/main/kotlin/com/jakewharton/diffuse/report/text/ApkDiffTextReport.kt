@@ -2,6 +2,7 @@ package com.jakewharton.diffuse.report.text
 
 import com.jakewharton.diffuse.ArchiveFile.Type
 import com.jakewharton.diffuse.diff.ApkDiff
+import com.jakewharton.diffuse.diff.lint.Notice
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.diff.toSummaryTable
 import com.jakewharton.diffuse.diffuseTable
@@ -25,12 +26,24 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
       }.toString())
       appendln()
       if (apkDiff.lintMessages.isNotEmpty()) {
-        appendln("NOTICE:")
-        apkDiff.lintMessages.forEach {
-          append(" · ")
-          appendln(it)
-        }
-        appendln()
+        appendln(diffuseTable {
+          header {
+            row("NOTICES")
+          }
+          body {
+            apkDiff.lintMessages.sorted().forEach { notice ->
+              row(buildString {
+                append(when (notice.type) {
+                  Notice.Type.Informational -> 'i'
+                  Notice.Type.Warning -> '!'
+                  Notice.Type.Resolution -> '✓'
+                })
+                append("  ")
+                append(notice.message)
+              })
+            }
+          }
+        }.toString())
         appendln()
       }
       appendln(apkDiff.archive.toSummaryTable("APK", Type.APK_TYPES,
