@@ -18,7 +18,7 @@ internal class Class private constructor(
       val declaredVisitor = DeclaredMembersVisitor(referencedVisitor)
       ClassReader(toByteArray()).accept(declaredVisitor, 0)
 
-      return Class(declaredVisitor.memebers.sorted(), referencedVisitor.memebers.sorted())
+      return Class(declaredVisitor.members.sorted(), referencedVisitor.members.sorted())
     }
   }
 }
@@ -26,7 +26,7 @@ internal class Class private constructor(
 private class DeclaredMembersVisitor(
   val methodVisitor: MethodVisitor
 ) : ClassVisitor(Opcodes.ASM7) {
-  val memebers = mutableListOf<Member>()
+  val members = mutableListOf<Member>()
 
   // TODO lateinit https://youtrack.jetbrains.com/issue/KT-23814
   private var type: TypeDescriptor? = null
@@ -49,7 +49,7 @@ private class DeclaredMembersVisitor(
     signature: String?,
     exceptions: Array<out String>?
   ): MethodVisitor? {
-    memebers += parseMethod(type!!, name, descriptor)
+    members += parseMethod(type!!, name, descriptor)
     return methodVisitor
   }
 
@@ -60,13 +60,13 @@ private class DeclaredMembersVisitor(
     signature: String?,
     value: Any?
   ): FieldVisitor? {
-    memebers += Field(type!!, name, TypeDescriptor(descriptor))
+    members += Field(type!!, name, TypeDescriptor(descriptor))
     return null
   }
 }
 
 private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
-  val memebers = mutableSetOf<Member>()
+  val members = mutableSetOf<Member>()
 
   override fun visitMethodInsn(
     opcode: Int,
@@ -77,7 +77,7 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
   ) {
     val ownerType = parseOwner(owner)
     val referencedMethod = parseMethod(ownerType, name, descriptor)
-    memebers += referencedMethod
+    members += referencedMethod
   }
 
   override fun visitInvokeDynamicInsn(
@@ -86,7 +86,7 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
     bootstrapMethodHandle: Handle,
     vararg bootstrapMethodArguments: Any?
   ) {
-    memebers += parseHandle(bootstrapMethodHandle)
+    members += parseHandle(bootstrapMethodHandle)
 
     if (bootstrapMethodHandle == lambdaMetaFactory) {
       // LambdaMetaFactory.metafactory accepts 6 arguments. The first 3 are
@@ -94,7 +94,7 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
       // this method. The second of those is a MethodHandle to the lambda
       // implementation which needs to be counted as a method reference.
       val implementationHandle = bootstrapMethodArguments[1] as Handle
-      memebers += parseHandle(implementationHandle)
+      members += parseHandle(implementationHandle)
     }
   }
 
@@ -117,7 +117,7 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
   ) {
     val ownerType = parseOwner(owner)
     val referencedField = Field(ownerType, name, TypeDescriptor(descriptor))
-    memebers += referencedField
+    members += referencedField
   }
 
   private fun parseOwner(owner: String): TypeDescriptor {
