@@ -16,7 +16,6 @@ sealed class Member : Comparable<Member> {
   }
 }
 
-/** Represents a single field reference. */
 data class Field(
   override val declaringType: TypeDescriptor,
   override val name: String,
@@ -37,7 +36,6 @@ data class Field(
   }
 }
 
-/** Represents a single method reference. */
 data class Method(
   override val declaringType: TypeDescriptor,
   override val name: String,
