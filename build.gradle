@@ -12,7 +12,7 @@ buildscript {
       'kotlin': [
           'stdlibJdk8': "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
       ],
-      'r8': 'com.android.tools:r8:1.6.39',
+      'r8': 'com.android.tools:r8:1.5.68',
       'clikt': 'com.github.ajalt:clikt:2.2.0',
       'junit': 'junit:junit:4.13-beta-3',
       'truth': 'com.google.truth:truth:1.0',
@@ -43,9 +43,6 @@ subprojects {
     mavenCentral()
     google()
     jcenter()
-    maven {
-      url 'http://storage.googleapis.com/r8-releases/raw'
-    }
   }
 
   apply plugin: 'org.jlleitschuh.gradle.ktlint'
