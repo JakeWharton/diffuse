@@ -3,12 +3,19 @@ package com.jakewharton.diffuse
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
 import com.google.devrel.gmscore.tools.apk.arsc.XmlChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlStartElementChunk
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import org.w3c.dom.NamedNodeMap
+import org.w3c.dom.Node
+import org.w3c.dom.NodeList
+import org.xml.sax.InputSource
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
-import org.w3c.dom.Element
-import org.xml.sax.InputSource
+import javax.xml.xpath.XPathConstants
+import javax.xml.xpath.XPathFactory
 
 class Manifest private constructor(
+  val xml: String,
   val packageName: String,
   val versionName: String?,
   val versionCode: Long?
@@ -43,6 +50,7 @@ class Manifest private constructor(
       val versionCode = (versionCodeMajor.toLong() shl 32) +
           requireNotNull(versionCodeMinor) { "<manifest> missing 'versionCode' attribute." }
       return Manifest(
+          "", // TODO
           requireNotNull(packageName) { "<manifest> missing 'package' attribute." },
           requireNotNull(versionName) { "<manifest> missing 'versionName' attribute." },
           versionCode)
@@ -51,10 +59,13 @@ class Manifest private constructor(
     @JvmStatic
     @JvmName("parse")
     fun String.toManifest(): Manifest {
-      val documentBuilderFactory = DocumentBuilderFactory.newInstance()
-      documentBuilderFactory.isNamespaceAware = true
-      val documentBuilder = documentBuilderFactory.newDocumentBuilder()
-      val document = documentBuilder.parse(InputSource(StringReader(this)))
+      val documentBuilderFactory = DocumentBuilderFactory.newInstance().apply {
+        isNamespaceAware = true
+      }
+      val document = documentBuilderFactory.newDocumentBuilder()
+          .parse(InputSource(StringReader(this)))
+      document.superNormalize()
+
       val manifestElement = document.documentElement
       require(manifestElement.tagName == "manifest") {
         "Unable to find root <manifest> tag"
@@ -70,7 +81,75 @@ class Manifest private constructor(
         null
       }
 
-      return Manifest(packageName, versionName, versionCode)
+      return Manifest(document.toFormattedXml(), packageName, versionName, versionCode)
+    }
+
+    private fun Document.superNormalize() {
+      normalize()
+
+      val emptyNodes = XPathFactory.newInstance().newXPath().evaluate(
+          "//text()[normalize-space()='']", this, XPathConstants.NODESET
+      ) as NodeList
+      for (emptyNode in emptyNodes) {
+        emptyNode.parentNode.removeChild(emptyNode)
+      }
+    }
+
+    private fun Document.toFormattedXml() = buildString {
+      fun appendIndent(indent: Int) {
+        repeat(indent) {
+          append("  ")
+        }
+      }
+      fun appendNode(node: Node, indent: Int) {
+        appendIndent(indent)
+        append('<')
+        append(node.nodeName)
+        if (node.hasAttributes()) {
+          // TODO sort attributes
+          //  xmlns: should be first
+          //  otherwise alphabetical
+          for (attribute in node.attributes) {
+            appendln()
+            appendIndent(indent + 2)
+            append(attribute.nodeName)
+            append("=\"")
+            append(attribute.nodeValue)
+            append('"')
+          }
+          appendln()
+          appendIndent(indent + 2)
+        }
+        if (!node.hasChildNodes()) {
+          append('/')
+        }
+        appendln('>')
+
+        if (node.hasChildNodes()) {
+          for (child in node.childNodes) {
+            appendNode(child, indent + 1)
+          }
+
+          appendIndent(indent)
+          append("</")
+          append(node.nodeName)
+          appendln('>')
+        }
+      }
+
+      appendNode(documentElement, 0)
+    }
+
+    private operator fun NodeList.iterator() = object : Iterator<Node> {
+      private var index = 0
+      override fun hasNext() = index < length
+      override fun next() = item(index++)
+    }
+
+    private operator fun NamedNodeMap.iterator() = object : Iterator<Node> {
+      private var index = 0
+      override fun hasNext() = index < length
+      override fun next() = item(index++)
     }
 
     private fun Element.getAttributeOrNull(namespace: String?, name: String): String? {
