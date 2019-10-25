@@ -1,7 +1,10 @@
 package com.jakewharton.diffuse
 
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
+import com.google.devrel.gmscore.tools.apk.arsc.Chunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlChunk
+import com.google.devrel.gmscore.tools.apk.arsc.XmlEndElementChunk
+import com.google.devrel.gmscore.tools.apk.arsc.XmlNamespaceStartChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlStartElementChunk
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -10,6 +13,7 @@ import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
 import java.io.StringReader
+import java.util.ArrayDeque
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
@@ -27,6 +31,51 @@ class Manifest private constructor(
       val rootChunk = requireNotNull(chunks.singleOrNull() as XmlChunk?) {
         "Unable to parse manifest from binary XML"
       }
+
+      val document = DocumentBuilderFactory.newInstance()
+          .apply {
+            isNamespaceAware = true
+          }
+          .newDocumentBuilder()
+          .newDocument()
+
+      val nodeStack = ArrayDeque<Node>().apply { add(document) }
+      val namespacesToAdd = mutableMapOf<String, String>()
+      val namespacesInScope = mutableMapOf<String?, String>(null to "")
+      fun Chunk.parseChunk() {
+        when (this) {
+          is XmlNamespaceStartChunk -> {
+            check(namespacesToAdd.put(prefix, uri) == null)
+            check(namespacesInScope.put(uri, "$prefix:") == null)
+          }
+          is XmlStartElementChunk -> {
+            val canonicalNamespace = namespace.takeIf(String::isNotEmpty)
+            val canonicalName = namespacesInScope[canonicalNamespace] + name
+            val element = document.createElementNS(canonicalNamespace, canonicalName)
+            if (namespacesToAdd.isNotEmpty()) {
+              namespacesToAdd.forEach { (prefix, uri) ->
+                element.setAttribute("xmlns:$prefix", uri)
+              }
+              namespacesToAdd.clear()
+            }
+
+            for (attribute in attributes) {
+              val attributeNamespace = attribute.namespace().takeIf(String::isNotEmpty)
+              val attributeName = namespacesInScope[attributeNamespace] + attribute.name()
+              val attributeValue =
+                if (attribute.rawValueIndex() != -1) attribute.rawValue()
+                else attribute.typedValue().data().toString()
+              element.setAttributeNS(attributeNamespace, attributeName, attributeValue)
+            }
+            nodeStack.peekFirst()!!.appendChild(element)
+            nodeStack.addFirst(element)
+          }
+          is XmlEndElementChunk -> {
+            nodeStack.removeFirst()
+          }
+        }
+      }
+      rootChunk.chunks.values.forEach(Chunk::parseChunk)
 
       var packageName: String? = null
       var versionName: String? = null
@@ -50,7 +99,7 @@ class Manifest private constructor(
       val versionCode = (versionCodeMajor.toLong() shl 32) +
           requireNotNull(versionCodeMinor) { "<manifest> missing 'versionCode' attribute." }
       return Manifest(
-          "", // TODO
+          document.toFormattedXml(),
           requireNotNull(packageName) { "<manifest> missing 'package' attribute." },
           requireNotNull(versionName) { "<manifest> missing 'versionName' attribute." },
           versionCode)
