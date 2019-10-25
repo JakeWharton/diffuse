@@ -1,7 +1,6 @@
 package com.jakewharton.diffuse
 
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
-import com.google.devrel.gmscore.tools.apk.arsc.Chunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlEndElementChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlNamespaceStartChunk
@@ -50,15 +49,15 @@ class Manifest private constructor(
       val nodeStack = ArrayDeque<Node>().apply { add(document) }
       val namespacesToAdd = mutableMapOf<String, String>()
       val namespacesInScope = mutableMapOf<String?, String>(null to "")
-      fun Chunk.parseChunk() {
-        when (this) {
+      rootChunk.chunks.values.forEach { chunk ->
+        when (chunk) {
           is XmlNamespaceStartChunk -> {
-            check(namespacesToAdd.put(prefix, uri) == null)
-            check(namespacesInScope.put(uri, "$prefix:") == null)
+            check(namespacesToAdd.put(chunk.prefix, chunk.uri) == null)
+            check(namespacesInScope.put(chunk.uri, "${chunk.prefix}:") == null)
           }
           is XmlStartElementChunk -> {
-            val canonicalNamespace = namespace.takeIf(String::isNotEmpty)
-            val canonicalName = namespacesInScope[canonicalNamespace] + name
+            val canonicalNamespace = chunk.namespace.takeIf(String::isNotEmpty)
+            val canonicalName = namespacesInScope[canonicalNamespace] + chunk.name
             val element = document.createElementNS(canonicalNamespace, canonicalName)
             if (namespacesToAdd.isNotEmpty()) {
               namespacesToAdd.forEach { (prefix, uri) ->
@@ -67,7 +66,7 @@ class Manifest private constructor(
               namespacesToAdd.clear()
             }
 
-            for (attribute in attributes) {
+            for (attribute in chunk.attributes) {
               val attributeNamespace = attribute.namespace().takeIf(String::isNotEmpty)
               val attributeName = namespacesInScope[attributeNamespace] + attribute.name()
               val attributeValue =
@@ -83,8 +82,6 @@ class Manifest private constructor(
           }
         }
       }
-
-      rootChunk.chunks.values.forEach(Chunk::parseChunk)
 
       return document
     }
