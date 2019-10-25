@@ -25,17 +25,25 @@ class Manifest private constructor(
   val versionCode: Long?
 ) {
   companion object {
+    private val documentBuilderFactory = DocumentBuilderFactory.newInstance()!!
+        .apply {
+          isNamespaceAware = true
+        }
+
     @JvmStatic
     @JvmName("parse")
-    fun BinaryResourceFile.toManifest(): Manifest {
+    fun BinaryResourceFile.toManifest(): Manifest = toDocument().toManifest()
+
+    @JvmStatic
+    @JvmName("parse")
+    fun String.toManifest(): Manifest = toDocument().toManifest()
+
+    private fun BinaryResourceFile.toDocument(): Document {
       val rootChunk = requireNotNull(chunks.singleOrNull() as XmlChunk?) {
         "Unable to parse manifest from binary XML"
       }
 
-      val document = DocumentBuilderFactory.newInstance()
-          .apply {
-            isNamespaceAware = true
-          }
+      val document = documentBuilderFactory
           .newDocumentBuilder()
           .newDocument()
 
@@ -75,47 +83,29 @@ class Manifest private constructor(
           }
         }
       }
+
       rootChunk.chunks.values.forEach(Chunk::parseChunk)
 
-      var packageName: String? = null
-      var versionName: String? = null
-      var versionCodeMinor: Int? = null
-      var versionCodeMajor = 0
-
-      val manifestChunk = rootChunk.chunks.values
-          .filterIsInstance<XmlStartElementChunk>()
-          .singleOrNull { it.name == "manifest" }
-          ?: throw IllegalArgumentException("Unable to find root <manifest> tag")
-
-      for (attribute in manifestChunk.attributes) {
-        when (attribute.name()) {
-          "package" -> packageName = attribute.rawValue()!!
-          "versionName" -> versionName = attribute.rawValue()!!
-          "versionCode" -> versionCodeMinor = attribute.typedValue().data()
-          "versionCodeMajor" -> versionCodeMajor = attribute.typedValue().data()
-        }
-      }
-
-      val versionCode = (versionCodeMajor.toLong() shl 32) +
-          requireNotNull(versionCodeMinor) { "<manifest> missing 'versionCode' attribute." }
-      return Manifest(
-          document.toFormattedXml(),
-          requireNotNull(packageName) { "<manifest> missing 'package' attribute." },
-          requireNotNull(versionName) { "<manifest> missing 'versionName' attribute." },
-          versionCode)
+      return document
     }
 
-    @JvmStatic
-    @JvmName("parse")
-    fun String.toManifest(): Manifest {
-      val documentBuilderFactory = DocumentBuilderFactory.newInstance().apply {
-        isNamespaceAware = true
-      }
+    private fun String.toDocument(): Document {
       val document = documentBuilderFactory.newDocumentBuilder()
           .parse(InputSource(StringReader(this)))
-      document.superNormalize()
 
-      val manifestElement = document.documentElement
+      document.normalize()
+      val emptyNodes = XPathFactory.newInstance().newXPath().evaluate(
+          "//text()[normalize-space()='']", document, XPathConstants.NODESET
+      ) as NodeList
+      for (emptyNode in emptyNodes) {
+        emptyNode.parentNode.removeChild(emptyNode)
+      }
+
+      return document
+    }
+
+    private fun Document.toManifest(): Manifest {
+      val manifestElement = documentElement
       require(manifestElement.tagName == "manifest") {
         "Unable to find root <manifest> tag"
       }
@@ -130,18 +120,7 @@ class Manifest private constructor(
         null
       }
 
-      return Manifest(document.toFormattedXml(), packageName, versionName, versionCode)
-    }
-
-    private fun Document.superNormalize() {
-      normalize()
-
-      val emptyNodes = XPathFactory.newInstance().newXPath().evaluate(
-          "//text()[normalize-space()='']", this, XPathConstants.NODESET
-      ) as NodeList
-      for (emptyNode in emptyNodes) {
-        emptyNode.parentNode.removeChild(emptyNode)
-      }
+      return Manifest(toFormattedXml(), packageName, versionName, versionCode)
     }
 
     private fun Document.toFormattedXml() = buildString {
