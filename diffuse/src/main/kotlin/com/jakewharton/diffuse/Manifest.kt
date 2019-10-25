@@ -1,21 +1,30 @@
 package com.jakewharton.diffuse
 
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_BOOLEAN
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COLOR_ARGB4
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COLOR_ARGB8
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COLOR_RGB4
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COLOR_RGB8
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_DEC
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_HEX
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.NULL
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.STRING
 import com.google.devrel.gmscore.tools.apk.arsc.XmlChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlEndElementChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlNamespaceStartChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlStartElementChunk
+import java.io.StringReader
+import java.util.ArrayDeque
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.xpath.XPathConstants
+import javax.xml.xpath.XPathFactory
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.NamedNodeMap
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
-import java.io.StringReader
-import java.util.ArrayDeque
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.xpath.XPathConstants
-import javax.xml.xpath.XPathFactory
 
 class Manifest private constructor(
   val xml: String,
@@ -69,9 +78,22 @@ class Manifest private constructor(
             for (attribute in chunk.attributes) {
               val attributeNamespace = attribute.namespace().takeIf(String::isNotEmpty)
               val attributeName = namespacesInScope[attributeNamespace] + attribute.name()
-              val attributeValue =
-                if (attribute.rawValueIndex() != -1) attribute.rawValue()
-                else attribute.typedValue().data().toString()
+
+              val typedValue = attribute.typedValue()
+              val attributeValue = when (typedValue.type()) {
+                INT_BOOLEAN -> if (typedValue.data() == 0) "false" else "true"
+                INT_COLOR_ARGB4 -> String.format("#%04x", typedValue.data())
+                INT_COLOR_ARGB8 -> String.format("#%08x", typedValue.data())
+                INT_COLOR_RGB4 -> String.format("#%03x", typedValue.data())
+                INT_COLOR_RGB8 -> String.format("#%06x", typedValue.data())
+                INT_DEC -> typedValue.data().toString()
+                INT_HEX -> "0x${typedValue.data()}"
+                NULL -> "null"
+                STRING -> attribute.rawValue()
+                // TODO handle other formats appropriately...
+                else -> typedValue.data().toString()
+              }
+
               element.setAttributeNS(attributeNamespace, attributeName, attributeValue)
             }
             nodeStack.peekFirst()!!.appendChild(element)
