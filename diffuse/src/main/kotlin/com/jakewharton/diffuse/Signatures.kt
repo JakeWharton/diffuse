@@ -14,6 +14,7 @@ data class Signatures(
     @JvmStatic
     @JvmName("parse")
     fun Input.toSignatures(): Signatures {
+      // TODO should be able to make a DataSource from a FileChannel to avoid toByteArray here.
       val dataSource = toByteArray().asByteBuffer().asDataSource()
       val result = ApkVerifier.Builder(dataSource).build().verify()
       return Signatures(
