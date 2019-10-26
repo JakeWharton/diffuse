@@ -14,7 +14,7 @@ buildscript {
       ],
       'r8': 'com.android.tools:r8:1.5.68',
       'clikt': 'com.github.ajalt:clikt:2.2.0',
-      'junit': 'junit:junit:4.13-beta-3',
+      'junit': 'junit:junit:4.13-rc-1',
       'truth': 'com.google.truth:truth:1.0',
       'guava': 'com.google.guava:guava:28.1-jre',
       'okio': 'com.squareup.okio:okio:2.4.1',
