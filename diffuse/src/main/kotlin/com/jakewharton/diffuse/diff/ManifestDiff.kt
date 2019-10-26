@@ -2,6 +2,7 @@ package com.jakewharton.diffuse.diff
 
 import com.github.difflib.DiffUtils
 import com.github.difflib.UnifiedDiffUtils
+import com.jakewharton.diffuse.Apk
 import com.jakewharton.diffuse.Manifest
 import com.jakewharton.diffuse.diffuseTable
 
@@ -18,7 +19,7 @@ internal class ManifestDiff(
     val oldLines = oldManifest.xml.lines()
     val newLines = newManifest.xml.lines()
     val diff = DiffUtils.diff(oldLines, newLines)
-    UnifiedDiffUtils.generateUnifiedDiff("AndroidManifest.xml", "AndroidManifest.xml", oldLines, diff, 1)
+    UnifiedDiffUtils.generateUnifiedDiff(Apk.manifestFileName, Apk.manifestFileName, oldLines, diff, 1)
   }
 }
 

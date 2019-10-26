@@ -18,6 +18,8 @@ class Apk private constructor(
 ) : Binary {
   companion object {
     internal val classesDexRegex = Regex("classes\\d*\\.dex")
+    internal const val resourcesArscFileName = "resources.arsc"
+    internal const val manifestFileName = "AndroidManifest.xml"
 
     @JvmStatic
     @JvmName("parse")
@@ -25,8 +27,8 @@ class Apk private constructor(
       val signatures = toSignatures()
       toZip().use { zip ->
         val files = zip.toArchiveFiles { it.toApkFileType() }
-        val arsc = zip["resources.arsc"].asInput().toBinaryResourceFile().toArsc()
-        val manifest = zip["AndroidManifest.xml"].asInput().toBinaryResourceFile().toManifest(arsc)
+        val arsc = zip[resourcesArscFileName].asInput().toBinaryResourceFile().toArsc()
+        val manifest = zip[manifestFileName].asInput().toBinaryResourceFile().toManifest(arsc)
         val dexes = zip.entries
             .filter { it.path.matches(classesDexRegex) }
             .map { it.asInput().toDex() }
