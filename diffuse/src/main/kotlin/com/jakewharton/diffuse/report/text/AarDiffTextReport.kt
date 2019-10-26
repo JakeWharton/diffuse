@@ -26,7 +26,7 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : DiffReport {
       appendln(aarDiff.archive.toSummaryTable("AAR", Type.AAR_TYPES,
           skipIfEmptyTypes = setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res)))
       appendln()
-      appendln(aarDiff.jar.toSummaryTable())
+      appendln(aarDiff.jars.toSummaryTable())
       if (aarDiff.archive.changed) {
         appendln()
         appendln("=================")
@@ -41,12 +41,12 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : DiffReport {
         appendln("======================")
         appendln(aarDiff.manifest.toDetailReport())
       }
-      if (aarDiff.jar.changed) {
+      if (aarDiff.jars.changed) {
         appendln()
         appendln("=================")
         appendln("====   JAR   ====")
         appendln("=================")
-        appendln(aarDiff.jar.toDetailReport())
+        appendln(aarDiff.jars.toDetailReport())
       }
     }
   }

@@ -25,7 +25,7 @@ internal class JarDiffTextReport(private val jarDiff: JarDiff) : DiffReport {
       appendln()
       appendln(jarDiff.archive.toSummaryTable("JAR", Type.JAR_TYPES))
       appendln()
-      appendln(jarDiff.toSummaryTable())
+      appendln(jarDiff.jars.toSummaryTable())
       if (jarDiff.archive.changed) {
         appendln()
         appendln("=================")
@@ -33,12 +33,12 @@ internal class JarDiffTextReport(private val jarDiff: JarDiff) : DiffReport {
         appendln("=================")
         appendln(jarDiff.archive.toDetailReport())
       }
-      if (jarDiff.changed) {
+      if (jarDiff.jars.changed) {
         appendln()
-        appendln("=================")
-        appendln("====   JAR   ====")
-        appendln("=================")
-        appendln(jarDiff.toDetailReport())
+        appendln("=====================")
+        appendln("====   CLASSES   ====")
+        appendln("=====================")
+        appendln(jarDiff.jars.toDetailReport())
       }
     }
   }
