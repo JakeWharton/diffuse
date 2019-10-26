@@ -9,6 +9,7 @@ import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COL
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_DEC
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_HEX
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.NULL
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.REFERENCE
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.STRING
 import com.google.devrel.gmscore.tools.apk.arsc.XmlChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlEndElementChunk
@@ -39,14 +40,15 @@ class Manifest private constructor(
         }
 
     @JvmStatic
+    @JvmOverloads
     @JvmName("parse")
-    fun BinaryResourceFile.toManifest(): Manifest = toDocument().toManifest()
+    fun BinaryResourceFile.toManifest(arsc: Arsc? = null): Manifest = toDocument(arsc).toManifest()
 
     @JvmStatic
     @JvmName("parse")
     fun String.toManifest(): Manifest = toDocument().toManifest()
 
-    private fun BinaryResourceFile.toDocument(): Document {
+    private fun BinaryResourceFile.toDocument(arsc: Arsc?): Document {
       val rootChunk = requireNotNull(chunks.singleOrNull() as XmlChunk?) {
         "Unable to parse manifest from binary XML"
       }
@@ -88,6 +90,10 @@ class Manifest private constructor(
                 INT_COLOR_RGB8 -> String.format("#%06x", typedValue.data())
                 INT_DEC -> typedValue.data().toString()
                 INT_HEX -> "0x${typedValue.data()}"
+                REFERENCE -> {
+                  if (arsc != null) "@${arsc.entries[typedValue.data()]}"
+                  else typedValue.data().toString()
+                }
                 NULL -> "null"
                 STRING -> attribute.rawValue()
                 // TODO handle other formats appropriately...
