@@ -4,12 +4,12 @@ import com.jakewharton.diffuse.diff.AabDiff
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.report.DiffReport
 
-internal class AabDiffTextReport(private val jarDiff: AabDiff) : DiffReport {
+internal class AabDiffTextReport(private val aabDiff: AabDiff) : DiffReport {
   override fun write(appendable: Appendable) {
     appendable.apply {
       appendln(diffuseTable {
         header {
-          row("OLD/NEW", jarDiff.oldAab.filename, jarDiff.newAab.filename)
+          row("OLD/NEW", aabDiff.oldAab.filename, aabDiff.newAab.filename)
         }
         body {
           // TODO do we care about showing a hash?

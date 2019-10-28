@@ -21,9 +21,33 @@ import okio.utf8Size
 interface Zip : Closeable {
   val entries: List<Entry>
 
+  fun directoryView(name: String): Zip {
+    val parent = this
+    val prefix = "$name/"
+    return object : Zip {
+      override val entries = parent.entries.mapNotNull {
+        if (it.path.startsWith(prefix)) {
+          object : Entry by it {
+            override val path: String
+              get() = it.path.substring(prefix.length)
+          }
+        } else {
+          null
+        }
+      }
+
+      override fun get(path: String) = parent[prefix + path]
+
+      override fun close() {
+        // No-op. Hopefully someone is treating the enclosing Zip as a resource.
+      }
+    }
+  }
+
+  fun find(path: String) = entries.firstOrNull { it.path == path }
+
   operator fun get(path: String) =
-    entries.firstOrNull { it.path == path }
-        ?: throw FileNotFoundException("No entry: $path")
+    find(path) ?: throw FileNotFoundException("No entry: $path")
 
   interface Entry {
     val path: String

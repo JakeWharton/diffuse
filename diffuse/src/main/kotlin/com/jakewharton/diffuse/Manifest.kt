@@ -1,5 +1,8 @@
 package com.jakewharton.diffuse
 
+import com.android.aapt.Resources.XmlNode
+import com.android.tools.build.bundletool.model.utils.xmlproto.XmlProtoNode
+import com.android.tools.build.bundletool.xml.XmlProtoToXmlConverter
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_BOOLEAN
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COLOR_ARGB4
@@ -47,6 +50,14 @@ class Manifest private constructor(
     @JvmStatic
     @JvmName("parse")
     fun String.toManifest(): Manifest = toDocument().toManifest()
+
+    @JvmStatic
+    @JvmName("parse")
+    internal fun XmlNode.toManifest(): Manifest {
+      return XmlProtoToXmlConverter.convert(XmlProtoNode(this))
+          .apply { normalizeWhitespace() }
+          .toManifest()
+    }
 
     private fun BinaryResourceFile.toDocument(arsc: Arsc?): Document {
       val rootChunk = requireNotNull(chunks.singleOrNull() as XmlChunk?) {
@@ -115,18 +126,19 @@ class Manifest private constructor(
     }
 
     private fun String.toDocument(): Document {
-      val document = documentBuilderFactory.newDocumentBuilder()
+      return documentBuilderFactory.newDocumentBuilder()
           .parse(InputSource(StringReader(this)))
+          .apply { normalizeWhitespace() }
+    }
 
-      document.normalize()
+    private fun Document.normalizeWhitespace() {
+      normalize()
       val emptyNodes = XPathFactory.newInstance().newXPath().evaluate(
-          "//text()[normalize-space()='']", document, XPathConstants.NODESET
+          "//text()[normalize-space()='']", this, XPathConstants.NODESET
       ) as NodeList
       for (emptyNode in emptyNodes) {
         emptyNode.parentNode.removeChild(emptyNode)
       }
-
-      return document
     }
 
     private fun Document.toManifest(): Manifest {

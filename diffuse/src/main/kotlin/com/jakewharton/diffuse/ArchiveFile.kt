@@ -36,6 +36,9 @@ data class ArchiveFile(
       val APK_TYPES = listOf(Dex, Arsc, Manifest, Res, Native, Asset, Other)
 
       @JvmField
+      val AAB_TYPES = listOf(Dex, Manifest, Res, Native, Asset, Other)
+
+      @JvmField
       val AAR_TYPES = listOf(Jar, Manifest, Res, Native, JarLibs, ApiJar, LintJar, Other)
 
       @JvmField
@@ -47,6 +50,17 @@ data class ArchiveFile(
         matches(Apk.classesDexRegex) -> Dex
         equals(Apk.manifestFileName) -> Manifest
         equals(Apk.resourcesArscFileName) -> Arsc
+        startsWith("lib/") -> Native
+        startsWith("assets/") -> Asset
+        startsWith("res/") -> Res
+        else -> Other
+      }
+
+      @JvmStatic
+      @JvmName("fromAabName")
+      fun String.toAabFileType() = when {
+        equals(Aab.Module.manifestFilePath) -> Manifest
+        startsWith("dex/") -> Dex
         startsWith("lib/") -> Native
         startsWith("assets/") -> Asset
         startsWith("res/") -> Res

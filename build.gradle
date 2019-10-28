@@ -7,7 +7,9 @@ buildscript {
       'androidTools': [
           'dalvikDx': 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3',
           'binaryResources': 'com.android.tools.apkparser:binary-resources:26.5.0',
-          'apkSigner': 'com.android.tools.build:apksig:3.5.0'
+          'apkSigner': 'com.android.tools.build:apksig:3.5.0',
+          'bundleTool': 'com.android.tools.build:bundletool:0.10.3',
+          'aapt2Proto': 'com.android.tools.build:aapt2-proto:0.4.0',
       ],
       'kotlin': [
           'stdlibJdk8': "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",

@@ -12,6 +12,9 @@ dependencies {
   api deps.okio
   implementation deps.androidTools.binaryResources
   implementation deps.androidTools.apkSigner
+  implementation deps.androidTools.bundleTool
+  // TODO bundletool depends on aapt2-proto, but its types won't resolve without the explicit dep.
+  implementation deps.androidTools.aapt2Proto
   implementation deps.byteunits
   implementation deps.asm
   implementation(deps.diffUtils) {
