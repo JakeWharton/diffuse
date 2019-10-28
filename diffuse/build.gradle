@@ -27,7 +27,7 @@ dependencies {
 
 def fatDiffuseJarProvider = tasks.register('fatDiffuseJar', Jar) { task ->
   task.dependsOn(configurations.named('runtimeClasspath'))
-  task.dependsOn(tasks.named('compileJava'))
+  task.dependsOn(tasks.named('jar'))
 
   task.classifier 'fat'
 
