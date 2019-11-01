@@ -9,6 +9,7 @@ import com.jakewharton.diffuse.report.DiffReport
 
 interface BinaryDiff {
   fun toTextReport(): DiffReport
+  fun toHtmlReport(): DiffReport { TODO("Implement HTML reporting") }
 
   companion object {
     @JvmStatic

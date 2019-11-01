@@ -6,10 +6,14 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.NoRunCliktCommand
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.groups.OptionGroup
+import com.github.ajalt.clikt.parameters.groups.provideDelegate
 import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.defaultLazy
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.switch
+import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
 import com.jakewharton.diffuse.Aab.Companion.toAab
 import com.jakewharton.diffuse.Aab.Module
@@ -18,7 +22,9 @@ import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
 import com.jakewharton.diffuse.Apk.Companion.toApk
 import com.jakewharton.diffuse.Jar.Companion.toJar
 import com.jakewharton.diffuse.diff.BinaryDiff
+import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Input.Companion.asInput
+import kotlin.LazyThreadSafetyMode.NONE
 
 fun main(vararg args: String) {
   NoRunCliktCommand(name = "diffuse")
@@ -31,44 +37,97 @@ private enum class Type {
 }
 
 private class DiffCommand : CliktCommand(name = "diff") {
-  private val old by argument("OLD", help = "Old input file.")
-      .path(exists = true, folderOkay = false, readable = true)
+  private val inputOptions by object : OptionGroup("Input options") {
+    private val type by option(help = "File type of OLD and NEW. Default is 'apk'.")
+        .switch("--apk" to Type.Apk, "--aar" to Type.Aar, "--aab" to Type.Aab, "--jar" to Type.Jar)
+        .default(Type.Apk)
 
-  private val oldMappingPath by option("--old-mapping",
-      help = "Mapping file produced by R8 or ProGuard.", metavar = "FILE")
+    private val oldMappingPath by option(
+          "--old-mapping",
+          help = "Mapping file produced by R8 or ProGuard.",
+          metavar = "FILE"
+        )
+        .path(exists = true, folderOkay = false, readable = true)
+
+    private val newMappingPath by option(
+          "--new-mapping",
+          help = "Mapping file produced by R8 or ProGuard.",
+          metavar = "FILE"
+        )
+        .path(exists = true, folderOkay = false, readable = true)
+
+    fun parse(old: Input, new: Input): BinaryDiff {
+      val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
+      val newMapping = newMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
+      return when (type) {
+        Type.Apk -> {
+          BinaryDiff.ofApk(old.toApk(), oldMapping, new.toApk(), newMapping)
+        }
+        Type.Aab -> {
+          BinaryDiff.ofAab(old.toAab(), new.toAab())
+        }
+        Type.Aar -> {
+          BinaryDiff.ofAar(old.toAar(), oldMapping, new.toAar(), newMapping)
+        }
+        Type.Jar -> {
+          BinaryDiff.ofJar(old.toJar(), oldMapping, new.toJar(), newMapping)
+        }
+      }
+    }
+  }
+
+  private enum class ReportType {
+    Text, Html, None
+  }
+
+  private val outputOptions by object : OptionGroup(name = "Output options") {
+    private val text by option(
+          help = "File to write text report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
+          metavar = "FILE"
+        )
+        .path()
+    private val html by option(
+          help = "File to write HTML report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
+          metavar = "FILE"
+        )
+        .path()
+    private val stdout by option(
+          help = "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified."
+        )
+        .choice("text" to ReportType.Text, "html" to ReportType.Html)
+        .defaultLazy {
+          if (text == null && html == null) {
+            ReportType.Text
+          } else {
+            ReportType.None
+          }
+        }
+
+    fun write(diff: BinaryDiff) {
+      val textReport by lazy(NONE) { diff.toTextReport().toString() }
+      val htmlReport by lazy(NONE) { diff.toHtmlReport().toString() }
+
+      text?.writeText(textReport)
+      html?.writeText(htmlReport)
+
+      val printReport = when (stdout) {
+        ReportType.Text -> textReport
+        ReportType.Html -> htmlReport
+        ReportType.None -> null
+      }
+      printReport?.let(::println)
+    }
+  }
+
+  private val old by argument("OLD", help = "Old input file.")
       .path(exists = true, folderOkay = false, readable = true)
 
   private val new by argument("NEW", help = "New input file.")
       .path(exists = true, folderOkay = false, readable = true)
 
-  private val newMappingPath by option("--new-mapping",
-      help = "Mapping file produced by R8 or ProGuard.", metavar = "FILE")
-      .path(exists = true, folderOkay = false, readable = true)
-
-  private val type by option(help = "File type of OLD and NEW. Default is 'apk'.")
-      .switch("--apk" to Type.Apk, "--aar" to Type.Aar, "--aab" to Type.Aab, "--jar" to Type.Jar)
-      .default(Type.Apk)
-
   override fun run() {
-    val oldInput = old.asInput()
-    val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
-    val newInput = new.asInput()
-    val newMapping = newMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
-    val diff = when (type) {
-      Type.Apk -> {
-        BinaryDiff.ofApk(oldInput.toApk(), oldMapping, newInput.toApk(), newMapping)
-      }
-      Type.Aab -> {
-        BinaryDiff.ofAab(oldInput.toAab(), newInput.toAab())
-      }
-      Type.Aar -> {
-        BinaryDiff.ofAar(oldInput.toAar(), oldMapping, newInput.toAar(), newMapping)
-      }
-      Type.Jar -> {
-        BinaryDiff.ofJar(oldInput.toJar(), oldMapping, newInput.toJar(), newMapping)
-      }
-    }
-    println(diff.toTextReport())
+    val diff = inputOptions.parse(old.asInput(), new.asInput())
+    outputOptions.write(diff)
   }
 }
 

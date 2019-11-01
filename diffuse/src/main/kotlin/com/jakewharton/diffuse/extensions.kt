@@ -22,6 +22,7 @@ internal fun InputStream.readByteString() = readBytes().toByteString()
 
 // TODO https://youtrack.jetbrains.com/issue/KT-18242
 internal fun Path.readBytes() = Files.readAllBytes(this)
+internal fun Path.writeText(text: String, charset: Charset = Charsets.UTF_8) = Files.write(this, text.toByteArray(charset))
 internal fun Path.inputStream(vararg options: OpenOption): InputStream = Files.newInputStream(this, *options)
 internal val Path.exists get() = Files.exists(this)
 internal fun Path.asZipFileSystem(loader: ClassLoader? = null) = FileSystems.newFileSystem(this, loader)!!
