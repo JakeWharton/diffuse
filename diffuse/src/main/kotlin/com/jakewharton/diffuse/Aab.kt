@@ -16,6 +16,9 @@ class Aab private constructor(
   val baseModule: Module,
   val featureModules: Map<String, Module>
 ) : Binary {
+  // TODO remove toTypedArray call https://youtrack.jetbrains.com/issue/KT-12663
+  val modules get() = listOf(baseModule, *featureModules.values.toTypedArray())
+
   class Module private constructor(
     val files: ArchiveFiles,
     val manifest: Manifest,

@@ -1,9 +1,6 @@
-package com.jakewharton.dex
+package com.jakewharton.diffuse
 
 import com.google.common.truth.Truth.assertThat
-import com.jakewharton.diffuse.Field
-import com.jakewharton.diffuse.Method
-import com.jakewharton.diffuse.TypeDescriptor
 import org.junit.Test
 
 class DexMembersTest {
