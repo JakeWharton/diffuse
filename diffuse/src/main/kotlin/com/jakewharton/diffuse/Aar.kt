@@ -25,7 +25,7 @@ class Aar private constructor(
     fun Input.toAar(): Aar {
       toZip().use { zip ->
         val files = zip.toArchiveFiles { it.toAarFileType() }
-        val manifest = zip[Apk.manifestFileName].asInput().toUtf8().toManifest()
+        val manifest = zip[Apk.manifestFileName].asInput().toManifest()
         val classes = zip["classes.jar"].asInput().toJar()
         val libs = zip.entries
             .filter { it.path.matches(libsJarRegex) }

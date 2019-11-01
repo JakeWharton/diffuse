@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse
 
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
 import com.google.devrel.gmscore.tools.apk.arsc.ResourceTableChunk
+import com.jakewharton.diffuse.io.Input
 
 class Arsc private constructor(
   val configs: List<String>,
@@ -22,8 +22,8 @@ class Arsc private constructor(
   companion object {
     @JvmStatic
     @JvmName("create")
-    fun BinaryResourceFile.toArsc(): Arsc {
-      val chunk = chunks.single()
+    fun Input.toArsc(): Arsc {
+      val chunk = toBinaryResourceFile().chunks.single()
       check(chunk is ResourceTableChunk) { "Root arsc chunk is not a resource table " }
 
       val configs = mutableListOf<String>()

@@ -18,6 +18,7 @@ import com.google.devrel.gmscore.tools.apk.arsc.XmlChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlEndElementChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlNamespaceStartChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlStartElementChunk
+import com.jakewharton.diffuse.io.Input
 import java.io.StringReader
 import java.util.ArrayDeque
 import javax.xml.parsers.DocumentBuilderFactory
@@ -42,10 +43,9 @@ class Manifest private constructor(
           isNamespaceAware = true
         }
 
-    @JvmStatic
-    @JvmOverloads
-    @JvmName("parse")
-    fun BinaryResourceFile.toManifest(arsc: Arsc? = null): Manifest = toDocument(arsc).toManifest()
+    internal fun BinaryResourceFile.toManifest(arsc: Arsc? = null): Manifest {
+      return toDocument(arsc).toManifest()
+    }
 
     @JvmStatic
     @JvmName("parse")
@@ -53,6 +53,8 @@ class Manifest private constructor(
 
     @JvmStatic
     @JvmName("parse")
+    fun Input.toManifest(): Manifest = toUtf8().toManifest()
+
     internal fun XmlNode.toManifest(): Manifest {
       return XmlProtoToXmlConverter.convert(XmlProtoNode(this))
           .apply { normalizeWhitespace() }
