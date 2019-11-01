@@ -3,6 +3,8 @@
 package com.jakewharton.diffuse
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.NoRunCliktCommand
+import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
@@ -17,10 +19,12 @@ import com.jakewharton.diffuse.diff.BinaryDiff
 import com.jakewharton.diffuse.io.Input.Companion.asInput
 
 fun main(vararg args: String) {
-  DiffuseCommand().main(args.toList())
+  NoRunCliktCommand(name = "diffuse")
+      .subcommands(DiffCommand())
+      .main(args.toList())
 }
 
-private class DiffuseCommand : CliktCommand(name = "diffuse") {
+private class DiffCommand : CliktCommand(name = "diff") {
   private val old by argument("OLD", help = "Old input file.")
       .path(exists = true, folderOkay = false, readable = true)
 
