@@ -72,18 +72,10 @@ private class DiffCommand(
       val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
       val newMapping = newMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
       return when (type) {
-        Type.Apk -> {
-          BinaryDiff.ofApk(old.toApk(), oldMapping, new.toApk(), newMapping)
-        }
-        Type.Aab -> {
-          BinaryDiff.ofAab(old.toAab(), new.toAab())
-        }
-        Type.Aar -> {
-          BinaryDiff.ofAar(old.toAar(), oldMapping, new.toAar(), newMapping)
-        }
-        Type.Jar -> {
-          BinaryDiff.ofJar(old.toJar(), oldMapping, new.toJar(), newMapping)
-        }
+        Type.Apk -> BinaryDiff.ofApk(old.toApk(), oldMapping, new.toApk(), newMapping)
+        Type.Aab -> BinaryDiff.ofAab(old.toAab(), new.toAab())
+        Type.Aar -> BinaryDiff.ofAar(old.toAar(), oldMapping, new.toAar(), newMapping)
+        Type.Jar -> BinaryDiff.ofJar(old.toJar(), oldMapping, new.toJar(), newMapping)
       }
     }
   }
