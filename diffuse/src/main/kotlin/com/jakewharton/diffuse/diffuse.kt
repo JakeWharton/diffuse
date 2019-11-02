@@ -24,11 +24,19 @@ import com.jakewharton.diffuse.Jar.Companion.toJar
 import com.jakewharton.diffuse.diff.BinaryDiff
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Input.Companion.asInput
+import java.io.PrintStream
+import java.nio.file.FileSystem
+import java.nio.file.FileSystems
 import kotlin.LazyThreadSafetyMode.NONE
 
 fun main(vararg args: String) {
+  val defaultFs = FileSystems.getDefault()
+  val systemOut = System.out
+
   NoRunCliktCommand(name = "diffuse")
-      .subcommands(DiffCommand(), MembersCommand())
+      .subcommands(
+          DiffCommand(defaultFs, defaultFs, systemOut),
+          MembersCommand(defaultFs, systemOut))
       .main(args.toList())
 }
 
@@ -36,7 +44,11 @@ private enum class Type {
   Apk, Aar, Aab, Jar
 }
 
-private class DiffCommand : CliktCommand(name = "diff") {
+private class DiffCommand(
+  inputFs: FileSystem,
+  outputFs: FileSystem,
+  output: PrintStream
+) : CliktCommand(name = "diff") {
   private val inputOptions by object : OptionGroup("Input options") {
     private val type by option(help = "File type of OLD and NEW. Default is 'apk'.")
         .switch("--apk" to Type.Apk, "--aar" to Type.Aar, "--aab" to Type.Aab, "--jar" to Type.Jar)
@@ -85,12 +97,12 @@ private class DiffCommand : CliktCommand(name = "diff") {
           help = "File to write text report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
           metavar = "FILE"
         )
-        .path()
+        .path(fileSystem = outputFs)
     private val html by option(
           help = "File to write HTML report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
           metavar = "FILE"
         )
-        .path()
+        .path(fileSystem = outputFs)
     private val stdout by option(
           help = "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified."
         )
@@ -115,15 +127,15 @@ private class DiffCommand : CliktCommand(name = "diff") {
         ReportType.Html -> htmlReport
         ReportType.None -> null
       }
-      printReport?.let(::println)
+      printReport?.let(output::println)
     }
   }
 
   private val old by argument("OLD", help = "Old input file.")
-      .path(exists = true, folderOkay = false, readable = true)
+      .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
 
   private val new by argument("NEW", help = "New input file.")
-      .path(exists = true, folderOkay = false, readable = true)
+      .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
 
   override fun run() {
     val diff = inputOptions.parse(old.asInput(), new.asInput())
@@ -131,9 +143,12 @@ private class DiffCommand : CliktCommand(name = "diff") {
   }
 }
 
-private class MembersCommand : CliktCommand(name = "members") {
+private class MembersCommand(
+  inputFs: FileSystem,
+  private val stdout: PrintStream
+) : CliktCommand(name = "members") {
   private val binary by argument("FILE", help = "Input file.")
-      .path(exists = true, folderOkay = false, readable = true)
+      .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
 
   private val hideSyntheticNumbers by option("--hide-synthetic-numbers",
       help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.")
@@ -173,6 +188,6 @@ private class MembersCommand : CliktCommand(name = "members") {
       items
     }
     // Re-sort because rendering may subtly change ordering.
-    displayList.map(Member::toString).sorted().forEach(::println)
+    displayList.map(Member::toString).sorted().forEach(stdout::println)
   }
 }
