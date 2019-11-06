@@ -49,7 +49,7 @@ internal fun ArscDiff.toSummaryTable() = diffuseTable {
         borderRight = false
       }
 
-      val delta = if (configsDelta > 0) {
+      val delta = if (configsAdded.isNotEmpty() || configsRemoved.isNotEmpty()) {
         val added = configsAdded.size.toDiffString(zeroSign = '+')
         val removed = (-configsRemoved.size).toDiffString(zeroSign = '-')
         "($added $removed)"
@@ -73,7 +73,7 @@ internal fun ArscDiff.toSummaryTable() = diffuseTable {
         borderRight = false
       }
 
-      val delta = if (entriesDelta > 0) {
+      val delta = if (entriesAdded.isNotEmpty() || entriesRemoved.isNotEmpty()) {
         val added = entriesAdded.size.toDiffString(zeroSign = '+')
         val removed = (-entriesRemoved.size).toDiffString(zeroSign = '-')
         "($added $removed)"
