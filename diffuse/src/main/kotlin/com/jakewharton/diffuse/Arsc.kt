@@ -32,9 +32,13 @@ class Arsc private constructor(
         val packageId = `package`.id
 
         for (typeChunk in `package`.typeChunks) {
-          val typeId = typeChunk.id
-          configs += typeChunk.typeName
+          configs += if (typeChunk.configuration.isDefault) {
+            typeChunk.typeName
+          } else {
+            "${typeChunk.typeName}-${typeChunk.configuration}"
+          }
 
+          val typeId = typeChunk.id
           for ((entryId, entry) in typeChunk.entries) {
             // See BinaryResourceIdentifier for the source of this algorithm.
             val id = ((packageId and 0xFF) shl 24) or
