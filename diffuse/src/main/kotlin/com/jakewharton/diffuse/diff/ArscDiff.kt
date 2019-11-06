@@ -90,7 +90,12 @@ internal fun ArscDiff.toSummaryTable() = diffuseTable {
 }.renderText()
 
 internal fun ArscDiff.toDetailReport() = buildString {
-  fun <T> appendComponentDiff(name: String, added: List<T>, removed: List<T>) {
+  fun <T> appendComponentDiff(
+    name: String,
+    componentSelector: (Arsc) -> Collection<*>,
+    added: List<T>,
+    removed: List<T>
+  ) {
     if (added.isNotEmpty() || removed.isNotEmpty()) {
       appendln()
       appendln("$name:")
@@ -108,7 +113,8 @@ internal fun ArscDiff.toDetailReport() = buildString {
           val diffSize = (added.size - removed.size).toDiffString()
           val addedSize = added.size.toDiffString(zeroSign = '+')
           val removedSize = (-removed.size).toDiffString(zeroSign = '-')
-          row(added.size, removed.size, "$diffSize ($addedSize $removedSize)")
+          row(componentSelector(oldArsc).size, componentSelector(newArsc).size,
+              "$diffSize ($addedSize $removedSize)")
         }.renderText())
         added.forEach {
           appendln("+ $it")
@@ -123,6 +129,6 @@ internal fun ArscDiff.toDetailReport() = buildString {
     }
   }
 
-  appendComponentDiff("CONFIGS", configsAdded, configsRemoved)
-  appendComponentDiff("ENTRIES", entriesAdded, entriesRemoved)
+  appendComponentDiff("CONFIGS", Arsc::configs, configsAdded, configsRemoved)
+  appendComponentDiff("ENTRIES", { it.entries.values }, entriesAdded, entriesRemoved)
 }
