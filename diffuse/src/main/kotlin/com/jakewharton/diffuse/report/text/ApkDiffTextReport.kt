@@ -12,18 +12,18 @@ import com.jakewharton.diffuse.report.toSummaryString
 internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
   override fun write(appendable: Appendable) {
     appendable.apply {
-      appendln(diffuseTable {
-        header {
-          row("OLD/NEW", apkDiff.oldApk.filename, apkDiff.newApk.filename)
-        }
-        body {
-          // TODO do we care about showing a hash?
-          //  row("md5", apkDiff.oldApk.bytes.md5().hex(), apkDiff.newApk.bytes.md5().hex())
-          //  row("sha1", apkDiff.oldApk.bytes.sha1().hex(), apkDiff.newApk.bytes.sha1().hex())
-          row("signature", apkDiff.oldApk.signatures.toSummaryString(), apkDiff.newApk.signatures.toSummaryString())
-          row("mapping", apkDiff.oldMapping.toSummaryString(), apkDiff.newMapping.toSummaryString())
-        }
-      }.toString())
+      append("OLD: ")
+      append(apkDiff.oldApk.filename)
+      append(" (signature: ")
+      append(apkDiff.oldApk.signatures.toSummaryString())
+      appendln(')')
+
+      append("NEW: ")
+      append(apkDiff.newApk.filename)
+      append(" (signature: ")
+      append(apkDiff.newApk.signatures.toSummaryString())
+      appendln(')')
+
       appendln()
       if (apkDiff.lintMessages.isNotEmpty()) {
         appendln(diffuseTable {
