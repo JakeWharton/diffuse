@@ -15,6 +15,8 @@ internal class AabDiff(
     val archive = ArchiveFilesDiff(oldModule.files, newModule.files)
     val dex = DexDiff(oldModule.dexes, oldAab.apiMapping, newModule.dexes, newAab.apiMapping)
     val manifest = ManifestDiff(oldModule.manifest, newModule.manifest)
+
+    val changed = archive.changed || dex.changed || manifest.changed
   }
 
   val baseModule = ModuleDiff(oldAab.baseModule, newAab.baseModule)
