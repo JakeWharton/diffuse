@@ -7,6 +7,9 @@ import com.jakewharton.diffuse.io.Zip
 class ArchiveFiles internal constructor(
   private val files: Map<String, ArchiveFile>
 ) : Map<String, ArchiveFile> by files {
+  override fun hashCode() = files.hashCode()
+  override fun equals(other: Any?) = other is ArchiveFiles && files == other.files
+
   companion object {
     @JvmStatic
     @JvmName("parse")
