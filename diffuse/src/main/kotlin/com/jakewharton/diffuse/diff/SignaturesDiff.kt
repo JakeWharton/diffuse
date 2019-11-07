@@ -2,6 +2,7 @@ package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.Signatures
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.picnic.TextAlignment.TopRight
 import okio.ByteString
 
 internal class SignaturesDiff(
@@ -15,22 +16,34 @@ internal fun SignaturesDiff.toDetailReport() = buildString {
   appendln()
   appendln(diffuseTable {
     header {
-      row("", "old", "new")
+      row("SIGNATURES", "old", "new")
     }
     if (oldSignatures.v1.isNotEmpty() || newSignatures.v1.isNotEmpty()) {
-      row("V1",
-          oldSignatures.v1.joinToString("\n", transform = ByteString::hex),
-          newSignatures.v1.joinToString("\n", transform = ByteString::hex))
+      row {
+        cell("V1") {
+          alignment = TopRight
+        }
+        cell(oldSignatures.v1.joinToString("\n", transform = ByteString::hex))
+        cell(newSignatures.v1.joinToString("\n", transform = ByteString::hex))
+      }
     }
     if (oldSignatures.v2.isNotEmpty() || newSignatures.v2.isNotEmpty()) {
-      row("V2",
-          oldSignatures.v2.joinToString("\n", transform = ByteString::hex),
-          newSignatures.v2.joinToString("\n", transform = ByteString::hex))
+      row {
+        cell("V2") {
+          alignment = TopRight
+        }
+        cell(oldSignatures.v2.joinToString("\n", transform = ByteString::hex))
+        cell(newSignatures.v2.joinToString("\n", transform = ByteString::hex))
+      }
     }
     if (oldSignatures.v3.isNotEmpty() || newSignatures.v3.isNotEmpty()) {
-      row("V3",
-          oldSignatures.v3.joinToString("\n", transform = ByteString::hex),
-          newSignatures.v3.joinToString("\n", transform = ByteString::hex))
+      row {
+        cell("V3") {
+          alignment = TopRight
+        }
+        cell(oldSignatures.v3.joinToString("\n", transform = ByteString::hex))
+        cell(newSignatures.v3.joinToString("\n", transform = ByteString::hex))
+      }
     }
   })
 }
