@@ -28,7 +28,7 @@ class Aab private constructor(
       internal const val manifestFilePath = "manifest/${Apk.manifestFileName}"
 
       fun Zip.toModule(): Module {
-        val files = this.toArchiveFiles { it.toAabFileType() }
+        val files = toArchiveFiles { it.toAabFileType() }
         val manifest = this[manifestFilePath].asInput().source().use {
           XmlNode.parseFrom(it.inputStream()).toManifest()
         }
