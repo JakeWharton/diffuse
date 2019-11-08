@@ -20,6 +20,7 @@ internal class AabDiff(
   }
 
   val baseModule = ModuleDiff(oldAab.baseModule, newAab.baseModule)
+  val featureModuleNames = (oldAab.featureModules.keys + newAab.featureModules.keys).sorted()
 
   val addedFeatureModules = newAab.featureModules.filterKeys { it !in oldAab.featureModules }
   val removedFeatureModules = oldAab.featureModules.filterKeys { it !in newAab.featureModules }
