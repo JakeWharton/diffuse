@@ -11,7 +11,7 @@ internal class JarDiff(
   val newJar: Jar,
   val newMapping: ApiMapping
 ) : BinaryDiff {
-  val archive = ArchiveFilesDiff(oldJar.files, newJar.files)
+  val archive = ArchiveFilesDiff(oldJar.files, newJar.files, includeCompressed = false)
   val jars = JarsDiff(listOf(oldJar), oldMapping, listOf(newJar), newMapping)
 
   val changed = jars.changed || archive.changed

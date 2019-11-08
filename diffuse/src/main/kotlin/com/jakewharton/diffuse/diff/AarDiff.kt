@@ -11,7 +11,7 @@ internal class AarDiff(
   val newAar: Aar,
   val newMapping: ApiMapping
 ) : BinaryDiff {
-  val archive = ArchiveFilesDiff(oldAar.files, newAar.files)
+  val archive = ArchiveFilesDiff(oldAar.files, newAar.files, includeCompressed = false)
   val jars = JarsDiff(oldAar.jars, oldMapping, newAar.jars, newMapping)
   val manifest = ManifestDiff(oldAar.manifest, newAar.manifest)
 

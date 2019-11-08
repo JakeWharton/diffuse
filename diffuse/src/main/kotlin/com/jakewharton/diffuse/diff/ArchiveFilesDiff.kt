@@ -15,7 +15,8 @@ import com.jakewharton.picnic.renderText
 
 internal class ArchiveFilesDiff(
   val oldFiles: ArchiveFiles,
-  val newFiles: ArchiveFiles
+  val newFiles: ArchiveFiles,
+  val includeCompressed: Boolean = true
 ) {
   data class Change(
     val path: String,
@@ -46,7 +47,13 @@ internal class ArchiveFilesDiff(
       }
     }
     val changed = oldFiles.mapNotNull { (path, oldFile) ->
-      val newFile = newFiles[path]
+      val newFile = newFiles[path]?.let {
+        if (includeCompressed) {
+          it
+        } else {
+          it.copy(size = oldFile.size, isCompressed = oldFile.isCompressed)
+        }
+      }
       if (newFile != null && newFile != oldFile) {
         Change(path, newFile.size, newFile.size - oldFile.size,
             newFile.uncompressedSize, newFile.uncompressedSize - oldFile.uncompressedSize,
@@ -68,21 +75,32 @@ internal fun ArchiveFilesDiff.toSummaryTable(
   skipIfEmptyTypes: Set<Type> = emptySet()
 ) = diffuseTable {
   header {
-    row {
-      cell(name) {
-        alignment = BottomLeft
-        rowSpan = 2
+    if (includeCompressed) {
+      row {
+        cell(name) {
+          alignment = BottomLeft
+          rowSpan = 2
+        }
+        cell("compressed") {
+          columnSpan = 3
+          alignment = BottomCenter
+        }
+        cell("uncompressed") {
+          columnSpan = 3
+          alignment = BottomCenter
+        }
       }
-      cell("compressed") {
-        columnSpan = 3
-        alignment = BottomCenter
-      }
-      cell("uncompressed") {
-        columnSpan = 3
-        alignment = BottomCenter
+      row("old", "new", "diff", "old", "new", "diff")
+    } else {
+      row {
+        cell(name) {
+          alignment = BottomLeft
+        }
+        cell("old")
+        cell("new")
+        cell("diff")
       }
     }
-    row("old", "new", "diff", "old", "new", "diff")
   }
 
   fun SectionDsl.addApkRow(name: String, type: Type? = null) {
@@ -93,8 +111,13 @@ internal fun ArchiveFilesDiff.toSummaryTable(
     val oldUncompressedSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
     val newUncompressedSize = new.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
     if (oldSize != Size.ZERO || newSize != Size.ZERO || type !in skipIfEmptyTypes) {
-      row(name, oldSize, newSize, (newSize - oldSize).toDiffString(), oldUncompressedSize,
-          newUncompressedSize, (newUncompressedSize - oldUncompressedSize).toDiffString())
+      val uncompressedDiff = (newUncompressedSize - oldUncompressedSize).toDiffString()
+      if (includeCompressed) {
+        row(name, oldSize, newSize, (newSize - oldSize).toDiffString(), oldUncompressedSize,
+            newUncompressedSize, uncompressedDiff)
+      } else {
+        row(name, oldUncompressedSize, newUncompressedSize, uncompressedDiff)
+      }
     }
   }
 
@@ -119,34 +142,46 @@ internal fun ArchiveFilesDiff.toDetailReport() = buildString {
   appendln()
   appendln(diffuseTable {
     header {
-      row {
-        cell("compressed") {
-          columnSpan = 2
-          alignment = MiddleCenter
+      if (includeCompressed) {
+        row {
+          cell("compressed") {
+            columnSpan = 2
+            alignment = MiddleCenter
+          }
+          cell("uncompressed") {
+            columnSpan = 2
+            alignment = MiddleCenter
+          }
+          cell("path") {
+            rowSpan = 2
+            alignment = BottomLeft
+          }
         }
-        cell("uncompressed") {
-          columnSpan = 2
-          alignment = MiddleCenter
-        }
-        cell("path") {
-          rowSpan = 2
-          alignment = BottomLeft
+        row("size", "diff", "size", "diff")
+      } else {
+        row {
+          cell("size")
+          cell("diff")
+          cell("path") {
+            alignment = BottomLeft
+          }
         }
       }
-      row("size", "diff", "size", "diff")
     }
     footer {
-      val totalSize = changes.fold(Size.ZERO) { acc, change -> acc + change.size }
-      val totalDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.sizeDiff }
-      val totalUncompressedSize = changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSize }
-      val totalUncompressedDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSizeDiff }
       row {
-        cell(totalSize) {
-          alignment = MiddleRight
+        if (includeCompressed) {
+          val totalSize = changes.fold(Size.ZERO) { acc, change -> acc + change.size }
+          val totalDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.sizeDiff }
+          cell(totalSize) {
+            alignment = MiddleRight
+          }
+          cell(totalDiff.toDiffString()) {
+            alignment = MiddleRight
+          }
         }
-        cell(totalDiff.toDiffString()) {
-          alignment = MiddleRight
-        }
+        val totalUncompressedSize = changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSize }
+        val totalUncompressedDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSizeDiff }
         cell(totalUncompressedSize) {
           alignment = MiddleRight
         }
@@ -163,11 +198,13 @@ internal fun ArchiveFilesDiff.toDetailReport() = buildString {
         Change.Type.Changed -> '∆'
       }
       row {
-        cell(if (type != Change.Type.Removed) size else "") {
-          alignment = MiddleRight
-        }
-        cell(sizeDiff.toDiffString()) {
-          alignment = MiddleRight
+        if (includeCompressed) {
+          cell(if (type != Change.Type.Removed) size else "") {
+            alignment = MiddleRight
+          }
+          cell(sizeDiff.toDiffString()) {
+            alignment = MiddleRight
+          }
         }
         cell(if (type != Change.Type.Removed) uncompressedSize else "") {
           alignment = MiddleRight
