@@ -50,7 +50,7 @@ private class DeclaredMembersVisitor(
     signature: String?,
     exceptions: Array<out String>?
   ): MethodVisitor? {
-    members += parseMethod(type!!, name, descriptor)
+    members += parseMethod(type, name, descriptor)
     return methodVisitor
   }
 
@@ -61,7 +61,7 @@ private class DeclaredMembersVisitor(
     signature: String?,
     value: Any?
   ): FieldVisitor? {
-    members += Field(type!!, name, TypeDescriptor(descriptor))
+    members += Field(type, name, TypeDescriptor(descriptor))
     return null
   }
 }
