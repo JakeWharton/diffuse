@@ -28,10 +28,10 @@ internal class JarsDiff(
   val changed = methods.changed || fields.changed
 }
 
-internal fun JarsDiff.toSummaryTable() = diffuseTable {
+internal fun JarsDiff.toSummaryTable(name: String) = diffuseTable {
   header {
     row {
-      cell("JAR")
+      cell(name)
       cell("old")
       cell("new")
       cell("diff") {

@@ -19,7 +19,7 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : DiffReport {
       appendln(aarDiff.archive.toSummaryTable("AAR", Type.AAR_TYPES,
           skipIfEmptyTypes = setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res)))
       appendln()
-      appendln(aarDiff.jars.toSummaryTable())
+      appendln(aarDiff.jars.toSummaryTable("JAR"))
       if (aarDiff.archive.changed) {
         appendln()
         appendln("=================")
