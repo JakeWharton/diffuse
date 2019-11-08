@@ -1,6 +1,7 @@
 package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.ApiMapping
+import com.jakewharton.diffuse.Class
 import com.jakewharton.diffuse.Field
 import com.jakewharton.diffuse.Jar
 import com.jakewharton.diffuse.Method
@@ -16,7 +17,7 @@ internal class JarsDiff(
   val newJars: List<Jar>,
   val newMapping: ApiMapping
 ) {
-  val classes = componentDiff(oldJars, newJars) { it.classes }
+  val classes = componentDiff(oldJars, newJars) { it.classes.map(Class::descriptor) }
   val methods = componentDiff(oldJars, newJars) { it.members.filterIsInstance<Method>() }
   val declaredMethods = componentDiff(oldJars, newJars) { it.declaredMembers.filterIsInstance<Method>() }
   val referencedMethods = componentDiff(oldJars, newJars) { it.referencedMembers.filterIsInstance<Method>() }
