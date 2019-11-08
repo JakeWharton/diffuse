@@ -17,9 +17,7 @@ dependencies {
   implementation deps.androidTools.aapt2Proto
   implementation deps.byteunits
   implementation deps.asm
-  implementation(deps.diffUtils) {
-    exclude group: 'org.eclipse.jgit'
-  }
+  implementation deps.diffUtils
 
   testImplementation deps.junit
   testImplementation deps.truth
