@@ -1,6 +1,7 @@
 package com.jakewharton.diffuse
 
 import com.jakewharton.diffuse.io.Input
+import java.util.Objects
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.FieldVisitor
@@ -8,39 +9,39 @@ import org.objectweb.asm.Handle
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
-internal class Class private constructor(
+class Class private constructor(
+  val descriptor: TypeDescriptor,
   val declaredMembers: List<Member>,
   val referencedMembers: List<Member>
 ) {
-  companion object {
-    fun Input.toClass(): Class {
-      val referencedVisitor = ReferencedMembersVisitor()
-      val declaredVisitor = DeclaredMembersVisitor(referencedVisitor)
-      ClassReader(toByteArray()).accept(declaredVisitor, 0)
+  override fun toString() = descriptor.toString()
+  override fun hashCode() = Objects.hash(descriptor, declaredMembers, referencedMembers)
+  override fun equals(other: Any?) = other is Class &&
+      descriptor == other.descriptor &&
+      declaredMembers == other.declaredMembers &&
+      referencedMembers == other.referencedMembers
 
-      return Class(declaredVisitor.members.sorted(), referencedVisitor.members.sorted())
+  companion object {
+    @JvmStatic
+    @JvmName("parse")
+    fun Input.toClass(): Class {
+      val reader = ClassReader(toByteArray())
+      val type = TypeDescriptor("L${reader.className};")
+
+      val referencedVisitor = ReferencedMembersVisitor()
+      val declaredVisitor = DeclaredMembersVisitor(type, referencedVisitor)
+      reader.accept(declaredVisitor, 0)
+
+      return Class(type, declaredVisitor.members.sorted(), referencedVisitor.members.sorted())
     }
   }
 }
 
 private class DeclaredMembersVisitor(
+  val type: TypeDescriptor,
   val methodVisitor: MethodVisitor
 ) : ClassVisitor(Opcodes.ASM7) {
   val members = mutableListOf<Member>()
-
-  // TODO lateinit https://youtrack.jetbrains.com/issue/KT-23814
-  private var type: TypeDescriptor? = null
-
-  override fun visit(
-    version: Int,
-    access: Int,
-    name: String,
-    signature: String?,
-    superName: String?,
-    interfaces: Array<out String>?
-  ) {
-    type = TypeDescriptor("L$name;")
-  }
 
   override fun visitMethod(
     access: Int,

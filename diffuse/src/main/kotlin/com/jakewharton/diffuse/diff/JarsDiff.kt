@@ -16,6 +16,7 @@ internal class JarsDiff(
   val newJars: List<Jar>,
   val newMapping: ApiMapping
 ) {
+  val classes = componentDiff(oldJars, newJars) { it.classes }
   val methods = componentDiff(oldJars, newJars) { it.members.filterIsInstance<Method>() }
   val declaredMethods = componentDiff(oldJars, newJars) { it.declaredMembers.filterIsInstance<Method>() }
   val referencedMethods = componentDiff(oldJars, newJars) { it.referencedMembers.filterIsInstance<Method>() }
@@ -43,7 +44,7 @@ internal fun JarsDiff.toSummaryTable() = diffuseTable {
       alignment = MiddleRight
     }
 
-    fun addDexRow(name: String, diff: ComponentDiff<*>) = row {
+    fun addRow(name: String, diff: ComponentDiff<*>) = row {
       cell(name)
       cell(diff.oldCount)
       cell(diff.newCount)
@@ -60,17 +61,16 @@ internal fun JarsDiff.toSummaryTable() = diffuseTable {
       }
     }
 
-    // TODO addDexRow("strings", strings)
-    // TODO addDexRow("types", types)
-    // TODO addDexRow("classes", classes)
-    addDexRow("methods", methods)
-    addDexRow("fields", fields)
+    // TODO addRow("strings", strings)?
+    addRow("classes", classes)
+    addRow("methods", methods)
+    addRow("fields", fields)
   }
 }.renderText()
 
 internal fun JarsDiff.toDetailReport() = buildString {
-  // TODO appendComponentDiff("STRINGS", strings)
-  // TODO appendComponentDiff("TYPES", types)
+  // TODO appendComponentDiff("STRINGS", strings)?
+  appendComponentDiff("CLASSES", classes)
   appendComponentDiff("METHODS", methods)
   appendComponentDiff("FIELDS", fields)
 }

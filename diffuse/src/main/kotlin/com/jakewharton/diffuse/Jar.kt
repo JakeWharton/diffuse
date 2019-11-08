@@ -8,6 +8,7 @@ import com.jakewharton.diffuse.io.Input
 class Jar private constructor(
   override val filename: String?,
   val files: ArchiveFiles,
+  val classes: List<Class>,
   val declaredMembers: List<Member>,
   val referencedMembers: List<Member>
 ) : Binary {
@@ -20,20 +21,16 @@ class Jar private constructor(
       toZip().use { zip ->
         val files = zip.toArchiveFiles { it.toJarFileType() }
 
-        val declaredMembers = mutableListOf<Member>()
-        val referencedMembers = mutableSetOf<Member>()
-        zip.entries
+        val classes = zip.entries
             .filter { it.path.endsWith(".class") }
-            .forEach { entry ->
-              val cls = entry.asInput().toClass()
-              declaredMembers += cls.declaredMembers
-              referencedMembers += cls.referencedMembers
-            }
+            .map { it.asInput().toClass() }
 
-        // Declared methods are likely to reference other declared members.
+        val declaredMembers = classes.flatMap { it.declaredMembers }
+        val referencedMembers = classes.flatMapTo(LinkedHashSet()) { it.referencedMembers }
+        // Declared methods are likely to reference other declared members. Ensure all are removed.
         referencedMembers -= declaredMembers
 
-        return Jar(name, files, declaredMembers.sorted(), referencedMembers.sorted())
+        return Jar(name, files, classes, declaredMembers.sorted(), referencedMembers.sorted())
       }
     }
   }
