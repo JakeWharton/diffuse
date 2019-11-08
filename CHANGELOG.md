@@ -1,6 +1,21 @@
 Change Log
 ==========
 
+Version 0.1.0 *(In development)*
+--------------------------------
+
+TODO stuff!
+
+
+----
+
+`dex-member-list` Change Log:
+=============================
+
+Note: The project was renamed from `dex-member-list` to `diffuse` at this point in the version
+history. The versions below are for the `dex-member-list` tool.
+
+
 Version 4.1.1 *(2019-09-11)*
 ----------------------------
 

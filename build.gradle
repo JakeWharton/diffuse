@@ -14,7 +14,6 @@ buildscript {
       'kotlin': [
           'stdlibJdk8': "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
       ],
-      'r8': 'com.android.tools:r8:1.5.68',
       'clikt': 'com.github.ajalt:clikt:2.3.0',
       'junit': 'junit:junit:4.13-rc-1',
       'truth': 'com.google.truth:truth:1.0',
