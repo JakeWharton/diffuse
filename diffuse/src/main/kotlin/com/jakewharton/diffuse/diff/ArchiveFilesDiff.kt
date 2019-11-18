@@ -6,7 +6,7 @@ import com.jakewharton.diffuse.Size
 import com.jakewharton.diffuse.diff.ArchiveFilesDiff.Change
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.report.toDiffString
-import com.jakewharton.picnic.SectionDsl
+import com.jakewharton.picnic.TableSectionDsl
 import com.jakewharton.picnic.TextAlignment.BottomCenter
 import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleCenter
@@ -103,7 +103,7 @@ internal fun ArchiveFilesDiff.toSummaryTable(
     }
   }
 
-  fun SectionDsl.addApkRow(name: String, type: Type? = null) {
+  fun TableSectionDsl.addApkRow(name: String, type: Type? = null) {
     val old = if (type != null) oldFiles.filterValues { it.type == type } else oldFiles
     val new = if (type != null) newFiles.filterValues { it.type == type } else newFiles
     val oldSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.size }

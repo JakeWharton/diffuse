@@ -1,9 +1,9 @@
 package com.jakewharton.diffuse
 
 import com.jakewharton.picnic.BorderStyle
-import com.jakewharton.picnic.SectionDsl
 import com.jakewharton.picnic.Table
 import com.jakewharton.picnic.TableDsl
+import com.jakewharton.picnic.TableSectionDsl
 import com.jakewharton.picnic.table
 
 internal fun diffuseTable(content: TableDsl.() -> Unit): Table = table {
@@ -20,7 +20,7 @@ internal fun diffuseTable(content: TableDsl.() -> Unit): Table = table {
 }
 
 private class DiffuseTableDsl(private val delegate: TableDsl) : TableDsl by delegate {
-  override fun header(content: SectionDsl.() -> Unit) {
+  override fun header(content: TableSectionDsl.() -> Unit) {
     delegate.header {
       cellStyle {
         borderBottom = true
@@ -29,7 +29,7 @@ private class DiffuseTableDsl(private val delegate: TableDsl) : TableDsl by dele
     }
   }
 
-  override fun footer(content: SectionDsl.() -> Unit) {
+  override fun footer(content: TableSectionDsl.() -> Unit) {
     delegate.footer {
       cellStyle {
         borderTop = true
