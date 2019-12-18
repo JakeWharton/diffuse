@@ -20,6 +20,7 @@ import com.jakewharton.diffuse.Aab.Module
 import com.jakewharton.diffuse.Aar.Companion.toAar
 import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
 import com.jakewharton.diffuse.Apk.Companion.toApk
+import com.jakewharton.diffuse.Dex.Companion.toDex
 import com.jakewharton.diffuse.Jar.Companion.toJar
 import com.jakewharton.diffuse.diff.BinaryDiff
 import com.jakewharton.diffuse.io.Input
@@ -41,7 +42,7 @@ fun main(vararg args: String) {
 }
 
 private enum class Type {
-  Apk, Aar, Aab, Jar
+  Apk, Aar, Aab, Jar, Dex
 }
 
 private class DiffCommand(
@@ -76,6 +77,7 @@ private class DiffCommand(
         Type.Aab -> BinaryDiff.ofAab(old.toAab(), new.toAab())
         Type.Aar -> BinaryDiff.ofAar(old.toAar(), oldMapping, new.toAar(), newMapping)
         Type.Jar -> BinaryDiff.ofJar(old.toJar(), oldMapping, new.toJar(), newMapping)
+        Type.Dex -> error("Unsupported")
       }
     }
   }
@@ -147,7 +149,7 @@ private class MembersCommand(
       .flag()
 
   private val type by option(help = "File type. Default is 'apk'.")
-      .switch("--apk" to Type.Apk, "--aar" to Type.Aar, "--aab" to Type.Aab, "--jar" to Type.Jar)
+      .switch("--apk" to Type.Apk, "--aar" to Type.Aar, "--aab" to Type.Aab, "--jar" to Type.Jar, "--dex" to Type.Dex)
       .default(Type.Apk)
 
   private val mode by option(help = "Items to display. Default is all (methods and fields).")
@@ -166,6 +168,7 @@ private class MembersCommand(
       Type.Aab -> input.toAab().modules.flatMap(Module::dexes).flatMap(Dex::members)
       Type.Aar -> input.toAar().jars.flatMap(Jar::members)
       Type.Jar -> input.toJar().members
+      Type.Dex -> input.toDex().members
     }.toSet()
 
     val items = when (mode) {
