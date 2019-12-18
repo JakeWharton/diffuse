@@ -9,10 +9,10 @@ class Jar private constructor(
   override val filename: String?,
   val files: ArchiveFiles,
   val classes: List<Class>,
-  val declaredMembers: List<Member>,
-  val referencedMembers: List<Member>
-) : Binary {
-  val members = declaredMembers + referencedMembers
+  override val declaredMembers: List<Member>,
+  override val referencedMembers: List<Member>
+) : Binary, BinaryMembers {
+  override val members = declaredMembers + referencedMembers
 
   companion object {
     @JvmStatic

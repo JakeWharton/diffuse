@@ -10,10 +10,10 @@ class Dex private constructor(
   val strings: List<String>,
   val types: List<String>,
   val classes: List<TypeDescriptor>,
-  val declaredMembers: List<Member>,
-  val referencedMembers: List<Member>
-) {
-  val members = declaredMembers + referencedMembers
+  override val declaredMembers: List<Member>,
+  override val referencedMembers: List<Member>
+) : BinaryMembers {
+  override val members = declaredMembers + referencedMembers
 
   fun withMapping(mapping: ApiMapping): Dex {
     if (mapping.isEmpty()) return this

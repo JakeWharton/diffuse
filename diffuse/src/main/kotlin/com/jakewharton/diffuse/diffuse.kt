@@ -41,7 +41,7 @@ fun main(vararg args: String) {
       .main(args.toList())
 }
 
-private enum class Type {
+private enum class BinaryType {
   Apk, Aar, Aab, Jar, Dex
 }
 
@@ -52,8 +52,8 @@ private class DiffCommand(
 ) : CliktCommand(name = "diff") {
   private val inputOptions by object : OptionGroup("Input options") {
     private val type by option(help = "File type of OLD and NEW. Default is 'apk'.")
-        .switch("--apk" to Type.Apk, "--aar" to Type.Aar, "--aab" to Type.Aab, "--jar" to Type.Jar)
-        .default(Type.Apk)
+        .switch("--apk" to BinaryType.Apk, "--aar" to BinaryType.Aar, "--aab" to BinaryType.Aab, "--jar" to BinaryType.Jar)
+        .default(BinaryType.Apk)
 
     private val oldMappingPath by option(
           "--old-mapping",
@@ -73,11 +73,11 @@ private class DiffCommand(
       val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
       val newMapping = newMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
       return when (type) {
-        Type.Apk -> BinaryDiff.ofApk(old.toApk(), oldMapping, new.toApk(), newMapping)
-        Type.Aab -> BinaryDiff.ofAab(old.toAab(), new.toAab())
-        Type.Aar -> BinaryDiff.ofAar(old.toAar(), oldMapping, new.toAar(), newMapping)
-        Type.Jar -> BinaryDiff.ofJar(old.toJar(), oldMapping, new.toJar(), newMapping)
-        Type.Dex -> error("Unsupported")
+        BinaryType.Apk -> BinaryDiff.ofApk(old.toApk(), oldMapping, new.toApk(), newMapping)
+        BinaryType.Aab -> BinaryDiff.ofAab(old.toAab(), new.toAab())
+        BinaryType.Aar -> BinaryDiff.ofAar(old.toAar(), oldMapping, new.toAar(), newMapping)
+        BinaryType.Jar -> BinaryDiff.ofJar(old.toJar(), oldMapping, new.toJar(), newMapping)
+        BinaryType.Dex -> error("Unsupported")
       }
     }
   }
@@ -148,33 +148,49 @@ private class MembersCommand(
       help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.")
       .flag()
 
-  private val type by option(help = "File type. Default is 'apk'.")
-      .switch("--apk" to Type.Apk, "--aar" to Type.Aar, "--aab" to Type.Aab, "--jar" to Type.Jar, "--dex" to Type.Dex)
-      .default(Type.Apk)
+  private val binaryType by option(help = "File type. Default is 'apk'.")
+      .switch("--apk" to BinaryType.Apk, "--aar" to BinaryType.Aar, "--aab" to BinaryType.Aab, "--jar" to BinaryType.Jar, "--dex" to BinaryType.Dex)
+      .default(BinaryType.Apk)
 
-  private val mode by option(help = "Items to display. Default is all (methods and fields).")
-      .switch("--all" to Mode.All, "--methods" to Mode.Methods, "--fields" to Mode.Fields)
-      .default(Mode.All)
+  private val type by option(help = "Item types to display. Default is both (methods and fields).")
+      .switch("--methods" to Type.Methods, "--fields" to Type.Fields)
+      .default(Type.All)
 
-  enum class Mode {
+  enum class Type {
     All, Methods, Fields
+  }
+
+  private val ownership by option(help = "Item ownerships to display. Default is both (declared and referenced).")
+      .switch("--declared" to Ownership.Declared, "--referenced" to Ownership.Referenced)
+      .default(Ownership.All)
+
+  enum class Ownership {
+    All, Declared, Referenced
   }
 
   override fun run() {
     val input = binary.asInput()
 
-    val members = when (type) {
-      Type.Apk -> input.toApk().dexes.flatMap(Dex::members)
-      Type.Aab -> input.toAab().modules.flatMap(Module::dexes).flatMap(Dex::members)
-      Type.Aar -> input.toAar().jars.flatMap(Jar::members)
-      Type.Jar -> input.toJar().members
-      Type.Dex -> input.toDex().members
-    }.toSet()
+    val memberSelector = when (ownership) {
+      Ownership.All -> BinaryMembers::members
+      Ownership.Declared -> BinaryMembers::declaredMembers
+      Ownership.Referenced -> BinaryMembers::referencedMembers
+    }
 
-    val items = when (mode) {
-      Mode.All -> members
-      Mode.Methods -> members.filterIsInstance<Method>()
-      Mode.Fields -> members.filterIsInstance<Field>()
+    val binaryMembers = when (binaryType) {
+      BinaryType.Apk -> input.toApk().dexes
+      BinaryType.Aab -> input.toAab().modules.flatMap(Module::dexes)
+      BinaryType.Aar -> input.toAar().jars
+      BinaryType.Jar -> listOf(input.toJar())
+      BinaryType.Dex -> listOf(input.toDex())
+    }
+
+    val members = binaryMembers.map(memberSelector).flatten().toSet()
+
+    val items = when (type) {
+      Type.All -> members
+      Type.Methods -> members.filterIsInstance<Method>()
+      Type.Fields -> members.filterIsInstance<Field>()
     }
 
     val displayList = if (hideSyntheticNumbers) {
