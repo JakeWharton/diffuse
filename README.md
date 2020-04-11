@@ -120,13 +120,38 @@ METHODS:
 Usage
 -----
 
-Coming soon.
+APK:
+```
+$ diffuse diff old.apk new.apk
+```
+
+AAB:
+```
+$ diffuse diff --aab old.aab new.aab
+```
+
+AAR:
+```
+$ diffuse diff --aar old.aar new.aar
+```
+
+JAR:
+```
+$ diffuse diff --jar old.jar new.jar
+```
+
+See more by running `--help`.
 
 
 Download
 --------
 
-Coming soon.
+Until binary releases are available:
+
+ 1. Clone the repository.
+ 2. Run `./gradlew assemble` from repository root.
+ 3. The executable will be created at `diffuse/build/diffuse`.
+ 4. Copy it to desired location or put it on your `$PATH`.
 
 
 License
