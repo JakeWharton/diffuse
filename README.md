@@ -120,18 +120,38 @@ METHODS:
 Usage
 -----
 
+APK:
 ```
-$ ./diffuse diff old.apk new.apk
+$ diffuse diff old.apk new.apk
 ```
+
+AAB:
+```
+$ diffuse diff --aab old.aab new.aab
+```
+
+AAR:
+```
+$ diffuse diff --aar old.aar new.aar
+```
+
+JAR:
+```
+$ diffuse diff --jar old.jar new.jar
+```
+
+See more by running `--help`.
 
 
 Download
 --------
 
-1. Clone this repository.
-1. Run `./gradlew assemble` from reopsitory root.
-1. An executable will be created at `./diffuse/build/diffuse`.
-1. Copy it where you want to use it (like to a folder where you have two APKs you want to compare) or put it on your `$PATH`.
+Until binary releases are available:
+
+ 1. Clone the repository.
+ 2. Run `./gradlew assemble` from repository root.
+ 3. The executable will be created at `diffuse/build/diffuse`.
+ 4. Copy it to desired location or put it on your `$PATH`.
 
 
 License
