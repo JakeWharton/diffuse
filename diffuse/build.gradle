@@ -52,7 +52,7 @@ def binaryDiffuseJar = tasks.register('binaryDiffuseJar') { task ->
 
     binaryDiffuseFile.getParentFile().mkdirs()
     binaryDiffuseFile.delete()
-    binaryDiffuseFile << "#!/bin/sh\n\nexec java -jar \$0 \"\$@\"\n\n"
+    binaryDiffuseFile << "#!/bin/sh\n\nexec java \$JAVA_OPTS -jar \$0 \"\$@\"\n\n"
     fatJarFile.withInputStream { binaryDiffuseFile.append it }
 
     binaryDiffuseFile.setExecutable true, false
