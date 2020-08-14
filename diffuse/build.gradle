@@ -33,8 +33,11 @@ def fatDiffuseJarProvider = tasks.register('fatDiffuseJar', Jar) { task ->
     attributes 'Main-Class': 'com.jakewharton.diffuse.Diffuse'
   }
 
+  def sourceClasses = sourceSets.main.output.classesDirs
+  task.inputs.files(sourceClasses)
+
   task.doFirst {
-    task.from files(sourceSets.main.output.classesDirs)
+    task.from files(sourceClasses)
     task.from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
   }
 }
