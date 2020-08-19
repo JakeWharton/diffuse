@@ -26,28 +26,39 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
 
       appendln()
       if (apkDiff.lintMessages.isNotEmpty()) {
-        appendln(diffuseTable {
-          header {
-            row("NOTICES")
-          }
-          body {
-            apkDiff.lintMessages.sorted().forEach { notice ->
-              row(buildString {
-                append(when (notice.type) {
-                  Notice.Type.Informational -> 'i'
-                  Notice.Type.Warning -> '!'
-                  Notice.Type.Resolution -> '✓'
-                })
-                append("  ")
-                append(notice.message)
-              })
+        appendln(
+          diffuseTable {
+            header {
+              row("NOTICES")
             }
-          }
-        }.toString())
+            body {
+              apkDiff.lintMessages.sorted().forEach { notice ->
+                row(
+                  buildString {
+                    append(
+                      when (notice.type) {
+                        Notice.Type.Informational -> 'i'
+                        Notice.Type.Warning -> '!'
+                        Notice.Type.Resolution -> '✓'
+                      }
+                    )
+                    append("  ")
+                    append(notice.message)
+                  }
+                )
+              }
+            }
+          }.toString()
+        )
         appendln()
       }
-      appendln(apkDiff.archive.toSummaryTable("APK", Type.APK_TYPES,
-          skipIfEmptyTypes = setOf(Type.Native)))
+      appendln(
+        apkDiff.archive.toSummaryTable(
+          "APK",
+          Type.APK_TYPES,
+          skipIfEmptyTypes = setOf(Type.Native)
+        )
+      )
       appendln()
       appendln(apkDiff.dex.toSummaryTable())
       appendln()

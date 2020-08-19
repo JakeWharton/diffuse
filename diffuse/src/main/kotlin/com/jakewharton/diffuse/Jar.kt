@@ -22,8 +22,8 @@ class Jar private constructor(
         val files = zip.toArchiveFiles { it.toJarFileType() }
 
         val classes = zip.entries
-            .filter { it.path.endsWith(".class") }
-            .map { it.asInput().toClass() }
+          .filter { it.path.endsWith(".class") }
+          .map { it.asInput().toClass() }
 
         val declaredMembers = classes.flatMap { it.declaredMembers }
         val referencedMembers = classes.flatMapTo(LinkedHashSet()) { it.referencedMembers }

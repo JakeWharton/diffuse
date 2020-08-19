@@ -28,8 +28,8 @@ class Aar private constructor(
         val manifest = zip[Apk.manifestFileName].asInput().toManifest()
         val classes = zip["classes.jar"].asInput().toJar()
         val libs = zip.entries
-            .filter { it.path.matches(libsJarRegex) }
-            .map { it.asInput().toJar() }
+          .filter { it.path.matches(libsJarRegex) }
+          .map { it.asInput().toJar() }
         return Aar(name, files, manifest, classes, libs)
       }
     }

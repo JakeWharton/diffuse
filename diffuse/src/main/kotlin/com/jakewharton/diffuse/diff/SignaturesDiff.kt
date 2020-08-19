@@ -14,36 +14,38 @@ internal class SignaturesDiff(
 
 internal fun SignaturesDiff.toDetailReport() = buildString {
   appendln()
-  appendln(diffuseTable {
-    header {
-      row("SIGNATURES", "old", "new")
-    }
-    if (oldSignatures.v1.isNotEmpty() || newSignatures.v1.isNotEmpty()) {
-      row {
-        cell("V1") {
-          alignment = TopRight
+  appendln(
+    diffuseTable {
+      header {
+        row("SIGNATURES", "old", "new")
+      }
+      if (oldSignatures.v1.isNotEmpty() || newSignatures.v1.isNotEmpty()) {
+        row {
+          cell("V1") {
+            alignment = TopRight
+          }
+          cell(oldSignatures.v1.joinToString("\n", transform = ByteString::hex))
+          cell(newSignatures.v1.joinToString("\n", transform = ByteString::hex))
         }
-        cell(oldSignatures.v1.joinToString("\n", transform = ByteString::hex))
-        cell(newSignatures.v1.joinToString("\n", transform = ByteString::hex))
+      }
+      if (oldSignatures.v2.isNotEmpty() || newSignatures.v2.isNotEmpty()) {
+        row {
+          cell("V2") {
+            alignment = TopRight
+          }
+          cell(oldSignatures.v2.joinToString("\n", transform = ByteString::hex))
+          cell(newSignatures.v2.joinToString("\n", transform = ByteString::hex))
+        }
+      }
+      if (oldSignatures.v3.isNotEmpty() || newSignatures.v3.isNotEmpty()) {
+        row {
+          cell("V3") {
+            alignment = TopRight
+          }
+          cell(oldSignatures.v3.joinToString("\n", transform = ByteString::hex))
+          cell(newSignatures.v3.joinToString("\n", transform = ByteString::hex))
+        }
       }
     }
-    if (oldSignatures.v2.isNotEmpty() || newSignatures.v2.isNotEmpty()) {
-      row {
-        cell("V2") {
-          alignment = TopRight
-        }
-        cell(oldSignatures.v2.joinToString("\n", transform = ByteString::hex))
-        cell(newSignatures.v2.joinToString("\n", transform = ByteString::hex))
-      }
-    }
-    if (oldSignatures.v3.isNotEmpty() || newSignatures.v3.isNotEmpty()) {
-      row {
-        cell("V3") {
-          alignment = TopRight
-        }
-        cell(oldSignatures.v3.joinToString("\n", transform = ByteString::hex))
-        cell(newSignatures.v3.joinToString("\n", transform = ByteString::hex))
-      }
-    }
-  })
+  )
 }

@@ -35,10 +35,11 @@ fun main(vararg args: String) {
   val systemOut = System.out
 
   NoRunCliktCommand(name = "diffuse")
-      .subcommands(
-          DiffCommand(defaultFs, defaultFs, systemOut),
-          MembersCommand(defaultFs, systemOut))
-      .main(args.toList())
+    .subcommands(
+      DiffCommand(defaultFs, defaultFs, systemOut),
+      MembersCommand(defaultFs, systemOut)
+    )
+    .main(args.toList())
 }
 
 private enum class BinaryType {
@@ -52,22 +53,22 @@ private class DiffCommand(
 ) : CliktCommand(name = "diff") {
   private val inputOptions by object : OptionGroup("Input options") {
     private val type by option(help = "File type of OLD and NEW. Default is 'apk'.")
-        .switch("--apk" to BinaryType.Apk, "--aar" to BinaryType.Aar, "--aab" to BinaryType.Aab, "--jar" to BinaryType.Jar)
-        .default(BinaryType.Apk)
+      .switch("--apk" to BinaryType.Apk, "--aar" to BinaryType.Aar, "--aab" to BinaryType.Aab, "--jar" to BinaryType.Jar)
+      .default(BinaryType.Apk)
 
     private val oldMappingPath by option(
-          "--old-mapping",
-          help = "Mapping file produced by R8 or ProGuard.",
-          metavar = "FILE"
-        )
-        .path(exists = true, folderOkay = false, readable = true)
+      "--old-mapping",
+      help = "Mapping file produced by R8 or ProGuard.",
+      metavar = "FILE"
+    )
+      .path(exists = true, folderOkay = false, readable = true)
 
     private val newMappingPath by option(
-          "--new-mapping",
-          help = "Mapping file produced by R8 or ProGuard.",
-          metavar = "FILE"
-        )
-        .path(exists = true, folderOkay = false, readable = true)
+      "--new-mapping",
+      help = "Mapping file produced by R8 or ProGuard.",
+      metavar = "FILE"
+    )
+      .path(exists = true, folderOkay = false, readable = true)
 
     fun parse(old: Input, new: Input): BinaryDiff {
       val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
@@ -88,26 +89,26 @@ private class DiffCommand(
 
   private val outputOptions by object : OptionGroup(name = "Output options") {
     private val text by option(
-          help = "File to write text report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
-          metavar = "FILE"
-        )
-        .path(fileSystem = outputFs)
+      help = "File to write text report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
+      metavar = "FILE"
+    )
+      .path(fileSystem = outputFs)
     private val html by option(
-          help = "File to write HTML report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
-          metavar = "FILE"
-        )
-        .path(fileSystem = outputFs)
+      help = "File to write HTML report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
+      metavar = "FILE"
+    )
+      .path(fileSystem = outputFs)
     private val stdout by option(
-          help = "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified."
-        )
-        .choice("text" to ReportType.Text, "html" to ReportType.Html)
-        .defaultLazy {
-          if (text == null && html == null) {
-            ReportType.Text
-          } else {
-            ReportType.None
-          }
+      help = "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified."
+    )
+      .choice("text" to ReportType.Text, "html" to ReportType.Html)
+      .defaultLazy {
+        if (text == null && html == null) {
+          ReportType.Text
+        } else {
+          ReportType.None
         }
+      }
 
     fun write(diff: BinaryDiff) {
       val textReport by lazy(NONE) { diff.toTextReport().toString() }
@@ -126,10 +127,10 @@ private class DiffCommand(
   }
 
   private val old by argument("OLD", help = "Old input file.")
-      .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
+    .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
 
   private val new by argument("NEW", help = "New input file.")
-      .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
+    .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
 
   override fun run() {
     val diff = inputOptions.parse(old.asInput(), new.asInput())
@@ -142,27 +143,29 @@ private class MembersCommand(
   private val stdout: PrintStream
 ) : CliktCommand(name = "members") {
   private val binary by argument("FILE", help = "Input file.")
-      .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
+    .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
 
-  private val hideSyntheticNumbers by option("--hide-synthetic-numbers",
-      help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.")
-      .flag()
+  private val hideSyntheticNumbers by option(
+    "--hide-synthetic-numbers",
+    help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output."
+  )
+    .flag()
 
   private val binaryType by option(help = "File type. Default is 'apk'.")
-      .switch("--apk" to BinaryType.Apk, "--aar" to BinaryType.Aar, "--aab" to BinaryType.Aab, "--jar" to BinaryType.Jar, "--dex" to BinaryType.Dex)
-      .default(BinaryType.Apk)
+    .switch("--apk" to BinaryType.Apk, "--aar" to BinaryType.Aar, "--aab" to BinaryType.Aab, "--jar" to BinaryType.Jar, "--dex" to BinaryType.Dex)
+    .default(BinaryType.Apk)
 
   private val type by option(help = "Item types to display. Default is both (methods and fields).")
-      .switch("--methods" to Type.Methods, "--fields" to Type.Fields)
-      .default(Type.All)
+    .switch("--methods" to Type.Methods, "--fields" to Type.Fields)
+    .default(Type.All)
 
   enum class Type {
     All, Methods, Fields
   }
 
   private val ownership by option(help = "Item ownerships to display. Default is both (declared and referenced).")
-      .switch("--declared" to Ownership.Declared, "--referenced" to Ownership.Referenced)
-      .default(Ownership.All)
+    .switch("--declared" to Ownership.Declared, "--referenced" to Ownership.Referenced)
+    .default(Ownership.All)
 
   enum class Ownership {
     All, Declared, Referenced

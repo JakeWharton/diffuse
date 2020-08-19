@@ -52,9 +52,9 @@ class Aab private constructor(
           zip.find(metadataObfuscationDirectoryName)?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
         val baseModule = zip.directoryView(baseDirectoryName).toModule()
         val featureModules = zip.directories
-            // TODO there's probably a better way to discover feature module names.
-            .filter { it != baseDirectoryName && it != bundleMetadataDirectoryName && it != "META-INF" }
-            .associateWith { zip.directoryView(it).toModule() }
+          // TODO there's probably a better way to discover feature module names.
+          .filter { it != baseDirectoryName && it != bundleMetadataDirectoryName && it != "META-INF" }
+          .associateWith { zip.directoryView(it).toModule() }
         return Aab(name, apiMapping, baseModule, featureModules)
       }
     }

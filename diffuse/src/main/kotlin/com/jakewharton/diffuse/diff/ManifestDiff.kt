@@ -11,8 +11,8 @@ internal class ManifestDiff(
   val newManifest: Manifest
 ) {
   internal val parsedPropertiesChanged = oldManifest.packageName != newManifest.packageName ||
-      oldManifest.versionName != newManifest.versionName ||
-      oldManifest.versionCode != newManifest.versionCode
+    oldManifest.versionName != newManifest.versionName ||
+    oldManifest.versionCode != newManifest.versionCode
 
   val diff: List<String> = run {
     val oldLines = oldManifest.xml.lines()
@@ -27,19 +27,21 @@ internal class ManifestDiff(
 internal fun ManifestDiff.toDetailReport() = buildString {
   if (parsedPropertiesChanged) {
     appendln()
-    appendln(diffuseTable {
-      header {
-        row("", "old", "new")
+    appendln(
+      diffuseTable {
+        header {
+          row("", "old", "new")
+        }
+        row("package", oldManifest.packageName, newManifest.packageName)
+        row("version code", oldManifest.versionCode, newManifest.versionCode)
+        row("version name", oldManifest.versionName, newManifest.versionName)
       }
-      row("package", oldManifest.packageName, newManifest.packageName)
-      row("version code", oldManifest.versionCode, newManifest.versionCode)
-      row("version name", oldManifest.versionName, newManifest.versionName)
-    })
+    )
   }
   if (diff.isNotEmpty()) {
     appendln()
     diff.drop(2) // Skip file name headers
-        .forEach { appendln(it) }
+      .forEach { appendln(it) }
     appendln()
   }
 }

@@ -18,9 +18,9 @@ data class Signatures(
       val dataSource = toByteArray().asByteBuffer().asDataSource()
       val result = ApkVerifier.Builder(dataSource).build().verify()
       return Signatures(
-          result.v1SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
-          result.v2SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
-          result.v3SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted()
+        result.v1SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
+        result.v2SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted(),
+        result.v3SchemeSigners.map { it.certificate.encoded.toByteString().sha1() }.sorted()
       )
     }
   }

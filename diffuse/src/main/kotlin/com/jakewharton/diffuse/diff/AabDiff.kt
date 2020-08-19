@@ -25,9 +25,9 @@ internal class AabDiff(
   val addedFeatureModules = newAab.featureModules.filterKeys { it !in oldAab.featureModules }
   val removedFeatureModules = oldAab.featureModules.filterKeys { it !in newAab.featureModules }
   val changedFeatureModules = oldAab.featureModules.filterKeys { it in newAab.featureModules }
-      .mapValues { (name, oldModule) ->
-        ModuleDiff(oldModule, newAab.featureModules.getValue(name))
-      }
+    .mapValues { (name, oldModule) ->
+      ModuleDiff(oldModule, newAab.featureModules.getValue(name))
+    }
 
   override fun toTextReport(): DiffReport = AabDiffTextReport(this)
 }

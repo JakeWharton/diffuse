@@ -18,40 +18,42 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff) : DiffReport {
       appendln(aabDiff.newAab.filename)
 
       appendln()
-      appendln(diffuseTable {
-        cellStyle {
-          alignment = MiddleCenter
-        }
-
-        header {
+      appendln(
+        diffuseTable {
           cellStyle {
-            alignment = BottomLeft
+            alignment = MiddleCenter
           }
-          row {
-            cell("MODULES")
-            cell("old")
-            cell("new")
-          }
-        }
 
-        row {
-          cell("base") {
-            alignment = MiddleRight
+          header {
+            cellStyle {
+              alignment = BottomLeft
+            }
+            row {
+              cell("MODULES")
+              cell("old")
+              cell("new")
+            }
           }
-          cell("✓")
-          cell("✓")
-        }
 
-        for (name in aabDiff.featureModuleNames) {
           row {
-            cell(name) {
+            cell("base") {
               alignment = MiddleRight
             }
-            cell(if (name in aabDiff.oldAab.featureModules) "✓" else "")
-            cell(if (name in aabDiff.newAab.featureModules) "✓" else "")
+            cell("✓")
+            cell("✓")
           }
-        }
-      }.toString())
+
+          for (name in aabDiff.featureModuleNames) {
+            row {
+              cell(name) {
+                alignment = MiddleRight
+              }
+              cell(if (name in aabDiff.oldAab.featureModules) "✓" else "")
+              cell(if (name in aabDiff.newAab.featureModules) "✓" else "")
+            }
+          }
+        }.toString()
+      )
 
       // TODO base module
 

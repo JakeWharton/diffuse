@@ -17,9 +17,9 @@ class Class private constructor(
   override fun toString() = descriptor.toString()
   override fun hashCode() = Objects.hash(descriptor, declaredMembers, referencedMembers)
   override fun equals(other: Any?) = other is Class &&
-      descriptor == other.descriptor &&
-      declaredMembers == other.declaredMembers &&
-      referencedMembers == other.referencedMembers
+    descriptor == other.descriptor &&
+    declaredMembers == other.declaredMembers &&
+    referencedMembers == other.referencedMembers
 
   companion object {
     @JvmStatic
@@ -160,8 +160,9 @@ private fun parseMethod(
 }
 
 private val lambdaMetaFactory = Handle(
-    Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory",
-    "metafactory",
-    "(Ljava/lang/invoke/MethodHandles\$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
-    false
+  Opcodes.H_INVOKESTATIC,
+  "java/lang/invoke/LambdaMetafactory",
+  "metafactory",
+  "(Ljava/lang/invoke/MethodHandles\$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
+  false
 )

@@ -15,11 +15,11 @@ class ArchiveFiles internal constructor(
     @JvmName("parse")
     fun Zip.toArchiveFiles(classifier: (String) -> Type): ArchiveFiles {
       return entries
-          .associate {
-            it.path to ArchiveFile(it.path, classifier(it.path), it.zipSize, it.uncompressedSize, it.isCompressed)
-          }
-          .plus("/" to ArchiveFile("/", Other, Size(22), Size.ZERO, false))
-          .let(::ArchiveFiles)
+        .associate {
+          it.path to ArchiveFile(it.path, classifier(it.path), it.zipSize, it.uncompressedSize, it.isCompressed)
+        }
+        .plus("/" to ArchiveFile("/", Other, Size(22), Size.ZERO, false))
+        .let(::ArchiveFiles)
     }
   }
 }

@@ -17,9 +17,9 @@ internal class ArscDiff(
   val entriesRemoved = (oldArsc.entries.values - newArsc.entries.values).sorted()
 
   val changed = configsAdded.isNotEmpty() ||
-      configsRemoved.isNotEmpty() ||
-      entriesAdded.isNotEmpty() ||
-      entriesRemoved.isNotEmpty()
+    configsRemoved.isNotEmpty() ||
+    entriesAdded.isNotEmpty() ||
+    entriesRemoved.isNotEmpty()
 }
 
 internal fun ArscDiff.toSummaryTable() = diffuseTable {
@@ -100,32 +100,39 @@ internal fun ArscDiff.toDetailReport() = buildString {
       appendln()
       appendln("$name:")
       appendln()
-      appendln(buildString {
-        appendln(diffuseTable {
-          header {
-            row {
-              cell("old")
-              cell("new")
-              cell("diff")
-            }
-          }
+      appendln(
+        buildString {
+          appendln(
+            diffuseTable {
+              header {
+                row {
+                  cell("old")
+                  cell("new")
+                  cell("diff")
+                }
+              }
 
-          val diffSize = (added.size - removed.size).toDiffString()
-          val addedSize = added.size.toDiffString(zeroSign = '+')
-          val removedSize = (-removed.size).toDiffString(zeroSign = '-')
-          row(componentSelector(oldArsc).size, componentSelector(newArsc).size,
-              "$diffSize ($addedSize $removedSize)")
-        }.renderText())
-        added.forEach {
-          appendln("+ $it")
-        }
-        if (added.isNotEmpty() && removed.isNotEmpty()) {
-          appendln()
-        }
-        removed.forEach {
-          appendln("- $it")
-        }
-      }.prependIndent("  "))
+              val diffSize = (added.size - removed.size).toDiffString()
+              val addedSize = added.size.toDiffString(zeroSign = '+')
+              val removedSize = (-removed.size).toDiffString(zeroSign = '-')
+              row(
+                componentSelector(oldArsc).size,
+                componentSelector(newArsc).size,
+                "$diffSize ($addedSize $removedSize)"
+              )
+            }.renderText()
+          )
+          added.forEach {
+            appendln("+ $it")
+          }
+          if (added.isNotEmpty() && removed.isNotEmpty()) {
+            appendln()
+          }
+          removed.forEach {
+            appendln("- $it")
+          }
+        }.prependIndent("  ")
+      )
     }
   }
 

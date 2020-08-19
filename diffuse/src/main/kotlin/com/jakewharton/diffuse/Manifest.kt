@@ -39,9 +39,9 @@ class Manifest private constructor(
 ) {
   companion object {
     private val documentBuilderFactory = DocumentBuilderFactory.newInstance()!!
-        .apply {
-          isNamespaceAware = true
-        }
+      .apply {
+        isNamespaceAware = true
+      }
 
     internal fun BinaryResourceFile.toManifest(arsc: Arsc? = null): Manifest {
       return toDocument(arsc).toManifest()
@@ -57,8 +57,8 @@ class Manifest private constructor(
 
     internal fun XmlNode.toManifest(): Manifest {
       return XmlProtoToXmlConverter.convert(XmlProtoNode(this))
-          .apply { normalizeWhitespace() }
-          .toManifest()
+        .apply { normalizeWhitespace() }
+        .toManifest()
     }
 
     private fun BinaryResourceFile.toDocument(arsc: Arsc?): Document {
@@ -67,8 +67,8 @@ class Manifest private constructor(
       }
 
       val document = documentBuilderFactory
-          .newDocumentBuilder()
-          .newDocument()
+        .newDocumentBuilder()
+        .newDocument()
 
       val nodeStack = ArrayDeque<Node>().apply { add(document) }
       val namespacesToAdd = mutableMapOf<String, String>()
@@ -129,14 +129,16 @@ class Manifest private constructor(
 
     private fun String.toDocument(): Document {
       return documentBuilderFactory.newDocumentBuilder()
-          .parse(InputSource(StringReader(this)))
-          .apply { normalizeWhitespace() }
+        .parse(InputSource(StringReader(this)))
+        .apply { normalizeWhitespace() }
     }
 
     private fun Document.normalizeWhitespace() {
       normalize()
       val emptyNodes = XPathFactory.newInstance().newXPath().evaluate(
-          "//text()[normalize-space()='']", this, XPathConstants.NODESET
+        "//text()[normalize-space()='']",
+        this,
+        XPathConstants.NODESET
       ) as NodeList
       for (emptyNode in emptyNodes) {
         emptyNode.parentNode.removeChild(emptyNode)

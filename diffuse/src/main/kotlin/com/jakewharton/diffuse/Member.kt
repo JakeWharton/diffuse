@@ -66,8 +66,8 @@ data class Method(
   private companion object {
     val VOID = TypeDescriptor("V")
     val COMPARATOR = compareBy(Method::name)
-        .thenBy(comparingValues(), Method::parameterTypes)
-        .thenBy(Method::returnType)
+      .thenBy(comparingValues(), Method::parameterTypes)
+      .thenBy(Method::returnType)
   }
 }
 

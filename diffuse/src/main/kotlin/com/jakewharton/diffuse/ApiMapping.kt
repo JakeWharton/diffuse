@@ -19,9 +19,9 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
    */
   operator fun get(type: TypeDescriptor): TypeDescriptor {
     return typeMappings[type.componentDescriptor]
-        ?.typeDescriptor
-        ?.asArray(type.arrayArity)
-        ?: type
+      ?.typeDescriptor
+      ?.asArray(type.arrayArity)
+      ?: type
   }
 
   /**
@@ -44,7 +44,7 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
     val declaringTypeMapping = typeMappings[declaringType] ?: return field
 
     val newDeclaringType = declaringTypeMapping.typeDescriptor
-        .asArray(field.declaringType.arrayArity)
+      .asArray(field.declaringType.arrayArity)
     val newType = this[field.type]
     val newName = declaringTypeMapping[field.name] ?: field.name
     return Field(newDeclaringType, newName, newType)
@@ -60,7 +60,7 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
     val declaringTypeMapping = typeMappings[declaringType] ?: return method
 
     val newDeclaringType = declaringTypeMapping.typeDescriptor
-        .asArray(method.declaringType.arrayArity)
+      .asArray(method.declaringType.arrayArity)
     val newReturnType = this[method.returnType]
     val newParameters = method.parameterTypes.map(::get)
     val signature = MethodSignature(newReturnType, method.name, newParameters)
@@ -87,18 +87,19 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
         }
         if (line.startsWith(' ')) {
           val result = memberLine.matchEntire(line)
-              ?: throw IllegalArgumentException(
-                  "Unable to parse line ${index + 1} as member mapping: $line")
+            ?: throw IllegalArgumentException(
+              "Unable to parse line ${index + 1} as member mapping: $line"
+            )
           val (_, returnType, fromName, parameters, toName) = result.groupValues
 
           if (parameters != "") {
             val returnDescriptor = humanNameToDescriptor(returnType)
             val parameterDescriptors = parameters
-                .substring(1, parameters.lastIndex) // Remove leading '(' and trailing ')'.
-                .takeUnless(String::isEmpty) // Do not process parameter-less methods.
-                ?.split(',')
-                ?.map(::humanNameToDescriptor)
-                ?: emptyList()
+              .substring(1, parameters.lastIndex) // Remove leading '(' and trailing ')'.
+              .takeUnless(String::isEmpty) // Do not process parameter-less methods.
+              ?.split(',')
+              ?.map(::humanNameToDescriptor)
+              ?: emptyList()
 
             val lookupSignature = MethodSignature(returnDescriptor, toName, parameterDescriptors)
             methods!![lookupSignature] = fromName
@@ -111,8 +112,9 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
           }
 
           val result = typeLine.matchEntire(line)
-              ?: throw IllegalArgumentException(
-                  "Unable to parse line ${index + 1} as type mapping: $line")
+            ?: throw IllegalArgumentException(
+              "Unable to parse line ${index + 1} as type mapping: $line"
+            )
           val (_, fromType, toType) = result.groupValues
 
           fromDescriptor = humanNameToDescriptor(fromType)

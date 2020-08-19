@@ -42,8 +42,8 @@ class Arsc private constructor(
           for ((entryId, entry) in typeChunk.entries) {
             // See BinaryResourceIdentifier for the source of this algorithm.
             val id = ((packageId and 0xFF) shl 24) or
-                ((typeId and 0xFF) shl 16) or
-                ((entryId and 0xFFFF))
+              ((typeId and 0xFF) shl 16) or
+              ((entryId and 0xFFFF))
 
             entries[id] = Entry(entry.typeName(), entry.key())
           }

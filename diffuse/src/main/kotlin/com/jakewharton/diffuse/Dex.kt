@@ -31,16 +31,16 @@ class Dex private constructor(
     fun Input.toDex(): Dex {
       val dex = AndroidDex(toByteArray())
       val classes = dex.classDefs()
-          .map { TypeDescriptor(dex.typeNames()[it.typeIndex]) }
+        .map { TypeDescriptor(dex.typeNames()[it.typeIndex]) }
       val declaredTypeIndices = dex.classDefs()
-          .map(ClassDef::getTypeIndex)
-          .toSet()
+        .map(ClassDef::getTypeIndex)
+        .toSet()
       val (declaredMethods, referencedMethods) = dex.methodIds()
-          .partition { it.declaringClassIndex in declaredTypeIndices }
-          .mapEach { it.map(dex::getMethod) }
+        .partition { it.declaringClassIndex in declaredTypeIndices }
+        .mapEach { it.map(dex::getMethod) }
       val (declaredFields, referencedFields) = dex.fieldIds()
-          .partition { it.declaringClassIndex in declaredTypeIndices }
-          .mapEach { it.map(dex::getField) }
+        .partition { it.declaringClassIndex in declaredTypeIndices }
+        .mapEach { it.map(dex::getField) }
       val declaredMembers = declaredMethods + declaredFields
       val referencedMembers = referencedMethods + referencedFields
       return Dex(dex.strings(), dex.typeNames(), classes, declaredMembers, referencedMembers)
@@ -53,7 +53,7 @@ private fun AndroidDex.getMethod(methodId: MethodId): Method {
   val name = strings()[methodId.nameIndex]
   val methodProtoIds = protoIds()[methodId.protoIndex]
   val parameterTypes = readTypeList(methodProtoIds.parametersOffset).types
-      .map { TypeDescriptor(typeNames()[it.toInt()]) }
+    .map { TypeDescriptor(typeNames()[it.toInt()]) }
   val returnType = TypeDescriptor(typeNames()[methodProtoIds.returnTypeIndex])
   return Method(declaringType, name, parameterTypes, returnType)
 }

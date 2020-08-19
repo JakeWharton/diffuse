@@ -22,7 +22,13 @@ internal fun <R, T> componentDiff(oldItems: List<R>, newItems: List<R>, selector
   val newSet = newItems.flatMapTo(mutableSetOf(), selector)
   val added = newSet - oldSet
   val removed = oldSet - newSet
-  return ComponentDiff(oldRawCount, oldSet.size, newRawCount, newSet.size, added, removed
+  return ComponentDiff(
+    oldRawCount,
+    oldSet.size,
+    newRawCount,
+    newSet.size,
+    added,
+    removed
   )
 }
 
@@ -31,30 +37,34 @@ internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff
     appendln()
     appendln("$name:")
     appendln()
-    appendln(buildString {
-      appendln(diffuseTable {
-        header {
-          row {
-            cell("old")
-            cell("new")
-            cell("diff")
-          }
-        }
+    appendln(
+      buildString {
+        appendln(
+          diffuseTable {
+            header {
+              row {
+                cell("old")
+                cell("new")
+                cell("diff")
+              }
+            }
 
-        val diffSize = (diff.added.size - diff.removed.size).toDiffString()
-        val addedSize = diff.added.size.toDiffString(zeroSign = '+')
-        val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
-        row(diff.oldCount, diff.newCount, "$diffSize ($addedSize $removedSize)")
-      }.renderText())
-      diff.added.forEach {
-        appendln("+ $it")
-      }
-      if (diff.added.isNotEmpty() && diff.removed.isNotEmpty()) {
-        appendln()
-      }
-      diff.removed.forEach {
-        appendln("- $it")
-      }
-    }.prependIndent("  "))
+            val diffSize = (diff.added.size - diff.removed.size).toDiffString()
+            val addedSize = diff.added.size.toDiffString(zeroSign = '+')
+            val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
+            row(diff.oldCount, diff.newCount, "$diffSize ($addedSize $removedSize)")
+          }.renderText()
+        )
+        diff.added.forEach {
+          appendln("+ $it")
+        }
+        if (diff.added.isNotEmpty() && diff.removed.isNotEmpty()) {
+          appendln()
+        }
+        diff.removed.forEach {
+          appendln("- $it")
+        }
+      }.prependIndent("  ")
+    )
   }
 }

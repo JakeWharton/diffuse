@@ -19,7 +19,8 @@ internal class ApkDiff(
   val manifest = ManifestDiff(oldApk.manifest, newApk.manifest)
 
   val lintMessages = listOfNotNull(
-      archive.resourcesArscCompression())
+    archive.resourcesArscCompression()
+  )
 
   override fun toTextReport(): DiffReport = ApkDiffTextReport(this)
 }

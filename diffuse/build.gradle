@@ -7,7 +7,6 @@ targetCompatibility = JavaVersion.VERSION_1_6
 dependencies {
   implementation deps.clikt
   implementation deps.androidTools.dalvikDx
-  api deps.kotlin.stdlibJdk8
   implementation deps.picnic
   api deps.okio
   implementation deps.androidTools.binaryResources

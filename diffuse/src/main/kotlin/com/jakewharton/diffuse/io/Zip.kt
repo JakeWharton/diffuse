@@ -80,11 +80,11 @@ private fun <T : Zip.Entry> ZipEntry.toZipEntry(
   // Calculate the actual compressed size impact in the zip, not just compressed data size.
   // See https://en.wikipedia.org/wiki/Zip_(file_format)#File_headers for details.
   val zipSize = compressedSize +
-      // Local file header. There is no way of knowing whether a trailing data descriptor
-      // was present since the general flags field is not exposed, but it's unlikely.
-      30 + nameSize + extraSize +
-      // Central directory file header.
-      46 + nameSize + extraSize + commentSize
+    // Local file header. There is no way of knowing whether a trailing data descriptor
+    // was present since the general flags field is not exposed, but it's unlikely.
+    30 + nameSize + extraSize +
+    // Central directory file header.
+    46 + nameSize + extraSize + commentSize
 
   return entryFactory(name, Size(size), Size(compressedSize), Size(zipSize), isCompressed)
 }

@@ -30,8 +30,8 @@ class Apk private constructor(
         val arsc = zip[resourcesArscFileName].asInput().toArsc()
         val manifest = zip[manifestFileName].asInput().toBinaryResourceFile().toManifest(arsc)
         val dexes = zip.entries
-            .filter { it.path.matches(classesDexRegex) }
-            .map { it.asInput().toDex() }
+          .filter { it.path.matches(classesDexRegex) }
+          .map { it.asInput().toDex() }
         return Apk(name, files, dexes, arsc, manifest, signatures)
       }
     }

@@ -14,30 +14,35 @@ class SignaturesDiffTest {
 
   @Test fun emptyToV1() {
     val diff = SignaturesDiff(signatureEmpty, signatureV1Only)
-    assertThat(diff.toDetailReport()).isEqualTo("""
+    assertThat(diff.toDetailReport()).isEqualTo(
+      """
       |
       | SIGNATURES │ old │ new      
       |────────────┼─────┼──────────
       |         V1 │     │ 76317631 
       |
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun v1ToV1AndV2() {
     val diff = SignaturesDiff(signatureV1Only, signatureV1AndV2)
-    assertThat(diff.toDetailReport()).isEqualTo("""
+    assertThat(diff.toDetailReport()).isEqualTo(
+      """
       |
       | SIGNATURES │ old      │ new      
       |────────────┼──────────┼──────────
       |         V1 │ 76317631 │ 76317631 
       |         V2 │          │ 76327632 
       |
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 
   @Test fun v1AndV2ToV1AndV3() {
     val diff = SignaturesDiff(signatureV1AndV2, signatureV1AndV3)
-    assertThat(diff.toDetailReport()).isEqualTo("""
+    assertThat(diff.toDetailReport()).isEqualTo(
+      """
       |
       | SIGNATURES │ old      │ new      
       |────────────┼──────────┼──────────
@@ -45,6 +50,7 @@ class SignaturesDiffTest {
       |         V2 │ 76327632 │          
       |         V3 │          │ 76337633 
       |
-      |""".trimMargin())
+      |""".trimMargin()
+    )
   }
 }
