@@ -5,6 +5,10 @@ apply plugin: "com.vanniktech.maven.publish"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
+configurations {
+  r8
+}
+
 dependencies {
   implementation deps.clikt
   implementation deps.androidTools.dalvikDx
@@ -20,11 +24,13 @@ dependencies {
   implementation deps.asm
   implementation deps.diffUtils
 
+  r8 'com.android.tools:r8:2.0.99'
+
   testImplementation deps.junit
   testImplementation deps.truth
 }
 
-def fatDiffuseJarProvider = tasks.register('fatDiffuseJar', Jar) { task ->
+def fatJarProvider = tasks.register('fatJar', Jar) { task ->
   task.dependsOn(configurations.named('runtimeClasspath'))
   task.dependsOn(tasks.named('jar'))
 
@@ -40,29 +46,58 @@ def fatDiffuseJarProvider = tasks.register('fatDiffuseJar', Jar) { task ->
   task.doFirst {
     task.from files(sourceClasses)
     task.from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
+
+    task.exclude '**/*.kotlin_metadata'
+    task.exclude '**/*.kotlin_module'
+    task.exclude '**/*.kotlin_builtins'
+    task.exclude '**/module-info.class'
+    task.exclude 'META-INF/maven/**'
+    task.exclude 'META-INF/proguard/**'
+    task.exclude 'META-INF/*.version'
+    task.exclude '**/*.proto'
+    task.exclude 'LICENSE'
+    task.exclude 'NOTICE'
+    task.exclude 'r8-version.properties'
+    task.exclude 'migrateToAndroidx/*'
   }
 }
 
-def binaryDiffuseFile = new File(buildDir, "libs/$archivesBaseName-$version-binary.jar")
-def binaryDiffuseJar = tasks.register('binaryDiffuseJar') { task ->
-  def fatDiffuseJar = fatDiffuseJarProvider.get()
-  task.dependsOn(fatDiffuseJar)
+def r8File = new File("$buildDir/libs/$archivesBaseName-$version-r8.jar")
+def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
+  task.dependsOn(fatJarProvider.get())
+  task.outputs.file(r8File)
 
-  task.inputs.file(fatDiffuseJar.archiveFile)
-  task.outputs.file(binaryDiffuseFile)
+  task.classpath(configurations.r8)
+  task.main = 'com.android.tools.r8.R8'
+  task.args = [
+    '--release',
+    '--classfile',
+    '--output', r8File.toString(),
+    '--pg-conf', 'src/main/rules.txt',
+    '--lib', System.properties['java.home'].toString()
+  ]
+  doFirst {
+    task.args += fatJarProvider.get().archivePath
+  }
+}
+
+def binaryFile = new File(buildDir, "libs/$archivesBaseName-$version-binary.jar")
+def binaryJar = tasks.register('binaryDiffuseJar') { task ->
+  task.dependsOn(r8JarProvider)
+
+  task.inputs.file(r8File)
+  task.outputs.file(binaryFile)
 
   task.doLast {
-    def fatJarFile = fatDiffuseJar.archivePath
+    binaryFile.getParentFile().mkdirs()
+    binaryFile.delete()
+    binaryFile << "#!/bin/sh\n\nexec java \$JAVA_OPTS -jar \$0 \"\$@\"\n\n"
+    r8File.withInputStream { binaryFile.append it }
 
-    binaryDiffuseFile.getParentFile().mkdirs()
-    binaryDiffuseFile.delete()
-    binaryDiffuseFile << "#!/bin/sh\n\nexec java \$JAVA_OPTS -jar \$0 \"\$@\"\n\n"
-    fatJarFile.withInputStream { binaryDiffuseFile.append it }
-
-    binaryDiffuseFile.setExecutable true, false
+    binaryFile.setExecutable true, false
   }
 }
 
 artifacts {
-  archives file: binaryDiffuseFile, name: 'binary', type: 'jar', builtBy: binaryDiffuseJar, classifier: 'diffuse'
+  archives file: binaryFile, name: 'binary', type: 'jar', builtBy: binaryJar, classifier: 'diffuse'
 }

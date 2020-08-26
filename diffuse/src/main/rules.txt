@@ -1,0 +1,8 @@
+-dontobfuscate
+-keepattributes SourceFile, LineNumberTable
+
+-allowaccessmodification
+
+-keep class com.jakewharton.diffuse.Diffuse {
+  public static void main(java.lang.String[]);
+}
