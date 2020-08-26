@@ -64,7 +64,10 @@ def fatJarProvider = tasks.register('fatJar', Jar) { task ->
 
 def r8File = new File("$buildDir/libs/$archivesBaseName-$version-r8.jar")
 def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
-  task.dependsOn(fatJarProvider.get())
+  def fatJar = fatJarProvider.get()
+  def fatJarFile = fatJar.archivePath
+  task.dependsOn(fatJar)
+  task.inputs.file(fatJarFile)
   task.outputs.file(r8File)
 
   task.classpath(configurations.r8)
@@ -74,11 +77,9 @@ def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
     '--classfile',
     '--output', r8File.toString(),
     '--pg-conf', 'src/main/rules.txt',
-    '--lib', System.properties['java.home'].toString()
+    '--lib', System.properties['java.home'].toString(),
+    fatJarFile.toString(),
   ]
-  doFirst {
-    task.args += fatJarProvider.get().archivePath
-  }
 }
 
 def binaryFile = new File(buildDir, "libs/$archivesBaseName-$version-binary.jar")
