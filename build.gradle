@@ -7,7 +7,7 @@ buildscript {
           'bundleTool': 'com.android.tools.build:bundletool:0.11.0',
           'aapt2Proto': 'com.android.tools.build:aapt2-proto:0.4.0',
       ],
-      'clikt': 'com.github.ajalt:clikt:2.3.0',
+      'clikt': 'com.github.ajalt:clikt:2.8.0',
       'junit': 'junit:junit:4.13',
       'truth': 'com.google.truth:truth:1.0.1',
       'guava': 'com.google.guava:guava:28.1-jre',

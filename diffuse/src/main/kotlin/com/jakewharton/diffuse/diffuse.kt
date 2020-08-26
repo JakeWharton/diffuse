@@ -3,7 +3,7 @@
 package com.jakewharton.diffuse
 
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.core.NoRunCliktCommand
+import com.github.ajalt.clikt.core.NoOpCliktCommand
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.groups.OptionGroup
@@ -34,7 +34,7 @@ fun main(vararg args: String) {
   val defaultFs = FileSystems.getDefault()
   val systemOut = System.out
 
-  NoRunCliktCommand(name = "diffuse")
+  NoOpCliktCommand(name = "diffuse")
     .subcommands(
       DiffCommand(defaultFs, defaultFs, systemOut),
       MembersCommand(defaultFs, systemOut)
@@ -61,14 +61,14 @@ private class DiffCommand(
       help = "Mapping file produced by R8 or ProGuard.",
       metavar = "FILE"
     )
-      .path(exists = true, folderOkay = false, readable = true)
+      .path(mustExist = true, canBeDir = false, mustBeReadable = true)
 
     private val newMappingPath by option(
       "--new-mapping",
       help = "Mapping file produced by R8 or ProGuard.",
       metavar = "FILE"
     )
-      .path(exists = true, folderOkay = false, readable = true)
+      .path(mustExist = true, canBeDir = false, mustBeReadable = true)
 
     fun parse(old: Input, new: Input): BinaryDiff {
       val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
@@ -127,10 +127,10 @@ private class DiffCommand(
   }
 
   private val old by argument("OLD", help = "Old input file.")
-    .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
+    .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
   private val new by argument("NEW", help = "New input file.")
-    .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
+    .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
   override fun run() {
     val diff = inputOptions.parse(old.asInput(), new.asInput())
@@ -143,7 +143,7 @@ private class MembersCommand(
   private val stdout: PrintStream
 ) : CliktCommand(name = "members") {
   private val binary by argument("FILE", help = "Input file.")
-    .path(exists = true, folderOkay = false, readable = true, fileSystem = inputFs)
+    .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
   private val hideSyntheticNumbers by option(
     "--hide-synthetic-numbers",
