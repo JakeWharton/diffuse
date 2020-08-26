@@ -25,7 +25,7 @@ class ApkInfoTextReport(
         )
       )
       appendLine()
-//      appendLine(apkDiff.dex.toSummaryTable())
+      appendLine(apk.dexes.toSummaryTable())
 //      appendLine()
 //      appendLine(apkDiff.arsc.toSummaryTable())
 //      if (apkDiff.archive.changed || apkDiff.signatures.changed) {
