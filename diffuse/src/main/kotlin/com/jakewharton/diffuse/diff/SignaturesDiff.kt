@@ -13,8 +13,8 @@ internal class SignaturesDiff(
 }
 
 internal fun SignaturesDiff.toDetailReport() = buildString {
-  appendln()
-  appendln(
+  appendLine()
+  appendLine(
     diffuseTable {
       header {
         row("SIGNATURES", "old", "new")

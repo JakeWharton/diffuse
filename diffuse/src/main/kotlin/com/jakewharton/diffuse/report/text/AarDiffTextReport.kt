@@ -10,41 +10,41 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : DiffReport {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
-      appendln(aarDiff.oldAar.filename)
+      appendLine(aarDiff.oldAar.filename)
 
       append("NEW: ")
-      appendln(aarDiff.newAar.filename)
+      appendLine(aarDiff.newAar.filename)
 
-      appendln()
-      appendln(
+      appendLine()
+      appendLine(
         aarDiff.archive.toSummaryTable(
           "AAR",
           Type.AAR_TYPES,
           skipIfEmptyTypes = setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res)
         )
       )
-      appendln()
-      appendln(aarDiff.jars.toSummaryTable("JAR"))
+      appendLine()
+      appendLine(aarDiff.jars.toSummaryTable("JAR"))
       if (aarDiff.archive.changed) {
-        appendln()
-        appendln("=================")
-        appendln("====   AAR   ====")
-        appendln("=================")
-        appendln(aarDiff.archive.toDetailReport())
+        appendLine()
+        appendLine("=================")
+        appendLine("====   AAR   ====")
+        appendLine("=================")
+        appendLine(aarDiff.archive.toDetailReport())
       }
       if (aarDiff.manifest.changed) {
-        appendln()
-        appendln("======================")
-        appendln("====   MANIFEST   ====")
-        appendln("======================")
-        appendln(aarDiff.manifest.toDetailReport())
+        appendLine()
+        appendLine("======================")
+        appendLine("====   MANIFEST   ====")
+        appendLine("======================")
+        appendLine(aarDiff.manifest.toDetailReport())
       }
       if (aarDiff.jars.changed) {
-        appendln()
-        appendln("=================")
-        appendln("====   JAR   ====")
-        appendln("=================")
-        appendln(aarDiff.jars.toDetailReport())
+        appendLine()
+        appendLine("=================")
+        appendLine("====   JAR   ====")
+        appendLine("=================")
+        appendLine(aarDiff.jars.toDetailReport())
       }
     }
   }

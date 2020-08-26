@@ -12,13 +12,13 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff) : DiffReport {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
-      appendln(aabDiff.oldAab.filename)
+      appendLine(aabDiff.oldAab.filename)
 
       append("NEW: ")
-      appendln(aabDiff.newAab.filename)
+      appendLine(aabDiff.newAab.filename)
 
-      appendln()
-      appendln(
+      appendLine()
+      appendLine(
         diffuseTable {
           cellStyle {
             alignment = MiddleCenter
@@ -58,12 +58,12 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff) : DiffReport {
       // TODO base module
 
       for (name in (aabDiff.featureModuleNames - aabDiff.removedFeatureModules.keys)) {
-        appendln()
-        appendln()
-        appendln("==============${"=".repeat(name.length)}")
-        appendln("====   $name   ====")
-        appendln("==============${"=".repeat(name.length)}")
-        appendln()
+        appendLine()
+        appendLine()
+        appendLine("==============${"=".repeat(name.length)}")
+        appendLine("====   $name   ====")
+        appendLine("==============${"=".repeat(name.length)}")
+        appendLine()
 
         val addedModule = aabDiff.addedFeatureModules[name]
         val changedModule = aabDiff.changedFeatureModules[name]
@@ -74,13 +74,13 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff) : DiffReport {
         }
         if (changedModule != null) {
           if (changedModule.archive.changed) {
-            appendln(changedModule.archive.toDetailReport())
+            appendLine(changedModule.archive.toDetailReport())
           }
           if (changedModule.dex.changed) {
-            appendln(changedModule.dex.toDetailReport())
+            appendLine(changedModule.dex.toDetailReport())
           }
           if (changedModule.manifest.changed) {
-            appendln(changedModule.manifest.toDetailReport())
+            appendLine(changedModule.manifest.toDetailReport())
           }
         }
       }

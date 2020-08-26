@@ -16,17 +16,17 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
       append(apkDiff.oldApk.filename)
       append(" (signature: ")
       append(apkDiff.oldApk.signatures.toSummaryString())
-      appendln(')')
+      appendLine(')')
 
       append("NEW: ")
       append(apkDiff.newApk.filename)
       append(" (signature: ")
       append(apkDiff.newApk.signatures.toSummaryString())
-      appendln(')')
+      appendLine(')')
 
-      appendln()
+      appendLine()
       if (apkDiff.lintMessages.isNotEmpty()) {
-        appendln(
+        appendLine(
           diffuseTable {
             header {
               row("NOTICES")
@@ -50,51 +50,51 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
             }
           }.toString()
         )
-        appendln()
+        appendLine()
       }
-      appendln(
+      appendLine(
         apkDiff.archive.toSummaryTable(
           "APK",
           Type.APK_TYPES,
           skipIfEmptyTypes = setOf(Type.Native)
         )
       )
-      appendln()
-      appendln(apkDiff.dex.toSummaryTable())
-      appendln()
-      appendln(apkDiff.arsc.toSummaryTable())
+      appendLine()
+      appendLine(apkDiff.dex.toSummaryTable())
+      appendLine()
+      appendLine(apkDiff.arsc.toSummaryTable())
       if (apkDiff.archive.changed || apkDiff.signatures.changed) {
-        appendln()
-        appendln("=================")
-        appendln("====   APK   ====")
-        appendln("=================")
+        appendLine()
+        appendLine("=================")
+        appendLine("====   APK   ====")
+        appendLine("=================")
         if (apkDiff.archive.changed) {
-          appendln(apkDiff.archive.toDetailReport())
+          appendLine(apkDiff.archive.toDetailReport())
         }
         if (apkDiff.signatures.changed) {
-          appendln(apkDiff.signatures.toDetailReport())
+          appendLine(apkDiff.signatures.toDetailReport())
         }
       }
       if (apkDiff.manifest.changed) {
-        appendln()
-        appendln("======================")
-        appendln("====   MANIFEST   ====")
-        appendln("======================")
-        appendln(apkDiff.manifest.toDetailReport())
+        appendLine()
+        appendLine("======================")
+        appendLine("====   MANIFEST   ====")
+        appendLine("======================")
+        appendLine(apkDiff.manifest.toDetailReport())
       }
       if (apkDiff.dex.changed) {
-        appendln()
-        appendln("=================")
-        appendln("====   DEX   ====")
-        appendln("=================")
-        appendln(apkDiff.dex.toDetailReport())
+        appendLine()
+        appendLine("=================")
+        appendLine("====   DEX   ====")
+        appendLine("=================")
+        appendLine(apkDiff.dex.toDetailReport())
       }
       if (apkDiff.arsc.changed) {
-        appendln()
-        appendln("==================")
-        appendln("====   ARSC   ====")
-        appendln("==================")
-        appendln(apkDiff.arsc.toDetailReport())
+        appendLine()
+        appendLine("==================")
+        appendLine("====   ARSC   ====")
+        appendLine("==================")
+        appendLine(apkDiff.arsc.toDetailReport())
       }
     }
   }

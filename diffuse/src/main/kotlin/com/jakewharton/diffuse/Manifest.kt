@@ -179,20 +179,20 @@ class Manifest private constructor(
           //  xmlns: should be first
           //  otherwise alphabetical
           for (attribute in node.attributes) {
-            appendln()
+            appendLine()
             appendIndent(indent + 2)
             append(attribute.nodeName)
             append("=\"")
             append(attribute.nodeValue)
             append('"')
           }
-          appendln()
+          appendLine()
           appendIndent(indent + 2)
         }
         if (!node.hasChildNodes()) {
           append('/')
         }
-        appendln('>')
+        appendLine('>')
 
         if (node.hasChildNodes()) {
           for (child in node.childNodes) {
@@ -202,7 +202,7 @@ class Manifest private constructor(
           appendIndent(indent)
           append("</")
           append(node.nodeName)
-          appendln('>')
+          appendLine('>')
         }
       }
 

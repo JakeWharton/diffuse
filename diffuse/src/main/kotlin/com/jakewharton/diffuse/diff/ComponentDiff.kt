@@ -34,12 +34,12 @@ internal fun <R, T> componentDiff(oldItems: List<R>, newItems: List<R>, selector
 
 internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff<*>) {
   if (diff.changed) {
-    appendln()
-    appendln("$name:")
-    appendln()
-    appendln(
+    appendLine()
+    appendLine("$name:")
+    appendLine()
+    appendLine(
       buildString {
-        appendln(
+        appendLine(
           diffuseTable {
             header {
               row {
@@ -56,13 +56,13 @@ internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff
           }.renderText()
         )
         diff.added.forEach {
-          appendln("+ $it")
+          appendLine("+ $it")
         }
         if (diff.added.isNotEmpty() && diff.removed.isNotEmpty()) {
-          appendln()
+          appendLine()
         }
         diff.removed.forEach {
-          appendln("- $it")
+          appendLine("- $it")
         }
       }.prependIndent("  ")
     )

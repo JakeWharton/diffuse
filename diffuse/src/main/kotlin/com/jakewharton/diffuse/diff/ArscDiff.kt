@@ -97,12 +97,12 @@ internal fun ArscDiff.toDetailReport() = buildString {
     removed: List<T>
   ) {
     if (added.isNotEmpty() || removed.isNotEmpty()) {
-      appendln()
-      appendln("$name:")
-      appendln()
-      appendln(
+      appendLine()
+      appendLine("$name:")
+      appendLine()
+      appendLine(
         buildString {
-          appendln(
+          appendLine(
             diffuseTable {
               header {
                 row {
@@ -123,13 +123,13 @@ internal fun ArscDiff.toDetailReport() = buildString {
             }.renderText()
           )
           added.forEach {
-            appendln("+ $it")
+            appendLine("+ $it")
           }
           if (added.isNotEmpty() && removed.isNotEmpty()) {
-            appendln()
+            appendLine()
           }
           removed.forEach {
-            appendln("- $it")
+            appendLine("- $it")
           }
         }.prependIndent("  ")
       )

@@ -26,8 +26,8 @@ internal class ManifestDiff(
 
 internal fun ManifestDiff.toDetailReport() = buildString {
   if (parsedPropertiesChanged) {
-    appendln()
-    appendln(
+    appendLine()
+    appendLine(
       diffuseTable {
         header {
           row("", "old", "new")
@@ -39,9 +39,9 @@ internal fun ManifestDiff.toDetailReport() = buildString {
     )
   }
   if (diff.isNotEmpty()) {
-    appendln()
+    appendLine()
     diff.drop(2) // Skip file name headers
-      .forEach { appendln(it) }
-    appendln()
+      .forEach { appendLine(it) }
+    appendLine()
   }
 }

@@ -163,8 +163,8 @@ internal fun ArchiveFilesDiff.toSummaryTable(
 }.renderText()
 
 internal fun ArchiveFilesDiff.toDetailReport() = buildString {
-  appendln()
-  appendln(
+  appendLine()
+  appendLine(
     diffuseTable {
       header {
         if (includeCompressed) {
