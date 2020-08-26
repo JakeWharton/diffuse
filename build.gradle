@@ -11,7 +11,7 @@ buildscript {
       'junit': 'junit:junit:4.13',
       'truth': 'com.google.truth:truth:1.0.1',
       'guava': 'com.google.guava:guava:28.1-jre',
-      'okio': 'com.squareup.okio:okio:2.4.1',
+      'okio': 'com.squareup.okio:okio:2.8.0',
       'byteunits': 'com.jakewharton.byteunits:byteunits:0.9.1',
       'asm': 'org.ow2.asm:asm:9.0-beta',
       'diffUtils': 'io.github.java-diff-utils:java-diff-utils:4.5',
