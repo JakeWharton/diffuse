@@ -13,7 +13,8 @@ dependencies {
   implementation deps.androidTools.binaryResources
   implementation deps.androidTools.apkSigner
   implementation deps.androidTools.bundleTool
-  // TODO bundletool depends on aapt2-proto, but its types won't resolve without the explicit dep.
+  // TODO bundletool depends on aapt2-proto but with a runtime dependency rather than compile.
+  //  https://github.com/google/bundletool/issues/177
   implementation deps.androidTools.aapt2Proto
   implementation deps.byteunits
   implementation deps.asm
