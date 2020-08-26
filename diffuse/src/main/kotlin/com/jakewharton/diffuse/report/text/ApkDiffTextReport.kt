@@ -6,10 +6,10 @@ import com.jakewharton.diffuse.diff.lint.Notice
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.diff.toSummaryTable
 import com.jakewharton.diffuse.diffuseTable
-import com.jakewharton.diffuse.report.DiffReport
+import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.toSummaryString
 
-internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : DiffReport {
+internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")

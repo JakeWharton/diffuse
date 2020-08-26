@@ -5,12 +5,9 @@ import com.jakewharton.diffuse.Aar
 import com.jakewharton.diffuse.ApiMapping
 import com.jakewharton.diffuse.Apk
 import com.jakewharton.diffuse.Jar
-import com.jakewharton.diffuse.report.DiffReport
+import com.jakewharton.diffuse.report.Report
 
-interface BinaryDiff {
-  fun toTextReport(): DiffReport
-  fun toHtmlReport(): DiffReport { TODO("Implement HTML reporting") }
-
+interface BinaryDiff : Report.Factory {
   companion object {
     @JvmStatic
     fun ofApk(

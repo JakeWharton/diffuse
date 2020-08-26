@@ -3,12 +3,12 @@ package com.jakewharton.diffuse.report.text
 import com.jakewharton.diffuse.diff.AabDiff
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.diffuseTable
-import com.jakewharton.diffuse.report.DiffReport
+import com.jakewharton.diffuse.report.Report
 import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleCenter
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 
-internal class AabDiffTextReport(private val aabDiff: AabDiff) : DiffReport {
+internal class AabDiffTextReport(private val aabDiff: AabDiff) : Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")

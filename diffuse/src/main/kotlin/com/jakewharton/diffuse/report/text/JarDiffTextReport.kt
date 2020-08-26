@@ -4,9 +4,9 @@ import com.jakewharton.diffuse.ArchiveFile.Type
 import com.jakewharton.diffuse.diff.JarDiff
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.diff.toSummaryTable
-import com.jakewharton.diffuse.report.DiffReport
+import com.jakewharton.diffuse.report.Report
 
-internal class JarDiffTextReport(private val jarDiff: JarDiff) : DiffReport {
+internal class JarDiffTextReport(private val jarDiff: JarDiff) : Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")

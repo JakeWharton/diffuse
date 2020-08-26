@@ -2,7 +2,7 @@ package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.Aar
 import com.jakewharton.diffuse.ApiMapping
-import com.jakewharton.diffuse.report.DiffReport
+import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.AarDiffTextReport
 
 internal class AarDiff(
@@ -15,5 +15,5 @@ internal class AarDiff(
   val jars = JarsDiff(oldAar.jars, oldMapping, newAar.jars, newMapping)
   val manifest = ManifestDiff(oldAar.manifest, newAar.manifest)
 
-  override fun toTextReport(): DiffReport = AarDiffTextReport(this)
+  override fun toTextReport(): Report = AarDiffTextReport(this)
 }

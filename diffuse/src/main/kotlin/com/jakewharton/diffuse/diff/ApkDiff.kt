@@ -3,7 +3,7 @@ package com.jakewharton.diffuse.diff
 import com.jakewharton.diffuse.ApiMapping
 import com.jakewharton.diffuse.Apk
 import com.jakewharton.diffuse.diff.lint.resourcesArscCompression
-import com.jakewharton.diffuse.report.DiffReport
+import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.ApkDiffTextReport
 
 internal class ApkDiff(
@@ -22,5 +22,5 @@ internal class ApkDiff(
     archive.resourcesArscCompression()
   )
 
-  override fun toTextReport(): DiffReport = ApkDiffTextReport(this)
+  override fun toTextReport(): Report = ApkDiffTextReport(this)
 }

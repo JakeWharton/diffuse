@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.Aab
-import com.jakewharton.diffuse.report.DiffReport
+import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.AabDiffTextReport
 
 internal class AabDiff(
@@ -29,5 +29,5 @@ internal class AabDiff(
       ModuleDiff(oldModule, newAab.featureModules.getValue(name))
     }
 
-  override fun toTextReport(): DiffReport = AabDiffTextReport(this)
+  override fun toTextReport(): Report = AabDiffTextReport(this)
 }

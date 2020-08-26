@@ -4,10 +4,14 @@ package com.jakewharton.diffuse
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.NoOpCliktCommand
+import com.github.ajalt.clikt.core.ParameterHolder
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.groups.OptionGroup
 import com.github.ajalt.clikt.parameters.groups.provideDelegate
+import com.github.ajalt.clikt.parameters.options.FlagOption
+import com.github.ajalt.clikt.parameters.options.OptionWithValues
+import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.defaultLazy
 import com.github.ajalt.clikt.parameters.options.flag
@@ -23,8 +27,10 @@ import com.jakewharton.diffuse.Apk.Companion.toApk
 import com.jakewharton.diffuse.Dex.Companion.toDex
 import com.jakewharton.diffuse.Jar.Companion.toJar
 import com.jakewharton.diffuse.diff.BinaryDiff
+import com.jakewharton.diffuse.info.ApkInfo
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Input.Companion.asInput
+import com.jakewharton.diffuse.report.Report
 import java.io.PrintStream
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
@@ -37,7 +43,8 @@ fun main(vararg args: String) {
   NoOpCliktCommand(name = "diffuse")
     .subcommands(
       DiffCommand(defaultFs, defaultFs, systemOut),
-      MembersCommand(defaultFs, systemOut)
+      InfoCommand(defaultFs, defaultFs, systemOut),
+      MembersCommand(defaultFs, systemOut),
     )
     .main(args.toList())
 }
@@ -46,33 +53,109 @@ private enum class BinaryType {
   Apk, Aar, Aab, Jar, Dex
 }
 
+private fun ParameterHolder.binaryType(): FlagOption<BinaryType> {
+  return option(help = "Input file type. Default is 'apk'.")
+    .switch(
+      "--apk" to BinaryType.Apk,
+      "--aar" to BinaryType.Aar,
+      "--aab" to BinaryType.Aab,
+      "--jar" to BinaryType.Jar
+    )
+    .default(BinaryType.Apk)
+}
+
+private enum class ReportType {
+  Text, Html, None
+}
+
+private fun ParameterHolder.mappingFile(name: String): OptionWithValues<ApiMapping, ApiMapping, ApiMapping> {
+  return option(
+    name,
+    help = "Mapping file produced by R8 or ProGuard.",
+    metavar = "FILE"
+  )
+    .path(mustExist = true, canBeDir = false, mustBeReadable = true)
+    .convert { it.asInput().toApiMapping() }
+    .default(ApiMapping.EMPTY)
+}
+
+private class OutputOptions(
+  outputFs: FileSystem,
+  private val output: PrintStream
+) : OptionGroup(name = "Output options") {
+  private val text by option(
+    help = "File to write text report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
+    metavar = "FILE"
+  )
+    .path(fileSystem = outputFs)
+  private val html by option(
+    help = "File to write HTML report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
+    metavar = "FILE"
+  )
+    .path(fileSystem = outputFs)
+  private val stdout by option(
+    help = "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified."
+  )
+    .choice("text" to ReportType.Text, "html" to ReportType.Html)
+    .defaultLazy {
+      if (text == null && html == null) {
+        ReportType.Text
+      } else {
+        ReportType.None
+      }
+    }
+
+  fun write(reportFactory: Report.Factory) {
+    val textReport by lazy(NONE) { reportFactory.toTextReport().toString() }
+    val htmlReport by lazy(NONE) { reportFactory.toHtmlReport().toString() }
+
+    text?.writeText(textReport)
+    html?.writeText(htmlReport)
+
+    val printReport = when (stdout) {
+      ReportType.Text -> textReport
+      ReportType.Html -> htmlReport
+      ReportType.None -> null
+    }
+    printReport?.let(output::println)
+  }
+}
+
+private class InfoCommand(
+  inputFs: FileSystem,
+  outputFs: FileSystem,
+  output: PrintStream,
+) : CliktCommand(name = "info") {
+  private val type by binaryType()
+  private val mapping by mappingFile("--mapping")
+  private val outputOptions by OutputOptions(outputFs, output)
+  private val file by argument("FILE", help = "Input file.")
+    .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
+
+  override fun run() {
+    val info = when (type) {
+      BinaryType.Apk -> ApkInfo(file.asInput().toApk(), mapping)
+      BinaryType.Aar -> TODO()
+      BinaryType.Aab -> TODO()
+      BinaryType.Jar -> TODO()
+      BinaryType.Dex -> TODO()
+    }
+    outputOptions.write(info)
+  }
+}
+
 private class DiffCommand(
   inputFs: FileSystem,
   outputFs: FileSystem,
   output: PrintStream
 ) : CliktCommand(name = "diff") {
   private val inputOptions by object : OptionGroup("Input options") {
-    private val type by option(help = "File type of OLD and NEW. Default is 'apk'.")
-      .switch("--apk" to BinaryType.Apk, "--aar" to BinaryType.Aar, "--aab" to BinaryType.Aab, "--jar" to BinaryType.Jar)
-      .default(BinaryType.Apk)
+    private val type by binaryType()
 
-    private val oldMappingPath by option(
-      "--old-mapping",
-      help = "Mapping file produced by R8 or ProGuard.",
-      metavar = "FILE"
-    )
-      .path(mustExist = true, canBeDir = false, mustBeReadable = true)
-
-    private val newMappingPath by option(
-      "--new-mapping",
-      help = "Mapping file produced by R8 or ProGuard.",
-      metavar = "FILE"
-    )
-      .path(mustExist = true, canBeDir = false, mustBeReadable = true)
+    private val oldMapping by mappingFile("--old-mapping")
+    private val newMapping by mappingFile("--new-mapping")
 
     fun parse(old: Input, new: Input): BinaryDiff {
-      val oldMapping = oldMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
-      val newMapping = newMappingPath?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
       return when (type) {
         BinaryType.Apk -> BinaryDiff.ofApk(old.toApk(), oldMapping, new.toApk(), newMapping)
         BinaryType.Aab -> BinaryDiff.ofAab(old.toAab(), new.toAab())
@@ -83,48 +166,7 @@ private class DiffCommand(
     }
   }
 
-  private enum class ReportType {
-    Text, Html, None
-  }
-
-  private val outputOptions by object : OptionGroup(name = "Output options") {
-    private val text by option(
-      help = "File to write text report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
-      metavar = "FILE"
-    )
-      .path(fileSystem = outputFs)
-    private val html by option(
-      help = "File to write HTML report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
-      metavar = "FILE"
-    )
-      .path(fileSystem = outputFs)
-    private val stdout by option(
-      help = "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified."
-    )
-      .choice("text" to ReportType.Text, "html" to ReportType.Html)
-      .defaultLazy {
-        if (text == null && html == null) {
-          ReportType.Text
-        } else {
-          ReportType.None
-        }
-      }
-
-    fun write(diff: BinaryDiff) {
-      val textReport by lazy(NONE) { diff.toTextReport().toString() }
-      val htmlReport by lazy(NONE) { diff.toHtmlReport().toString() }
-
-      text?.writeText(textReport)
-      html?.writeText(htmlReport)
-
-      val printReport = when (stdout) {
-        ReportType.Text -> textReport
-        ReportType.Html -> htmlReport
-        ReportType.None -> null
-      }
-      printReport?.let(output::println)
-    }
-  }
+  private val outputOptions by OutputOptions(outputFs, output)
 
   private val old by argument("OLD", help = "Old input file.")
     .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
