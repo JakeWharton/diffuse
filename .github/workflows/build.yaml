@@ -1,0 +1,48 @@
+name: build
+
+on:
+  pull_request: {}
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - uses: gradle/wrapper-validation-action@v1
+      - run: ./gradlew build
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: diffuse-binary.jar
+          path: diffuse/build/libs/diffuse-*-binary.jar
+          if-no-files-found: error
+
+      - run: ./gradlew uploadArchives
+        if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/diffuse' }}
+        env:
+          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+
+      - name: Extract release notes
+        id: release_notes
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: ffurrer2/extract-release-notes@v1
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.release_notes.outputs.release_notes }}
+          files: diffuse/build/libs/diffuse-*-binary.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

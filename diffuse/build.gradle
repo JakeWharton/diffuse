@@ -1,8 +1,9 @@
 apply plugin: 'java-library'
 apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: "com.vanniktech.maven.publish"
 
-sourceCompatibility = JavaVersion.VERSION_1_6
-targetCompatibility = JavaVersion.VERSION_1_6
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
   implementation deps.clikt
@@ -61,20 +62,6 @@ def binaryDiffuseJar = tasks.register('binaryDiffuseJar') { task ->
   }
 }
 
-def copyDiffuseBinary = tasks.register('copyDiffuseBinary', Copy) { task ->
-  task.dependsOn(binaryDiffuseJar)
-
-  task.from(binaryDiffuseFile)
-  task.into buildDir
-  task.rename(".*", 'diffuse')
-}
-
-tasks.named('assemble').configure { task ->
-  task.dependsOn(copyDiffuseBinary)
-}
-
 artifacts {
   archives file: binaryDiffuseFile, name: 'binary', type: 'jar', builtBy: binaryDiffuseJar, classifier: 'diffuse'
 }
-
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
