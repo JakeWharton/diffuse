@@ -28,6 +28,7 @@ import com.jakewharton.diffuse.Dex.Companion.toDex
 import com.jakewharton.diffuse.Jar.Companion.toJar
 import com.jakewharton.diffuse.diff.BinaryDiff
 import com.jakewharton.diffuse.info.AabInfo
+import com.jakewharton.diffuse.info.AarInfo
 import com.jakewharton.diffuse.info.ApkInfo
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Input.Companion.asInput
@@ -135,7 +136,7 @@ private class InfoCommand(
   override fun run() {
     val info = when (type) {
       BinaryType.Apk -> ApkInfo(file.asInput().toApk())
-      BinaryType.Aar -> TODO()
+      BinaryType.Aar -> AarInfo(file.asInput().toAar())
       BinaryType.Aab -> AabInfo(file.asInput().toAab())
       BinaryType.Jar -> TODO()
       BinaryType.Dex -> TODO()
