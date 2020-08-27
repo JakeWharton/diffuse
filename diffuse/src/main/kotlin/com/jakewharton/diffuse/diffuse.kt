@@ -30,6 +30,7 @@ import com.jakewharton.diffuse.diff.BinaryDiff
 import com.jakewharton.diffuse.info.AabInfo
 import com.jakewharton.diffuse.info.AarInfo
 import com.jakewharton.diffuse.info.ApkInfo
+import com.jakewharton.diffuse.info.JarInfo
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Input.Companion.asInput
 import com.jakewharton.diffuse.report.Report
@@ -138,7 +139,7 @@ private class InfoCommand(
       BinaryType.Apk -> ApkInfo(file.asInput().toApk())
       BinaryType.Aar -> AarInfo(file.asInput().toAar())
       BinaryType.Aab -> AabInfo(file.asInput().toAab())
-      BinaryType.Jar -> TODO()
+      BinaryType.Jar -> JarInfo(file.asInput().toJar())
       BinaryType.Dex -> TODO()
     }
     outputOptions.write(info)
