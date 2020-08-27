@@ -127,14 +127,13 @@ private class InfoCommand(
   output: PrintStream,
 ) : CliktCommand(name = "info") {
   private val type by binaryType()
-  private val mapping by mappingFile("--mapping")
   private val outputOptions by OutputOptions(outputFs, output)
   private val file by argument("FILE", help = "Input file.")
     .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
   override fun run() {
     val info = when (type) {
-      BinaryType.Apk -> ApkInfo(file.asInput().toApk(), mapping)
+      BinaryType.Apk -> ApkInfo(file.asInput().toApk())
       BinaryType.Aar -> TODO()
       BinaryType.Aab -> TODO()
       BinaryType.Jar -> TODO()
