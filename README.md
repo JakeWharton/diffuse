@@ -120,38 +120,59 @@ METHODS:
 Usage
 -----
 
-APK:
+`diffuse` has multiple subcommands. The primary one is `diff` which takes two binaries and displays
+a summary and detailed listing of changes between them.
+
 ```
 $ diffuse diff old.apk new.apk
-```
 
-AAB:
-```
 $ diffuse diff --aab old.aab new.aab
-```
 
-AAR:
-```
 $ diffuse diff --aar old.aar new.aar
-```
 
-JAR:
-```
 $ diffuse diff --jar old.jar new.jar
 ```
 
-See more by running `--help`.
+For a single binary, the `info` subcommand will show a summary table of the binary contents.
+
+```
+$ diffuse info my.apk
+
+$ diffuse info --aab my.aab
+
+$ diffuse info --aar my.aar
+
+$ diffuse info --jar my.jar
+```
+
+Finally, the `members` subcommand lists the methods, fields, or both of a binary. This mimics
+the behavior of `dex-member-list`, the tool from which Diffuse is derived.
+
+```
+$ diffuse members my.apk
+
+$ diffuse members --methods my.apk
+
+$ diffuse members --aar --fields my.aar
+```
+
+See more information about the subcommands and their options/arguments by running with `--help`.
 
 
-Download
---------
+## Install
 
-Until binary releases are available:
+**Mac OS**
 
- 1. Clone the repository.
- 2. Run `./gradlew assemble` from repository root.
- 3. The executable will be created at `diffuse/build/diffuse`.
- 4. Copy it to desired location or put it on your `$PATH`.
+```
+$ brew install JakeWharton/repo/diffuse
+```
+
+**Other**
+
+Download standalone JAR from
+[latest release](https://github.com/JakeWharton/diffuse/releases/latest).
+On MacOS and Linux you can `chmod +x` and execute the `.jar` directly.
+On Windows use `java -jar`.
 
 
 License

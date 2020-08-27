@@ -1,11 +1,13 @@
-Change Log
-==========
+# Change Log
 
-Version 0.1.0 *(In development)*
---------------------------------
+## [Unreleased]
+[Unreleased]: https://github.com/JakeWharton/diffuse/compare/0.1.1...HEAD
 
-TODO stuff!
 
+## [0.1.0] - 2020-08-27
+[0.1.0]: https://github.com/JakeWharton/diffuse/releases/tag/1.1.0
+
+Initial release
 
 ----
 
