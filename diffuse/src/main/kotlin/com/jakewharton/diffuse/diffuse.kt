@@ -17,6 +17,7 @@ import com.github.ajalt.clikt.parameters.options.defaultLazy
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.switch
+import com.github.ajalt.clikt.parameters.options.versionOption
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
 import com.jakewharton.diffuse.Aab.Companion.toAab
@@ -43,7 +44,9 @@ fun main(vararg args: String) {
   val defaultFs = FileSystems.getDefault()
   val systemOut = System.out
 
+  val version = NoOpCliktCommand::class.java.`package`.implementationVersion
   NoOpCliktCommand(name = "diffuse")
+    .versionOption(version)
     .subcommands(
       DiffCommand(defaultFs, defaultFs, systemOut),
       InfoCommand(defaultFs, defaultFs, systemOut),

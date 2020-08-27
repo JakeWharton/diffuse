@@ -38,6 +38,7 @@ def fatJarProvider = tasks.register('fatJar', Jar) { task ->
 
   task.manifest {
     attributes 'Main-Class': 'com.jakewharton.diffuse.Diffuse'
+    attributes 'Implementation-Version': version
   }
 
   def sourceClasses = sourceSets.main.output.classesDirs
