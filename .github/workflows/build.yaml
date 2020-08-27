@@ -23,7 +23,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: diffuse.jar
+          name: diffuse-latest-binary.jar
           path: diffuse/build/libs/diffuse-*-binary.jar
           if-no-files-found: error
 
