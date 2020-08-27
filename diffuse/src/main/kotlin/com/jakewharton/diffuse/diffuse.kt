@@ -140,7 +140,7 @@ private class InfoCommand(
       BinaryType.Aar -> AarInfo(file.asInput().toAar())
       BinaryType.Aab -> AabInfo(file.asInput().toAab())
       BinaryType.Jar -> JarInfo(file.asInput().toJar())
-      BinaryType.Dex -> TODO()
+      BinaryType.Dex -> error("Unsupported")
     }
     outputOptions.write(info)
   }
