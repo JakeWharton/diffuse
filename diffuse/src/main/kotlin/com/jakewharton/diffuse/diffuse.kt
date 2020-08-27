@@ -128,7 +128,7 @@ private class InfoCommand(
   inputFs: FileSystem,
   outputFs: FileSystem,
   output: PrintStream,
-) : CliktCommand(name = "info") {
+) : CliktCommand(name = "info", help = "Display info about a binary.") {
   private val type by binaryType()
   private val outputOptions by OutputOptions(outputFs, output)
   private val file by argument("FILE", help = "Input file.")
@@ -150,7 +150,7 @@ private class DiffCommand(
   inputFs: FileSystem,
   outputFs: FileSystem,
   output: PrintStream
-) : CliktCommand(name = "diff") {
+) : CliktCommand(name = "diff", help = "Display changes between two binaries.") {
   private val inputOptions by object : OptionGroup("Input options") {
     private val type by binaryType()
 
@@ -185,7 +185,7 @@ private class DiffCommand(
 private class MembersCommand(
   inputFs: FileSystem,
   private val stdout: PrintStream
-) : CliktCommand(name = "members") {
+) : CliktCommand(name = "members", help = "List methods or fields of a binary.") {
   private val binary by argument("FILE", help = "Input file.")
     .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
