@@ -19,7 +19,7 @@ internal fun List<Dex>.toSummaryTable() = diffuseTable {
         cell("raw")
         cell("unique")
       } else {
-        cell("quantity")
+        cell("count")
       }
     }
   }
@@ -30,7 +30,7 @@ internal fun List<Dex>.toSummaryTable() = diffuseTable {
     }
 
     row {
-      cell("count")
+      cell("files")
       cell(size)
       if (isMultidex) {
         // Add empty cell to ensure borders get drawn

@@ -73,7 +73,7 @@ internal fun DexDiff.toSummaryTable() = diffuseTable {
     }
 
     row {
-      cell("count")
+      cell("files")
       cell(oldDexes.size)
       cell(newDexes.size)
       cell((newDexes.size - oldDexes.size).toDiffString()) {

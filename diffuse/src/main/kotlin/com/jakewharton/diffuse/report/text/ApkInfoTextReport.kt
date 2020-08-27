@@ -26,41 +26,8 @@ class ApkInfoTextReport(
       )
       appendLine()
       appendLine(apk.dexes.toSummaryTable())
-//      appendLine()
-//      appendLine(apkDiff.arsc.toSummaryTable())
-//      if (apkDiff.archive.changed || apkDiff.signatures.changed) {
-//        appendLine()
-//        appendLine("=================")
-//        appendLine("====   APK   ====")
-//        appendLine("=================")
-//        if (apkDiff.archive.changed) {
-//          appendLine(apkDiff.archive.toDetailReport())
-//        }
-//        if (apkDiff.signatures.changed) {
-//          appendLine(apkDiff.signatures.toDetailReport())
-//        }
-//      }
-//      if (apkDiff.manifest.changed) {
-//        appendLine()
-//        appendLine("======================")
-//        appendLine("====   MANIFEST   ====")
-//        appendLine("======================")
-//        appendLine(apkDiff.manifest.toDetailReport())
-//      }
-//      if (apkDiff.dex.changed) {
-//        appendLine()
-//        appendLine("=================")
-//        appendLine("====   DEX   ====")
-//        appendLine("=================")
-//        appendLine(apkDiff.dex.toDetailReport())
-//      }
-//      if (apkDiff.arsc.changed) {
-//        appendLine()
-//        appendLine("==================")
-//        appendLine("====   ARSC   ====")
-//        appendLine("==================")
-//        appendLine(apkDiff.arsc.toDetailReport())
-//      }
+      appendLine()
+      appendLine(apk.arsc.toSummaryTable())
     }
   }
 
