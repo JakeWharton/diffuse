@@ -25,11 +25,29 @@ class DexMethodTest {
   @Test fun renderKotlinLambdaFunctionName() {
     val synthetic = Method(fooDescriptor, "lambda\$refreshSessionToken$14\$MainActivity", emptyList(), barDescriptor)
     assertThat(synthetic.toString()).isEqualTo("com.example.Foo lambda\$refreshSessionToken$14\$MainActivity() → Bar")
+    val removedSynthetic = synthetic.withoutSyntheticSuffix()
+    assertThat(removedSynthetic.toString()).isEqualTo("com.example.Foo lambda\$refreshSessionToken\$MainActivity() → Bar")
+  }
+
+  @Test fun renderKotlinLambdaFunctionNameNumberLast() {
+    val synthetic = Method(fooDescriptor, "lambda\$refreshSessionToken$14", emptyList(), barDescriptor)
+    assertThat(synthetic.toString()).isEqualTo("com.example.Foo lambda\$refreshSessionToken$14() → Bar")
+    val removedSynthetic = synthetic.withoutSyntheticSuffix()
+    assertThat(removedSynthetic.toString()).isEqualTo("com.example.Foo lambda\$refreshSessionToken() → Bar")
+  }
+
+  @Test fun renderKotlinInvalidLambdaName() {
+    val synthetic = Method(fooDescriptor, "lambda\$refreshSessionToken", emptyList(), barDescriptor)
+    assertThat(synthetic.toString()).isEqualTo("com.example.Foo lambda\$refreshSessionToken() → Bar")
+    val removedSynthetic = synthetic.withoutSyntheticSuffix()
+    assertThat(removedSynthetic.toString()).isEqualTo("com.example.Foo lambda\$refreshSessionToken() → Bar")
   }
 
   @Test fun renderKotlinLambdaClassName() {
     val synthetic = Method(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", emptyList(), barDescriptor)
     assertThat(synthetic.toString()).isEqualTo("com.example.Foo$\$Lambda$26 bar() → Bar")
+    val removedSynthetic = synthetic.withoutSyntheticSuffix()
+    assertThat(removedSynthetic.toString()).isEqualTo("com.example.Foo$\$Lambda bar() → Bar")
   }
 
   @Test fun compareToSame() {
