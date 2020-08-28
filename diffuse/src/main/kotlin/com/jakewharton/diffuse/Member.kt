@@ -85,7 +85,7 @@ private fun Field.withoutSyntheticSuffix(): Field {
 }
 
 private val syntheticMethodSuffix = ".*?\\$\\d+".toRegex()
-private val lambdaMethodNumber = "\\$\\d+\\$".toRegex()
+private val lambdaMethodNumber = "\\$\\d+(\\$|$)".toRegex()
 
 private fun Method.withoutSyntheticSuffix(): Method {
   val newDeclaredType = declaringType.withoutSyntheticSuffix()
@@ -97,9 +97,10 @@ private fun Method.withoutSyntheticSuffix(): Method {
   }
 
   val newName = when {
-    lambdaName -> lambdaMethodNumber.find(name)!!.let { match ->
-      name.removeRange(match.range.first, match.range.last)
-    }
+    lambdaName -> lambdaMethodNumber.find(name)?.let { match ->
+      val endIndex = if (match.range.last == name.lastIndex) name.length else match.range.last
+      name.removeRange(match.range.first, endIndex)
+    } ?: name
     syntheticName -> name.substring(0, name.lastIndexOf('$'))
     else -> name
   }
