@@ -8,7 +8,7 @@ buildscript {
           // Keep this value in sync with bundletool's dependencies.
           'aapt2Proto': 'com.android.tools.build:aapt2-proto:4.1.0-alpha01-6193524',
       ],
-      'clikt': 'com.github.ajalt:clikt:2.8.0',
+      'clikt': 'com.github.ajalt.clikt:clikt:3.0.0-rc',
       'junit': 'junit:junit:4.13',
       'truth': 'com.google.truth:truth:1.0.1',
       'guava': 'com.google.guava:guava:28.1-jre',
