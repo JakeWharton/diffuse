@@ -2,8 +2,8 @@ package com.jakewharton.diffuse.info
 
 import com.jakewharton.diffuse.ArchiveFile
 import com.jakewharton.diffuse.ArchiveFiles
-import com.jakewharton.diffuse.Size
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.io.Size
 import com.jakewharton.picnic.TableSectionDsl
 import com.jakewharton.picnic.TextAlignment
 import com.jakewharton.picnic.renderText

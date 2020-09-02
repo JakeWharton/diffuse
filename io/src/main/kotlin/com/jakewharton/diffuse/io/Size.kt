@@ -1,4 +1,4 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.io
 
 import com.jakewharton.byteunits.BinaryByteUnit
 import kotlin.math.absoluteValue

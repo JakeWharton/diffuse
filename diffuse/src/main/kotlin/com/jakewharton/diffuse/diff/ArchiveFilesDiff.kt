@@ -2,9 +2,9 @@ package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.ArchiveFile.Type
 import com.jakewharton.diffuse.ArchiveFiles
-import com.jakewharton.diffuse.Size
 import com.jakewharton.diffuse.diff.ArchiveFilesDiff.Change
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.io.Size
 import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TableSectionDsl
 import com.jakewharton.picnic.TextAlignment.BottomCenter
