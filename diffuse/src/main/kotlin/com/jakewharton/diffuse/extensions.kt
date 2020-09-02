@@ -4,8 +4,10 @@ import com.android.apksig.util.DataSource
 import com.android.apksig.util.DataSources
 import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
 import com.jakewharton.diffuse.io.Input
+import com.jakewharton.diffuse.io.PathInput
+import java.io.Closeable
 import java.io.InputStream
-import java.nio.ByteBuffer
+import java.nio.channels.FileChannel
 import java.nio.charset.Charset
 import java.nio.file.FileSystems
 import java.nio.file.Files
@@ -13,6 +15,8 @@ import java.nio.file.OpenOption
 import java.nio.file.Path
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
+import kotlin.contracts.InvocationKind.EXACTLY_ONCE
+import kotlin.contracts.contract
 import okio.Buffer
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
@@ -21,7 +25,6 @@ internal fun InputStream.asZip(charset: Charset = Charsets.UTF_8) = ZipInputStre
 internal fun InputStream.readByteString() = readBytes().toByteString()
 
 // TODO https://youtrack.jetbrains.com/issue/KT-18242
-internal fun Path.readBytes() = Files.readAllBytes(this)
 internal fun Path.writeText(text: String, charset: Charset = Charsets.UTF_8) = Files.write(this, text.toByteArray(charset))
 internal fun Path.inputStream(vararg options: OpenOption): InputStream = Files.newInputStream(this, *options)
 internal val Path.exists get() = Files.exists(this)
@@ -29,10 +32,25 @@ internal fun Path.asZipFileSystem(loader: ClassLoader? = null) = FileSystems.new
 
 internal fun ByteString.asInputStream() = Buffer().write(this).inputStream()
 
-internal fun ByteArray.asByteBuffer(offset: Int = 0, length: Int = size - offset): ByteBuffer =
-  ByteBuffer.wrap(this, offset, length)
-
-internal fun ByteBuffer.asDataSource(): DataSource = DataSources.asDataSource(this)
+internal inline fun Input.useDataSource(body: (DataSource) -> Unit) {
+  contract {
+    callsInPlace(body, EXACTLY_ONCE)
+  }
+  var closeable: Closeable? = null
+  val source = when (this) {
+    is PathInput -> {
+      val channel = FileChannel.open(path)
+      closeable = channel
+      DataSources.asDataSource(channel)
+    }
+    else -> DataSources.asDataSource(toByteString().asByteBuffer())
+  }
+  try {
+    body(source)
+  } finally {
+    closeable?.close()
+  }
+}
 
 internal fun Input.toBinaryResourceFile() = BinaryResourceFile(toByteArray())
 

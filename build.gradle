@@ -2,9 +2,9 @@ buildscript {
   ext.deps = [
       'androidTools': [
           'dalvikDx': 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3',
-          'binaryResources': 'com.android.tools.apkparser:binary-resources:27.0.1',
-          'apkSigner': 'com.android.tools.build:apksig:4.0.1',
-          'bundleTool': 'com.android.tools.build:bundletool:1.1.0',
+          'binaryResources': 'com.android.tools.apkparser:binary-resources:27.2.0-alpha08',
+          'apkSigner': 'com.android.tools.build:apksig:4.2.0-alpha08',
+          'bundleTool': 'com.android.tools.build:bundletool:1.2.0',
           // Keep this value in sync with bundletool's dependencies.
           'aapt2Proto': 'com.android.tools.build:aapt2-proto:4.1.0-alpha01-6193524',
       ],
@@ -64,6 +64,7 @@ subprojects {
             "-XXLanguage:+InlineClasses",
             "-Xjvm-default=enable",
             "-progressive",
+            '-Xopt-in=kotlin.contracts.ExperimentalContracts'
         ]
       }
     }
