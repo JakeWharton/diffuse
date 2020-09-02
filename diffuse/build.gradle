@@ -12,9 +12,8 @@ configurations {
 dependencies {
   implementation project(':io')
   implementation project(':formats')
+  implementation project(':reports')
   implementation deps.clikt
-  implementation deps.picnic
-  implementation deps.diffUtils
 
   r8 'com.android.tools:r8:2.0.99'
 

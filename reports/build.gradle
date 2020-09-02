@@ -1,0 +1,10 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+dependencies {
+  api project(':formats')
+  implementation deps.picnic
+  implementation deps.diffUtils
+
+  testImplementation deps.junit
+  testImplementation deps.truth
+}
