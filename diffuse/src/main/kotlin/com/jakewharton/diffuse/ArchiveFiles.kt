@@ -2,6 +2,7 @@ package com.jakewharton.diffuse
 
 import com.jakewharton.diffuse.ArchiveFile.Type
 import com.jakewharton.diffuse.ArchiveFile.Type.Other
+import com.jakewharton.diffuse.io.Size
 import com.jakewharton.diffuse.io.Zip
 
 class ArchiveFiles internal constructor(

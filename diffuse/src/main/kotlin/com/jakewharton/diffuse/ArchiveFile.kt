@@ -1,5 +1,6 @@
 package com.jakewharton.diffuse
 
+import com.jakewharton.diffuse.io.Size
 import java.util.Locale
 
 data class ArchiveFile(

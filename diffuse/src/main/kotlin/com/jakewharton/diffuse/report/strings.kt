@@ -1,6 +1,6 @@
 package com.jakewharton.diffuse.report
 
-import com.jakewharton.diffuse.Size
+import com.jakewharton.diffuse.io.Size
 
 internal fun Int.toUnitString(unit: String, vararg specializations: Pair<Int, String>): String {
   return buildString {
