@@ -1,8 +1,8 @@
 package com.jakewharton.diffuse.report.text
 
-import com.jakewharton.diffuse.Aab
-import com.jakewharton.diffuse.ArchiveFile
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.format.Aab
+import com.jakewharton.diffuse.format.ArchiveFile
 import com.jakewharton.diffuse.info.toSummaryTable
 import com.jakewharton.diffuse.report.Report
 

@@ -1,8 +1,8 @@
 package com.jakewharton.diffuse.diff
 
-import com.jakewharton.diffuse.ApiMapping
-import com.jakewharton.diffuse.Apk
 import com.jakewharton.diffuse.diff.lint.resourcesArscCompression
+import com.jakewharton.diffuse.format.ApiMapping
+import com.jakewharton.diffuse.format.Apk
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.ApkDiffTextReport
 

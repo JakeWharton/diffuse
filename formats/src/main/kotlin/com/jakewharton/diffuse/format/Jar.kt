@@ -1,8 +1,8 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
-import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toJarFileType
-import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
-import com.jakewharton.diffuse.Class.Companion.toClass
+import com.jakewharton.diffuse.format.ArchiveFile.Type.Companion.toJarFileType
+import com.jakewharton.diffuse.format.ArchiveFiles.Companion.toArchiveFiles
+import com.jakewharton.diffuse.format.Class.Companion.toClass
 import com.jakewharton.diffuse.io.Input
 
 class Jar private constructor(
@@ -11,7 +11,7 @@ class Jar private constructor(
   val classes: List<Class>,
   override val declaredMembers: List<Member>,
   override val referencedMembers: List<Member>
-) : Binary, BinaryMembers {
+) : BinaryFormat, CodeBinary {
   override val members = declaredMembers + referencedMembers
 
   companion object {

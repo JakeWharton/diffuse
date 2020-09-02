@@ -2,13 +2,12 @@ package com.jakewharton.diffuse.diff
 
 import com.github.difflib.DiffUtils
 import com.github.difflib.UnifiedDiffUtils
-import com.jakewharton.diffuse.Apk
-import com.jakewharton.diffuse.Manifest
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.format.AndroidManifest
 
 internal class ManifestDiff(
-  val oldManifest: Manifest,
-  val newManifest: Manifest
+  val oldManifest: AndroidManifest,
+  val newManifest: AndroidManifest
 ) {
   internal val parsedPropertiesChanged = oldManifest.packageName != newManifest.packageName ||
     oldManifest.versionName != newManifest.versionName ||
@@ -18,7 +17,7 @@ internal class ManifestDiff(
     val oldLines = oldManifest.xml.lines()
     val newLines = newManifest.xml.lines()
     val diff = DiffUtils.diff(oldLines, newLines)
-    UnifiedDiffUtils.generateUnifiedDiff(Apk.manifestFileName, Apk.manifestFileName, oldLines, diff, 1)
+    UnifiedDiffUtils.generateUnifiedDiff(AndroidManifest.NAME, AndroidManifest.NAME, oldLines, diff, 1)
   }
 
   val changed = parsedPropertiesChanged || diff.isNotEmpty()

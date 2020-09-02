@@ -1,6 +1,6 @@
 package com.jakewharton.diffuse.info
 
-import com.jakewharton.diffuse.Aar
+import com.jakewharton.diffuse.format.Aar
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.AarInfoTextReport
 

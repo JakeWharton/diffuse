@@ -1,9 +1,9 @@
 package com.jakewharton.diffuse.info
 
-import com.jakewharton.diffuse.Field
-import com.jakewharton.diffuse.Jar
-import com.jakewharton.diffuse.Method
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.format.Field
+import com.jakewharton.diffuse.format.Jar
+import com.jakewharton.diffuse.format.Method
 import com.jakewharton.picnic.TextAlignment
 import com.jakewharton.picnic.renderText
 

@@ -1,6 +1,6 @@
 package com.jakewharton.diffuse.report
 
-import com.jakewharton.diffuse.Signatures
+import com.jakewharton.diffuse.format.Signatures
 
 internal fun Signatures.toSummaryString(): String {
   if (v1.isEmpty() && v2.isEmpty() && v3.isEmpty()) {

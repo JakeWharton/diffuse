@@ -1,4 +1,4 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
 import com.jakewharton.diffuse.io.Input
 import java.util.Objects

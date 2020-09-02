@@ -1,12 +1,12 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
 import com.android.aapt.Resources.XmlNode
-import com.jakewharton.diffuse.Aab.Module.Companion.toModule
-import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
-import com.jakewharton.diffuse.ArchiveFile.Type.Companion.toAabFileType
-import com.jakewharton.diffuse.ArchiveFiles.Companion.toArchiveFiles
-import com.jakewharton.diffuse.Dex.Companion.toDex
-import com.jakewharton.diffuse.Manifest.Companion.toManifest
+import com.jakewharton.diffuse.format.Aab.Module.Companion.toModule
+import com.jakewharton.diffuse.format.AndroidManifest.Companion.toManifest
+import com.jakewharton.diffuse.format.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.format.ArchiveFile.Type.Companion.toAabFileType
+import com.jakewharton.diffuse.format.ArchiveFiles.Companion.toArchiveFiles
+import com.jakewharton.diffuse.format.Dex.Companion.toDex
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Zip
 
@@ -15,17 +15,17 @@ class Aab private constructor(
   val apiMapping: ApiMapping,
   val baseModule: Module,
   val featureModules: Map<String, Module>
-) : Binary {
+) : BinaryFormat {
   // TODO remove toTypedArray call https://youtrack.jetbrains.com/issue/KT-12663
   val modules get() = listOf(baseModule, *featureModules.values.toTypedArray())
 
   class Module private constructor(
     val files: ArchiveFiles,
-    val manifest: Manifest,
+    val manifest: AndroidManifest,
     val dexes: List<Dex>
   ) {
     companion object {
-      internal const val manifestFilePath = "manifest/${Apk.manifestFileName}"
+      internal const val manifestFilePath = "manifest/${AndroidManifest.NAME}"
 
       fun Zip.toModule(): Module {
         val files = toArchiveFiles { it.toAabFileType() }

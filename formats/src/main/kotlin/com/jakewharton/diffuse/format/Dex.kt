@@ -1,4 +1,4 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
 import com.android.dex.ClassDef
 import com.android.dex.Dex as AndroidDex
@@ -12,7 +12,7 @@ class Dex private constructor(
   val classes: List<TypeDescriptor>,
   override val declaredMembers: List<Member>,
   override val referencedMembers: List<Member>
-) : BinaryMembers {
+) : CodeBinary {
   override val members = declaredMembers + referencedMembers
 
   fun withMapping(mapping: ApiMapping): Dex {
@@ -45,6 +45,8 @@ class Dex private constructor(
       val referencedMembers = referencedMethods + referencedFields
       return Dex(dex.strings(), dex.typeNames(), classes, declaredMembers, referencedMembers)
     }
+
+    private fun <T, R> Pair<T, T>.mapEach(body: (T) -> R): Pair<R, R> = body(first) to body(second)
   }
 }
 

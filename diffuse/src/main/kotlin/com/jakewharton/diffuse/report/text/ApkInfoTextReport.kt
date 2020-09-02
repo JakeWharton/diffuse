@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse.report.text
 
-import com.jakewharton.diffuse.Apk
-import com.jakewharton.diffuse.ArchiveFile
+import com.jakewharton.diffuse.format.Apk
+import com.jakewharton.diffuse.format.ArchiveFile
 import com.jakewharton.diffuse.info.toSummaryTable
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.toSummaryString

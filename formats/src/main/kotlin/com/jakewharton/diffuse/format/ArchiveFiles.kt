@@ -1,7 +1,7 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
-import com.jakewharton.diffuse.ArchiveFile.Type
-import com.jakewharton.diffuse.ArchiveFile.Type.Other
+import com.jakewharton.diffuse.format.ArchiveFile.Type
+import com.jakewharton.diffuse.format.ArchiveFile.Type.Other
 import com.jakewharton.diffuse.io.Size
 import com.jakewharton.diffuse.io.Zip
 

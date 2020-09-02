@@ -1,4 +1,4 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
 import com.jakewharton.diffuse.io.Input
 
@@ -98,7 +98,7 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
               .substring(1, parameters.lastIndex) // Remove leading '(' and trailing ')'.
               .takeUnless(String::isEmpty) // Do not process parameter-less methods.
               ?.split(',')
-              ?.map(::humanNameToDescriptor)
+              ?.map(Companion::humanNameToDescriptor)
               ?: emptyList()
 
             val lookupSignature = MethodSignature(returnDescriptor, toName, parameterDescriptors)

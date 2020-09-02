@@ -1,4 +1,4 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
 sealed class Member : Comparable<Member> {
   abstract val declaringType: TypeDescriptor
@@ -68,50 +68,27 @@ data class Method(
     val COMPARATOR = compareBy(Method::name)
       .thenBy(comparingValues(), Method::parameterTypes)
       .thenBy(Method::returnType)
-  }
-}
 
-internal fun Member.withoutSyntheticSuffix() = when (this) {
-  is Field -> withoutSyntheticSuffix()
-  is Method -> withoutSyntheticSuffix()
-}
-
-private fun Field.withoutSyntheticSuffix(): Field {
-  val newDeclaredType = declaringType.withoutSyntheticSuffix()
-  if (newDeclaredType == declaringType) {
-    return this
-  }
-  return copy(declaringType = newDeclaredType)
-}
-
-private val syntheticMethodSuffix = ".*?\\$\\d+".toRegex()
-private val lambdaMethodNumber = "\\$\\d+(\\$|$)".toRegex()
-
-private fun Method.withoutSyntheticSuffix(): Method {
-  val newDeclaredType = declaringType.withoutSyntheticSuffix()
-  val lambdaName = name.startsWith("lambda$")
-  val syntheticName = name.matches(syntheticMethodSuffix)
-
-  if (declaringType == newDeclaredType && !lambdaName && !syntheticName) {
-    return this
-  }
-
-  val newName = when {
-    lambdaName -> lambdaMethodNumber.find(name)?.let { match ->
-      val endIndex = if (match.range.last == name.lastIndex) name.length else match.range.last
-      name.removeRange(match.range.first, endIndex)
-    } ?: name
-    syntheticName -> name.substring(0, name.lastIndexOf('$'))
-    else -> name
-  }
-  return copy(declaringType = newDeclaredType, name = newName)
-}
-
-private val lambdaClassSuffix = ".*?\\$\\\$Lambda\\$\\d+;".toRegex()
-
-private fun TypeDescriptor.withoutSyntheticSuffix(): TypeDescriptor {
-  return when (value.matches(lambdaClassSuffix)) {
-    true -> TypeDescriptor(value.substringBeforeLast('$') + ";")
-    false -> this
+    // TODO replace with https://youtrack.jetbrains.com/issue/KT-20690
+    private fun <T : Comparable<T>> comparingValues(): Comparator<Iterable<T>> {
+      return object : Comparator<Iterable<T>> {
+        override fun compare(o1: Iterable<T>, o2: Iterable<T>): Int {
+          val i1 = o1.iterator()
+          val i2 = o2.iterator()
+          while (true) {
+            if (!i1.hasNext()) {
+              return if (!i2.hasNext()) 0 else -1
+            }
+            if (!i2.hasNext()) {
+              return 1
+            }
+            val result = i1.next().compareTo(i2.next())
+            if (result != 0) {
+              return result
+            }
+          }
+        }
+      }
+    }
   }
 }

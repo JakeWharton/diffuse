@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse.diff
 
-import com.jakewharton.diffuse.Signatures
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.format.Signatures
 import com.jakewharton.picnic.TextAlignment.TopRight
 import okio.ByteString
 

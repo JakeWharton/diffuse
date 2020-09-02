@@ -1,6 +1,6 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
-interface BinaryMembers {
+interface CodeBinary {
   val members: List<Member>
   val declaredMembers: List<Member>
   val referencedMembers: List<Member>

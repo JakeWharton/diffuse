@@ -1,6 +1,6 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
-import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.format.ApiMapping.Companion.toApiMapping
 import com.jakewharton.diffuse.io.Input.Companion.asInput
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

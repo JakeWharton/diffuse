@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse.info
 
-import com.jakewharton.diffuse.Arsc
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.format.Arsc
 import com.jakewharton.picnic.TextAlignment
 import com.jakewharton.picnic.renderText
 
