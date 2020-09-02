@@ -1,12 +1,12 @@
 package com.jakewharton.diffuse.diff.lint
 
-import com.jakewharton.diffuse.Apk
 import com.jakewharton.diffuse.diff.ArchiveFilesDiff
 import com.jakewharton.diffuse.diff.lint.Notice.Type
+import com.jakewharton.diffuse.format.Arsc
 
 internal fun ArchiveFilesDiff.resourcesArscCompression(): Notice? {
-  val oldCompressed = oldFiles[Apk.resourcesArscFileName]!!.isCompressed
-  val newCompressed = newFiles[Apk.resourcesArscFileName]!!.isCompressed
+  val oldCompressed = oldFiles[Arsc.NAME]!!.isCompressed
+  val newCompressed = newFiles[Arsc.NAME]!!.isCompressed
   return when {
     !newCompressed && !oldCompressed -> null
     newCompressed -> Notice(

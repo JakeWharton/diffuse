@@ -1,5 +1,6 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
+import com.jakewharton.diffuse.format.Arsc as ArscFormat
 import com.jakewharton.diffuse.io.Size
 import java.util.Locale
 
@@ -49,8 +50,8 @@ data class ArchiveFile(
       @JvmName("fromApkName")
       fun String.toApkFileType() = when {
         matches(Apk.classesDexRegex) -> Dex
-        equals(Apk.manifestFileName) -> Manifest
-        equals(Apk.resourcesArscFileName) -> Arsc
+        equals(AndroidManifest.NAME) -> Manifest
+        equals(ArscFormat.NAME) -> Arsc
         startsWith("lib/") -> Native
         startsWith("assets/") -> Asset
         startsWith("res/") -> Res
@@ -74,7 +75,7 @@ data class ArchiveFile(
         equals("classes.jar") -> Jar
         equals("api.jar") -> ApiJar
         equals("lint.jar") -> LintJar
-        equals(Apk.manifestFileName) -> Manifest
+        equals(AndroidManifest.NAME) -> Manifest
         startsWith("jni/") -> Native
         matches(Aar.libsJarRegex) -> JarLibs
         startsWith("assets/") -> Asset

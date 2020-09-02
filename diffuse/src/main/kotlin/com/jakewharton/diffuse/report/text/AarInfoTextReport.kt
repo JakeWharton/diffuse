@@ -1,7 +1,7 @@
 package com.jakewharton.diffuse.report.text
 
-import com.jakewharton.diffuse.Aar
-import com.jakewharton.diffuse.ArchiveFile.Type
+import com.jakewharton.diffuse.format.Aar
+import com.jakewharton.diffuse.format.ArchiveFile.Type
 import com.jakewharton.diffuse.info.toSummaryTable
 import com.jakewharton.diffuse.report.Report
 

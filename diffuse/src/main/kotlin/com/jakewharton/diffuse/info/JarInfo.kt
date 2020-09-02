@@ -1,6 +1,6 @@
 package com.jakewharton.diffuse.info
 
-import com.jakewharton.diffuse.Jar
+import com.jakewharton.diffuse.format.Jar
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.JarInfoTextReport
 

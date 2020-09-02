@@ -20,14 +20,19 @@ import com.github.ajalt.clikt.parameters.options.switch
 import com.github.ajalt.clikt.parameters.options.versionOption
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
-import com.jakewharton.diffuse.Aab.Companion.toAab
-import com.jakewharton.diffuse.Aab.Module
-import com.jakewharton.diffuse.Aar.Companion.toAar
-import com.jakewharton.diffuse.ApiMapping.Companion.toApiMapping
-import com.jakewharton.diffuse.Apk.Companion.toApk
-import com.jakewharton.diffuse.Dex.Companion.toDex
-import com.jakewharton.diffuse.Jar.Companion.toJar
 import com.jakewharton.diffuse.diff.BinaryDiff
+import com.jakewharton.diffuse.format.Aab.Companion.toAab
+import com.jakewharton.diffuse.format.Aab.Module
+import com.jakewharton.diffuse.format.Aar.Companion.toAar
+import com.jakewharton.diffuse.format.ApiMapping
+import com.jakewharton.diffuse.format.ApiMapping.Companion.toApiMapping
+import com.jakewharton.diffuse.format.Apk.Companion.toApk
+import com.jakewharton.diffuse.format.CodeBinary
+import com.jakewharton.diffuse.format.Dex.Companion.toDex
+import com.jakewharton.diffuse.format.Field
+import com.jakewharton.diffuse.format.Jar.Companion.toJar
+import com.jakewharton.diffuse.format.Member
+import com.jakewharton.diffuse.format.Method
 import com.jakewharton.diffuse.info.AabInfo
 import com.jakewharton.diffuse.info.AarInfo
 import com.jakewharton.diffuse.info.ApkInfo
@@ -222,9 +227,9 @@ private class MembersCommand(
     val input = binary.asInput()
 
     val memberSelector = when (ownership) {
-      Ownership.All -> BinaryMembers::members
-      Ownership.Declared -> BinaryMembers::declaredMembers
-      Ownership.Referenced -> BinaryMembers::referencedMembers
+      Ownership.All -> CodeBinary::members
+      Ownership.Declared -> CodeBinary::declaredMembers
+      Ownership.Referenced -> CodeBinary::referencedMembers
     }
 
     val binaryMembers = when (binaryType) {

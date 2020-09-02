@@ -1,10 +1,10 @@
 package com.jakewharton.diffuse.diff
 
-import com.jakewharton.diffuse.Aab
-import com.jakewharton.diffuse.Aar
-import com.jakewharton.diffuse.ApiMapping
-import com.jakewharton.diffuse.Apk
-import com.jakewharton.diffuse.Jar
+import com.jakewharton.diffuse.format.Aab
+import com.jakewharton.diffuse.format.Aar
+import com.jakewharton.diffuse.format.ApiMapping
+import com.jakewharton.diffuse.format.Apk
+import com.jakewharton.diffuse.format.Jar
 import com.jakewharton.diffuse.report.Report
 
 interface BinaryDiff : Report.Factory {

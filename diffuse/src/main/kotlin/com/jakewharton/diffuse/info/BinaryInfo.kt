@@ -1,6 +1,6 @@
 package com.jakewharton.diffuse.info
 
-import com.jakewharton.diffuse.Apk
+import com.jakewharton.diffuse.format.Apk
 import com.jakewharton.diffuse.report.Report
 
 interface BinaryInfo : Report.Factory {

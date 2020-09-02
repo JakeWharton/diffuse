@@ -1,6 +1,6 @@
 package com.jakewharton.diffuse.diff
 
-import com.jakewharton.diffuse.Aab
+import com.jakewharton.diffuse.format.Aab
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.AabDiffTextReport
 

@@ -1,11 +1,11 @@
 package com.jakewharton.diffuse.diff
 
-import com.jakewharton.diffuse.ApiMapping
-import com.jakewharton.diffuse.Class
-import com.jakewharton.diffuse.Field
-import com.jakewharton.diffuse.Jar
-import com.jakewharton.diffuse.Method
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.format.ApiMapping
+import com.jakewharton.diffuse.format.Class
+import com.jakewharton.diffuse.format.Field
+import com.jakewharton.diffuse.format.Jar
+import com.jakewharton.diffuse.format.Method
 import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TextAlignment.MiddleLeft
 import com.jakewharton.picnic.TextAlignment.MiddleRight

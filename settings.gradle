@@ -1,2 +1,3 @@
 include ':diffuse'
+include ':formats'
 include ':io'

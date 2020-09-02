@@ -1,4 +1,4 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
 import com.google.devrel.gmscore.tools.apk.arsc.ResourceTableChunk
 import com.jakewharton.diffuse.io.Input
@@ -20,6 +20,8 @@ class Arsc private constructor(
   }
 
   companion object {
+    const val NAME = "resources.arsc"
+
     @JvmStatic
     @JvmName("create")
     fun Input.toArsc(): Arsc {

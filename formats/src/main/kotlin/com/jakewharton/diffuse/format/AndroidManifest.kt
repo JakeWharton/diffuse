@@ -1,4 +1,4 @@
-package com.jakewharton.diffuse
+package com.jakewharton.diffuse.format
 
 import com.android.aapt.Resources.XmlNode
 import com.android.tools.build.bundletool.model.utils.xmlproto.XmlProtoNode
@@ -31,31 +31,33 @@ import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
 
-class Manifest private constructor(
+class AndroidManifest private constructor(
   val xml: String,
   val packageName: String,
   val versionName: String?,
   val versionCode: Long?
 ) {
   companion object {
+    const val NAME = "AndroidManifest.xml"
+
     private val documentBuilderFactory = DocumentBuilderFactory.newInstance()!!
       .apply {
         isNamespaceAware = true
       }
 
-    internal fun BinaryResourceFile.toManifest(arsc: Arsc? = null): Manifest {
+    internal fun BinaryResourceFile.toManifest(arsc: Arsc? = null): AndroidManifest {
       return toDocument(arsc).toManifest()
     }
 
     @JvmStatic
     @JvmName("parse")
-    fun String.toManifest(): Manifest = toDocument().toManifest()
+    fun String.toManifest(): AndroidManifest = toDocument().toManifest()
 
     @JvmStatic
     @JvmName("parse")
-    fun Input.toManifest(): Manifest = toUtf8().toManifest()
+    fun Input.toManifest(): AndroidManifest = toUtf8().toManifest()
 
-    internal fun XmlNode.toManifest(): Manifest {
+    internal fun XmlNode.toManifest(): AndroidManifest {
       return XmlProtoToXmlConverter.convert(XmlProtoNode(this))
         .apply { normalizeWhitespace() }
         .toManifest()
@@ -145,7 +147,7 @@ class Manifest private constructor(
       }
     }
 
-    private fun Document.toManifest(): Manifest {
+    private fun Document.toManifest(): AndroidManifest {
       val manifestElement = documentElement
       require(manifestElement.tagName == "manifest") {
         "Unable to find root <manifest> tag"
@@ -161,7 +163,7 @@ class Manifest private constructor(
         null
       }
 
-      return Manifest(toFormattedXml(), packageName, versionName, versionCode)
+      return AndroidManifest(toFormattedXml(), packageName, versionName, versionCode)
     }
 
     private fun Document.toFormattedXml() = buildString {

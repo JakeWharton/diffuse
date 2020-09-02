@@ -1,11 +1,11 @@
 package com.jakewharton.diffuse.report.text
 
-import com.jakewharton.diffuse.ArchiveFile.Type
 import com.jakewharton.diffuse.diff.ApkDiff
 import com.jakewharton.diffuse.diff.lint.Notice
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.diff.toSummaryTable
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.format.ArchiveFile.Type
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.toSummaryString
 

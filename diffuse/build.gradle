@@ -11,17 +11,9 @@ configurations {
 
 dependencies {
   implementation project(':io')
+  implementation project(':formats')
   implementation deps.clikt
-  implementation deps.androidTools.dalvikDx
   implementation deps.picnic
-  api deps.okio
-  implementation deps.androidTools.binaryResources
-  implementation deps.androidTools.apkSigner
-  implementation deps.androidTools.bundleTool
-  // TODO bundletool depends on aapt2-proto but with a runtime dependency rather than compile.
-  //  https://github.com/google/bundletool/issues/177
-  implementation deps.androidTools.aapt2Proto
-  implementation deps.asm
   implementation deps.diffUtils
 
   r8 'com.android.tools:r8:2.0.99'
