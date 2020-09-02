@@ -4,7 +4,7 @@ import com.jakewharton.diffuse.format.Aar
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.AarInfoTextReport
 
-internal class AarInfo(
+class AarInfo(
   private val aar: Aar,
 ) : BinaryInfo {
   override fun toTextReport(): Report {
