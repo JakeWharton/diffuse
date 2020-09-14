@@ -21,9 +21,11 @@ internal fun ArchiveFiles.toSummaryTable(
           alignment = TextAlignment.BottomLeft
         }
         cell("compressed") {
+          columnSpan = 2
           alignment = TextAlignment.BottomCenter
         }
         cell("uncompressed") {
+          columnSpan = 2
           alignment = TextAlignment.BottomCenter
         }
       }
@@ -43,11 +45,36 @@ internal fun ArchiveFiles.toSummaryTable(
     val oldUncompressedSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
     if (oldSize != Size.ZERO || type !in skipIfEmptyTypes) {
       if (includeCompressed) {
-        row(
-          name,
-          oldSize,
-          oldUncompressedSize,
-        )
+        val (oldSizeQuantity, oldSizeUnit) = oldSize.toStringPair()
+        val (oldUncompressedSizeQuantity, oldUncompressedSizeUnit) = oldUncompressedSize.toStringPair()
+
+        row {
+          cell(name)
+          cell(oldSizeQuantity) {
+            alignment = TextAlignment.MiddleRight
+            borderLeft = true
+            borderRight = false
+            paddingRight = 0
+          }
+          cell(oldSizeUnit) {
+            alignment = TextAlignment.MiddleLeft
+            borderLeft = false
+            borderRight = true
+            paddingLeft = 1
+          }
+          cell(oldUncompressedSizeQuantity) {
+            alignment = TextAlignment.MiddleRight
+            borderLeft = true
+            borderRight = false
+            paddingRight = 0
+          }
+          cell(oldUncompressedSizeUnit) {
+            alignment = TextAlignment.MiddleLeft
+            borderLeft = false
+            borderRight = true
+            paddingLeft = 1
+          }
+        }
       } else {
         row(name, oldUncompressedSize)
       }
