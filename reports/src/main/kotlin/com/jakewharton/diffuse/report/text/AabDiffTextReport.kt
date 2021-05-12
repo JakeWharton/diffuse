@@ -55,7 +55,19 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff) : Report {
         }.toString()
       )
 
-      // TODO base module
+      appendLine("==================")
+      appendLine("====   base   ====")
+      appendLine("==================")
+      appendLine()
+      if (aabDiff.baseModule.archive.changed) {
+        appendLine(aabDiff.baseModule.archive.toDetailReport())
+      }
+      if (aabDiff.baseModule.dex.changed) {
+        appendLine(aabDiff.baseModule.dex.toDetailReport())
+      }
+      if (aabDiff.baseModule.manifest.changed) {
+        appendLine(aabDiff.baseModule.manifest.toDetailReport())
+      }
 
       for (name in (aabDiff.featureModuleNames - aabDiff.removedFeatureModules.keys)) {
         appendLine()
