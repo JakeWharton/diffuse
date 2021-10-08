@@ -5,7 +5,7 @@
 
 
 ## [0.1.0] - 2020-08-27
-[0.1.0]: https://github.com/JakeWharton/diffuse/releases/tag/1.1.0
+[0.1.0]: https://github.com/JakeWharton/diffuse/releases/tag/0.1.0
 
 Initial release
 
