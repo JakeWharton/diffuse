@@ -21,7 +21,6 @@ class SignaturesDiffTest {
       | SIGNATURES │ old │ new      
       |────────────┼─────┼──────────
       |         V1 │     │ 76317631 
-      |
       |""".trimMargin()
     )
   }
@@ -35,7 +34,6 @@ class SignaturesDiffTest {
       |────────────┼──────────┼──────────
       |         V1 │ 76317631 │ 76317631 
       |         V2 │          │ 76327632 
-      |
       |""".trimMargin()
     )
   }
@@ -50,7 +48,6 @@ class SignaturesDiffTest {
       |         V1 │ 76317631 │ 76317631 
       |         V2 │ 76327632 │          
       |         V3 │          │ 76337633 
-      |
       |""".trimMargin()
     )
   }
