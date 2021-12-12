@@ -16,7 +16,7 @@ buildscript {
       'byteunits': 'com.jakewharton.byteunits:byteunits:0.9.1',
       'asm': 'org.ow2.asm:asm:9.0-beta',
       'diffUtils': 'io.github.java-diff-utils:java-diff-utils:4.7',
-      'picnic': 'com.jakewharton.picnic:picnic:0.3.0',
+      'picnic': 'com.jakewharton.picnic:picnic:0.5.0',
   ]
 
   dependencies {
