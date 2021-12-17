@@ -82,7 +82,7 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
       var fields: MutableMap<String, String>? = null
       var methods: MutableMap<MethodSignature, String>? = null
       toUtf8().split('\n').forEachIndexed { index, line ->
-        if (line.startsWith('#') || line.isBlank()) {
+        if (line.trimStart().startsWith('#') || line.isBlank()) {
           return@forEachIndexed
         }
         if (line.startsWith(' ')) {
