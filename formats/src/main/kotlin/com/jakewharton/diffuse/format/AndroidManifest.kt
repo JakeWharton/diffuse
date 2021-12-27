@@ -79,7 +79,9 @@ class AndroidManifest private constructor(
         when (chunk) {
           is XmlNamespaceStartChunk -> {
             check(namespacesToAdd.put(chunk.prefix, chunk.uri) == null)
-            check(namespacesInScope.put(chunk.uri, "${chunk.prefix}:") == null)
+            val newPrefix = "${chunk.prefix}:"
+            val oldPrefix = namespacesInScope.put(chunk.uri, newPrefix)
+            check(oldPrefix == null || oldPrefix == newPrefix)
           }
           is XmlStartElementChunk -> {
             val canonicalNamespace = chunk.namespace.takeIf(String::isNotEmpty)
