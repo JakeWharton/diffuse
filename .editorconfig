@@ -9,3 +9,4 @@ insert_final_newline = true
 
 [*.{kt,kts}]
 kotlin_imports_layout=ascii
+trim_trailing_whitespace = false

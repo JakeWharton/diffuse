@@ -46,6 +46,15 @@ internal fun SignaturesDiff.toDetailReport() = buildString {
           cell(newSignatures.v3.joinToString("\n", transform = ByteString::hex))
         }
       }
+      if (oldSignatures.v4.isNotEmpty() || newSignatures.v4.isNotEmpty()) {
+        row {
+          cell("V4") {
+            alignment = TopRight
+          }
+          cell(oldSignatures.v4.joinToString("\n", transform = ByteString::hex))
+          cell(newSignatures.v4.joinToString("\n", transform = ByteString::hex))
+        }
+      }
     }
   )
 }

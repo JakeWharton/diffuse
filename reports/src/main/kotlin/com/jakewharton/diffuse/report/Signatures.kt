@@ -3,7 +3,7 @@ package com.jakewharton.diffuse.report
 import com.jakewharton.diffuse.format.Signatures
 
 internal fun Signatures.toSummaryString(): String {
-  if (v1.isEmpty() && v2.isEmpty() && v3.isEmpty()) {
+  if (v1.isEmpty() && v2.isEmpty() && v3.isEmpty() && v4.isEmpty()) {
     return "none"
   }
   return buildString {
@@ -34,6 +34,17 @@ internal fun Signatures.toSummaryString(): String {
       if (v3.size > 1) {
         append(" (x")
         append(v3.size)
+        append(')')
+      }
+    }
+    if (v4.isNotEmpty()) {
+      if (length > 0) {
+        append(", ")
+      }
+      append("V4")
+      if (v4.size > 1) {
+        append(" (x")
+        append(v4.size)
         append(')')
       }
     }
