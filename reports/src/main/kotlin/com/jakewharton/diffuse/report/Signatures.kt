@@ -16,7 +16,7 @@ internal fun Signatures.toSummaryString(): String {
       }
     }
     if (v2.isNotEmpty()) {
-      if (length > 0) {
+      if (isNotEmpty()) {
         append(", ")
       }
       append("V2")
@@ -27,7 +27,7 @@ internal fun Signatures.toSummaryString(): String {
       }
     }
     if (v3.isNotEmpty()) {
-      if (length > 0) {
+      if (isNotEmpty()) {
         append(", ")
       }
       append("V3")
@@ -38,7 +38,7 @@ internal fun Signatures.toSummaryString(): String {
       }
     }
     if (v4.isNotEmpty()) {
-      if (length > 0) {
+      if (isNotEmpty()) {
         append(", ")
       }
       append("V4")

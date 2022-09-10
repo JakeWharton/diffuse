@@ -10,8 +10,8 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
   fun isEmpty() = typeMappings.isEmpty()
 
   val types get() = typeMappings.size
-  val methods get() = typeMappings.values.sumBy { it.methods.size }
-  val fields get() = typeMappings.values.sumBy { it.fields.size }
+  val methods get() = typeMappings.values.sumOf { it.methods.size }
+  val fields get() = typeMappings.values.sumOf { it.fields.size }
 
   /**
    * Given a [TypeDescriptor] which is typically obfuscated, return a new [TypeDescriptor] for the

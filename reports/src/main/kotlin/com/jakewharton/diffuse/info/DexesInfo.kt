@@ -41,7 +41,7 @@ internal fun List<Dex>.toSummaryTable() = diffuseTable {
     fun addDexRow(name: String, selector: (Dex) -> List<Any>) = row {
       cell(name)
       if (isMultidex) {
-        cell(sumBy { selector(it).size })
+        cell(sumOf { selector(it).size })
       }
       cell(flatMapTo(LinkedHashSet(), selector).size)
     }

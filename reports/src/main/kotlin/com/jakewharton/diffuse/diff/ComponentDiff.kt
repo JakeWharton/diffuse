@@ -16,8 +16,8 @@ internal class ComponentDiff<T>(
 }
 
 internal fun <R, T> componentDiff(oldItems: List<R>, newItems: List<R>, selector: (R) -> Collection<T>): ComponentDiff<T> {
-  val oldRawCount = oldItems.sumBy { selector(it).size }
-  val newRawCount = newItems.sumBy { selector(it).size }
+  val oldRawCount = oldItems.sumOf { selector(it).size }
+  val newRawCount = newItems.sumOf { selector(it).size }
   val oldSet = oldItems.flatMapTo(mutableSetOf(), selector)
   val newSet = newItems.flatMapTo(mutableSetOf(), selector)
   val added = newSet - oldSet
