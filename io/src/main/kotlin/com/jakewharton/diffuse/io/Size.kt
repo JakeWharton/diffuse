@@ -3,7 +3,8 @@ package com.jakewharton.diffuse.io
 import com.jakewharton.byteunits.BinaryByteUnit
 import kotlin.math.absoluteValue
 
-inline class Size(val bytes: Long) : Comparable<Size> {
+@JvmInline
+value class Size(val bytes: Long) : Comparable<Size> {
   override fun toString(): String = if (bytes >= 0) {
     BinaryByteUnit.format(bytes)
   } else {

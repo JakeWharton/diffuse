@@ -1,6 +1,7 @@
 package com.jakewharton.diffuse.format
 
-inline class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
+@JvmInline
+value class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
   override fun compareTo(other: TypeDescriptor): Int {
     return sourceName.compareTo(other.sourceName)
   }

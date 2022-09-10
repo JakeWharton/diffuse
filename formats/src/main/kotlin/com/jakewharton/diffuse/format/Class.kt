@@ -49,7 +49,7 @@ private class DeclaredMembersVisitor(
     descriptor: String,
     signature: String?,
     exceptions: Array<out String>?
-  ): MethodVisitor? {
+  ): MethodVisitor {
     members += parseMethod(type, name, descriptor)
     return methodVisitor
   }

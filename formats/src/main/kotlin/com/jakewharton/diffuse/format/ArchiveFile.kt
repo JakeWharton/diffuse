@@ -31,7 +31,7 @@ data class ArchiveFile(
     Native,
     Other;
 
-    open val displayName get() = name.toLowerCase(Locale.US)
+    open val displayName get() = name.lowercase(Locale.US)
 
     companion object {
       @JvmField

@@ -20,15 +20,14 @@ buildscript {
   ]
 
   dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0"
-    classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.10.0'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
+    classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.7.10'
     classpath 'org.jlleitschuh.gradle:ktlint-gradle:11.0.0'
     classpath 'com.vanniktech:gradle-maven-publish-plugin:0.9.0'
   }
 
   repositories {
     mavenCentral()
-    jcenter()
     gradlePluginPortal()
   }
 }
@@ -40,7 +39,6 @@ subprojects {
   repositories {
     mavenCentral()
     google()
-    jcenter()
   }
 
   apply plugin: 'org.jlleitschuh.gradle.ktlint'
@@ -65,10 +63,9 @@ subprojects {
       kotlinOptions {
         jvmTarget = "1.8"
         freeCompilerArgs = [
-            "-XXLanguage:+InlineClasses",
-            "-Xjvm-default=enable",
+            "-Xjvm-default=all",
             "-progressive",
-            '-Xopt-in=kotlin.contracts.ExperimentalContracts'
+            '-opt-in=kotlin.contracts.ExperimentalContracts'
         ]
       }
     }
