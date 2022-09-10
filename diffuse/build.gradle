@@ -53,7 +53,7 @@ def fatJarProvider = tasks.register('fatJar', Jar) { task ->
 def r8File = new File("$buildDir/libs/$archivesBaseName-$version-r8.jar")
 def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
   def fatJar = fatJarProvider.get()
-  def fatJarFile = fatJar.archivePath
+  def fatJarFile = fatJar.archiveFile.get()
   task.dependsOn(fatJar)
   task.inputs.file(fatJarFile)
   task.outputs.file(r8File)
