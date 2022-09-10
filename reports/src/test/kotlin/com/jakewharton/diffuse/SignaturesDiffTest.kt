@@ -22,7 +22,8 @@ class SignaturesDiffTest {
       | SIGNATURES │ old │ new      
       |────────────┼─────┼──────────
       |         V1 │     │ 76317631 
-      |""".trimMargin()
+      |
+      """.trimMargin()
     )
   }
 
@@ -35,7 +36,8 @@ class SignaturesDiffTest {
       |────────────┼──────────┼──────────
       |         V1 │ 76317631 │ 76317631 
       |         V2 │          │ 76327632 
-      |""".trimMargin()
+      |
+      """.trimMargin()
     )
   }
 
@@ -49,7 +51,8 @@ class SignaturesDiffTest {
       |         V1 │ 76317631 │ 76317631 
       |         V2 │ 76327632 │          
       |         V3 │          │ 76337633 
-      |""".trimMargin()
+      |
+      """.trimMargin()
     )
   }
   @Test fun v1AndV2ToV3AndV4() {
@@ -63,7 +66,8 @@ class SignaturesDiffTest {
       |         V2 │ 76327632 │          
       |         V3 │          │ 76337633 
       |         V4 │          │ 76347634 
-      |""".trimMargin()
+      |
+      """.trimMargin()
     )
   }
 }
