@@ -26,3 +26,8 @@
 -keepclassmembers class com.android.apksig.internal.** {
   <init>();
 }
+
+# Method called reflectively.
+-keep class com.android.apksig.ApkVerifier$Result {
+    private java.util.List getV4SchemeSigners();
+}
