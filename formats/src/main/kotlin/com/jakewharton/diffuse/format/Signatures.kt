@@ -59,6 +59,6 @@ data class Signatures(
     private val Result.v4SchemeSigners: List<V4SchemeSignerInfo>
       get() = this::class.java
         .getDeclaredMethod("getV4SchemeSigners").apply { isAccessible = true }
-        .invoke(this, null) as List<V4SchemeSignerInfo>
+        .invoke(this) as List<V4SchemeSignerInfo>
   }
 }
