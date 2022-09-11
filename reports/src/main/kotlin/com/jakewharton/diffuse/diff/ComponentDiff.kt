@@ -10,7 +10,7 @@ internal class ComponentDiff<T>(
   val newRawCount: Int,
   val newCount: Int,
   val added: Set<T>,
-  val removed: Set<T>
+  val removed: Set<T>,
 ) {
   val changed get() = added.isNotEmpty() || removed.isNotEmpty()
 }
@@ -28,7 +28,7 @@ internal fun <R, T> componentDiff(oldItems: List<R>, newItems: List<R>, selector
     newRawCount,
     newSet.size,
     added,
-    removed
+    removed,
   )
 }
 
@@ -53,7 +53,7 @@ internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff
             val addedSize = diff.added.size.toDiffString(zeroSign = '+')
             val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
             row(diff.oldCount, diff.newCount, "$diffSize ($addedSize $removedSize)")
-          }.renderText()
+          }.renderText(),
         )
         diff.added.forEach {
           appendLine("+ $it")
@@ -64,7 +64,7 @@ internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff
         diff.removed.forEach {
           appendLine("- $it")
         }
-      }.prependIndent("  ")
+      }.prependIndent("  "),
     )
   }
 }

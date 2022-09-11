@@ -11,7 +11,7 @@ class Aar private constructor(
   val files: ArchiveFiles,
   val manifest: AndroidManifest,
   val classes: Jar,
-  val libs: List<Jar>
+  val libs: List<Jar>,
 ) : BinaryFormat {
   /** The `classes.jar` and any additional jars from `libs/`. */
   // TODO remove toTypedArray call https://youtrack.jetbrains.com/issue/KT-12663

@@ -52,7 +52,7 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff) : Report {
               cell(if (name in aabDiff.newAab.featureModules) "✓" else "")
             }
           }
-        }.toString()
+        }.toString(),
       )
 
       appendLine("==================")

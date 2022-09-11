@@ -35,7 +35,7 @@ interface Input {
 }
 
 class PathInput internal constructor(
-  val path: Path
+  val path: Path,
 ) : Input {
   override val name get() = path.fileName.toString()
   override fun source() = path.source().buffer()
@@ -45,7 +45,7 @@ class PathInput internal constructor(
 
 class BytesInput internal constructor(
   override val name: String,
-  val bytes: ByteString
+  val bytes: ByteString,
 ) : Input {
   override fun source(): BufferedSource = Buffer().write(bytes)
   override fun toByteArray() = bytes.toByteArray()
@@ -55,7 +55,7 @@ class BytesInput internal constructor(
 
 class StringInput internal constructor(
   override val name: String,
-  private val string: String
+  private val string: String,
 ) : Input {
   private val bytes = string.encodeUtf8()
 

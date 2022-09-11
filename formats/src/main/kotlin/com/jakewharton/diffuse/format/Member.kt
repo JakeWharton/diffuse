@@ -19,7 +19,7 @@ sealed class Member : Comparable<Member> {
 data class Field(
   override val declaringType: TypeDescriptor,
   override val name: String,
-  val type: TypeDescriptor
+  val type: TypeDescriptor,
 ) : Member() {
   override fun toString() = "${declaringType.sourceName} $name: ${type.simpleName}"
 
@@ -40,7 +40,7 @@ data class Method(
   override val declaringType: TypeDescriptor,
   override val name: String,
   val parameterTypes: List<TypeDescriptor>,
-  val returnType: TypeDescriptor
+  val returnType: TypeDescriptor,
 ) : Member() {
   override fun toString() = buildString {
     append(declaringType.sourceName)

@@ -88,7 +88,7 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
         if (line.startsWith(' ')) {
           val result = memberLine.matchEntire(line)
             ?: throw IllegalArgumentException(
-              "Unable to parse line ${index + 1} as member mapping: $line"
+              "Unable to parse line ${index + 1} as member mapping: $line",
             )
           val (_, returnType, fromName, parameters, toName) = result.groupValues
 
@@ -113,7 +113,7 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
 
           val result = typeLine.matchEntire(line)
             ?: throw IllegalArgumentException(
-              "Unable to parse line ${index + 1} as type mapping: $line"
+              "Unable to parse line ${index + 1} as type mapping: $line",
             )
           val (_, fromType, toType) = result.groupValues
 
@@ -155,13 +155,13 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
 private data class MethodSignature(
   val returnType: TypeDescriptor,
   val name: String,
-  val parameterTypes: List<TypeDescriptor>
+  val parameterTypes: List<TypeDescriptor>,
 )
 
 private data class TypeMapping(
   val typeDescriptor: TypeDescriptor,
   val fields: Map<String, String>,
-  val methods: Map<MethodSignature, String>
+  val methods: Map<MethodSignature, String>,
 ) {
   operator fun get(field: String) = fields[field]
   operator fun get(method: MethodSignature) = methods[method]

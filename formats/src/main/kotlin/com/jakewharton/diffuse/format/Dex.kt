@@ -11,7 +11,7 @@ class Dex private constructor(
   val types: List<String>,
   val classes: List<TypeDescriptor>,
   override val declaredMembers: List<Member>,
-  override val referencedMembers: List<Member>
+  override val referencedMembers: List<Member>,
 ) : CodeBinary {
   override val members = declaredMembers + referencedMembers
 

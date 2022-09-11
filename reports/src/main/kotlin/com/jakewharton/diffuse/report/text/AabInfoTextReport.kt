@@ -22,7 +22,7 @@ internal class AabInfoTextReport(private val aab: Aab) : Report {
           for (name in aab.featureModules.keys) {
             row(name)
           }
-        }.toString()
+        }.toString(),
       )
 
       appendModule("base", aab.baseModule)
@@ -48,8 +48,8 @@ internal class AabInfoTextReport(private val aab: Aab) : Report {
       module.files.toSummaryTable(
         "AAB",
         ArchiveFile.Type.AAB_TYPES,
-        skipIfEmptyTypes = setOf(ArchiveFile.Type.Native)
-      )
+        skipIfEmptyTypes = setOf(ArchiveFile.Type.Native),
+      ),
     )
     appendLine(module.dexes.toSummaryTable())
   }

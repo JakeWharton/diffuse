@@ -10,7 +10,7 @@ class Jar private constructor(
   val files: ArchiveFiles,
   val classes: List<Class>,
   override val declaredMembers: List<Member>,
-  override val referencedMembers: List<Member>
+  override val referencedMembers: List<Member>,
 ) : BinaryFormat, CodeBinary {
   override val members = declaredMembers + referencedMembers
 

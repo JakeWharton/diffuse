@@ -21,8 +21,8 @@ class ApkInfoTextReport(
         apk.files.toSummaryTable(
           "APK",
           ArchiveFile.Type.APK_TYPES,
-          skipIfEmptyTypes = setOf(ArchiveFile.Type.Native)
-        )
+          skipIfEmptyTypes = setOf(ArchiveFile.Type.Native),
+        ),
       )
       appendLine()
       appendLine(apk.dexes.toSummaryTable())
