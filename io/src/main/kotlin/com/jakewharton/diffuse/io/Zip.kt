@@ -7,6 +7,8 @@ import java.nio.file.FileSystem
 import java.nio.file.Path
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
+import kotlin.io.path.exists
+import kotlin.io.path.inputStream
 import okio.ByteString
 import okio.utf8Size
 
@@ -110,7 +112,7 @@ internal class PathZip(
   ) : Zip.Entry {
     override fun asInput(): Input {
       val child = root.resolve(path)
-      if (!child.exists) {
+      if (!child.exists()) {
         throw FileNotFoundException("No entry: $path")
       }
       return child.asInput()

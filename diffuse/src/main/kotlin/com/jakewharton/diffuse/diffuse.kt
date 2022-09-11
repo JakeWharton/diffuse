@@ -44,6 +44,7 @@ import java.io.PrintStream
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
 import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.io.path.writeText
 
 fun main(vararg args: String) {
   val defaultFs = FileSystems.getDefault()
