@@ -14,8 +14,8 @@ internal class AarInfoTextReport(private val aar: Aar) : Report {
         aar.files.toSummaryTable(
           "AAR",
           Type.AAR_TYPES,
-          skipIfEmptyTypes = setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res)
-        )
+          skipIfEmptyTypes = setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res),
+        ),
       )
       appendLine()
       appendLine(aar.jars.toSummaryTable("JAR"))

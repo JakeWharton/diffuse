@@ -14,7 +14,7 @@ class Aab private constructor(
   override val filename: String?,
   val apiMapping: ApiMapping,
   val baseModule: Module,
-  val featureModules: Map<String, Module>
+  val featureModules: Map<String, Module>,
 ) : BinaryFormat {
   // TODO remove toTypedArray call https://youtrack.jetbrains.com/issue/KT-12663
   val modules get() = listOf(baseModule, *featureModules.values.toTypedArray())
@@ -22,7 +22,7 @@ class Aab private constructor(
   class Module private constructor(
     val files: ArchiveFiles,
     val manifest: AndroidManifest,
-    val dexes: List<Dex>
+    val dexes: List<Dex>,
   ) {
     companion object {
       internal const val manifestFilePath = "manifest/${AndroidManifest.NAME}"

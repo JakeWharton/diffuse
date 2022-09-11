@@ -7,7 +7,7 @@ import com.jakewharton.diffuse.format.AndroidManifest
 
 internal class ManifestDiff(
   val oldManifest: AndroidManifest,
-  val newManifest: AndroidManifest
+  val newManifest: AndroidManifest,
 ) {
   internal val parsedPropertiesChanged = oldManifest.packageName != newManifest.packageName ||
     oldManifest.versionName != newManifest.versionName ||
@@ -34,7 +34,7 @@ internal fun ManifestDiff.toDetailReport() = buildString {
         row("package", oldManifest.packageName, newManifest.packageName)
         row("version code", oldManifest.versionCode, newManifest.versionCode)
         row("version name", oldManifest.versionName, newManifest.versionName)
-      }
+      },
     )
   }
   if (diff.isNotEmpty()) {

@@ -9,7 +9,7 @@ data class ArchiveFile(
   val type: Type,
   val size: Size,
   val uncompressedSize: Size,
-  val isCompressed: Boolean
+  val isCompressed: Boolean,
 ) {
   enum class Type {
     Dex,
@@ -29,7 +29,8 @@ data class ArchiveFile(
     Res,
     Asset,
     Native,
-    Other;
+    Other,
+    ;
 
     open val displayName get() = name.lowercase(Locale.US)
 

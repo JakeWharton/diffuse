@@ -43,12 +43,16 @@ interface Zip : Closeable {
 
   interface Entry {
     val path: String
+
     /** The uncompressed size of the entry contents */
     val uncompressedSize: Size
+
     /** The compressed size of the entry contents. */
     val compressedSize: Size
+
     /** The impact on the overall zip size. This is [compressedSize] plus metadata. */
     val zipSize: Size
+
     /** Returns true if the entry is compressed using any method other than 'store'. */
     val isCompressed: Boolean
 
@@ -57,13 +61,13 @@ interface Zip : Closeable {
 }
 
 private fun <T : Zip.Entry> ZipInputStream.mapEntries(
-  entryFactory: (name: String, size: Size, compressedSize: Size, zipSize: Size, isCompressed: Boolean) -> T
+  entryFactory: (name: String, size: Size, compressedSize: Size, zipSize: Size, isCompressed: Boolean) -> T,
 ): List<T> {
   return entries().map { it.toZipEntry(entryFactory) }.toList()
 }
 
 private fun <T : Zip.Entry> ZipEntry.toZipEntry(
-  entryFactory: (name: String, size: Size, compressedSize: Size, zipSize: Size, isCompressed: Boolean) -> T
+  entryFactory: (name: String, size: Size, compressedSize: Size, zipSize: Size, isCompressed: Boolean) -> T,
 ): T {
   val isCompressed = method != ZipEntry.STORED
   val nameSize = name.utf8Size()
@@ -94,7 +98,7 @@ internal fun Path.toZip(): Zip {
 
 internal class PathZip(
   fs: FileSystem,
-  override val entries: List<Zip.Entry>
+  override val entries: List<Zip.Entry>,
 ) : Zip, Closeable by fs {
   class Entry(
     private val root: Path,
@@ -102,7 +106,7 @@ internal class PathZip(
     override val uncompressedSize: Size,
     override val compressedSize: Size,
     override val zipSize: Size,
-    override val isCompressed: Boolean
+    override val isCompressed: Boolean,
   ) : Zip.Entry {
     override fun asInput(): Input {
       val child = root.resolve(path)
@@ -122,7 +126,7 @@ internal fun ByteString.toZip(): Zip {
 }
 
 internal class BytesZip(
-  override val entries: List<Zip.Entry>
+  override val entries: List<Zip.Entry>,
 ) : Zip {
   class Entry(
     private val bytes: ByteString,
@@ -130,7 +134,7 @@ internal class BytesZip(
     override val uncompressedSize: Size,
     override val compressedSize: Size,
     override val zipSize: Size,
-    override val isCompressed: Boolean
+    override val isCompressed: Boolean,
   ) : Zip.Entry {
     override fun asInput(): Input {
       val zis = bytes.asInputStream().asZip()

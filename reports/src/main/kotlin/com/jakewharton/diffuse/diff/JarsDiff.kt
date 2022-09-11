@@ -15,7 +15,7 @@ internal class JarsDiff(
   val oldJars: List<Jar>,
   val oldMapping: ApiMapping,
   val newJars: List<Jar>,
-  val newMapping: ApiMapping
+  val newMapping: ApiMapping,
 ) {
   val classes = componentDiff(oldJars, newJars) { it.classes.map(Class::descriptor) }
   val methods = componentDiff(oldJars, newJars) { it.members.filterIsInstance<Method>() }

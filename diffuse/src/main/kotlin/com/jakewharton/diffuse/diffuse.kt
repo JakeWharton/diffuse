@@ -70,7 +70,7 @@ private fun ParameterHolder.binaryType(): FlagOption<BinaryType> {
       "--apk" to BinaryType.Apk,
       "--aar" to BinaryType.Aar,
       "--aab" to BinaryType.Aab,
-      "--jar" to BinaryType.Jar
+      "--jar" to BinaryType.Jar,
     )
     .default(BinaryType.Apk)
 }
@@ -83,7 +83,7 @@ private fun ParameterHolder.mappingFile(name: String): OptionWithValues<ApiMappi
   return option(
     name,
     help = "Mapping file produced by R8 or ProGuard.",
-    metavar = "FILE"
+    metavar = "FILE",
   )
     .path(mustExist = true, canBeDir = false, mustBeReadable = true)
     .convert { it.asInput().toApiMapping() }
@@ -92,20 +92,20 @@ private fun ParameterHolder.mappingFile(name: String): OptionWithValues<ApiMappi
 
 private class OutputOptions(
   outputFs: FileSystem,
-  private val output: PrintStream
+  private val output: PrintStream,
 ) : OptionGroup(name = "Output options") {
   private val text by option(
     help = "File to write text report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
-    metavar = "FILE"
+    metavar = "FILE",
   )
     .path(fileSystem = outputFs)
   private val html by option(
     help = "File to write HTML report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
-    metavar = "FILE"
+    metavar = "FILE",
   )
     .path(fileSystem = outputFs)
   private val stdout by option(
-    help = "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified."
+    help = "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified.",
   )
     .choice("text" to ReportType.Text, "html" to ReportType.Html)
     .defaultLazy {
@@ -157,7 +157,7 @@ private class InfoCommand(
 private class DiffCommand(
   inputFs: FileSystem,
   outputFs: FileSystem,
-  output: PrintStream
+  output: PrintStream,
 ) : CliktCommand(name = "diff", help = "Display changes between two binaries.") {
   private val inputOptions by object : OptionGroup("Input options") {
     private val type by binaryType()
@@ -192,14 +192,14 @@ private class DiffCommand(
 
 private class MembersCommand(
   inputFs: FileSystem,
-  private val stdout: PrintStream
+  private val stdout: PrintStream,
 ) : CliktCommand(name = "members", help = "List methods or fields of a binary.") {
   private val binary by argument("FILE", help = "Input file.")
     .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
   private val hideSyntheticNumbers by option(
     "--hide-synthetic-numbers",
-    help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output."
+    help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.",
   )
     .flag()
 

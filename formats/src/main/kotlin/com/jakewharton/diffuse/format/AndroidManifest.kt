@@ -35,7 +35,7 @@ class AndroidManifest private constructor(
   val xml: String,
   val packageName: String,
   val versionName: String?,
-  val versionCode: Long?
+  val versionCode: Long?,
 ) {
   companion object {
     const val NAME = "AndroidManifest.xml"
@@ -108,8 +108,11 @@ class AndroidManifest private constructor(
                 INT_DEC -> typedValue.data().toString()
                 INT_HEX -> "0x${typedValue.data()}"
                 REFERENCE -> {
-                  if (arsc != null) "@${arsc.entries[typedValue.data()]}"
-                  else typedValue.data().toString()
+                  if (arsc != null) {
+                    "@${arsc.entries[typedValue.data()]}"
+                  } else {
+                    typedValue.data().toString()
+                  }
                 }
                 NULL -> "null"
                 STRING -> attribute.rawValue()
@@ -142,7 +145,7 @@ class AndroidManifest private constructor(
       val emptyNodes = XPathFactory.newInstance().newXPath().evaluate(
         "//text()[normalize-space()='']",
         this,
-        XPathConstants.NODESET
+        XPathConstants.NODESET,
       ) as NodeList
       for (emptyNode in emptyNodes) {
         emptyNode.parentNode.removeChild(emptyNode)

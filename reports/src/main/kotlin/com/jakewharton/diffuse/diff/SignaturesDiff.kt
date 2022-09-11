@@ -7,7 +7,7 @@ import okio.ByteString
 
 internal class SignaturesDiff(
   val oldSignatures: Signatures,
-  val newSignatures: Signatures
+  val newSignatures: Signatures,
 ) {
   val changed = oldSignatures != newSignatures
 }
@@ -55,6 +55,6 @@ internal fun SignaturesDiff.toDetailReport() = buildString {
           cell(newSignatures.v4.joinToString("\n", transform = ByteString::hex))
         }
       }
-    }
+    },
   )
 }

@@ -6,11 +6,11 @@ import com.jakewharton.diffuse.report.text.AabDiffTextReport
 
 internal class AabDiff(
   val oldAab: Aab,
-  val newAab: Aab
+  val newAab: Aab,
 ) : BinaryDiff {
   inner class ModuleDiff(
     val oldModule: Aab.Module,
-    val newModule: Aab.Module
+    val newModule: Aab.Module,
   ) {
     val archive = ArchiveFilesDiff(oldModule.files, newModule.files, includeCompressed = false)
     val dex = DexDiff(oldModule.dexes, oldAab.apiMapping, newModule.dexes, newAab.apiMapping)

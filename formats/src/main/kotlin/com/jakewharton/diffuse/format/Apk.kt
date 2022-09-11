@@ -14,7 +14,7 @@ class Apk private constructor(
   val dexes: List<Dex>,
   val arsc: Arsc,
   val manifest: AndroidManifest,
-  val signatures: Signatures
+  val signatures: Signatures,
 ) : BinaryFormat {
   companion object {
     internal val classesDexRegex = Regex("classes\\d*\\.dex")

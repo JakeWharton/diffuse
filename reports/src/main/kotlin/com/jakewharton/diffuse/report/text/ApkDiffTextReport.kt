@@ -40,15 +40,15 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : Report {
                         Notice.Type.Informational -> 'i'
                         Notice.Type.Warning -> '!'
                         Notice.Type.Resolution -> '✓'
-                      }
+                      },
                     )
                     append("  ")
                     append(notice.message)
-                  }
+                  },
                 )
               }
             }
-          }.toString()
+          }.toString(),
         )
         appendLine()
       }
@@ -56,8 +56,8 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : Report {
         apkDiff.archive.toSummaryTable(
           "APK",
           Type.APK_TYPES,
-          skipIfEmptyTypes = setOf(Type.Native)
-        )
+          skipIfEmptyTypes = setOf(Type.Native),
+        ),
       )
       appendLine()
       appendLine(apkDiff.dex.toSummaryTable())

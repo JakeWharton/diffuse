@@ -324,9 +324,9 @@ class ApiMappingTest {
         floatDescriptor,
         intDescriptor,
         longDescriptor,
-        shortDescriptor
+        shortDescriptor,
       ),
-      voidDescriptor
+      voidDescriptor,
     )
 
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
@@ -341,9 +341,9 @@ class ApiMappingTest {
         floatDescriptor,
         intDescriptor,
         longDescriptor,
-        shortDescriptor
+        shortDescriptor,
       ),
-      voidDescriptor
+      voidDescriptor,
     )
 
     assertEquals(barMethod, mapping[aMethod])
@@ -390,7 +390,7 @@ class ApiMappingTest {
       aaaDescriptor,
       "a",
       listOf(byteDescriptor.asArray(1), aabDescriptor.asArray(1), stringDescriptor.asArray(6)),
-      voidDescriptor
+      voidDescriptor,
     )
 
     val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
@@ -399,7 +399,7 @@ class ApiMappingTest {
       fooDescriptor,
       "bar",
       listOf(byteDescriptor.asArray(1), barDescriptor.asArray(1), stringDescriptor.asArray(6)),
-      voidDescriptor
+      voidDescriptor,
     )
 
     assertEquals(barMethod, mapping[aMethod])
@@ -412,7 +412,7 @@ class ApiMappingTest {
       TypeDescriptor("Ljava/lang/Byte;"),
       "toString",
       emptyList(),
-      stringDescriptor
+      stringDescriptor,
     )
     assertSame(boxedByteToString, mapping[boxedByteToString])
   }
@@ -424,7 +424,7 @@ class ApiMappingTest {
       byteDescriptor.asArray(1),
       "clone",
       emptyList(),
-      byteDescriptor.asArray(1)
+      byteDescriptor.asArray(1),
     )
     assertSame(byteArrayClone, mapping[byteArrayClone])
 
@@ -432,7 +432,7 @@ class ApiMappingTest {
       TypeDescriptor("Ljava/lang/Byte;"),
       "toString",
       listOf(byteDescriptor),
-      stringDescriptor
+      stringDescriptor,
     )
     assertSame(boxedByteToString, mapping[boxedByteToString])
   }

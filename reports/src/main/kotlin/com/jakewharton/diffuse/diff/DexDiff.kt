@@ -16,7 +16,7 @@ internal class DexDiff(
   val oldDexes: List<Dex>,
   val oldMapping: ApiMapping,
   val newDexes: List<Dex>,
-  val newMapping: ApiMapping
+  val newMapping: ApiMapping,
 ) {
   val isMultidex = oldDexes.size > 1 || newDexes.size > 1
 

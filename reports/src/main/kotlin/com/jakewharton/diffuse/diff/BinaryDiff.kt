@@ -14,13 +14,13 @@ interface BinaryDiff : Report.Factory {
       oldApk: Apk,
       oldMapping: ApiMapping = ApiMapping.EMPTY,
       newApk: Apk,
-      newMapping: ApiMapping = ApiMapping.EMPTY
+      newMapping: ApiMapping = ApiMapping.EMPTY,
     ): BinaryDiff = ApkDiff(oldApk, oldMapping, newApk, newMapping)
 
     @JvmStatic
     fun ofAab(
       oldAab: Aab,
-      newAab: Aab
+      newAab: Aab,
     ): BinaryDiff = AabDiff(oldAab, newAab)
 
     @JvmStatic
@@ -28,7 +28,7 @@ interface BinaryDiff : Report.Factory {
       oldAar: Aar,
       oldMapping: ApiMapping = ApiMapping.EMPTY,
       newAar: Aar,
-      newMapping: ApiMapping = ApiMapping.EMPTY
+      newMapping: ApiMapping = ApiMapping.EMPTY,
     ): BinaryDiff = AarDiff(oldAar, oldMapping, newAar, newMapping)
 
     @JvmStatic
@@ -36,7 +36,7 @@ interface BinaryDiff : Report.Factory {
       oldJar: Jar,
       oldMapping: ApiMapping = ApiMapping.EMPTY,
       newJar: Jar,
-      newMapping: ApiMapping = ApiMapping.EMPTY
+      newMapping: ApiMapping = ApiMapping.EMPTY,
     ): BinaryDiff = JarDiff(oldJar, oldMapping, newJar, newMapping)
   }
 }

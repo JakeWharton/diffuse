@@ -12,7 +12,7 @@ import org.objectweb.asm.Opcodes
 class Class private constructor(
   val descriptor: TypeDescriptor,
   val declaredMembers: List<Member>,
-  val referencedMembers: List<Member>
+  val referencedMembers: List<Member>,
 ) {
   override fun toString() = descriptor.toString()
   override fun hashCode() = Objects.hash(descriptor, declaredMembers, referencedMembers)
@@ -39,7 +39,7 @@ class Class private constructor(
 
 private class DeclaredMembersVisitor(
   val type: TypeDescriptor,
-  val methodVisitor: MethodVisitor
+  val methodVisitor: MethodVisitor,
 ) : ClassVisitor(Opcodes.ASM7) {
   val members = mutableListOf<Member>()
 
@@ -48,7 +48,7 @@ private class DeclaredMembersVisitor(
     name: String,
     descriptor: String,
     signature: String?,
-    exceptions: Array<out String>?
+    exceptions: Array<out String>?,
   ): MethodVisitor {
     members += parseMethod(type, name, descriptor)
     return methodVisitor
@@ -59,7 +59,7 @@ private class DeclaredMembersVisitor(
     name: String,
     descriptor: String,
     signature: String?,
-    value: Any?
+    value: Any?,
   ): FieldVisitor? {
     members += Field(type, name, TypeDescriptor(descriptor))
     return null
@@ -74,7 +74,7 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
     owner: String,
     name: String,
     descriptor: String,
-    isInterface: Boolean
+    isInterface: Boolean,
   ) {
     val ownerType = parseOwner(owner)
     val referencedMethod = parseMethod(ownerType, name, descriptor)
@@ -85,7 +85,7 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
     name: String?,
     descriptor: String?,
     bootstrapMethodHandle: Handle,
-    vararg bootstrapMethodArguments: Any?
+    vararg bootstrapMethodArguments: Any?,
   ) {
     members += parseHandle(bootstrapMethodHandle)
 
@@ -114,7 +114,7 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
     opcode: Int,
     owner: String,
     name: String,
-    descriptor: String
+    descriptor: String,
   ) {
     val ownerType = parseOwner(owner)
     val referencedField = Field(ownerType, name, TypeDescriptor(descriptor))
@@ -134,7 +134,7 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
 private fun parseMethod(
   owner: TypeDescriptor,
   name: String,
-  descriptor: String
+  descriptor: String,
 ): Method {
   val parameterTypes = mutableListOf<TypeDescriptor>()
   var i = 1
@@ -164,5 +164,5 @@ private val lambdaMetaFactory = Handle(
   "java/lang/invoke/LambdaMetafactory",
   "metafactory",
   "(Ljava/lang/invoke/MethodHandles\$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
-  false
+  false,
 )

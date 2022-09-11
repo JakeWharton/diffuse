@@ -10,7 +10,7 @@ internal class ApkDiff(
   val oldApk: Apk,
   val oldMapping: ApiMapping,
   val newApk: Apk,
-  val newMapping: ApiMapping
+  val newMapping: ApiMapping,
 ) : BinaryDiff {
   val archive = ArchiveFilesDiff(oldApk.files, newApk.files)
   val signatures = SignaturesDiff(oldApk.signatures, newApk.signatures)
@@ -19,7 +19,7 @@ internal class ApkDiff(
   val manifest = ManifestDiff(oldApk.manifest, newApk.manifest)
 
   val lintMessages = listOfNotNull(
-    archive.resourcesArscCompression()
+    archive.resourcesArscCompression(),
   )
 
   override fun toTextReport(): Report = ApkDiffTextReport(this)

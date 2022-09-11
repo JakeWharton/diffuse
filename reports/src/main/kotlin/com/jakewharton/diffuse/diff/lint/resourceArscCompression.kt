@@ -11,15 +11,15 @@ internal fun ArchiveFilesDiff.resourcesArscCompression(): Notice? {
     !newCompressed && !oldCompressed -> null
     newCompressed -> Notice(
       "resources.arsc changed from correctly uncompressed to incorrectly compressed",
-      Type.Warning
+      Type.Warning,
     )
     oldCompressed -> Notice(
       "resources.arsc changed from incorrectly compressed to correctly uncompressed",
-      Type.Resolution
+      Type.Resolution,
     )
     else -> Notice(
       "resources.arsc remains incorrectly compressed instead of correctly uncompressed",
-      Type.Warning
+      Type.Warning,
     )
   }
 }

@@ -16,7 +16,7 @@ import com.jakewharton.picnic.renderText
 internal class ArchiveFilesDiff(
   val oldFiles: ArchiveFiles,
   val newFiles: ArchiveFiles,
-  val includeCompressed: Boolean = true
+  val includeCompressed: Boolean = true,
 ) {
   data class Change(
     val path: String,
@@ -24,7 +24,7 @@ internal class ArchiveFilesDiff(
     val sizeDiff: Size,
     val uncompressedSize: Size,
     val uncompressedSizeDiff: Size,
-    val type: Type
+    val type: Type,
   ) {
     enum class Type { Added, Removed, Changed }
   }
@@ -38,7 +38,7 @@ internal class ArchiveFilesDiff(
           newFile.size,
           newFile.uncompressedSize,
           newFile.uncompressedSize,
-          Change.Type.Added
+          Change.Type.Added,
         )
       } else {
         null
@@ -52,7 +52,7 @@ internal class ArchiveFilesDiff(
           -oldFile.size,
           Size.ZERO,
           -oldFile.uncompressedSize,
-          Change.Type.Removed
+          Change.Type.Removed,
         )
       } else {
         null
@@ -73,7 +73,7 @@ internal class ArchiveFilesDiff(
           newFile.size - oldFile.size,
           newFile.uncompressedSize,
           newFile.uncompressedSize - oldFile.uncompressedSize,
-          Change.Type.Changed
+          Change.Type.Changed,
         )
       } else {
         null
@@ -89,7 +89,7 @@ internal class ArchiveFilesDiff(
 internal fun ArchiveFilesDiff.toSummaryTable(
   name: String,
   displayTypes: List<Type>,
-  skipIfEmptyTypes: Set<Type> = emptySet()
+  skipIfEmptyTypes: Set<Type> = emptySet(),
 ) = diffuseTable {
   header {
     if (includeCompressed) {
@@ -137,7 +137,7 @@ internal fun ArchiveFilesDiff.toSummaryTable(
           (newSize - oldSize).toDiffString(),
           oldUncompressedSize,
           newUncompressedSize,
-          uncompressedDiff
+          uncompressedDiff,
         )
       } else {
         row(name, oldUncompressedSize, newUncompressedSize, uncompressedDiff)
@@ -240,6 +240,6 @@ internal fun ArchiveFilesDiff.toDetailReport() = buildString {
           cell("$typeChar $path")
         }
       }
-    }.renderText()
+    }.renderText(),
   )
 }

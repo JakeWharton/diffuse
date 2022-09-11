@@ -9,7 +9,7 @@ import com.jakewharton.picnic.renderText
 
 internal class ArscDiff(
   val oldArsc: Arsc,
-  val newArsc: Arsc
+  val newArsc: Arsc,
 ) {
   val configsAdded = (newArsc.configs - oldArsc.configs).sorted()
   val configsRemoved = (oldArsc.configs - newArsc.configs).sorted()
@@ -94,7 +94,7 @@ internal fun ArscDiff.toDetailReport() = buildString {
     name: String,
     componentSelector: (Arsc) -> Collection<*>,
     added: List<T>,
-    removed: List<T>
+    removed: List<T>,
   ) {
     if (added.isNotEmpty() || removed.isNotEmpty()) {
       appendLine()
@@ -118,9 +118,9 @@ internal fun ArscDiff.toDetailReport() = buildString {
               row(
                 componentSelector(oldArsc).size,
                 componentSelector(newArsc).size,
-                "$diffSize ($addedSize $removedSize)"
+                "$diffSize ($addedSize $removedSize)",
               )
-            }.renderText()
+            }.renderText(),
           )
           added.forEach {
             appendLine("+ $it")
@@ -131,7 +131,7 @@ internal fun ArscDiff.toDetailReport() = buildString {
           removed.forEach {
             appendLine("- $it")
           }
-        }.prependIndent("  ")
+        }.prependIndent("  "),
       )
     }
   }
