@@ -7,8 +7,8 @@ guava = "30.1-jre"
 [libraries]
 dalvikDx = "com.jakewharton.android.repackaged:dalvik-dx:11.0.0_r3"
 binaryResources = "com.android.tools.apkparser:binary-resources:30.2.2"
-apkSigner = "com.android.tools.build:apksig:7.2.2"
-bundleTool = "com.android.tools.build:bundletool:1.11.2"
+apkSigner = "com.android.tools.build:apksig:7.4.2"
+bundleTool = "com.android.tools.build:bundletool:1.14.1"
 aapt2Proto = { module = "com.android.tools.build:aapt2-proto", version.ref = "aapt2Proto" }
 protobufJava = { module = "com.google.protobuf:protobuf-java", version.ref = "protobufJava" }
 clikt = "com.github.ajalt.clikt:clikt:3.5.0"
