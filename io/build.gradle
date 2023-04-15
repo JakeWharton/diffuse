@@ -1,6 +1,8 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+}
 
 dependencies {
-  api deps.okio
-  implementation deps.byteunits
+  api libs.okio
+  implementation libs.byteunits
 }

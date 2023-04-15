@@ -1,5 +1,7 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
-//apply plugin: "com.vanniktech.maven.publish"
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.mavenPublish)
+}
 
 configurations {
   r8
@@ -9,12 +11,12 @@ dependencies {
   implementation project(':io')
   implementation project(':formats')
   implementation project(':reports')
-  implementation deps.clikt
+  implementation libs.clikt
 
-  r8 'com.android.tools:r8:2.0.99'
+  r8 libs.r8
 
-  testImplementation deps.junit
-  testImplementation deps.truth
+  testImplementation libs.junit
+  testImplementation libs.truth
 }
 
 def fatJarProvider = tasks.register('fatJar', Jar) { task ->
@@ -43,6 +45,7 @@ def fatJarProvider = tasks.register('fatJar', Jar) { task ->
     task.exclude 'META-INF/proguard/**'
     task.exclude 'META-INF/*.version'
     task.exclude '**/*.proto'
+    task.exclude '**/*.dex'
     task.exclude 'LICENSE'
     task.exclude 'NOTICE'
     task.exclude 'r8-version.properties'
@@ -51,22 +54,27 @@ def fatJarProvider = tasks.register('fatJar', Jar) { task ->
 }
 
 def r8File = new File("$buildDir/libs/$archivesBaseName-$version-r8.jar")
+def rulesFile = project.file("src/main/rules.txt")
 def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
+  task.javaLauncher.set(javaToolchains.launcherFor { spec ->
+    spec.languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_11.majorVersion))
+  })
   def fatJar = fatJarProvider.get()
-  def fatJarFile = fatJar.archiveFile.get()
+  def fatJarFile = fatJar.archiveFile
   task.dependsOn(fatJar)
   task.inputs.file(fatJarFile)
+  task.inputs.file(rulesFile)
   task.outputs.file(r8File)
 
   task.classpath(configurations.r8)
-  task.main = 'com.android.tools.r8.R8'
+  task.mainClass.set('com.android.tools.r8.R8')
   task.args = [
     '--release',
     '--classfile',
     '--output', r8File.toString(),
-    '--pg-conf', 'src/main/rules.txt',
-    '--lib', System.properties['java.home'].toString(),
-    fatJarFile.toString(),
+    '--pg-conf', rulesFile.path,
+    '--lib', System.getProperty('java.home').toString(),
+    fatJarFile.get().toString(),
   ]
 }
 

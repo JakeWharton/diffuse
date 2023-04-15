@@ -15,19 +15,15 @@
 -keepattributes Signature, InnerClasses, EnclosingMethod
 
 # Annotations for reflection.
--keepattributes RuntimeVisible*Annotations
+-keepattributes RuntimeVisible*Annotations,AnnotationDefault
+-keep class com.android.apksig.internal.** { *; }
 
-# Fields accessed reflectively which correspond to a binary format.
--keepclassmembers class com.android.apksig.internal.** {
-  @com.android.apksig.internal.asn1.Asn1Field <fields>;
-}
-
-# Default constructors invoked reflectively.
--keepclassmembers class com.android.apksig.internal.** {
-  <init>();
-}
-
-# Method called reflectively.
+# Called by reflection
 -keep class com.android.apksig.ApkVerifier$Result {
     private java.util.List getV4SchemeSigners();
 }
+
+##############
+### APKSIG ###
+##############
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
