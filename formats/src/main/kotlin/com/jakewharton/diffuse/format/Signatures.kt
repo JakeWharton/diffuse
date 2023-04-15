@@ -1,8 +1,6 @@
 package com.jakewharton.diffuse.format
 
 import com.android.apksig.ApkVerifier
-import com.android.apksig.ApkVerifier.Result
-import com.android.apksig.ApkVerifier.Result.V4SchemeSignerInfo
 import com.android.apksig.util.DataSource
 import com.android.apksig.util.DataSources
 import com.jakewharton.diffuse.io.Input
@@ -54,11 +52,5 @@ data class Signatures(
         closeable?.close()
       }
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private val Result.v4SchemeSigners: List<V4SchemeSignerInfo>
-      get() = this::class.java
-        .getDeclaredMethod("getV4SchemeSigners").apply { isAccessible = true }
-        .invoke(this) as List<V4SchemeSignerInfo>
   }
 }
