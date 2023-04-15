@@ -23,11 +23,11 @@ def fatJarProvider = tasks.register('fatJar', Jar) { task ->
   task.dependsOn(configurations.named('runtimeClasspath'))
   task.dependsOn(tasks.named('jar'))
 
-  task.classifier 'fat'
+  task.archiveClassifier.set('fat')
 
   task.manifest {
     attributes 'Main-Class': 'com.jakewharton.diffuse.Diffuse'
-    attributes 'Implementation-Version': version
+    attributes 'Implementation-Version': archiveVersion
   }
 
   def sourceClasses = sourceSets.main.output.classesDirs
@@ -56,9 +56,6 @@ def fatJarProvider = tasks.register('fatJar', Jar) { task ->
 def r8File = new File("$buildDir/libs/$archivesBaseName-$version-r8.jar")
 def rulesFile = project.file("src/main/rules.txt")
 def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
-  task.javaLauncher.set(javaToolchains.launcherFor { spec ->
-    spec.languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_11.majorVersion))
-  })
   def fatJar = fatJarProvider.get()
   def fatJarFile = fatJar.archiveFile
   task.dependsOn(fatJar)
