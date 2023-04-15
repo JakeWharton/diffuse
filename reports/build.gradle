@@ -1,10 +1,12 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+}
 
 dependencies {
   api project(':formats')
-  implementation deps.picnic
-  implementation deps.diffUtils
+  implementation libs.picnic
+  implementation libs.diffUtils
 
-  testImplementation deps.junit
-  testImplementation deps.truth
+  testImplementation libs.junit
+  testImplementation libs.truth
 }

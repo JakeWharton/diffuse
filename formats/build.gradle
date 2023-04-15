@@ -1,19 +1,22 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+plugins {
+  alias(libs.plugins.kotlin.jvm)
+}
 
 dependencies {
   api project(':io')
 
-  implementation deps.asm
+  implementation libs.asm
 
-  implementation deps.androidTools.apkSigner
-  implementation deps.androidTools.binaryResources
-  implementation deps.androidTools.dalvikDx
+  implementation libs.apkSigner
+  implementation libs.binaryResources
+  implementation libs.dalvikDx
 
-  implementation deps.androidTools.bundleTool
+  implementation libs.bundleTool
   // TODO bundletool depends on aapt2-proto but with a runtime dependency rather than compile.
   //  https://github.com/google/bundletool/issues/177
-  implementation deps.androidTools.aapt2Proto
+  implementation libs.aapt2Proto
+  implementation libs.protobufJava
 
-  testImplementation deps.junit
-  testImplementation deps.truth
+  testImplementation libs.junit
+  testImplementation libs.truth
 }
