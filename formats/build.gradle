@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-  api project(':io')
+  api projects.io
 
   implementation libs.asm
 

@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-  api project(':formats')
+  api projects.formats
   implementation libs.picnic
   implementation libs.diffUtils
 
