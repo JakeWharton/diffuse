@@ -8,9 +8,9 @@ configurations {
 }
 
 dependencies {
-  implementation project(':io')
-  implementation project(':formats')
-  implementation project(':reports')
+  implementation projects.io
+  implementation projects.formats
+  implementation projects.reports
   implementation libs.clikt
 
   r8 libs.r8
