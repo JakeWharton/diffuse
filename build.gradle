@@ -11,10 +11,15 @@ subprojects {
 
   apply plugin: libs.plugins.kotlinter.get().pluginId
 
+  plugins.withType(JavaBasePlugin).configureEach {
+    java.toolchain {
+      languageVersion.set(JavaLanguageVersion.of(11))
+    }
+  }
+
   plugins.withId('org.jetbrains.kotlin.jvm') {
     compileKotlin {
-      kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+      compilerOptions {
         freeCompilerArgs = [
             "-progressive",
             '-opt-in=kotlin.contracts.ExperimentalContracts'
