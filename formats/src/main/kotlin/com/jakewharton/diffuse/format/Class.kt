@@ -40,7 +40,7 @@ class Class private constructor(
 private class DeclaredMembersVisitor(
   val type: TypeDescriptor,
   val methodVisitor: MethodVisitor,
-) : ClassVisitor(Opcodes.ASM7) {
+) : ClassVisitor(Opcodes.ASM9) {
   val members = mutableListOf<Member>()
 
   override fun visitMethod(
@@ -66,7 +66,7 @@ private class DeclaredMembersVisitor(
   }
 }
 
-private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM7) {
+private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM9) {
   val members = mutableSetOf<Member>()
 
   override fun visitMethodInsn(
