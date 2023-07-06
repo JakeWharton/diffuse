@@ -9,7 +9,6 @@ import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.groups.OptionGroup
 import com.github.ajalt.clikt.parameters.groups.provideDelegate
-import com.github.ajalt.clikt.parameters.options.FlagOption
 import com.github.ajalt.clikt.parameters.options.OptionWithValues
 import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.default
@@ -65,7 +64,7 @@ private enum class BinaryType {
   Apk, Aar, Aab, Jar, Dex
 }
 
-private fun ParameterHolder.binaryType(): FlagOption<BinaryType> {
+private fun ParameterHolder.binaryType(): OptionWithValues<BinaryType, BinaryType, String> {
   return option(help = "Input file type. Default is 'apk'.")
     .switch(
       "--apk" to BinaryType.Apk,
