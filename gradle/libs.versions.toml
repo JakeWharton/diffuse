@@ -24,5 +24,5 @@ r8 = "com.android.tools:r8:8.1.56"
 [plugins]
 dokka = "org.jetbrains.dokka:1.8.20"
 kotlin-jvm = "org.jetbrains.kotlin.jvm:1.9.10"
-kotlinter = "org.jmailen.kotlinter:3.14.0"
+kotlinter = "org.jmailen.kotlinter:3.16.0"
 mavenPublish = "com.vanniktech.maven.publish:0.25.3"
