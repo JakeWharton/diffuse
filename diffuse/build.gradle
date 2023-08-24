@@ -53,7 +53,7 @@ def fatJarProvider = tasks.register('fatJar', Jar) { task ->
   }
 }
 
-def r8File = new File("$buildDir/libs/$archivesBaseName-$version-r8.jar")
+def r8File = layout.buildDirectory.file("libs/$archivesBaseName-$version-r8.jar").get().asFile
 def rulesFile = project.file("src/main/rules.txt")
 def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
   def fatJar = fatJarProvider.get()
@@ -75,7 +75,7 @@ def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
   ]
 }
 
-def binaryFile = new File(buildDir, "libs/$archivesBaseName-$version-binary.jar")
+def binaryFile = layout.buildDirectory.file("libs/$archivesBaseName-$version-binary.jar").get().asFile
 def binaryJar = tasks.register('binaryDiffuseJar') { task ->
   task.dependsOn(r8JarProvider)
 
