@@ -1,15 +1,24 @@
 plugins {
   alias(libs.plugins.kotlin.jvm) apply false
-  alias(libs.plugins.kotlinter) apply false
   alias(libs.plugins.dokka) apply false
   alias(libs.plugins.mavenPublish) apply false
+  alias(libs.plugins.spotless) apply false
 }
 
 subprojects {
   group = GROUP
   version = VERSION_NAME
 
-  apply plugin: libs.plugins.kotlinter.get().pluginId
+  apply plugin: libs.plugins.spotless.get().pluginId
+  spotless {
+    kotlin {
+      ktlint().editorConfigOverride([
+        'ktlint_standard_filename': 'disabled',
+      ])
+      target('**/*.kt')
+      targetExclude("**/build/**")
+    }
+  }
 
   plugins.withType(JavaBasePlugin).configureEach {
     java.toolchain {
