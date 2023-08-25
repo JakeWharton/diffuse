@@ -7,6 +7,7 @@ import com.jakewharton.diffuse.io.Input
 
 class Jar private constructor(
   override val filename: String?,
+  val bytecodeVersion: Short,
   val files: ArchiveFiles,
   val classes: List<Class>,
   override val declaredMembers: List<Member>,
@@ -25,12 +26,14 @@ class Jar private constructor(
           .filter { it.path.endsWith(".class") }
           .map { it.asInput().toClass() }
 
+        val bytecodeVersion = classes.first().bytecodeVersion
+
         val declaredMembers = classes.flatMap { it.declaredMembers }
         val referencedMembers = classes.flatMapTo(LinkedHashSet()) { it.referencedMembers }
         // Declared methods are likely to reference other declared members. Ensure all are removed.
         referencedMembers -= declaredMembers
 
-        return Jar(name, files, classes, declaredMembers.sorted(), referencedMembers.sorted())
+        return Jar(name, bytecodeVersion, files, classes, declaredMembers.sorted(), referencedMembers.sorted())
       }
     }
   }
