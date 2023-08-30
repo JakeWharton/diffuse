@@ -20,3 +20,7 @@
 
 # Suppress warnings in R8 internal.
 -dontwarn com.android.tools.r8.internal.**
+
+# TODO: Remove this after clikt 4.2.x is released, see https://github.com/ajalt/mordant/pull/117
+-keep class com.sun.jna.** { *; }
+-keep class * implements com.sun.jna.** { *; }
