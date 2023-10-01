@@ -14,9 +14,9 @@ subprojects {
     kotlin {
       ktlint().editorConfigOverride([
         'ktlint_standard_filename': 'disabled',
+        'ktlint_standard_property-naming': 'disabled',
       ])
       target('**/*.kt')
-      targetExclude("**/build/**")
     }
   }
 
