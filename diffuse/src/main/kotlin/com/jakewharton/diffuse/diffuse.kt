@@ -61,7 +61,11 @@ fun main(vararg args: String) {
 }
 
 private enum class BinaryType {
-  Apk, Aar, Aab, Jar, Dex
+  Apk,
+  Aar,
+  Aab,
+  Jar,
+  Dex,
 }
 
 private fun ParameterHolder.binaryType(): OptionWithValues<BinaryType, BinaryType, String> {
@@ -76,7 +80,9 @@ private fun ParameterHolder.binaryType(): OptionWithValues<BinaryType, BinaryTyp
 }
 
 private enum class ReportType {
-  Text, Html, None
+  Text,
+  Html,
+  None,
 }
 
 private fun ParameterHolder.mappingFile(name: String): OptionWithValues<ApiMapping, ApiMapping, ApiMapping> {
@@ -212,7 +218,9 @@ private class MembersCommand(
     .default(Type.All)
 
   enum class Type {
-    All, Methods, Fields
+    All,
+    Methods,
+    Fields,
   }
 
   private val ownership by option(help = "Item ownerships to display. Default is both (declared and referenced).")
@@ -220,7 +228,9 @@ private class MembersCommand(
     .default(Ownership.All)
 
   enum class Ownership {
-    All, Declared, Referenced
+    All,
+    Declared,
+    Referenced,
   }
 
   override fun run() {

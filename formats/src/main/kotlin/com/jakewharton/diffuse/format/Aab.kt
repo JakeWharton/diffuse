@@ -25,11 +25,11 @@ class Aab private constructor(
     val dexes: List<Dex>,
   ) {
     companion object {
-      internal const val manifestFilePath = "manifest/${AndroidManifest.NAME}"
+      internal const val MANIFEST_FILE_PATH = "manifest/${AndroidManifest.NAME}"
 
       fun Zip.toModule(): Module {
         val files = toArchiveFiles { it.toAabFileType() }
-        val manifest = this[manifestFilePath].asInput().source().use {
+        val manifest = this[MANIFEST_FILE_PATH].asInput().source().use {
           XmlNode.parseFrom(it.inputStream()).toManifest()
         }
         val dexes = entries.filter { it.path.startsWith("dex/") }.map { it.asInput().toDex() }
@@ -39,21 +39,21 @@ class Aab private constructor(
   }
 
   companion object {
-    private const val bundleMetadataDirectoryName = "BUNDLE-METADATA"
-    private const val metadataObfuscationDirectoryName =
-      "$bundleMetadataDirectoryName/com.android.tools.build.obfuscation/proguard.map"
-    private const val baseDirectoryName = "base"
+    private const val BUNDLE_METADATA_DIRECTORY_NAME = "BUNDLE-METADATA"
+    private const val METADATA_OBFUSCATION_DIRECTORY_NAME =
+      "$BUNDLE_METADATA_DIRECTORY_NAME/com.android.tools.build.obfuscation/proguard.map"
+    private const val BASE_DIRECTORY_NAME = "base"
 
     @JvmStatic
     @JvmName("parse")
     fun Input.toAab(): Aab {
       toZip().use { zip ->
         val apiMapping =
-          zip.find(metadataObfuscationDirectoryName)?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
-        val baseModule = zip.directoryView(baseDirectoryName).toModule()
+          zip.find(METADATA_OBFUSCATION_DIRECTORY_NAME)?.asInput()?.toApiMapping() ?: ApiMapping.EMPTY
+        val baseModule = zip.directoryView(BASE_DIRECTORY_NAME).toModule()
         val featureModules = zip.directories
           // TODO there's probably a better way to discover feature module names.
-          .filter { it != baseDirectoryName && it != bundleMetadataDirectoryName && it != "META-INF" }
+          .filter { it != BASE_DIRECTORY_NAME && it != BUNDLE_METADATA_DIRECTORY_NAME && it != "META-INF" }
           .associateWith { zip.directoryView(it).toModule() }
         return Aab(name, apiMapping, baseModule, featureModules)
       }
