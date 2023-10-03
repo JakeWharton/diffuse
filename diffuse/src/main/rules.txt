@@ -20,3 +20,8 @@
 
 # Suppress warnings in R8 internal.
 -dontwarn com.android.tools.r8.internal.**
+
+# Suppress errors in clikt.
+-dontwarn org.graalvm.nativeimage.**
+-dontwarn com.oracle.svm.core.annotate.Delete
+-dontwarn org.graalvm.word.PointerBase
