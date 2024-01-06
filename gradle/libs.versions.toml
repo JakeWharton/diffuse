@@ -24,5 +24,5 @@ r8 = "com.android.tools:r8:8.2.33"
 [plugins]
 dokka = "org.jetbrains.dokka:1.9.10"
 kotlin-jvm = "org.jetbrains.kotlin.jvm:1.9.22"
-mavenPublish = "com.vanniktech.maven.publish:0.26.0"
+mavenPublish = "com.vanniktech.maven.publish:0.27.0"
 spotless = "com.diffplug.spotless:6.23.3"
