@@ -16,7 +16,7 @@ dependencies {
   r8 libs.r8
 
   testImplementation libs.junit
-  testImplementation libs.truth
+  testImplementation libs.assertk
 }
 
 def fatJarProvider = tasks.register('fatJar', Jar) { task ->

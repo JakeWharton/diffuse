@@ -18,5 +18,5 @@ dependencies {
   implementation libs.protobufJava
 
   testImplementation libs.junit
-  testImplementation libs.truth
+  testImplementation libs.assertk
 }

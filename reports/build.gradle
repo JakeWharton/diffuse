@@ -8,5 +8,5 @@ dependencies {
   implementation libs.diffUtils
 
   testImplementation libs.junit
-  testImplementation libs.truth
+  testImplementation libs.assertk
 }

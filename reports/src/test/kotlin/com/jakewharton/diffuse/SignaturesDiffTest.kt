@@ -1,6 +1,7 @@
 package com.jakewharton.diffuse
 
-import com.google.common.truth.Truth.assertThat
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import com.jakewharton.diffuse.diff.SignaturesDiff
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.format.Signatures
