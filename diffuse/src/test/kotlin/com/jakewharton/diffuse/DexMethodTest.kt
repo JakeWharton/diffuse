@@ -1,6 +1,9 @@
 package com.jakewharton.diffuse
 
-import com.google.common.truth.Truth.assertThat
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import com.jakewharton.diffuse.format.Method
 import com.jakewharton.diffuse.format.TypeDescriptor
 import org.junit.Test
