@@ -1,5 +1,6 @@
 package com.jakewharton.diffuse.format
 
+import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
 import com.google.devrel.gmscore.tools.apk.arsc.ResourceTableChunk
 import com.jakewharton.diffuse.io.Input
 
@@ -25,8 +26,14 @@ class Arsc private constructor(
     @JvmStatic
     @JvmName("create")
     fun Input.toArsc(): Arsc {
-      val chunk = toBinaryResourceFile().chunks.single()
-      check(chunk is ResourceTableChunk) { "Root arsc chunk is not a resource table " }
+      // Workaround for https://issuetracker.google.com/issues/322437900.
+      val inputBytes = toByteArray()
+      if (inputBytes.size == 40) {
+        return Arsc(emptyList(), emptyMap())
+      }
+
+      val chunk = BinaryResourceFile(inputBytes).chunks.single()
+      check(chunk is ResourceTableChunk) { "Root arsc chunk is not a resource table" }
 
       val configs = mutableListOf<String>()
       val entries = mutableMapOf<Int, Entry>()
