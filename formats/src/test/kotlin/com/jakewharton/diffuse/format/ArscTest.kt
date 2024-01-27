@@ -4,8 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEmpty
 import com.jakewharton.diffuse.format.Arsc.Companion.toArsc
 import com.jakewharton.diffuse.io.Input.Companion.asInput
-import okio.ByteString
-import okio.ByteString.Companion.decodeHex
+import com.jakewharton.diffuse.testing.decodeHexWithWhitespace
 import org.junit.Test
 
 class ArscTest {
@@ -50,9 +49,5 @@ class ArscTest {
 
     assertThat(arsc.configs).isEmpty()
     assertThat(arsc.entries).isEmpty()
-  }
-
-  private fun String.decodeHexWithWhitespace(): ByteString {
-    return replace(Regex("\\s"), "").decodeHex()
   }
 }

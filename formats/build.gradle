@@ -19,4 +19,5 @@ dependencies {
 
   testImplementation libs.junit
   testImplementation libs.assertk
+  testImplementation projects.testHelpers
 }
