@@ -5,4 +5,8 @@ plugins {
 dependencies {
   api libs.okio
   implementation libs.byteunits
+
+  testImplementation libs.junit
+  testImplementation libs.assertk
+  testImplementation projects.testHelpers
 }

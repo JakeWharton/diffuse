@@ -65,22 +65,41 @@ interface Zip : Closeable {
 private fun <T : Zip.Entry> ZipInputStream.mapEntries(
   entryFactory: (name: String, size: Size, compressedSize: Size, zipSize: Size, isCompressed: Boolean) -> T,
 ): List<T> {
-  return entries().map { it.toZipEntry(entryFactory) }.toList()
+  return entries().map { it.toZipEntry(this, entryFactory) }.toList()
 }
 
 private fun <T : Zip.Entry> ZipEntry.toZipEntry(
+  zipStream: ZipInputStream,
   entryFactory: (name: String, size: Size, compressedSize: Size, zipSize: Size, isCompressed: Boolean) -> T,
 ): T {
   val isCompressed = method != ZipEntry.STORED
   val nameSize = name.utf8Size()
   val extraSize = extra?.size ?: 0
   val commentSize = comment?.utf8Size() ?: 0
+
+  var dataDescriptorSize = 0
+  if (compressedSize == -1L || size == -1L) {
+    // Entries which were streamed have their compressed and original size stored in a data descriptor
+    // record which follows the entry data. The values will only be populated when the data has been
+    // fully read. This call is free as reading the next entry will close this entry anyway.
+    zipStream.closeEntry()
+
+    // We assume the data descriptor includes the optional-but-recommended 4-byte signature prefix.
+    dataDescriptorSize = 16
+
+    if (size > UInt.MAX_VALUE.toLong()) {
+      // Assuming the original size is always larger than the compressed size, if it exceeds the
+      // amount that can fit into a 4-byte integer we're a zip64. Note that zip64 _could_ still have
+      // been used with small files, but it _must_ have been used with ones this large.
+      dataDescriptorSize += 8
+    }
+  }
+
   // Calculate the actual compressed size impact in the zip, not just compressed data size.
   // See https://en.wikipedia.org/wiki/Zip_(file_format)#File_headers for details.
   val zipSize = compressedSize +
-    // Local file header. There is no way of knowing whether a trailing data descriptor
-    // was present since the general flags field is not exposed, but it's unlikely.
-    30 + nameSize + extraSize +
+    // Local file header.
+    30 + nameSize + extraSize + dataDescriptorSize +
     // Central directory file header.
     46 + nameSize + extraSize + commentSize
 
