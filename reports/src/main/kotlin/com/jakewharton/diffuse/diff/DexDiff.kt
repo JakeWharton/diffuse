@@ -1,7 +1,6 @@
 package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.diffuseTable
-import com.jakewharton.diffuse.format.ApiMapping
 import com.jakewharton.diffuse.format.Dex
 import com.jakewharton.diffuse.format.Field
 import com.jakewharton.diffuse.format.Method
@@ -13,17 +12,9 @@ import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
 
 internal class DexDiff(
-  val oldDexesOriginal: List<Dex>,
-  val oldMapping: ApiMapping,
-  val newDexesOriginal: List<Dex>,
-  val newMapping: ApiMapping
+  val oldDexes: List<Dex>,
+  val newDexes: List<Dex>,
 ) {
-  val oldDexes =if (oldMapping.isEmpty()) oldDexesOriginal else oldDexesOriginal.map{
-    it.withMapping(oldMapping)
-  }
-  val newDexes =if (newMapping.isEmpty()) newDexesOriginal else newDexesOriginal.map{
-    it.withMapping(newMapping)
-  }
   val isMultidex = oldDexes.size > 1 || newDexes.size > 1
 
   val strings = componentDiff(oldDexes, newDexes) { it.strings }

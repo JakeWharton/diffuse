@@ -13,7 +13,10 @@ internal class AabDiff(
     val newModule: Aab.Module,
   ) {
     val archive = ArchiveFilesDiff(oldModule.files, newModule.files, includeCompressed = false)
-    val dex = DexDiff(oldModule.dexes, oldAab.apiMapping, newModule.dexes, newAab.apiMapping)
+    val dex = DexDiff(
+      oldModule.dexes.map { it.withMapping(oldAab.apiMapping) },
+      newModule.dexes.map { it.withMapping(newAab.apiMapping) },
+    )
     val manifest = ManifestDiff(oldModule.manifest, newModule.manifest)
 
     val changed = archive.changed || dex.changed || manifest.changed
