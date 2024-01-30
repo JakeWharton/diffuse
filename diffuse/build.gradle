@@ -12,6 +12,7 @@ dependencies {
   implementation projects.formats
   implementation projects.reports
   implementation libs.clikt
+  implementation libs.mordant
 
   r8 libs.r8
 

@@ -7,6 +7,13 @@
   public static void main(java.lang.String[]);
 }
 
+###############
+### Mordant ###
+###############
+
+-dontwarn org.graalvm.**
+-dontwarn com.oracle.svm.core.annotate.Delete
+
 ##############
 ### APKSIG ###
 ##############
