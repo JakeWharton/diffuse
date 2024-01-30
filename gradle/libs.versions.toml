@@ -20,6 +20,7 @@ asm = "org.ow2.asm:asm:9.6"
 diffUtils = "io.github.java-diff-utils:java-diff-utils:4.12"
 picnic = "com.jakewharton.picnic:picnic:0.7.0"
 r8 = "com.android.tools:r8:8.2.42"
+mordant = "com.github.ajalt.mordant:mordant:2.2.0"
 
 [plugins]
 dokka = "org.jetbrains.dokka:1.9.10"
