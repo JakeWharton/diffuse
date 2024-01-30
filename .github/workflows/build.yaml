@@ -30,11 +30,11 @@ jobs:
           path: diffuse/build/libs/diffuse-*-binary.jar
           if-no-files-found: error
 
-      #- run: ./gradlew uploadArchives
-      #  if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/diffuse' }}
-      #  env:
-      #    ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-      #    ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+      - run: ./gradlew publish
+        if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/diffuse' }}
+        env:
+          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
 
       - name: Extract release notes
         id: release_notes
