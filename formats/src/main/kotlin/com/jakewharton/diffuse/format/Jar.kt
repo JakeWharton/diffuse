@@ -21,19 +21,27 @@ class Jar private constructor(
     fun Input.toJar(): Jar {
       toZip().use { zip ->
         val files = zip.toArchiveFiles { it.toJarFileType() }
+        val bcVersions = mutableMapOf<Short, Long>()
 
         val classes = zip.entries
+          .asSequence()
           .filter { it.path.endsWith(".class") }
-          .map { it.asInput().toClass() }
+          .map { entry ->
+            entry.asInput().toClass().also { cls ->
+              bcVersions[cls.bytecodeVersion] =
+                bcVersions.getOrDefault(cls.bytecodeVersion, 0) + 1
+            }
+          }
+          .toList()
 
-        val bytecodeVersion = classes.firstOrNull()?.bytecodeVersion
+        val mostBytecodeVersion = bcVersions.maxByOrNull { it.value }?.key
 
         val declaredMembers = classes.flatMap { it.declaredMembers }
         val referencedMembers = classes.flatMapTo(LinkedHashSet()) { it.referencedMembers }
         // Declared methods are likely to reference other declared members. Ensure all are removed.
         referencedMembers -= declaredMembers
 
-        return Jar(name, bytecodeVersion, files, classes, declaredMembers.sorted(), referencedMembers.sorted())
+        return Jar(name, mostBytecodeVersion, files, classes, declaredMembers.sorted(), referencedMembers.sorted())
       }
     }
   }
