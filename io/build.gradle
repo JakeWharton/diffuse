@@ -1,8 +1,13 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.mavenPublish)
 }
 
 dependencies {
   api libs.okio
   implementation libs.byteunits
+
+  testImplementation libs.junit
+  testImplementation libs.assertk
+  testImplementation projects.testHelpers
 }

@@ -62,7 +62,7 @@ data class ArchiveFile(
       @JvmStatic
       @JvmName("fromAabName")
       fun String.toAabFileType() = when {
-        equals(Aab.Module.manifestFilePath) -> Manifest
+        equals(Aab.Module.MANIFEST_FILE_PATH) -> Manifest
         startsWith("dex/") -> Dex
         startsWith("lib/") -> Native
         startsWith("assets/") -> Asset

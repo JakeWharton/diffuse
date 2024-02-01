@@ -1,5 +1,6 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.mavenPublish)
 }
 
 dependencies {
@@ -18,5 +19,6 @@ dependencies {
   implementation libs.protobufJava
 
   testImplementation libs.junit
-  testImplementation libs.truth
+  testImplementation libs.assertk
+  testImplementation projects.testHelpers
 }

@@ -1,5 +1,6 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.mavenPublish)
 }
 
 dependencies {
@@ -8,5 +9,5 @@ dependencies {
   implementation libs.diffUtils
 
   testImplementation libs.junit
-  testImplementation libs.truth
+  testImplementation libs.assertk
 }

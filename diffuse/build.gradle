@@ -12,11 +12,12 @@ dependencies {
   implementation projects.formats
   implementation projects.reports
   implementation libs.clikt
+  implementation libs.mordant
 
   r8 libs.r8
 
   testImplementation libs.junit
-  testImplementation libs.truth
+  testImplementation libs.assertk
 }
 
 def fatJarProvider = tasks.register('fatJar', Jar) { task ->

@@ -16,7 +16,6 @@ subprojects {
         'ktlint_standard_filename': 'disabled',
       ])
       target('**/*.kt')
-      targetExclude("**/build/**")
     }
   }
 
