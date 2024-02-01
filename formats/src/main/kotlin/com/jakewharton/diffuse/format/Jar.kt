@@ -28,8 +28,8 @@ class Jar private constructor(
           .filter { it.path.endsWith(".class") }
           .map { entry ->
             entry.asInput().toClass().also { cls ->
-              bcVersions[cls.bytecodeVersion] =
-                bcVersions.getOrDefault(cls.bytecodeVersion, 0) + 1
+              // Count all the byte code versions in a Jar.
+              bcVersions.merge(cls.bytecodeVersion, 1L, Long::plus)
             }
           }
           .toList()
