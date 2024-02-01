@@ -27,7 +27,3 @@
 
 # Suppress warnings in R8 internal.
 -dontwarn com.android.tools.r8.internal.**
-
-# https://github.com/java-native-access/jna/issues/1187#issuecomment-626251894
--keep class com.sun.jna.** { *; }
--keep class * implements com.sun.jna.** { *; }
