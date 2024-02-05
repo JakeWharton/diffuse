@@ -71,6 +71,7 @@ def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
     '--classfile',
     '--output', r8File.toString(),
     '--pg-conf', rulesFile.path,
+    '--pg-conf-output', layout.buildDirectory.file("rules.pro").get().asFile.path,
     '--lib', System.getProperty('java.home').toString(),
     fatJarFile.get().toString(),
   ]
