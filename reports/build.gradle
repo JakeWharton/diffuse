@@ -1,7 +1,6 @@
-plugins {
-  alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.mavenPublish)
-}
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: 'org.jetbrains.dokka'
 
 dependencies {
   api projects.formats

@@ -1,15 +1,20 @@
-plugins {
-  alias(libs.plugins.kotlin.jvm) apply false
-  alias(libs.plugins.dokka) apply false
-  alias(libs.plugins.mavenPublish) apply false
-  alias(libs.plugins.spotless) apply false
+buildscript {
+  dependencies {
+    classpath libs.kotlinPlugin
+    classpath libs.dokkaPlugin
+    classpath libs.mavenPublishPlugin
+    classpath libs.spotlessPlugin
+  }
+  repositories {
+    mavenCentral()
+  }
 }
 
 subprojects {
   group = GROUP
   version = VERSION_NAME
 
-  apply plugin: libs.plugins.spotless.get().pluginId
+  apply plugin: 'com.diffplug.spotless'
   spotless {
     kotlin {
       ktlint().editorConfigOverride([
