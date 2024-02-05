@@ -21,9 +21,7 @@ diffUtils = "io.github.java-diff-utils:java-diff-utils:4.12"
 picnic = "com.jakewharton.picnic:picnic:0.7.0"
 r8 = "com.android.tools:r8:8.2.42"
 mordant = "com.github.ajalt.mordant:mordant:2.2.0"
-
-[plugins]
-dokka = "org.jetbrains.dokka:1.9.10"
-kotlin-jvm = "org.jetbrains.kotlin.jvm:1.9.22"
-mavenPublish = "com.vanniktech.maven.publish:0.27.0"
-spotless = "com.diffplug.spotless:6.25.0"
+kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
+dokkaPlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.10"
+mavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.27.0"
+spotlessPlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"
