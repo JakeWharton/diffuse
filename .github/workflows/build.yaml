@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - 'trunk'
-    tags-ignore:
+    tags:
       - '**'
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 20
+          java-version: 21
 
       - uses: gradle/gradle-build-action@v2
 
@@ -49,28 +49,3 @@ jobs:
           files: diffuse/build/distributions/diffuse-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get version
-        id: get_version
-        if: startsWith(github.ref, 'refs/tags/')
-        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
-
-      - name: Set SHA
-        id: shasum
-        if: startsWith(github.ref, 'refs/tags/')
-        run: echo ::set-output name=sha::"$(shasum -a 256 diffuse/build/libs/diffuse-*-binary.jar | awk '{printf $1}')"
-
-      - name: Bump Brew
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_HOMEBREW_TOKEN }}
-        run: |
-          git config --global user.email "41898282+github-actions@users.noreply.github.com"
-          git config --global user.name "github-actions"
-          # Update to ensure we have the latest version which supports arbitrary default branches.
-          brew update
-          brew tap JakeWharton/repo
-          brew bump-formula-pr -f --version=${{ steps.get_version.outputs.version }} --no-browse --no-audit \
-            --sha256=${{ steps.shasum.outputs.sha }} \
-            --url="https://github.com/JakeWharton/diffuse/releases/download/${{ steps.get_version.outputs.version }}/diffuse-${{ steps.get_version.outputs.version }}-binary.jar" \
-            JakeWharton/repo/diffuse
