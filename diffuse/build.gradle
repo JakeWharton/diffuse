@@ -1,9 +1,11 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.vanniktech.maven.publish'
 apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'com.github.gmazzo.buildconfig'
+apply plugin: 'application'
 
-configurations {
-  r8
+application {
+  mainClass = 'com.jakewharton.diffuse.Diffuse'
 }
 
 dependencies {
@@ -13,86 +15,36 @@ dependencies {
   implementation libs.clikt
   implementation libs.mordant
 
-  r8 libs.r8
-
   testImplementation libs.junit
   testImplementation libs.assertk
 }
 
-def fatJarProvider = tasks.register('fatJar', Jar) { task ->
-  task.dependsOn(configurations.named('runtimeClasspath'))
-  task.dependsOn(tasks.named('jar'))
-
-  task.archiveClassifier.set('fat')
-
-  task.manifest {
-    attributes 'Main-Class': 'com.jakewharton.diffuse.Diffuse'
-    attributes 'Implementation-Version': archiveVersion
+buildConfig {
+  useKotlinOutput {
+    internalVisibility = true
+    topLevelConstants = true
   }
 
-  def sourceClasses = sourceSets.main.output.classesDirs
-  task.inputs.files(sourceClasses)
+  packageName('com.jakewharton.diffuse')
+  buildConfigField(String, 'diffuseVersion', version)
+}
 
-  task.doFirst {
-    task.from files(sourceClasses)
-    task.from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
+// A zip and tar are configured by default. We don't care about tar.
+tasks.named('distTar').configure { task ->
+  task.enabled = false
+}
 
-    task.exclude '**/*.kotlin_metadata'
-    task.exclude '**/*.kotlin_module'
-    task.exclude '**/*.kotlin_builtins'
-    task.exclude '**/module-info.class'
-    task.exclude 'META-INF/maven/**'
-    task.exclude 'META-INF/proguard/**'
-    task.exclude 'META-INF/*.version'
-    task.exclude '**/*.proto'
-    task.exclude '**/*.dex'
-    task.exclude 'LICENSE'
-    task.exclude 'NOTICE'
-    task.exclude 'r8-version.properties'
-    task.exclude 'migrateToAndroidx/*'
+// Build an exploded application directory by default for local testing.
+tasks.named('assemble').configure { task ->
+  task.dependsOn(tasks.named('installDist'))
+}
+
+// Attach the bundled application zip so that we get free versioned hosting from Maven Central.
+publishing {
+  publications.configureEach {
+    artifact(tasks.named('distZip')) {
+      classifier = 'cli'
+    }
   }
 }
 
-def r8File = layout.buildDirectory.file("libs/$archivesBaseName-$version-r8.jar").get().asFile
-def rulesFile = project.file("src/main/rules.txt")
-def r8JarProvider = tasks.register('r8Jar', JavaExec) { task ->
-  def fatJar = fatJarProvider.get()
-  def fatJarFile = fatJar.archiveFile
-  task.dependsOn(fatJar)
-  task.inputs.file(fatJarFile)
-  task.inputs.file(rulesFile)
-  task.outputs.file(r8File)
-
-  task.classpath(configurations.r8)
-  task.mainClass.set('com.android.tools.r8.R8')
-  task.args = [
-    '--release',
-    '--classfile',
-    '--output', r8File.toString(),
-    '--pg-conf', rulesFile.path,
-    '--pg-conf-output', layout.buildDirectory.file("rules.pro").get().asFile.path,
-    '--lib', System.getProperty('java.home').toString(),
-    fatJarFile.get().toString(),
-  ]
-}
-
-def binaryFile = layout.buildDirectory.file("libs/$archivesBaseName-$version-binary.jar").get().asFile
-def binaryJar = tasks.register('binaryDiffuseJar') { task ->
-  task.dependsOn(r8JarProvider)
-
-  task.inputs.file(r8File)
-  task.outputs.file(binaryFile)
-
-  task.doLast {
-    binaryFile.getParentFile().mkdirs()
-    binaryFile.delete()
-    binaryFile << "#!/bin/sh\n\nexec java \$JAVA_OPTS -jar \$0 \"\$@\"\n\n"
-    r8File.withInputStream { binaryFile.append it }
-
-    binaryFile.setExecutable true, false
-  }
-}
-
-artifacts {
-  archives file: binaryFile, name: 'binary', type: 'jar', builtBy: binaryJar, classifier: 'diffuse'
-}
