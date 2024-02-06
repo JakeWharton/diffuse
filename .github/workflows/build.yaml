@@ -26,8 +26,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: diffuse-latest-binary.jar
-          path: diffuse/build/libs/diffuse-*-binary.jar
+          name: diffuse-cli.zip
+          path: diffuse/build/distributions/diffuse-*.zip
           if-no-files-found: error
 
       - run: ./gradlew publish
@@ -46,7 +46,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ steps.release_notes.outputs.release_notes }}
-          files: diffuse/build/libs/diffuse-*-binary.jar
+          files: diffuse/build/distributions/diffuse-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -4,9 +4,11 @@ buildscript {
     classpath libs.dokkaPlugin
     classpath libs.mavenPublishPlugin
     classpath libs.spotlessPlugin
+    classpath libs.buildConfigPlugin
   }
   repositories {
     mavenCentral()
+    gradlePluginPortal()
   }
 }
 
