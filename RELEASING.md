@@ -13,28 +13,36 @@
    $ git commit -am "Prepare version X.Y.X"
    ```
 
-4. Tag
+4. Publish
+
+    ```
+    $ ./gradlew clean publish
+    ```
+
+    If this fails, fix, commit, and repeat.
+    You may also have to drop the Sonatype repository.
+
+5. Tag
 
    ```
    $ git tag -am "Version X.Y.Z" X.Y.Z
    ```
 
-5. Update the `VERSION_NAME` in `gradle.properties` to the next "SNAPSHOT" version.
+6. Update the `VERSION_NAME` in `gradle.properties` to the next "SNAPSHOT" version.
 
-6. Commit
+7. Commit
 
    ```
    $ git commit -am "Prepare next development version"
    ```
-7. Push!
+
+8. Push!
 
    ```
    $ git push && git push --tags
    ```
 
    This will trigger a GitHub Action workflow which will create a GitHub release with the
-   change log and binary, upload the library to Sonatype Nexus, and send a PR to the Homebrew repo.
+   change log and binary, and send a PR to the Homebrew repo.
 
-8. Find [the Homebrew PR](https://github.com/JakeWharton/homebrew-repo/pulls) and merge it!
-
-9. Visit [Sonatype Nexus](https://oss.sonatype.org/) and promote the artifact.
+9. Find [the Homebrew PR](https://github.com/JakeWharton/homebrew-repo/pulls) and merge it!

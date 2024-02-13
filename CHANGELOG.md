@@ -1,7 +1,27 @@
 # Change Log
 
 ## [Unreleased]
-[Unreleased]: https://github.com/JakeWharton/diffuse/compare/0.1.1...HEAD
+[Unreleased]: https://github.com/JakeWharton/diffuse/compare/0.2.0...HEAD
+
+
+## [0.2.0] - 2024-02-13
+[0.2.0]: https://github.com/JakeWharton/diffuse/releases/tag/0.2.0
+
+**Added**
+- `.aab` base module now displays a diff.
+- Display v4 signatures.
+
+**Changed**
+- Hide trailing numbers from lambda methods to attempt to clean up diffs.
+- Update internal ASM library to handle newer Java bytecode versions.
+- Update internal binary-resources library to handle empty `.arsc` resource tables.
+- Migrated the CLI to the Gradle application plugin. This produces a `.zip` instead of an executable `.jar`.
+
+**Fixed**
+- Handle comments in R8 mapping files which are indented with whitespace.
+- Apply R8 mapping file before displaying a dex file diff.
+- Support reading zip entry sizes when the contents were streamed and thus use a trailing data descriptor. This also allows more accurately reporting the zip storage size of entries.
+- Handle the same XML namespace URL being mapped to two different namespace names.
 
 
 ## [0.1.0] - 2020-08-27

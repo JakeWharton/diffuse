@@ -169,10 +169,8 @@ $ brew install JakeWharton/repo/diffuse
 
 **Other**
 
-Download standalone JAR from
+Download ZIP from
 [latest release](https://github.com/JakeWharton/diffuse/releases/latest).
-On MacOS and Linux you can `chmod +x` and execute the `.jar` directly.
-On Windows use `java -jar`.
 
 
 License
