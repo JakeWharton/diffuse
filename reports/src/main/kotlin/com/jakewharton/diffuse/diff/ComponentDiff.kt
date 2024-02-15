@@ -55,14 +55,17 @@ internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff
             row(diff.oldCount, diff.newCount, "$diffSize ($addedSize $removedSize)")
           }.renderText(),
         )
-        diff.added.forEach {
-          appendLine("+ $it")
-        }
-        if (diff.added.isNotEmpty() && diff.removed.isNotEmpty()) {
+        if (diff.added.isNotEmpty()) {
           appendLine()
+          diff.added.forEach {
+            appendLine("+ $it")
+          }
         }
-        diff.removed.forEach {
-          appendLine("- $it")
+        if (diff.removed.isNotEmpty()) {
+          appendLine()
+          diff.removed.forEach {
+            appendLine("- $it")
+          }
         }
       }.prependIndent("  "),
     )
