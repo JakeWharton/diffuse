@@ -35,6 +35,7 @@ import com.jakewharton.diffuse.format.Method
 import com.jakewharton.diffuse.info.AabInfo
 import com.jakewharton.diffuse.info.AarInfo
 import com.jakewharton.diffuse.info.ApkInfo
+import com.jakewharton.diffuse.info.DexInfo
 import com.jakewharton.diffuse.info.JarInfo
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Input.Companion.asInput
@@ -74,6 +75,7 @@ private fun ParameterHolder.binaryType(): OptionWithValues<BinaryType, BinaryTyp
       "--aar" to BinaryType.Aar,
       "--aab" to BinaryType.Aab,
       "--jar" to BinaryType.Jar,
+      "--dex" to BinaryType.Dex,
     )
     .default(BinaryType.Apk)
 }
@@ -153,7 +155,7 @@ private class InfoCommand(
       BinaryType.Aar -> AarInfo(file.asInput().toAar())
       BinaryType.Aab -> AabInfo(file.asInput().toAab())
       BinaryType.Jar -> JarInfo(file.asInput().toJar())
-      BinaryType.Dex -> error("Unsupported")
+      BinaryType.Dex -> DexInfo(file.asInput().toDex())
     }
     outputOptions.write(info)
   }
@@ -176,7 +178,7 @@ private class DiffCommand(
         BinaryType.Aab -> BinaryDiff.ofAab(old.toAab(), new.toAab())
         BinaryType.Aar -> BinaryDiff.ofAar(old.toAar(), oldMapping, new.toAar(), newMapping)
         BinaryType.Jar -> BinaryDiff.ofJar(old.toJar(), oldMapping, new.toJar(), newMapping)
-        BinaryType.Dex -> error("Unsupported")
+        BinaryType.Dex -> BinaryDiff.ofDex(old.toDex(), oldMapping, new.toDex(), newMapping)
       }
     }
   }
