@@ -7,12 +7,13 @@ import com.android.dex.MethodId
 import com.jakewharton.diffuse.io.Input
 
 class Dex private constructor(
+  override val filename: String,
   val strings: List<String>,
   val types: List<String>,
   val classes: List<TypeDescriptor>,
   override val declaredMembers: List<Member>,
   override val referencedMembers: List<Member>,
-) : CodeBinary {
+) : BinaryFormat, CodeBinary {
   override val members = declaredMembers + referencedMembers
 
   fun withMapping(mapping: ApiMapping): Dex {
@@ -22,7 +23,7 @@ class Dex private constructor(
     val mappedClasses = classes.map(mapping::get)
     val mappedDeclaredMembers = declaredMembers.map(mapping::get)
     val mappedReferencedMembers = referencedMembers.map(mapping::get)
-    return Dex(strings, types, mappedClasses, mappedDeclaredMembers, mappedReferencedMembers)
+    return Dex(filename, strings, types, mappedClasses, mappedDeclaredMembers, mappedReferencedMembers)
   }
 
   companion object {
@@ -43,7 +44,7 @@ class Dex private constructor(
         .mapEach { it.map(dex::getField) }
       val declaredMembers = declaredMethods + declaredFields
       val referencedMembers = referencedMethods + referencedFields
-      return Dex(dex.strings(), dex.typeNames(), classes, declaredMembers, referencedMembers)
+      return Dex(name, dex.strings(), dex.typeNames(), classes, declaredMembers, referencedMembers)
     }
 
     private fun <T, R> Pair<T, T>.mapEach(body: (T) -> R): Pair<R, R> = body(first) to body(second)
