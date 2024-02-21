@@ -1,7 +1,17 @@
 # Change Log
 
 ## [Unreleased]
-[Unreleased]: https://github.com/JakeWharton/diffuse/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/diffuse/compare/0.3.0...HEAD
+
+
+## [0.3.0] - 2024-02-20
+[0.3.0]: https://github.com/JakeWharton/diffuse/releases/tag/0.3.0
+
+**Added**
+- Support `.dex` as an input type with `--dex` flag.
+
+**Fixed**
+- Ensure empty line appears between summary table and diff items.
 
 
 ## [0.2.0] - 2024-02-13
