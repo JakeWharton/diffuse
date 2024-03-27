@@ -8,6 +8,7 @@ import com.jakewharton.diffuse.io.Input
 
 class Aar private constructor(
   override val filename: String?,
+  val bytecodeVersion: Short?,
   val files: ArchiveFiles,
   val manifest: AndroidManifest,
   val classes: Jar,
@@ -30,7 +31,7 @@ class Aar private constructor(
         val libs = zip.entries
           .filter { it.path.matches(libsJarRegex) }
           .map { it.asInput().toJar() }
-        return Aar(name, files, manifest, classes, libs)
+        return Aar(name, classes.bytecodeVersion, files, manifest, classes, libs)
       }
     }
   }

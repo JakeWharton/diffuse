@@ -10,10 +10,16 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
-      appendLine(aarDiff.oldAar.filename)
+      append(aarDiff.oldAar.filename)
+      append(" (bytecodeVersion: ")
+      append(aarDiff.oldAar.bytecodeVersion.toString())
+      appendLine(')')
 
       append("NEW: ")
-      appendLine(aarDiff.newAar.filename)
+      append(aarDiff.newAar.filename)
+      append(" (bytecodeVersion: ")
+      append(aarDiff.newAar.bytecodeVersion.toString())
+      appendLine(')')
 
       appendLine()
       appendLine(

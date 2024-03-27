@@ -10,6 +10,7 @@ import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
 class Class private constructor(
+  val bytecodeVersion: Short,
   val descriptor: TypeDescriptor,
   val declaredMembers: List<Member>,
   val referencedMembers: List<Member>,
@@ -26,13 +27,14 @@ class Class private constructor(
     @JvmName("parse")
     fun Input.toClass(): Class {
       val reader = ClassReader(toByteArray())
+      val bytecodeVersion = reader.readShort(0 + 6)
       val type = TypeDescriptor("L${reader.className};")
 
       val referencedVisitor = ReferencedMembersVisitor()
       val declaredVisitor = DeclaredMembersVisitor(type, referencedVisitor)
       reader.accept(declaredVisitor, 0)
 
-      return Class(type, declaredVisitor.members.sorted(), referencedVisitor.members.sorted())
+      return Class(bytecodeVersion, type, declaredVisitor.members.sorted(), referencedVisitor.members.sorted())
     }
   }
 }
