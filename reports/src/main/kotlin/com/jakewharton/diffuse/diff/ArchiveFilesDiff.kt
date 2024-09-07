@@ -5,6 +5,7 @@ import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.format.ArchiveFile.Type
 import com.jakewharton.diffuse.format.ArchiveFiles
 import com.jakewharton.diffuse.io.Size
+import com.jakewharton.diffuse.report.htmlEncoded
 import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TableSectionDsl
 import com.jakewharton.picnic.TextAlignment.BottomCenter
@@ -12,6 +13,16 @@ import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleCenter
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
+import kotlinx.html.FlowContent
+import kotlinx.html.TR
+import kotlinx.html.style
+import kotlinx.html.table
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.tfoot
+import kotlinx.html.thead
+import kotlinx.html.tr
+import kotlinx.html.unsafe
 
 internal class ArchiveFilesDiff(
   val oldFiles: ArchiveFiles,
@@ -120,7 +131,7 @@ internal fun ArchiveFilesDiff.toSummaryTable(
     }
   }
 
-  fun TableSectionDsl.addApkRow(name: String, type: Type? = null) {
+  fun TableSectionDsl.addArchiveRow(name: String, type: Type? = null) {
     val old = if (type != null) oldFiles.filterValues { it.type == type } else oldFiles
     val new = if (type != null) newFiles.filterValues { it.type == type } else newFiles
     val oldSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.size }
@@ -150,7 +161,7 @@ internal fun ArchiveFilesDiff.toSummaryTable(
       alignment = MiddleRight
     }
     for (type in displayTypes) {
-      addApkRow(type.displayName, type)
+      addArchiveRow(type.displayName, type)
     }
   }
 
@@ -158,7 +169,7 @@ internal fun ArchiveFilesDiff.toSummaryTable(
     cellStyle {
       alignment = MiddleRight
     }
-    addApkRow("total")
+    addArchiveRow("total")
   }
 }.renderText()
 
@@ -242,4 +253,191 @@ internal fun ArchiveFilesDiff.toDetailReport() = buildString {
       }
     }.renderText(),
   )
+}
+
+internal fun FlowContent.toSummaryTable(
+  name: String,
+  diff: ArchiveFilesDiff,
+  displayTypes: List<Type>,
+  skipIfEmptyTypes: Set<Type> = emptySet(),
+) {
+  table {
+    thead {
+      if (diff.includeCompressed) {
+        tr {
+          td {
+            rowSpan = "2"
+            style = "text-align: left; vertical-align: bottom;"
+            +name
+          }
+          td {
+            colSpan = "3"
+            style = "text-align: center; vertical-align: bottom;"
+            +"compressed"
+          }
+          td {
+            colSpan = "3"
+            style = "text-align: center; vertical-align: bottom;"
+            +"uncompressed"
+          }
+        }
+        tr {
+          td { +"old" }
+          td { +"new" }
+          td { +"diff" }
+          td { +"old" }
+          td { +"new" }
+          td { +"diff" }
+        }
+      } else {
+        tr {
+          td {
+            style = "text-align: left; vertical-align: bottom;"
+            +name
+          }
+          td { +"old" }
+          td { +"new" }
+          td { +"diff" }
+        }
+      }
+    }
+
+    fun TR.addArchiveRow(name: String, type: Type? = null) {
+      val old = if (type != null) diff.oldFiles.filterValues { it.type == type } else diff.oldFiles
+      val new = if (type != null) diff.newFiles.filterValues { it.type == type } else diff.newFiles
+      val oldSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.size }
+      val newSize = new.values.fold(Size.ZERO) { acc, file -> acc + file.size }
+      val oldUncompressedSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
+      val newUncompressedSize = new.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
+      if (oldSize != Size.ZERO || newSize != Size.ZERO || type !in skipIfEmptyTypes) {
+        val uncompressedDiff = (newUncompressedSize - oldUncompressedSize).toDiffString()
+        if (diff.includeCompressed) {
+          td { +name }
+          td { +oldSize.toString() }
+          td { +newSize.toString() }
+          td { +(newSize - oldSize).toString() }
+          td { +oldUncompressedSize.toString() }
+          td { +newUncompressedSize.toString() }
+          td { +uncompressedDiff }
+        } else {
+          td { +name }
+          td { +oldUncompressedSize.toString() }
+          td { +newUncompressedSize.toString() }
+          td { +uncompressedDiff }
+        }
+      }
+    }
+
+    tbody {
+      style = "text-align: right; vertical-align: center;"
+
+      for (type in displayTypes) {
+        tr {
+          addArchiveRow(type.displayName, type)
+        }
+      }
+    }
+
+    tfoot {
+      style = "text-align: right; vertical-align: center;"
+      tr { addArchiveRow("total") }
+    }
+  }
+}
+
+internal fun FlowContent.toDetailReport(diff: ArchiveFilesDiff) {
+  table {
+    thead {
+      if (diff.includeCompressed) {
+        tr {
+          td {
+            style = "text-align: center; vertical-align: center;"
+            colSpan = "2"
+            +"compressed"
+          }
+          td {
+            style = "text-align: center; vertical-align: center;"
+            colSpan = "2"
+            +"uncompressed"
+          }
+
+          td {
+            style = "text-align: left; vertical-align: bottom;"
+            rowSpan = "2"
+            +"path"
+          }
+        }
+        tr {
+          td { +"size" }
+          td { +"diff" }
+          td { +"size" }
+          td { +"diff" }
+        }
+      } else {
+        tr {
+          td { +"size" }
+          td { +"diff" }
+          td {
+            style = "text-align: left; vertical-align: bottom;"
+            +"path"
+          }
+        }
+      }
+    }
+    tfoot {
+      tr {
+        if (diff.includeCompressed) {
+          val totalSize = diff.changes.fold(Size.ZERO) { acc, change -> acc + change.size }
+          val totalDiff = diff.changes.fold(Size.ZERO) { acc, change -> acc + change.sizeDiff }
+          td {
+            style = "text-align: right; vertical-align: center;"
+            +totalSize.toString()
+          }
+          td {
+            style = "text-align: right; vertical-align: center;"
+            +totalDiff.toDiffString()
+          }
+        }
+        val totalUncompressedSize = diff.changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSize }
+        val totalUncompressedDiff = diff.changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSizeDiff }
+        td {
+          style = "text-align: right; vertical-align: center;"
+          +totalUncompressedSize.toString()
+        }
+        td {
+          style = "text-align: right; vertical-align: center;"
+          +totalUncompressedDiff.toDiffString()
+        }
+        td { +"(total)" }
+      }
+    }
+    for ((path, size, sizeDiff, uncompressedSize, uncompressedSizeDiff, type) in diff.changes) {
+      val typeChar = when (type) {
+        Change.Type.Added -> '+'
+        Change.Type.Removed -> '-'
+        Change.Type.Changed -> '∆'
+      }
+      tr {
+        if (diff.includeCompressed) {
+          td {
+            style = "text-align: right; vertical-align: center;"
+            if (type != Change.Type.Removed) +size.toString() else +""
+          }
+          td {
+            style = "text-align: right; vertical-align: center;"
+            +sizeDiff.toDiffString()
+          }
+        }
+        td {
+          style = "text-align: right; vertical-align: center;"
+          if (type != Change.Type.Removed) +uncompressedSize.toString() else +""
+        }
+        td {
+          style = "text-align: right; vertical-align: center;"
+          +uncompressedSizeDiff.toDiffString()
+        }
+        td { unsafe { raw("$typeChar $path".htmlEncoded) } }
+      }
+    }
+  }
 }

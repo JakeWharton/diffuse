@@ -3,6 +3,7 @@ package com.jakewharton.diffuse.diff
 import com.jakewharton.diffuse.format.ApiMapping
 import com.jakewharton.diffuse.format.Jar
 import com.jakewharton.diffuse.report.Report
+import com.jakewharton.diffuse.report.html.JarDiffHtmlReport
 import com.jakewharton.diffuse.report.text.JarDiffTextReport
 
 internal class JarDiff(
@@ -17,4 +18,6 @@ internal class JarDiff(
   val changed = jars.changed || archive.changed
 
   override fun toTextReport(): Report = JarDiffTextReport(this)
+
+  override fun toHtmlReport(): Report = JarDiffHtmlReport(this)
 }

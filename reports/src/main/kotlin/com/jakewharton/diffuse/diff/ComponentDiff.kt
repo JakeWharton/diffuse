@@ -1,8 +1,21 @@
 package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.report.htmlEncoded
 import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.renderText
+import kotlinx.html.FlowContent
+import kotlinx.html.br
+import kotlinx.html.div
+import kotlinx.html.h3
+import kotlinx.html.span
+import kotlinx.html.style
+import kotlinx.html.table
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.thead
+import kotlinx.html.tr
+import kotlinx.html.unsafe
 
 internal class ComponentDiff<T>(
   val oldRawCount: Int,
@@ -69,5 +82,52 @@ internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff
         }
       }.prependIndent("  "),
     )
+  }
+}
+
+internal fun FlowContent.appendComponentDiff(name: String, diff: ComponentDiff<*>) {
+  if (diff.changed) {
+    h3 { +"$name:" }
+
+    div {
+      style = "margin-left: 16pt;"
+
+      table {
+        thead {
+          tr {
+            td { +"old" }
+            td { +"new" }
+            td { +"diff" }
+          }
+        }
+        tbody {
+          val diffSize = (diff.added.size - diff.removed.size).toDiffString()
+          val addedSize = diff.added.size.toDiffString(zeroSign = '+')
+          val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
+
+          tr {
+            td { +diff.oldCount.toString() }
+            td { +diff.newCount.toString() }
+            td { +"$diffSize ($addedSize $removedSize)" }
+          }
+        }
+      }
+
+      if (diff.added.isNotEmpty()) {
+        br()
+        diff.added.forEach {
+          span { unsafe { raw("+ $it".htmlEncoded) } }
+          br()
+        }
+      }
+
+      if (diff.removed.isNotEmpty()) {
+        br()
+        diff.removed.forEach {
+          span { unsafe { raw("- $it".htmlEncoded) } }
+          br()
+        }
+      }
+    }
   }
 }

@@ -5,6 +5,7 @@ apply plugin: 'org.jetbrains.dokka'
 dependencies {
   api projects.formats
   implementation libs.picnic
+  implementation libs.kotlinxHtml
   implementation libs.diffUtils
 
   testImplementation libs.junit
