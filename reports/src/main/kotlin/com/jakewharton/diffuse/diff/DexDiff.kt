@@ -5,6 +5,7 @@ import com.jakewharton.diffuse.format.Dex
 import com.jakewharton.diffuse.format.Field
 import com.jakewharton.diffuse.format.Method
 import com.jakewharton.diffuse.report.Report
+import com.jakewharton.diffuse.report.html.DexDiffHtmlReport
 import com.jakewharton.diffuse.report.text.DexDiffTextReport
 import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TextAlignment.BottomCenter
@@ -12,6 +13,7 @@ import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleLeft
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
+import kotlinx.html.FlowContent
 
 internal class DexDiff(
   val oldDexes: List<Dex>,
@@ -32,6 +34,7 @@ internal class DexDiff(
   val changed = strings.changed || types.changed || methods.changed || fields.changed
 
   override fun toTextReport(): Report = DexDiffTextReport(this)
+  override fun toHtmlReport(): Report = DexDiffHtmlReport(this)
 }
 
 internal fun DexDiff.toSummaryTable() = diffuseTable {
@@ -127,4 +130,11 @@ internal fun DexDiff.toDetailReport() = buildString {
   appendComponentDiff("TYPES", types)
   appendComponentDiff("METHODS", methods)
   appendComponentDiff("FIELDS", fields)
+}
+
+internal fun FlowContent.toDetailReport(diff: DexDiff) {
+  appendComponentDiff("STRINGS", diff.strings)
+  appendComponentDiff("TYPES", diff.types)
+  appendComponentDiff("METHODS", diff.methods)
+  appendComponentDiff("FIELDS", diff.fields)
 }
