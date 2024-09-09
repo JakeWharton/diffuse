@@ -6,6 +6,17 @@ import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TextAlignment.MiddleLeft
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
+import kotlinx.html.FlowContent
+import kotlinx.html.br
+import kotlinx.html.div
+import kotlinx.html.p
+import kotlinx.html.span
+import kotlinx.html.style
+import kotlinx.html.table
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.thead
+import kotlinx.html.tr
 
 internal class ArscDiff(
   val oldArsc: Arsc,
@@ -138,4 +149,123 @@ internal fun ArscDiff.toDetailReport() = buildString {
 
   appendComponentDiff("CONFIGS", Arsc::configs, configsAdded, configsRemoved)
   appendComponentDiff("ENTRIES", { it.entries.values }, entriesAdded, entriesRemoved)
+}
+
+internal fun FlowContent.toSummaryTable(diff: ArscDiff) {
+  table {
+    thead {
+      tr {
+        td { +"ARSC" }
+        td { +"old" }
+        td { +"new" }
+        td { colSpan = "2" + "diff" }
+      }
+    }
+
+    tbody {
+      style = "text-align: right; vertical-align: center;"
+
+      tr {
+        td { +"configs" }
+        td { +diff.oldArsc.configs.size }
+        td { +diff.newArsc.configs.size }
+
+        val configsDelta = diff.configsAdded.size - diff.configsRemoved.size
+        td {
+          style = "border-right: none;"
+          +configsDelta.toDiffString()
+        }
+
+        val delta = if (diff.configsAdded.isNotEmpty() || diff.configsRemoved.isNotEmpty()) {
+          val added = diff.configsAdded.size.toDiffString(zeroSign = '+')
+          val removed = (-diff.configsRemoved.size).toDiffString(zeroSign = '-')
+          "($added $removed)"
+        } else {
+          ""
+        }
+
+        td {
+          style = "border-left: none; padding-left: 0; text-align: left; vertical-align: center;"
+          +delta
+        }
+      }
+
+      tr {
+        td { +"entries" }
+        td { +diff.oldArsc.entries.size }
+        td { +diff.newArsc.entries.size }
+
+        val entriesDelta = diff.entriesAdded.size - diff.entriesRemoved.size
+        td {
+          style = "border-right: none;"
+          +entriesDelta.toDiffString()
+        }
+
+        val delta = if (diff.entriesAdded.isNotEmpty() || diff.entriesRemoved.isNotEmpty()) {
+          val added = diff.entriesAdded.size.toDiffString(zeroSign = '+')
+          val removed = (-diff.entriesRemoved.size).toDiffString(zeroSign = '-')
+          "($added $removed)"
+        } else {
+          ""
+        }
+
+        td {
+          style = "border-left: none; padding-left: 0; text-align: left; vertical-align: center;"
+          +delta
+        }
+      }
+    }
+  }
+}
+
+internal fun FlowContent.toDetailReport(diff: ArscDiff) {
+  fun FlowContent.appendComponentDiff(
+    name: String,
+    diff: ArscDiff,
+    componentSelector: (Arsc) -> Collection<*>,
+  ) {
+    if (diff.configsAdded.isNotEmpty() || diff.configsRemoved.isNotEmpty()) {
+      p { +"$name:" }
+
+      div {
+        style = "margin-left: 16pt;"
+
+        table {
+          thead {
+            tr {
+              td { +"old" }
+              td { +"new" }
+              td { +"diff" }
+            }
+          }
+          tbody {
+            val diffSize = (diff.configsAdded.size - diff.configsRemoved.size).toDiffString()
+            val addedSize = diff.configsAdded.size.toDiffString(zeroSign = '+')
+            val removedSize = (-diff.configsRemoved.size).toDiffString(zeroSign = '-')
+            tr {
+              td { +componentSelector(diff.oldArsc).size }
+              td { +componentSelector(diff.newArsc).size }
+              td { +"$diffSize ($addedSize $removedSize)" }
+            }
+          }
+        }
+
+        diff.configsAdded.forEach {
+          span { +"+ $it" }
+          br()
+        }
+        if (diff.configsAdded.isNotEmpty() && diff.configsRemoved.isNotEmpty()) {
+          br()
+          br()
+        }
+        diff.configsRemoved.forEach {
+          span { +"- $it" }
+          br()
+        }
+      }
+    }
+  }
+
+  appendComponentDiff("CONFIGS", diff, Arsc::configs)
+  appendComponentDiff("ENTRIES", diff) { it.entries.values }
 }

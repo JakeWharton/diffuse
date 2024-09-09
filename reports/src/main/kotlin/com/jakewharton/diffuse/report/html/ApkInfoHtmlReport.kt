@@ -14,7 +14,7 @@ import kotlinx.html.stream.appendHTML
 import kotlinx.html.style
 import kotlinx.html.unsafe
 
-class ApkInfoHtmlReport(
+internal class ApkInfoHtmlReport(
   private val apk: Apk,
 ) : Report {
   override fun write(appendable: Appendable) {
