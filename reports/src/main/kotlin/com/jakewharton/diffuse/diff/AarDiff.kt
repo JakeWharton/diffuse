@@ -3,6 +3,7 @@ package com.jakewharton.diffuse.diff
 import com.jakewharton.diffuse.format.Aar
 import com.jakewharton.diffuse.format.ApiMapping
 import com.jakewharton.diffuse.report.Report
+import com.jakewharton.diffuse.report.html.AarDiffHtmlReport
 import com.jakewharton.diffuse.report.text.AarDiffTextReport
 
 internal class AarDiff(
@@ -16,4 +17,5 @@ internal class AarDiff(
   val manifest = ManifestDiff(oldAar.manifest, newAar.manifest)
 
   override fun toTextReport(): Report = AarDiffTextReport(this)
+  override fun toHtmlReport(): Report = AarDiffHtmlReport(this)
 }
