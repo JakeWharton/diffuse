@@ -5,8 +5,6 @@ interface Report {
 
   interface Factory {
     fun toTextReport(): Report
-    fun toHtmlReport(): Report {
-      TODO("Implement HTML reporting")
-    }
+    fun toHtmlReport(): Report
   }
 }
