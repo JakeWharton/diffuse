@@ -26,7 +26,6 @@ internal class ApkDiffHtmlReport(
         span { +"OLD: ${diff.oldApk.filename} (signature: ${diff.oldApk.signatures.toSummaryString()})" }
         span { +"NEW: ${diff.newApk.filename} (signature: ${diff.newApk.signatures.toSummaryString()})" }
         br()
-        br()
 
         toSummaryTable("APK", diff.archive, Type.APK_TYPES, skipIfEmptyTypes = setOf(Type.Native))
         br()

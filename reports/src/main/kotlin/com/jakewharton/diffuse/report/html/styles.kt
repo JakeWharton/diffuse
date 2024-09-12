@@ -15,15 +15,19 @@ internal fun HEAD.applyStyles() {
     unsafe {
       raw(
         """
-              table{
-                border-collapse:collapse;
-                border:1px solid var(--bs-body-color);
-              }
-  
-              table td{
-                border:1px solid var(--bs-body-color);
-                padding: 4px;
-              }
+          table {
+            border-collapse:collapse;
+            border:1px solid var(--bs-body-color);
+          }
+
+          table td {
+            border:1px solid var(--bs-body-color);
+            padding: 4px;
+          }
+          
+          body {
+            margin: 0 16pt;
+          }
         """.trimIndent(),
       )
     }

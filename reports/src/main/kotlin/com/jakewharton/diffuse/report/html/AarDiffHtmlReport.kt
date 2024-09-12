@@ -9,7 +9,6 @@ import com.jakewharton.diffuse.report.Report
 import kotlinx.html.body
 import kotlinx.html.br
 import kotlinx.html.details
-import kotlinx.html.h2
 import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.span
@@ -22,12 +21,9 @@ internal class AarDiffHtmlReport(private val aarDiff: AarDiff) : Report {
       head { applyStyles() }
 
       body {
-        h2 { +"Summary" }
-
         span { +"OLD: ${aarDiff.oldAar.filename}" }
         br()
         span { +"NEW: ${aarDiff.newAar.filename}" }
-        br()
         br()
 
         toSummaryTable(

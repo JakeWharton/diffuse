@@ -9,7 +9,6 @@ import com.jakewharton.diffuse.report.Report
 import kotlinx.html.body
 import kotlinx.html.br
 import kotlinx.html.details
-import kotlinx.html.h2
 import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.span
@@ -22,8 +21,6 @@ internal class JarDiffHtmlReport(private val jarDiff: JarDiff) : Report {
       head { applyStyles() }
 
       body {
-        h2 { +"Summary" }
-
         span { +"OLD: ${jarDiff.oldJar.filename}" }
         br()
         span { +"NEW: ${jarDiff.newJar.filename}" }

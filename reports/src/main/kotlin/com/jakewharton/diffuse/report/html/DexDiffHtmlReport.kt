@@ -27,7 +27,6 @@ internal class DexDiffHtmlReport(private val dexDiff: DexDiff) : Report {
         br()
         span { +"NEW: ${newDex.filename}" }
         br()
-        br()
 
         toDetailReport(dexDiff)
       }

@@ -6,10 +6,12 @@ import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.renderText
 import kotlinx.html.FlowContent
 import kotlinx.html.br
+import kotlinx.html.details
 import kotlinx.html.div
-import kotlinx.html.h3
+import kotlinx.html.h4
 import kotlinx.html.span
 import kotlinx.html.style
+import kotlinx.html.summary
 import kotlinx.html.table
 import kotlinx.html.tbody
 import kotlinx.html.td
@@ -87,10 +89,10 @@ internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff
 
 internal fun FlowContent.appendComponentDiff(name: String, diff: ComponentDiff<*>) {
   if (diff.changed) {
-    h3 { +"$name:" }
-
     div {
-      style = "margin-left: 16pt;"
+      style = "margin: 24px 0;"
+
+      h4 { +name }
 
       table {
         thead {
@@ -113,19 +115,27 @@ internal fun FlowContent.appendComponentDiff(name: String, diff: ComponentDiff<*
         }
       }
 
-      if (diff.added.isNotEmpty()) {
-        br()
-        diff.added.forEach {
-          span { unsafe { raw("+ $it".htmlEncoded) } }
-          br()
-        }
-      }
+      details {
+        summary { +"diff" }
 
-      if (diff.removed.isNotEmpty()) {
-        br()
-        diff.removed.forEach {
-          span { unsafe { raw("- $it".htmlEncoded) } }
-          br()
+        div {
+          style = "margin-left: 16pt;"
+
+          if (diff.added.isNotEmpty()) {
+            br()
+            diff.added.forEach {
+              span { unsafe { raw("+ $it".htmlEncoded) } }
+              br()
+            }
+          }
+
+          if (diff.removed.isNotEmpty()) {
+            br()
+            diff.removed.forEach {
+              span { unsafe { raw("- $it".htmlEncoded) } }
+              br()
+            }
+          }
         }
       }
     }

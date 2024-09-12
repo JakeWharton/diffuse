@@ -27,7 +27,6 @@ internal class AabDiffHtmlReport(private val aabDiff: AabDiff) : Report {
         span { +"OLD: ${aabDiff.oldAab.filename}" }
         span { +"NEW: ${aabDiff.newAab.filename}" }
         br()
-        br()
 
         table {
           style = "text-align: center; vertical-align: middle;"
