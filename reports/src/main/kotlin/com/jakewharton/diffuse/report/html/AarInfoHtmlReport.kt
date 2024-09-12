@@ -9,32 +9,13 @@ import kotlinx.html.h2
 import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.stream.appendHTML
-import kotlinx.html.style
-import kotlinx.html.unsafe
 
 class AarInfoHtmlReport(
   private val aar: Aar,
 ) : Report {
   override fun write(appendable: Appendable) {
     appendable.appendHTML().html {
-      head {
-        style(type = "text/css") {
-          unsafe {
-            raw(
-              """
-              table{
-                border-collapse:collapse;
-                border:1px solid #000;
-              }
-  
-              table td{
-                border:1px solid #000;
-              }
-              """.trimIndent(),
-            )
-          }
-        }
-      }
+      head { applyStyles() }
 
       body {
         appendable.apply {

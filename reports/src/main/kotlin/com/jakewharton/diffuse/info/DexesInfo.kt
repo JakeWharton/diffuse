@@ -83,7 +83,7 @@ internal fun FlowContent.toSummaryTable(dexList: List<Dex>) {
     }
 
     tbody {
-      style = "text-align: right; vertical-align: center;"
+      style = "text-align: right; vertical-align: middle;"
 
       tr {
         td { +"files" }

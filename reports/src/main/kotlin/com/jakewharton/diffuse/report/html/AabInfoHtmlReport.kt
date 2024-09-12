@@ -11,36 +11,17 @@ import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.p
 import kotlinx.html.stream.appendHTML
-import kotlinx.html.style
 import kotlinx.html.summary
 import kotlinx.html.table
 import kotlinx.html.tbody
 import kotlinx.html.td
 import kotlinx.html.thead
 import kotlinx.html.tr
-import kotlinx.html.unsafe
 
 class AabInfoHtmlReport(private val aab: Aab) : Report {
   override fun write(appendable: Appendable) {
     appendable.appendHTML().html {
-      head {
-        style(type = "text/css") {
-          unsafe {
-            raw(
-              """
-              table{
-                border-collapse:collapse;
-                border:1px solid #000;
-              }
-  
-              table td{
-                border:1px solid #000;
-              }
-              """.trimIndent(),
-            )
-          }
-        }
-      }
+      head { applyStyles() }
 
       body {
         p { +aab.filename.toString() }

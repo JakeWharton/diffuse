@@ -163,7 +163,7 @@ internal fun FlowContent.toSummaryTable(diff: ArscDiff) {
     }
 
     tbody {
-      style = "text-align: right; vertical-align: center;"
+      style = "text-align: right; vertical-align: middle;"
 
       tr {
         td { +"configs" }
@@ -185,7 +185,7 @@ internal fun FlowContent.toSummaryTable(diff: ArscDiff) {
         }
 
         td {
-          style = "border-left: none; padding-left: 0; text-align: left; vertical-align: center;"
+          style = "border-left: none; padding-left: 0; text-align: left; vertical-align: middle;"
           +delta
         }
       }
@@ -210,7 +210,7 @@ internal fun FlowContent.toSummaryTable(diff: ArscDiff) {
         }
 
         td {
-          style = "border-left: none; padding-left: 0; text-align: left; vertical-align: center;"
+          style = "border-left: none; padding-left: 0; text-align: left; vertical-align: middle;"
           +delta
         }
       }

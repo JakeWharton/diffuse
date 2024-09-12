@@ -13,33 +13,14 @@ import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.span
 import kotlinx.html.stream.appendHTML
-import kotlinx.html.style
 import kotlinx.html.summary
-import kotlinx.html.unsafe
 
 internal class ApkDiffHtmlReport(
   private val diff: ApkDiff,
 ) : Report {
   override fun write(appendable: Appendable) {
     appendable.appendHTML().html {
-      head {
-        style(type = "text/css") {
-          unsafe {
-            raw(
-              """
-              table{
-                border-collapse:collapse;
-                border:1px solid #000;
-              }
-  
-              table td{
-                border:1px solid #000;
-              }
-              """.trimIndent(),
-            )
-          }
-        }
-      }
+      head { applyStyles() }
 
       body {
         span { +"OLD: ${diff.oldApk.filename} (signature: ${diff.oldApk.signatures.toSummaryString()})" }

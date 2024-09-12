@@ -37,7 +37,7 @@ internal fun FlowContent.toSummaryTable(arsc: Arsc) {
     }
 
     tbody {
-      style = "text-align: right; vertical-align: center;"
+      style = "text-align: right; vertical-align: middle;"
 
       tr {
         td { +"configs" }

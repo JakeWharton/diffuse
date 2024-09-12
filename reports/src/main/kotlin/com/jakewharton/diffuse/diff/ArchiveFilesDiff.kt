@@ -329,7 +329,7 @@ internal fun FlowContent.toSummaryTable(
     }
 
     tbody {
-      style = "text-align: right; vertical-align: center;"
+      style = "text-align: right; vertical-align: middle;"
 
       for (type in displayTypes) {
         tr {
@@ -339,7 +339,7 @@ internal fun FlowContent.toSummaryTable(
     }
 
     tfoot {
-      style = "text-align: right; vertical-align: center;"
+      style = "text-align: right; vertical-align: middle;"
       tr { addArchiveRow("total") }
     }
   }
@@ -351,12 +351,12 @@ internal fun FlowContent.toDetailReport(diff: ArchiveFilesDiff) {
       if (diff.includeCompressed) {
         tr {
           td {
-            style = "text-align: center; vertical-align: center;"
+            style = "text-align: center; vertical-align: middle;"
             colSpan = "2"
             +"compressed"
           }
           td {
-            style = "text-align: center; vertical-align: center;"
+            style = "text-align: center; vertical-align: middle;"
             colSpan = "2"
             +"uncompressed"
           }
@@ -390,22 +390,22 @@ internal fun FlowContent.toDetailReport(diff: ArchiveFilesDiff) {
           val totalSize = diff.changes.fold(Size.ZERO) { acc, change -> acc + change.size }
           val totalDiff = diff.changes.fold(Size.ZERO) { acc, change -> acc + change.sizeDiff }
           td {
-            style = "text-align: right; vertical-align: center;"
+            style = "text-align: right; vertical-align: middle;"
             +totalSize.toString()
           }
           td {
-            style = "text-align: right; vertical-align: center;"
+            style = "text-align: right; vertical-align: middle;"
             +totalDiff.toDiffString()
           }
         }
         val totalUncompressedSize = diff.changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSize }
         val totalUncompressedDiff = diff.changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSizeDiff }
         td {
-          style = "text-align: right; vertical-align: center;"
+          style = "text-align: right; vertical-align: middle;"
           +totalUncompressedSize.toString()
         }
         td {
-          style = "text-align: right; vertical-align: center;"
+          style = "text-align: right; vertical-align: middle;"
           +totalUncompressedDiff.toDiffString()
         }
         td { +"(total)" }
@@ -420,20 +420,20 @@ internal fun FlowContent.toDetailReport(diff: ArchiveFilesDiff) {
       tr {
         if (diff.includeCompressed) {
           td {
-            style = "text-align: right; vertical-align: center;"
+            style = "text-align: right; vertical-align: middle;"
             if (type != Change.Type.Removed) +size.toString() else +""
           }
           td {
-            style = "text-align: right; vertical-align: center;"
+            style = "text-align: right; vertical-align: middle;"
             +sizeDiff.toDiffString()
           }
         }
         td {
-          style = "text-align: right; vertical-align: center;"
+          style = "text-align: right; vertical-align: middle;"
           if (type != Change.Type.Removed) +uncompressedSize.toString() else +""
         }
         td {
-          style = "text-align: right; vertical-align: center;"
+          style = "text-align: right; vertical-align: middle;"
           +uncompressedSizeDiff.toDiffString()
         }
         td { unsafe { raw("$typeChar $path".htmlEncoded) } }

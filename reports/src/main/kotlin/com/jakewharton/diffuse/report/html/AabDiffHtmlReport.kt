@@ -17,29 +17,11 @@ import kotlinx.html.table
 import kotlinx.html.td
 import kotlinx.html.thead
 import kotlinx.html.tr
-import kotlinx.html.unsafe
 
 internal class AabDiffHtmlReport(private val aabDiff: AabDiff) : Report {
   override fun write(appendable: Appendable) {
     appendable.appendHTML().html {
-      head {
-        style(type = "text/css") {
-          unsafe {
-            raw(
-              """
-              table{
-                border-collapse:collapse;
-                border:1px solid #000;
-              }
-  
-              table td{
-                border:1px solid #000;
-              }
-              """.trimIndent(),
-            )
-          }
-        }
-      }
+      head { applyStyles() }
 
       body {
         span { +"OLD: ${aabDiff.oldAab.filename}" }
@@ -60,7 +42,7 @@ internal class AabDiffHtmlReport(private val aabDiff: AabDiff) : Report {
 
             tr {
               td {
-                style = "text-align: right; vertical-align: center;"
+                style = "text-align: right; vertical-align: middle;"
                 +"base"
               }
               td { +"✓" }
@@ -70,7 +52,7 @@ internal class AabDiffHtmlReport(private val aabDiff: AabDiff) : Report {
             for (name in aabDiff.featureModuleNames) {
               tr {
                 td {
-                  style = "text-align: right; vertical-align: center;"
+                  style = "text-align: right; vertical-align: middle;"
                   +name
                 }
                 td { if (name in aabDiff.oldAab.featureModules) +"✓" else +"" }

@@ -11,31 +11,12 @@ import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.p
 import kotlinx.html.stream.appendHTML
-import kotlinx.html.style
 import kotlinx.html.summary
-import kotlinx.html.unsafe
 
 internal class JarInfoHtmlReport(private val jar: Jar) : Report {
   override fun write(appendable: Appendable) {
     appendable.appendHTML().html {
-      head {
-        style(type = "text/css") {
-          unsafe {
-            raw(
-              """
-              table{
-                border-collapse:collapse;
-                border:1px solid #000;
-              }
-  
-              table td{
-                border:1px solid #000;
-              }
-              """.trimIndent(),
-            )
-          }
-        }
-      }
+      head { applyStyles() }
 
       body {
         p { +jar.filename!! }

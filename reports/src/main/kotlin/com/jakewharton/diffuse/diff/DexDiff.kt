@@ -180,7 +180,7 @@ internal fun FlowContent.toSummaryTable(dexDiff: DexDiff) {
     }
 
     tbody {
-      style = "text-align: right; vertical-align: center;"
+      style = "text-align: right; vertical-align: middle;"
 
       tr {
         td { +"files" }
@@ -217,7 +217,7 @@ internal fun FlowContent.toSummaryTable(dexDiff: DexDiff) {
           val addedSize = diff.added.size.toDiffString(zeroSign = '+')
           val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
           td {
-            style = "border-left: none; padding-left: 0; text-align: left; vertical-align: center;"
+            style = "border-left: none; padding-left: 0; text-align: left; vertical-align: middle;"
             +"($addedSize $removedSize)"
           }
         }

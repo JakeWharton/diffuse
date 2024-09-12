@@ -9,8 +9,6 @@ import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.span
 import kotlinx.html.stream.appendHTML
-import kotlinx.html.style
-import kotlinx.html.unsafe
 
 internal class DexDiffHtmlReport(private val dexDiff: DexDiff) : Report {
   private val oldDex = requireNotNull(dexDiff.oldDexes.singleOrNull()) {
@@ -22,24 +20,7 @@ internal class DexDiffHtmlReport(private val dexDiff: DexDiff) : Report {
 
   override fun write(appendable: Appendable) {
     appendable.appendHTML().html {
-      head {
-        style(type = "text/css") {
-          unsafe {
-            raw(
-              """
-              table{
-                border-collapse:collapse;
-                border:1px solid #000;
-              }
-  
-              table td{
-                border:1px solid #000;
-              }
-              """.trimIndent(),
-            )
-          }
-        }
-      }
+      head { applyStyles() }
 
       body {
         span { +"OLD: ${oldDex.filename}" }

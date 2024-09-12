@@ -14,31 +14,12 @@ import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.span
 import kotlinx.html.stream.appendHTML
-import kotlinx.html.style
 import kotlinx.html.summary
-import kotlinx.html.unsafe
 
 internal class AarDiffHtmlReport(private val aarDiff: AarDiff) : Report {
   override fun write(appendable: Appendable) {
     appendable.appendHTML().html {
-      head {
-        style(type = "text/css") {
-          unsafe {
-            raw(
-              """
-              table{
-                border-collapse:collapse;
-                border:1px solid #000;
-              }
-  
-              table td{
-                border:1px solid #000;
-              }
-              """.trimIndent(),
-            )
-          }
-        }
-      }
+      head { applyStyles() }
 
       body {
         h2 { +"Summary" }
