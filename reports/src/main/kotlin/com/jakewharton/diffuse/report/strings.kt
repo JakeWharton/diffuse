@@ -25,3 +25,19 @@ internal fun Size.toDiffString() = buildString {
   }
   append(this@toDiffString)
 }
+
+internal val String.htmlEncoded: String
+  get() = buildString {
+    for (char in this@htmlEncoded) {
+      when (char) {
+        '&' -> append("&amp;")
+        '<' -> append("&lt;")
+        '>' -> append("&gt;")
+        '\"' -> append("&quot;")
+        '\'' -> append("&#39;")
+        '→' -> append("&rarr;")
+        '∆' -> append("&Delta;")
+        else -> append(char)
+      }
+    }
+  }

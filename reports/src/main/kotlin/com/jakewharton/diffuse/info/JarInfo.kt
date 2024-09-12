@@ -2,6 +2,7 @@ package com.jakewharton.diffuse.info
 
 import com.jakewharton.diffuse.format.Jar
 import com.jakewharton.diffuse.report.Report
+import com.jakewharton.diffuse.report.html.JarInfoHtmlReport
 import com.jakewharton.diffuse.report.text.JarInfoTextReport
 
 class JarInfo(
@@ -9,5 +10,9 @@ class JarInfo(
 ) : BinaryInfo {
   override fun toTextReport(): Report {
     return JarInfoTextReport(jar)
+  }
+
+  override fun toHtmlReport(): Report {
+    return JarInfoHtmlReport(jar)
   }
 }

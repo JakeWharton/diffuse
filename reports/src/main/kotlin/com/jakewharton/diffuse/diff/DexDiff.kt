@@ -5,6 +5,7 @@ import com.jakewharton.diffuse.format.Dex
 import com.jakewharton.diffuse.format.Field
 import com.jakewharton.diffuse.format.Method
 import com.jakewharton.diffuse.report.Report
+import com.jakewharton.diffuse.report.html.DexDiffHtmlReport
 import com.jakewharton.diffuse.report.text.DexDiffTextReport
 import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TextAlignment.BottomCenter
@@ -12,6 +13,14 @@ import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleLeft
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
+import kotlinx.html.FlowContent
+import kotlinx.html.TBODY
+import kotlinx.html.style
+import kotlinx.html.table
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.thead
+import kotlinx.html.tr
 
 internal class DexDiff(
   val oldDexes: List<Dex>,
@@ -32,6 +41,7 @@ internal class DexDiff(
   val changed = strings.changed || types.changed || methods.changed || fields.changed
 
   override fun toTextReport(): Report = DexDiffTextReport(this)
+  override fun toHtmlReport(): Report = DexDiffHtmlReport(this)
 }
 
 internal fun DexDiff.toSummaryTable() = diffuseTable {
@@ -127,4 +137,104 @@ internal fun DexDiff.toDetailReport() = buildString {
   appendComponentDiff("TYPES", types)
   appendComponentDiff("METHODS", methods)
   appendComponentDiff("FIELDS", fields)
+}
+
+internal fun FlowContent.toSummaryTable(dexDiff: DexDiff) {
+  table {
+    thead {
+      if (dexDiff.isMultidex) {
+        tr {
+          td {
+            style = "text-align: left; vertical-align: bottom;"
+            rowSpan = "2"
+            +"DEX"
+          }
+
+          td {
+            style = "text-align: center; vertical-align: bottom;"
+            colSpan = "3"
+            +"raw"
+          }
+          td {
+            style = "text-align: center; vertical-align: bottom;"
+            colSpan = "4"
+            +"unique"
+          }
+        }
+      }
+      tr {
+        if (!dexDiff.isMultidex) {
+          td { +"DEX" }
+        } else {
+          td { +"old" }
+          td { +"new" }
+          td { +"diff" }
+        }
+        td { +"old" }
+        td { +"new" }
+        td {
+          colSpan = "2"
+          +"diff"
+        }
+      }
+    }
+
+    tbody {
+      style = "text-align: right; vertical-align: middle;"
+
+      tr {
+        td { +"files" }
+        td { +dexDiff.oldDexes.size }
+        td { +dexDiff.newDexes.size }
+        td {
+          style = "border-right: none;"
+          +(dexDiff.newDexes.size - dexDiff.oldDexes.size).toDiffString()
+        }
+        if (dexDiff.isMultidex) {
+          // todo: necessary for html?
+          // Add empty cells to ensure borders get drawn
+          td { +"" }
+          td { +"" }
+          td { colSpan = "2" + "" }
+        }
+      }
+
+      fun TBODY.addDexRow(name: String, diff: ComponentDiff<*>) {
+        tr {
+          td { +name }
+          if (dexDiff.isMultidex) {
+            td { +diff.oldRawCount }
+            td { +diff.newRawCount }
+            td { +(diff.newRawCount - diff.oldRawCount).toDiffString() }
+          }
+          td { +diff.oldCount }
+          td { +diff.newCount }
+          td {
+            style = "border-right: none;"
+            +(diff.added.size - diff.removed.size).toDiffString()
+          }
+
+          val addedSize = diff.added.size.toDiffString(zeroSign = '+')
+          val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
+          td {
+            style = "border-left: none; padding-left: 0; text-align: left; vertical-align: middle;"
+            +"($addedSize $removedSize)"
+          }
+        }
+      }
+
+      addDexRow("strings", dexDiff.strings)
+      addDexRow("types", dexDiff.types)
+      addDexRow("classes", dexDiff.classes)
+      addDexRow("methods", dexDiff.methods)
+      addDexRow("fields", dexDiff.fields)
+    }
+  }
+}
+
+internal fun FlowContent.toDetailReport(diff: DexDiff) {
+  appendComponentDiff("STRINGS", diff.strings)
+  appendComponentDiff("TYPES", diff.types)
+  appendComponentDiff("METHODS", diff.methods)
+  appendComponentDiff("FIELDS", diff.fields)
 }

@@ -7,6 +7,16 @@ import com.jakewharton.diffuse.io.Size
 import com.jakewharton.picnic.TableSectionDsl
 import com.jakewharton.picnic.TextAlignment
 import com.jakewharton.picnic.renderText
+import kotlinx.html.FlowContent
+import kotlinx.html.TR
+import kotlinx.html.style
+import kotlinx.html.table
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.tfoot
+import kotlinx.html.th
+import kotlinx.html.thead
+import kotlinx.html.tr
 
 internal fun ArchiveFiles.toSummaryTable(
   name: String,
@@ -37,7 +47,7 @@ internal fun ArchiveFiles.toSummaryTable(
     }
   }
 
-  fun TableSectionDsl.addApkRow(name: String, type: ArchiveFile.Type? = null) {
+  fun TableSectionDsl.addArchiveFileRow(name: String, type: ArchiveFile.Type? = null) {
     val old = if (type != null) filterValues { it.type == type } else this@toSummaryTable
     val oldSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.size }
     val oldUncompressedSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
@@ -59,7 +69,7 @@ internal fun ArchiveFiles.toSummaryTable(
       alignment = TextAlignment.MiddleRight
     }
     for (type in displayTypes) {
-      addApkRow(type.displayName, type)
+      addArchiveFileRow(type.displayName, type)
     }
   }
 
@@ -67,6 +77,83 @@ internal fun ArchiveFiles.toSummaryTable(
     cellStyle {
       alignment = TextAlignment.MiddleRight
     }
-    addApkRow("total")
+    addArchiveFileRow("total")
   }
 }.renderText()
+
+internal fun FlowContent.toSummaryTable(
+  name: String,
+  files: ArchiveFiles,
+  displayTypes: List<ArchiveFile.Type>,
+  skipIfEmptyTypes: Set<ArchiveFile.Type> = emptySet(),
+  includeCompressed: Boolean = true,
+) {
+  table {
+    thead {
+      tr {
+        if (includeCompressed) {
+          th {
+            style = "text-align: left; vertical-align: bottom;"
+
+            +name
+          }
+
+          th {
+            style = "text-align: center; vertical-align: bottom;"
+
+            +"compressed"
+          }
+
+          th {
+            style = "text-align: center; vertical-align: bottom;"
+
+            +"uncompressed"
+          }
+        } else {
+          th {
+            style = "text-align: left; vertical-align: bottom;"
+
+            +name
+          }
+
+          th {
+            +"size"
+          }
+        }
+      }
+    }
+
+    fun TR.addArchiveFileRow(name: String, type: ArchiveFile.Type? = null) {
+      val old = if (type != null) files.filterValues { it.type == type } else files
+      val oldSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.size }
+      val oldUncompressedSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
+      if (oldSize != Size.ZERO || type !in skipIfEmptyTypes) {
+        if (includeCompressed) {
+          td { +name }
+          td { +oldSize.toString() }
+          td { +oldUncompressedSize.toString() }
+        } else {
+          td { +name }
+          td { +oldUncompressedSize.toString() }
+        }
+      }
+    }
+
+    tbody {
+      style = "text-align: right; vertical-align: middle;"
+
+      for (type in displayTypes) {
+        tr {
+          addArchiveFileRow(type.displayName, type)
+        }
+      }
+    }
+
+    tfoot {
+      tr {
+        style = "text-align: right; vertical-align: middle;"
+        addArchiveFileRow("total")
+      }
+    }
+  }
+}

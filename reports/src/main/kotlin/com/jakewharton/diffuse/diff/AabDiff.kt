@@ -2,6 +2,7 @@ package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.format.Aab
 import com.jakewharton.diffuse.report.Report
+import com.jakewharton.diffuse.report.html.AabDiffHtmlReport
 import com.jakewharton.diffuse.report.text.AabDiffTextReport
 
 internal class AabDiff(
@@ -33,4 +34,5 @@ internal class AabDiff(
     }
 
   override fun toTextReport(): Report = AabDiffTextReport(this)
+  override fun toHtmlReport(): Report = AabDiffHtmlReport(this)
 }

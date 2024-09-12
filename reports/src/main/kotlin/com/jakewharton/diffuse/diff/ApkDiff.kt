@@ -4,6 +4,7 @@ import com.jakewharton.diffuse.diff.lint.resourcesArscCompression
 import com.jakewharton.diffuse.format.ApiMapping
 import com.jakewharton.diffuse.format.Apk
 import com.jakewharton.diffuse.report.Report
+import com.jakewharton.diffuse.report.html.ApkDiffHtmlReport
 import com.jakewharton.diffuse.report.text.ApkDiffTextReport
 
 internal class ApkDiff(
@@ -26,4 +27,5 @@ internal class ApkDiff(
   )
 
   override fun toTextReport(): Report = ApkDiffTextReport(this)
+  override fun toHtmlReport(): Report = ApkDiffHtmlReport(this)
 }
