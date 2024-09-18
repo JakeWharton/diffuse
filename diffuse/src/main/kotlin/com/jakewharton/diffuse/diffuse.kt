@@ -3,6 +3,7 @@
 package com.jakewharton.diffuse
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.NoOpCliktCommand
 import com.github.ajalt.clikt.core.ParameterHolder
 import com.github.ajalt.clikt.core.main
@@ -144,7 +145,10 @@ private class InfoCommand(
   inputFs: FileSystem,
   outputFs: FileSystem,
   output: PrintStream,
-) : CliktCommand(name = "info", help = "Display info about a binary.") {
+) : CliktCommand("info") {
+  override fun help(context: Context) =
+    "Display info about a binary."
+
   private val type by binaryType()
   private val outputOptions by OutputOptions(outputFs, output)
   private val file by argument("FILE", help = "Input file.")
@@ -166,7 +170,10 @@ private class DiffCommand(
   inputFs: FileSystem,
   outputFs: FileSystem,
   output: PrintStream,
-) : CliktCommand(name = "diff", help = "Display changes between two binaries.") {
+) : CliktCommand("diff") {
+  override fun help(context: Context) =
+    "Display changes between two binaries."
+
   private val inputOptions by object : OptionGroup("Input options") {
     private val type by binaryType()
 
@@ -201,7 +208,10 @@ private class DiffCommand(
 private class MembersCommand(
   inputFs: FileSystem,
   private val stdout: PrintStream,
-) : CliktCommand(name = "members", help = "List methods or fields of a binary.") {
+) : CliktCommand("members") {
+  override fun help(context: Context) =
+    "List methods or fields of a binary."
+
   private val binary by argument("FILE", help = "Input file.")
     .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
