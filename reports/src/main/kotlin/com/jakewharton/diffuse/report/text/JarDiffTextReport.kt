@@ -10,11 +10,16 @@ internal class JarDiffTextReport(private val jarDiff: JarDiff) : Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
-      appendLine(jarDiff.oldJar.filename)
+      append(jarDiff.oldJar.filename)
+      append(" (bytecodeVersion: ")
+      append(jarDiff.oldJar.bytecodeVersion.toString())
+      appendLine(')')
 
       append("NEW: ")
-      appendLine(jarDiff.newJar.filename)
-
+      append(jarDiff.newJar.filename)
+      append(" (bytecodeVersion: ")
+      append(jarDiff.newJar.bytecodeVersion.toString())
+      appendLine(')')
       appendLine()
       appendLine(jarDiff.archive.toSummaryTable("JAR", Type.JAR_TYPES))
       appendLine()

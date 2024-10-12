@@ -1,5 +1,5 @@
 package com.jakewharton.diffuse.format
 
-interface BinaryFormat {
+sealed interface BinaryFormat {
   val filename: String?
 }
