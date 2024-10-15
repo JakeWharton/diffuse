@@ -11,7 +11,8 @@ internal class ManifestDiff(
 ) {
   internal val parsedPropertiesChanged = oldManifest.packageName != newManifest.packageName ||
     oldManifest.versionName != newManifest.versionName ||
-    oldManifest.versionCode != newManifest.versionCode
+    oldManifest.versionCode != newManifest.versionCode ||
+    oldManifest.usesPermissionCount != newManifest.usesPermissionCount
 
   val diff: List<String> = run {
     val oldLines = oldManifest.xml.lines()
@@ -34,6 +35,7 @@ internal fun ManifestDiff.toDetailReport() = buildString {
         row("package", oldManifest.packageName, newManifest.packageName)
         row("version code", oldManifest.versionCode, newManifest.versionCode)
         row("version name", oldManifest.versionName, newManifest.versionName)
+        row("uses-permission count", oldManifest.usesPermissionCount, newManifest.usesPermissionCount)
       },
     )
   }
