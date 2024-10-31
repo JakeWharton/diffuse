@@ -1,13 +1,13 @@
 [versions]
 # Keep this values in sync with bundletool"s dependencies.
-aapt2Proto = "8.7.1-12006047"
+aapt2Proto = "8.7.2-12006047"
 protobufJava = "3.25.5"
 guava = "30.1-jre"
 
 [libraries]
 dalvikDx = "com.jakewharton.android.repackaged:dalvik-dx:14.0.0_r21"
-binaryResources = "com.android.tools.apkparser:binary-resources:31.7.1"
-apkSigner = "com.android.tools.build:apksig:8.7.1"
+binaryResources = "com.android.tools.apkparser:binary-resources:31.7.2"
+apkSigner = "com.android.tools.build:apksig:8.7.2"
 bundleTool = "com.android.tools.build:bundletool:1.17.2"
 aapt2Proto = { module = "com.android.tools.build:aapt2-proto", version.ref = "aapt2Proto" }
 protobufJava = { module = "com.google.protobuf:protobuf-java", version.ref = "protobufJava" }
