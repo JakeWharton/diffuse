@@ -14,7 +14,7 @@ protobufJava = { module = "com.google.protobuf:protobuf-java", version.ref = "pr
 clikt = "com.github.ajalt.clikt:clikt:5.0.2"
 junit = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
-okio = "com.squareup.okio:okio:3.10.1"
+okio = "com.squareup.okio:okio:3.10.2"
 byteunits = "com.jakewharton.byteunits:byteunits:0.9.1"
 asm = "org.ow2.asm:asm:9.7.1"
 diffUtils = "io.github.java-diff-utils:java-diff-utils:4.15"
