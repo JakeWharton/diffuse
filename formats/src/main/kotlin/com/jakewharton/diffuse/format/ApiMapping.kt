@@ -81,46 +81,48 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
       var toDescriptor: TypeDescriptor? = null
       var fields: MutableMap<String, String>? = null
       var methods: MutableMap<MethodSignature, String>? = null
-      toUtf8().split('\n').forEachIndexed { index, line ->
-        if (line.trimStart().startsWith('#') || line.isBlank()) {
-          return@forEachIndexed
-        }
-        if (line.startsWith(' ')) {
-          val result = memberLine.matchEntire(line)
-            ?: throw IllegalArgumentException(
-              "Unable to parse line ${index + 1} as member mapping: $line",
-            )
-          val (_, returnType, fromName, parameters, toName) = result.groupValues
+      source().use { bufferedSource -> 
+        generateSequence { bufferedSource.readUtf8Line() }.forEachIndexed { index, line ->
+          if (line.trimStart().startsWith('#') || line.isBlank()) {
+            return@forEachIndexed
+          }
+          if (line.startsWith(' ')) {
+            val result = memberLine.matchEntire(line)
+              ?: throw IllegalArgumentException(
+                "Unable to parse line ${index + 1} as member mapping: $line",
+              )
+            val (_, returnType, fromName, parameters, toName) = result.groupValues
 
-          if (parameters != "") {
-            val returnDescriptor = humanNameToDescriptor(returnType)
-            val parameterDescriptors = parameters
-              .substring(1, parameters.lastIndex) // Remove leading '(' and trailing ')'.
-              .takeUnless(String::isEmpty) // Do not process parameter-less methods.
-              ?.split(',')
-              ?.map(Companion::humanNameToDescriptor)
-              ?: emptyList()
+            if (parameters != "") {
+              val returnDescriptor = humanNameToDescriptor(returnType)
+              val parameterDescriptors = parameters
+                .substring(1, parameters.lastIndex) // Remove leading '(' and trailing ')'.
+                .takeUnless(String::isEmpty) // Do not process parameter-less methods.
+                ?.split(',')
+                ?.map(Companion::humanNameToDescriptor)
+                ?: emptyList()
 
-            val lookupSignature = MethodSignature(returnDescriptor, toName, parameterDescriptors)
-            methods!![lookupSignature] = fromName
+              val lookupSignature = MethodSignature(returnDescriptor, toName, parameterDescriptors)
+              methods!![lookupSignature] = fromName
+            } else {
+              fields!![toName] = fromName
+            }
           } else {
-            fields!![toName] = fromName
-          }
-        } else {
-          if (fromDescriptor != null) {
-            typeMappings[toDescriptor!!] = TypeMapping(fromDescriptor!!, fields!!, methods!!)
-          }
+            if (fromDescriptor != null) {
+              typeMappings[toDescriptor!!] = TypeMapping(fromDescriptor!!, fields!!, methods!!)
+            }
 
-          val result = typeLine.matchEntire(line)
-            ?: throw IllegalArgumentException(
-              "Unable to parse line ${index + 1} as type mapping: $line",
-            )
-          val (_, fromType, toType) = result.groupValues
+            val result = typeLine.matchEntire(line)
+              ?: throw IllegalArgumentException(
+                "Unable to parse line ${index + 1} as type mapping: $line",
+              )
+            val (_, fromType, toType) = result.groupValues
 
-          fromDescriptor = humanNameToDescriptor(fromType)
-          toDescriptor = humanNameToDescriptor(toType)
-          fields = mutableMapOf()
-          methods = mutableMapOf()
+            fromDescriptor = humanNameToDescriptor(fromType)
+            toDescriptor = humanNameToDescriptor(toType)
+            fields = mutableMapOf()
+            methods = mutableMapOf()
+          }
         }
       }
       if (fromDescriptor != null) {
