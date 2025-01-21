@@ -81,7 +81,7 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
       var toDescriptor: TypeDescriptor? = null
       var fields: MutableMap<String, String>? = null
       var methods: MutableMap<MethodSignature, String>? = null
-      source().use { bufferedSource -> 
+      source().use { bufferedSource ->
         generateSequence { bufferedSource.readUtf8Line() }.forEachIndexed { index, line ->
           if (line.trimStart().startsWith('#') || line.isBlank()) {
             return@forEachIndexed
