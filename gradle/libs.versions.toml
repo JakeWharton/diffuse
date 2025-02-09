@@ -11,7 +11,7 @@ apkSigner = "com.android.tools.build:apksig:8.8.0"
 bundleTool = "com.android.tools.build:bundletool:1.18.0"
 aapt2Proto = { module = "com.android.tools.build:aapt2-proto", version.ref = "aapt2Proto" }
 protobufJava = { module = "com.google.protobuf:protobuf-java", version.ref = "protobufJava" }
-clikt = "com.github.ajalt.clikt:clikt:5.0.2"
+clikt = "com.github.ajalt.clikt:clikt:5.0.3"
 junit = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
 okio = "com.squareup.okio:okio:3.10.2"
