@@ -33,8 +33,8 @@ jobs:
       - run: ./gradlew publish
         if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/diffuse' }}
         env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
 
       - name: Extract release notes
         id: release_notes
