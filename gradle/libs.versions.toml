@@ -24,6 +24,6 @@ mordant = "com.github.ajalt.mordant:mordant:3.0.2"
 # Note: This is in the more verbose form so that it can be changed by the prerelease-testing repo.
 kotlinPlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version = "2.1.21" }
 dokkaPlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.0.0"
-mavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.31.0"
+mavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.32.0"
 spotlessPlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"
 buildConfigPlugin = "com.github.gmazzo.buildconfig:plugin:5.6.5"
