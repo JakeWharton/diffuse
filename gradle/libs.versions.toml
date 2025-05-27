@@ -15,7 +15,7 @@ clikt = "com.github.ajalt.clikt:clikt:5.0.3"
 junit = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
 # Note: This is in the more verbose form so that it can be changed by the prerelease-testing repo.
-okio = { module = "com.squareup.okio:okio", version = "3.11.0" }
+okio = { module = "com.squareup.okio:okio", version = "3.12.0" }
 byteunits = "com.jakewharton.byteunits:byteunits:0.9.1"
 asm = "org.ow2.asm:asm:9.8"
 diffUtils = "io.github.java-diff-utils:java-diff-utils:4.15"
