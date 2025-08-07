@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 buildscript {
   dependencies {
     classpath libs.kotlinPlugin
@@ -26,21 +28,21 @@ subprojects {
     }
   }
 
-  plugins.withType(JavaBasePlugin).configureEach {
-    java.toolchain {
-      languageVersion.set(JavaLanguageVersion.of(11))
-    }
-  }
-
   plugins.withId('org.jetbrains.kotlin.jvm') {
-    compileKotlin {
+    kotlin {
       compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
         freeCompilerArgs = [
             "-progressive",
-            '-opt-in=kotlin.contracts.ExperimentalContracts'
+            '-opt-in=kotlin.contracts.ExperimentalContracts',
+            '-Xjdk-release=11',
         ]
       }
     }
+  }
+
+  tasks.withType(JavaCompile).configureEach {
+    options.release = 11
   }
 
   configurations.configureEach {
