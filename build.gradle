@@ -19,9 +19,7 @@ subprojects {
   apply plugin: 'com.diffplug.spotless'
   spotless {
     kotlin {
-      ktlint().editorConfigOverride([
-        'ktlint_standard_filename': 'disabled',
-      ])
+      ktlint(libs.ktlint.get().version)
       target('**/*.kt')
     }
   }

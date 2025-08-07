@@ -11,7 +11,8 @@ class Jar private constructor(
   val classes: List<Class>,
   override val declaredMembers: List<Member>,
   override val referencedMembers: List<Member>,
-) : BinaryFormat, CodeBinary {
+) : BinaryFormat,
+  CodeBinary {
   override val members = declaredMembers + referencedMembers
 
   companion object {

@@ -146,8 +146,7 @@ private class InfoCommand(
   outputFs: FileSystem,
   output: PrintStream,
 ) : CliktCommand("info") {
-  override fun help(context: Context) =
-    "Display info about a binary."
+  override fun help(context: Context) = "Display info about a binary."
 
   private val type by binaryType()
   private val outputOptions by OutputOptions(outputFs, output)
@@ -171,8 +170,7 @@ private class DiffCommand(
   outputFs: FileSystem,
   output: PrintStream,
 ) : CliktCommand("diff") {
-  override fun help(context: Context) =
-    "Display changes between two binaries."
+  override fun help(context: Context) = "Display changes between two binaries."
 
   private val inputOptions by object : OptionGroup("Input options") {
     private val type by binaryType()
@@ -209,8 +207,7 @@ private class MembersCommand(
   inputFs: FileSystem,
   private val stdout: PrintStream,
 ) : CliktCommand("members") {
-  override fun help(context: Context) =
-    "List methods or fields of a binary."
+  override fun help(context: Context) = "List methods or fields of a binary."
 
   private val binary by argument("FILE", help = "Input file.")
     .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)

@@ -13,7 +13,8 @@ class Dex private constructor(
   val classes: List<TypeDescriptor>,
   override val declaredMembers: List<Member>,
   override val referencedMembers: List<Member>,
-) : BinaryFormat, CodeBinary {
+) : BinaryFormat,
+  CodeBinary {
   override val members = declaredMembers + referencedMembers
 
   fun withMapping(mapping: ApiMapping): Dex {
