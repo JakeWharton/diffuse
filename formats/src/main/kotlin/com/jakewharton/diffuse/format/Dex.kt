@@ -57,6 +57,7 @@ private fun AndroidDex.getMethod(methodId: MethodId): Method {
   val name = strings()[methodId.nameIndex]
   val methodProtoIds = protoIds()[methodId.protoIndex]
   val parameterTypes = readTypeList(methodProtoIds.parametersOffset).types
+    .asUShortArray()
     .map { TypeDescriptor(typeNames()[it.toInt()]) }
   val returnType = TypeDescriptor(typeNames()[methodProtoIds.returnTypeIndex])
   return Method(declaringType, name, parameterTypes, returnType)
