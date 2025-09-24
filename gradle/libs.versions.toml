@@ -23,7 +23,7 @@ mordant = "com.github.ajalt.mordant:mordant:3.0.2"
 kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.20"
 dokkaPlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.0.0"
 mavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.34.0"
-spotlessPlugin = "com.diffplug.spotless:spotless-plugin-gradle:7.2.1"
+spotlessPlugin = "com.diffplug.spotless:spotless-plugin-gradle:8.0.0"
 buildConfigPlugin = "com.github.gmazzo.buildconfig:plugin:5.6.8"
 
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
