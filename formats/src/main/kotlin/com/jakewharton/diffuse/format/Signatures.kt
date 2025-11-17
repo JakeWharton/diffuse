@@ -44,6 +44,7 @@ data class Signatures(
           closeable = channel
           DataSources.asDataSource(channel)
         }
+
         else -> DataSources.asDataSource(toByteString().asByteBuffer())
       }
       try {

@@ -83,6 +83,7 @@ class AndroidManifest private constructor(
             val oldPrefix = namespacesInScope.put(chunk.uri, newPrefix)
             check(oldPrefix == null || oldPrefix == newPrefix)
           }
+
           is XmlStartElementChunk -> {
             val canonicalNamespace = chunk.namespace.takeIf(String::isNotEmpty)
             val canonicalName = namespacesInScope[canonicalNamespace] + chunk.name
@@ -101,12 +102,19 @@ class AndroidManifest private constructor(
               val typedValue = attribute.typedValue()
               val attributeValue = when (typedValue.type()) {
                 INT_BOOLEAN -> if (typedValue.data() == 0) "false" else "true"
+
                 INT_COLOR_ARGB4 -> String.format("#%04x", typedValue.data())
+
                 INT_COLOR_ARGB8 -> String.format("#%08x", typedValue.data())
+
                 INT_COLOR_RGB4 -> String.format("#%03x", typedValue.data())
+
                 INT_COLOR_RGB8 -> String.format("#%06x", typedValue.data())
+
                 INT_DEC -> typedValue.data().toString()
+
                 INT_HEX -> "0x${typedValue.data()}"
+
                 REFERENCE -> {
                   if (arsc != null) {
                     "@${arsc.entries[typedValue.data()]}"
@@ -114,8 +122,11 @@ class AndroidManifest private constructor(
                     typedValue.data().toString()
                   }
                 }
+
                 NULL -> "null"
+
                 STRING -> attribute.rawValue()
+
                 // TODO handle other formats appropriately...
                 else -> typedValue.data().toString()
               }
@@ -125,6 +136,7 @@ class AndroidManifest private constructor(
             nodeStack.peekFirst()!!.appendChild(element)
             nodeStack.addFirst(element)
           }
+
           is XmlEndElementChunk -> {
             nodeStack.removeFirst()
           }

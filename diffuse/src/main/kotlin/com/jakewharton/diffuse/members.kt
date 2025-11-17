@@ -35,7 +35,9 @@ private fun Method.withoutSyntheticSuffix(): Method {
       val endIndex = if (match.range.last == name.lastIndex) name.length else match.range.last
       name.removeRange(match.range.first, endIndex)
     } ?: name
+
     syntheticName -> name.substring(0, name.lastIndexOf('$'))
+
     else -> name
   }
   return copy(declaringType = newDeclaredType, name = newName)
