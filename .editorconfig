@@ -11,7 +11,3 @@ ij_kotlin_imports_layout = *
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = true
 trim_trailing_whitespace = false
-
-ktlint_code_style = intellij_idea
-ktlint_standard_filename = disabled
-ktlint_standard_function-expression-body = disabled
