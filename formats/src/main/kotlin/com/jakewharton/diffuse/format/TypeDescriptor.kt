@@ -6,11 +6,18 @@ value class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
     return sourceName.compareTo(other.sourceName)
   }
 
-  val sourceName get() = value.toHumanName()
-  val simpleName get() = sourceName.substringAfterLast('.')
+  val sourceName
+    get() = value.toHumanName()
 
-  val arrayArity get() = value.indexOfFirst { it != '[' }
-  val componentDescriptor get() = TypeDescriptor(value.substring(arrayArity))
+  val simpleName
+    get() = sourceName.substringAfterLast('.')
+
+  val arrayArity
+    get() = value.indexOfFirst { it != '[' }
+
+  val componentDescriptor
+    get() = TypeDescriptor(value.substring(arrayArity))
+
   fun asArray(arity: Int = 1) = TypeDescriptor("[".repeat(arity) + value)
 
   override fun toString() = sourceName

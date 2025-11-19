@@ -13,16 +13,15 @@ internal class AabInfoTextReport(private val aab: Aab) : Report {
       appendLine()
       appendLine(
         diffuseTable {
-          header {
-            row("MODULES")
-          }
+            header { row("MODULES") }
 
-          row("base")
+            row("base")
 
-          for (name in aab.featureModules.keys) {
-            row(name)
+            for (name in aab.featureModules.keys) {
+              row(name)
+            }
           }
-        }.toString(),
+          .toString()
       )
 
       appendModule("base", aab.baseModule)
@@ -33,10 +32,7 @@ internal class AabInfoTextReport(private val aab: Aab) : Report {
     }
   }
 
-  private fun Appendable.appendModule(
-    name: String,
-    module: Aab.Module,
-  ) {
+  private fun Appendable.appendModule(name: String, module: Aab.Module) {
     appendLine()
     appendLine()
     appendLine("==============${"=".repeat(name.length)}")
@@ -49,7 +45,7 @@ internal class AabInfoTextReport(private val aab: Aab) : Report {
         "AAB",
         ArchiveFile.Type.AAB_TYPES,
         skipIfEmptyTypes = setOf(ArchiveFile.Type.Native),
-      ),
+      )
     )
     appendLine(module.dexes.toSummaryTable())
   }

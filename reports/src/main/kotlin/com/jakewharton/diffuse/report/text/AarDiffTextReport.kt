@@ -21,7 +21,7 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : Report {
           "AAR",
           Type.AAR_TYPES,
           skipIfEmptyTypes = setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res),
-        ),
+        )
       )
       appendLine()
       appendLine(aarDiff.jars.toSummaryTable("JAR"))

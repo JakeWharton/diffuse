@@ -7,9 +7,9 @@ import okio.source
 
 fun URL.asInput(): Input = ResourceInput(this)
 
-private class ResourceInput(
-  private val url: URL,
-) : Input {
-  override val name get() = url.path.substringAfterLast('/')
+private class ResourceInput(private val url: URL) : Input {
+  override val name
+    get() = url.path.substringAfterLast('/')
+
   override fun source() = url.openStream().source().buffer()
 }

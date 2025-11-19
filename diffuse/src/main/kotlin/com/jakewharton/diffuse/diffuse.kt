@@ -88,42 +88,44 @@ private enum class ReportType {
   None,
 }
 
-private fun ParameterHolder.mappingFile(name: String): OptionWithValues<ApiMapping, ApiMapping, ApiMapping> {
-  return option(
-    name,
-    help = "Mapping file produced by R8 or ProGuard.",
-    metavar = "FILE",
-  )
+private fun ParameterHolder.mappingFile(
+  name: String
+): OptionWithValues<ApiMapping, ApiMapping, ApiMapping> {
+  return option(name, help = "Mapping file produced by R8 or ProGuard.", metavar = "FILE")
     .path(mustExist = true, canBeDir = false, mustBeReadable = true)
     .convert { it.asInput().toApiMapping() }
     .default(ApiMapping.EMPTY)
 }
 
-private class OutputOptions(
-  outputFs: FileSystem,
-  private val output: PrintStream,
-) : OptionGroup(name = "Output options") {
-  private val text by option(
-    help = "File to write text report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
-    metavar = "FILE",
-  )
-    .path(fileSystem = outputFs)
-  private val html by option(
-    help = "File to write HTML report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
-    metavar = "FILE",
-  )
-    .path(fileSystem = outputFs)
-  private val stdout by option(
-    help = "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified.",
-  )
-    .choice("text" to ReportType.Text, "html" to ReportType.Html)
-    .defaultLazy {
-      if (text == null && html == null) {
-        ReportType.Text
-      } else {
-        ReportType.None
+private class OutputOptions(outputFs: FileSystem, private val output: PrintStream) :
+  OptionGroup(name = "Output options") {
+  private val text by
+    option(
+        help =
+          "File to write text report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
+        metavar = "FILE",
+      )
+      .path(fileSystem = outputFs)
+  private val html by
+    option(
+        help =
+          "File to write HTML report. Note: Specifying this option will disable printing the text report to standard out by default. Specify '--stdout text' to restore that behavior.",
+        metavar = "FILE",
+      )
+      .path(fileSystem = outputFs)
+  private val stdout by
+    option(
+        help =
+          "Report to print to standard out. By default, The text report will be printed to standard out ONLY when neither --text nor --html are specified."
+      )
+      .choice("text" to ReportType.Text, "html" to ReportType.Html)
+      .defaultLazy {
+        if (text == null && html == null) {
+          ReportType.Text
+        } else {
+          ReportType.None
+        }
       }
-    }
 
   fun write(reportFactory: Report.Factory) {
     val textReport by lazy(NONE) { reportFactory.toTextReport().toString() }
@@ -132,70 +134,70 @@ private class OutputOptions(
     text?.writeText(textReport)
     html?.writeText(htmlReport)
 
-    val printReport = when (stdout) {
-      ReportType.Text -> textReport
-      ReportType.Html -> htmlReport
-      ReportType.None -> null
-    }
+    val printReport =
+      when (stdout) {
+        ReportType.Text -> textReport
+        ReportType.Html -> htmlReport
+        ReportType.None -> null
+      }
     printReport?.let(output::println)
   }
 }
 
-private class InfoCommand(
-  inputFs: FileSystem,
-  outputFs: FileSystem,
-  output: PrintStream,
-) : CliktCommand("info") {
+private class InfoCommand(inputFs: FileSystem, outputFs: FileSystem, output: PrintStream) :
+  CliktCommand("info") {
   override fun help(context: Context) = "Display info about a binary."
 
   private val type by binaryType()
   private val outputOptions by OutputOptions(outputFs, output)
-  private val file by argument("FILE", help = "Input file.")
-    .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
+  private val file by
+    argument("FILE", help = "Input file.")
+      .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
   override fun run() {
-    val info = when (type) {
-      BinaryType.Apk -> ApkInfo(file.asInput().toApk())
-      BinaryType.Aar -> AarInfo(file.asInput().toAar())
-      BinaryType.Aab -> AabInfo(file.asInput().toAab())
-      BinaryType.Jar -> JarInfo(file.asInput().toJar())
-      BinaryType.Dex -> DexInfo(file.asInput().toDex())
-    }
+    val info =
+      when (type) {
+        BinaryType.Apk -> ApkInfo(file.asInput().toApk())
+        BinaryType.Aar -> AarInfo(file.asInput().toAar())
+        BinaryType.Aab -> AabInfo(file.asInput().toAab())
+        BinaryType.Jar -> JarInfo(file.asInput().toJar())
+        BinaryType.Dex -> DexInfo(file.asInput().toDex())
+      }
     outputOptions.write(info)
   }
 }
 
-private class DiffCommand(
-  inputFs: FileSystem,
-  outputFs: FileSystem,
-  output: PrintStream,
-) : CliktCommand("diff") {
+private class DiffCommand(inputFs: FileSystem, outputFs: FileSystem, output: PrintStream) :
+  CliktCommand("diff") {
   override fun help(context: Context) = "Display changes between two binaries."
 
-  private val inputOptions by object : OptionGroup("Input options") {
-    private val type by binaryType()
+  private val inputOptions by
+    object : OptionGroup("Input options") {
+      private val type by binaryType()
 
-    private val oldMapping by mappingFile("--old-mapping")
-    private val newMapping by mappingFile("--new-mapping")
+      private val oldMapping by mappingFile("--old-mapping")
+      private val newMapping by mappingFile("--new-mapping")
 
-    fun parse(old: Input, new: Input): BinaryDiff {
-      return when (type) {
-        BinaryType.Apk -> BinaryDiff.ofApk(old.toApk(), oldMapping, new.toApk(), newMapping)
-        BinaryType.Aab -> BinaryDiff.ofAab(old.toAab(), new.toAab())
-        BinaryType.Aar -> BinaryDiff.ofAar(old.toAar(), oldMapping, new.toAar(), newMapping)
-        BinaryType.Jar -> BinaryDiff.ofJar(old.toJar(), oldMapping, new.toJar(), newMapping)
-        BinaryType.Dex -> BinaryDiff.ofDex(old.toDex(), oldMapping, new.toDex(), newMapping)
+      fun parse(old: Input, new: Input): BinaryDiff {
+        return when (type) {
+          BinaryType.Apk -> BinaryDiff.ofApk(old.toApk(), oldMapping, new.toApk(), newMapping)
+          BinaryType.Aab -> BinaryDiff.ofAab(old.toAab(), new.toAab())
+          BinaryType.Aar -> BinaryDiff.ofAar(old.toAar(), oldMapping, new.toAar(), newMapping)
+          BinaryType.Jar -> BinaryDiff.ofJar(old.toJar(), oldMapping, new.toJar(), newMapping)
+          BinaryType.Dex -> BinaryDiff.ofDex(old.toDex(), oldMapping, new.toDex(), newMapping)
+        }
       }
     }
-  }
 
   private val outputOptions by OutputOptions(outputFs, output)
 
-  private val old by argument("OLD", help = "Old input file.")
-    .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
+  private val old by
+    argument("OLD", help = "Old input file.")
+      .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
-  private val new by argument("NEW", help = "New input file.")
-    .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
+  private val new by
+    argument("NEW", help = "New input file.")
+      .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
   override fun run() {
     val diff = inputOptions.parse(old.asInput(), new.asInput())
@@ -203,28 +205,37 @@ private class DiffCommand(
   }
 }
 
-private class MembersCommand(
-  inputFs: FileSystem,
-  private val stdout: PrintStream,
-) : CliktCommand("members") {
+private class MembersCommand(inputFs: FileSystem, private val stdout: PrintStream) :
+  CliktCommand("members") {
   override fun help(context: Context) = "List methods or fields of a binary."
 
-  private val binary by argument("FILE", help = "Input file.")
-    .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
+  private val binary by
+    argument("FILE", help = "Input file.")
+      .path(mustExist = true, canBeDir = false, mustBeReadable = true, fileSystem = inputFs)
 
-  private val hideSyntheticNumbers by option(
-    "--hide-synthetic-numbers",
-    help = "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.",
-  )
-    .flag()
+  private val hideSyntheticNumbers by
+    option(
+        "--hide-synthetic-numbers",
+        help =
+          "Remove synthetic numbers from type and method names. This is useful to prevent noise when diffing output.",
+      )
+      .flag()
 
-  private val binaryType by option(help = "File type. Default is 'apk'.")
-    .switch("--apk" to BinaryType.Apk, "--aar" to BinaryType.Aar, "--aab" to BinaryType.Aab, "--jar" to BinaryType.Jar, "--dex" to BinaryType.Dex)
-    .default(BinaryType.Apk)
+  private val binaryType by
+    option(help = "File type. Default is 'apk'.")
+      .switch(
+        "--apk" to BinaryType.Apk,
+        "--aar" to BinaryType.Aar,
+        "--aab" to BinaryType.Aab,
+        "--jar" to BinaryType.Jar,
+        "--dex" to BinaryType.Dex,
+      )
+      .default(BinaryType.Apk)
 
-  private val type by option(help = "Item types to display. Default is both (methods and fields).")
-    .switch("--methods" to Type.Methods, "--fields" to Type.Fields)
-    .default(Type.All)
+  private val type by
+    option(help = "Item types to display. Default is both (methods and fields).")
+      .switch("--methods" to Type.Methods, "--fields" to Type.Fields)
+      .default(Type.All)
 
   enum class Type {
     All,
@@ -232,9 +243,10 @@ private class MembersCommand(
     Fields,
   }
 
-  private val ownership by option(help = "Item ownerships to display. Default is both (declared and referenced).")
-    .switch("--declared" to Ownership.Declared, "--referenced" to Ownership.Referenced)
-    .default(Ownership.All)
+  private val ownership by
+    option(help = "Item ownerships to display. Default is both (declared and referenced).")
+      .switch("--declared" to Ownership.Declared, "--referenced" to Ownership.Referenced)
+      .default(Ownership.All)
 
   enum class Ownership {
     All,
@@ -245,33 +257,37 @@ private class MembersCommand(
   override fun run() {
     val input = binary.asInput()
 
-    val memberSelector = when (ownership) {
-      Ownership.All -> CodeBinary::members
-      Ownership.Declared -> CodeBinary::declaredMembers
-      Ownership.Referenced -> CodeBinary::referencedMembers
-    }
+    val memberSelector =
+      when (ownership) {
+        Ownership.All -> CodeBinary::members
+        Ownership.Declared -> CodeBinary::declaredMembers
+        Ownership.Referenced -> CodeBinary::referencedMembers
+      }
 
-    val binaryMembers = when (binaryType) {
-      BinaryType.Apk -> input.toApk().dexes
-      BinaryType.Aab -> input.toAab().modules.flatMap(Module::dexes)
-      BinaryType.Aar -> input.toAar().jars
-      BinaryType.Jar -> listOf(input.toJar())
-      BinaryType.Dex -> listOf(input.toDex())
-    }
+    val binaryMembers =
+      when (binaryType) {
+        BinaryType.Apk -> input.toApk().dexes
+        BinaryType.Aab -> input.toAab().modules.flatMap(Module::dexes)
+        BinaryType.Aar -> input.toAar().jars
+        BinaryType.Jar -> listOf(input.toJar())
+        BinaryType.Dex -> listOf(input.toDex())
+      }
 
     val members = binaryMembers.map(memberSelector).flatten().toSet()
 
-    val items = when (type) {
-      Type.All -> members
-      Type.Methods -> members.filterIsInstance<Method>()
-      Type.Fields -> members.filterIsInstance<Field>()
-    }
+    val items =
+      when (type) {
+        Type.All -> members
+        Type.Methods -> members.filterIsInstance<Method>()
+        Type.Fields -> members.filterIsInstance<Field>()
+      }
 
-    val displayList = if (hideSyntheticNumbers) {
-      items.map { it.withoutSyntheticSuffix() }
-    } else {
-      items
-    }
+    val displayList =
+      if (hideSyntheticNumbers) {
+        items.map { it.withoutSyntheticSuffix() }
+      } else {
+        items
+      }
     // Re-sort because rendering may subtly change ordering.
     displayList.map(Member::toString).sorted().forEach(stdout::println)
   }

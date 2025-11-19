@@ -12,38 +12,44 @@ class DexFieldTest {
   private val fooDescriptor = TypeDescriptor("Lcom/example/Foo;")
   private val barDescriptor = TypeDescriptor("Lcom/example/Bar;")
 
-  @Test fun string() {
+  @Test
+  fun string() {
     val field = Field(fooDescriptor, "bar", barDescriptor)
     assertThat(field.toString()).isEqualTo("com.example.Foo bar: Bar")
   }
 
-  @Test fun renderKotlinLambdaClassName() {
+  @Test
+  fun renderKotlinLambdaClassName() {
     val field = Field(TypeDescriptor("Lcom/example/Foo$\$Lambda$26;"), "bar", barDescriptor)
     assertThat(field.toString()).isEqualTo("com.example.Foo$\$Lambda$26 bar: Bar")
   }
 
-  @Test fun compareToSame() {
+  @Test
+  fun compareToSame() {
     val one = Field(fooDescriptor, "bar", barDescriptor)
     val two = Field(fooDescriptor, "bar", barDescriptor)
     assertThat(one < two).isFalse()
     assertThat(two < one).isFalse()
   }
 
-  @Test fun compareToDifferentDeclaringType() {
+  @Test
+  fun compareToDifferentDeclaringType() {
     val one = Field(barDescriptor, "bar", barDescriptor)
     val two = Field(fooDescriptor, "bar", barDescriptor)
     assertThat(one < two).isTrue()
     assertThat(two < one).isFalse()
   }
 
-  @Test fun compareToDifferentName() {
+  @Test
+  fun compareToDifferentName() {
     val one = Field(fooDescriptor, "bar", barDescriptor)
     val two = Field(fooDescriptor, "foo", barDescriptor)
     assertThat(one < two).isTrue()
     assertThat(two < one).isFalse()
   }
 
-  @Test fun compareToDifferentType() {
+  @Test
+  fun compareToDifferentType() {
     val one = Field(fooDescriptor, "bar", barDescriptor)
     val two = Field(fooDescriptor, "bar", fooDescriptor)
     assertThat(one < two).isTrue()

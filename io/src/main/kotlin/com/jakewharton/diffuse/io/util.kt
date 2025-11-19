@@ -11,10 +11,13 @@ import okio.Buffer
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
 
-internal fun InputStream.asZip(charset: Charset = Charsets.UTF_8): ZipInputStream = ZipInputStream(this, charset)
+internal fun InputStream.asZip(charset: Charset = Charsets.UTF_8): ZipInputStream =
+  ZipInputStream(this, charset)
+
 internal fun InputStream.readByteString(): ByteString = readBytes().toByteString()
 
-internal fun Path.asZipFileSystem(loader: ClassLoader? = null): FileSystem = FileSystems.newFileSystem(this, loader)
+internal fun Path.asZipFileSystem(loader: ClassLoader? = null): FileSystem =
+  FileSystems.newFileSystem(this, loader)
 
 internal fun ByteString.asInputStream(): InputStream = Buffer().write(this).inputStream()
 

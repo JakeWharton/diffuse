@@ -14,16 +14,15 @@ internal class ApkDiff(
 ) : BinaryDiff {
   val archive = ArchiveFilesDiff(oldApk.files, newApk.files)
   val signatures = SignaturesDiff(oldApk.signatures, newApk.signatures)
-  val dex = DexDiff(
-    oldApk.dexes.map { it.withMapping(oldMapping) },
-    newApk.dexes.map { it.withMapping(newMapping) },
-  )
+  val dex =
+    DexDiff(
+      oldApk.dexes.map { it.withMapping(oldMapping) },
+      newApk.dexes.map { it.withMapping(newMapping) },
+    )
   val arsc = ArscDiff(oldApk.arsc, newApk.arsc)
   val manifest = ManifestDiff(oldApk.manifest, newApk.manifest)
 
-  val lintMessages = listOfNotNull(
-    archive.resourcesArscCompression(),
-  )
+  val lintMessages = listOfNotNull(archive.resourcesArscCompression())
 
   override fun toTextReport(): Report = ApkDiffTextReport(this)
 }

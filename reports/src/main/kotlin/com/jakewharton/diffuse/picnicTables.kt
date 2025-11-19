@@ -13,27 +13,21 @@ internal fun diffuseTable(content: TableDsl.() -> Unit): Table = table {
     borderLeft = true
     borderRight = true
   }
-  style {
-    borderStyle = BorderStyle.Hidden
-  }
+  style { borderStyle = BorderStyle.Hidden }
   DiffuseTableDsl(this).content()
 }
 
 private class DiffuseTableDsl(private val delegate: TableDsl) : TableDsl by delegate {
   override fun header(content: TableSectionDsl.() -> Unit) {
     delegate.header {
-      cellStyle {
-        borderBottom = true
-      }
+      cellStyle { borderBottom = true }
       content()
     }
   }
 
   override fun footer(content: TableSectionDsl.() -> Unit) {
     delegate.footer {
-      cellStyle {
-        borderTop = true
-      }
+      cellStyle { borderTop = true }
       content()
     }
   }

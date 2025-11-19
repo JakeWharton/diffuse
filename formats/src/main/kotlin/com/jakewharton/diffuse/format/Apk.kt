@@ -8,7 +8,8 @@ import com.jakewharton.diffuse.format.Dex.Companion.toDex
 import com.jakewharton.diffuse.format.Signatures.Companion.toSignatures
 import com.jakewharton.diffuse.io.Input
 
-class Apk private constructor(
+class Apk
+private constructor(
   override val filename: String?,
   val files: ArchiveFiles,
   val dexes: List<Dex>,
@@ -27,9 +28,8 @@ class Apk private constructor(
         val files = zip.toArchiveFiles { it.toApkFileType() }
         val arsc = zip[Arsc.NAME].asInput().toArsc()
         val manifest = zip[AndroidManifest.NAME].asInput().toBinaryResourceFile().toManifest(arsc)
-        val dexes = zip.entries
-          .filter { it.path.matches(classesDexRegex) }
-          .map { it.asInput().toDex() }
+        val dexes =
+          zip.entries.filter { it.path.matches(classesDexRegex) }.map { it.asInput().toDex() }
         return Apk(name, files, dexes, arsc, manifest, signatures)
       }
     }

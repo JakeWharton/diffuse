@@ -8,19 +8,26 @@ import com.jakewharton.diffuse.testing.decodeHexWithWhitespace
 import org.junit.Test
 
 class ArscTest {
-  @Test fun agp7EmptyResourceTable() {
-    val arsc = """
+  @Test
+  fun agp7EmptyResourceTable() {
+    val arsc =
+      """
       0200 0c00 2800 0000 0000 0000 0100 1c00
       1c00 0000 0000 0000 0000 0000 0001 0000
       1c00 0000 0000 0000
-    """.decodeHexWithWhitespace().asInput("resources.arsc").toArsc()
+    """
+        .decodeHexWithWhitespace()
+        .asInput("resources.arsc")
+        .toArsc()
 
     assertThat(arsc.configs).isEmpty()
     assertThat(arsc.entries).isEmpty()
   }
 
-  @Test fun agp4_2_2EmptyResourceTable() {
-    val arsc = """
+  @Test
+  fun agp4_2_2EmptyResourceTable() {
+    val arsc =
+      """
       0200 0c00 8001 0000 0100 0000 0100 1c00
       1c00 0000 0000 0000 0000 0000 0001 0000
       1c00 0000 0000 0000 0002 2001 5801 0000
@@ -45,7 +52,10 @@ class ArscTest {
       0000 0000 0000 0000 0000 0000 1c00 0000
       0000 0000 0100 1c00 1c00 0000 0000 0000
       0000 0000 0001 0000 1c00 0000 0000 0000                   
-    """.decodeHexWithWhitespace().asInput("resources.arsc").toArsc()
+    """
+        .decodeHexWithWhitespace()
+        .asInput("resources.arsc")
+        .toArsc()
 
     assertThat(arsc.configs).isEmpty()
     assertThat(arsc.entries).isEmpty()

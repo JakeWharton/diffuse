@@ -9,17 +9,21 @@ import org.objectweb.asm.Handle
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
-class Class private constructor(
+class Class
+private constructor(
   val descriptor: TypeDescriptor,
   val declaredMembers: List<Member>,
   val referencedMembers: List<Member>,
 ) {
   override fun toString() = descriptor.toString()
+
   override fun hashCode() = Objects.hash(descriptor, declaredMembers, referencedMembers)
-  override fun equals(other: Any?) = other is Class &&
-    descriptor == other.descriptor &&
-    declaredMembers == other.declaredMembers &&
-    referencedMembers == other.referencedMembers
+
+  override fun equals(other: Any?) =
+    other is Class &&
+      descriptor == other.descriptor &&
+      declaredMembers == other.declaredMembers &&
+      referencedMembers == other.referencedMembers
 
   companion object {
     @JvmStatic
@@ -37,10 +41,8 @@ class Class private constructor(
   }
 }
 
-private class DeclaredMembersVisitor(
-  val type: TypeDescriptor,
-  val methodVisitor: MethodVisitor,
-) : ClassVisitor(Opcodes.ASM9) {
+private class DeclaredMembersVisitor(val type: TypeDescriptor, val methodVisitor: MethodVisitor) :
+  ClassVisitor(Opcodes.ASM9) {
   val members = mutableListOf<Member>()
 
   override fun visitMethod(
@@ -110,32 +112,24 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM9) {
     }
   }
 
-  override fun visitFieldInsn(
-    opcode: Int,
-    owner: String,
-    name: String,
-    descriptor: String,
-  ) {
+  override fun visitFieldInsn(opcode: Int, owner: String, name: String, descriptor: String) {
     val ownerType = parseOwner(owner)
     val referencedField = Field(ownerType, name, TypeDescriptor(descriptor))
     members += referencedField
   }
 
   private fun parseOwner(owner: String): TypeDescriptor {
-    val ownerDescriptor = if (owner.startsWith('[')) {
-      owner
-    } else {
-      "L$owner;"
-    }
+    val ownerDescriptor =
+      if (owner.startsWith('[')) {
+        owner
+      } else {
+        "L$owner;"
+      }
     return TypeDescriptor(ownerDescriptor)
   }
 }
 
-private fun parseMethod(
-  owner: TypeDescriptor,
-  name: String,
-  descriptor: String,
-): Method {
+private fun parseMethod(owner: TypeDescriptor, name: String, descriptor: String): Method {
   val parameterTypes = mutableListOf<TypeDescriptor>()
   var i = 1
   while (true) {
@@ -146,11 +140,12 @@ private fun parseMethod(
     while (descriptor[typeIndex] == '[') {
       typeIndex++
     }
-    val end = if (descriptor[typeIndex] == 'L') {
-      descriptor.indexOf(';', startIndex = typeIndex)
-    } else {
-      typeIndex
-    }
+    val end =
+      if (descriptor[typeIndex] == 'L') {
+        descriptor.indexOf(';', startIndex = typeIndex)
+      } else {
+        typeIndex
+      }
     val parameterDescriptor = descriptor.substring(i, end + 1)
     parameterTypes += TypeDescriptor(parameterDescriptor)
     i += parameterDescriptor.length
@@ -159,10 +154,11 @@ private fun parseMethod(
   return Method(owner, name, parameterTypes, returnType)
 }
 
-private val lambdaMetaFactory = Handle(
-  Opcodes.H_INVOKESTATIC,
-  "java/lang/invoke/LambdaMetafactory",
-  "metafactory",
-  "(Ljava/lang/invoke/MethodHandles\$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
-  false,
-)
+private val lambdaMetaFactory =
+  Handle(
+    Opcodes.H_INVOKESTATIC,
+    "java/lang/invoke/LambdaMetafactory",
+    "metafactory",
+    "(Ljava/lang/invoke/MethodHandles\$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
+    false,
+  )

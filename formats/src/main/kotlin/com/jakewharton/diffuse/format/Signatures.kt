@@ -34,19 +34,18 @@ data class Signatures(
     }
 
     private inline fun Input.useDataSource(body: (DataSource) -> Unit) {
-      contract {
-        callsInPlace(body, InvocationKind.EXACTLY_ONCE)
-      }
+      contract { callsInPlace(body, InvocationKind.EXACTLY_ONCE) }
       var closeable: Closeable? = null
-      val source = when (this) {
-        is PathInput -> {
-          val channel = FileChannel.open(path)
-          closeable = channel
-          DataSources.asDataSource(channel)
-        }
+      val source =
+        when (this) {
+          is PathInput -> {
+            val channel = FileChannel.open(path)
+            closeable = channel
+            DataSources.asDataSource(channel)
+          }
 
-        else -> DataSources.asDataSource(toByteString().asByteBuffer())
-      }
+          else -> DataSources.asDataSource(toByteString().asByteBuffer())
+        }
       try {
         body(source)
       } finally {

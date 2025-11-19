@@ -1,9 +1,6 @@
 package com.jakewharton.diffuse.diff.lint
 
-internal data class Notice(
-  val message: String,
-  val type: Type,
-) : Comparable<Notice> {
+internal data class Notice(val message: String, val type: Type) : Comparable<Notice> {
   override fun compareTo(other: Notice) = comparator.compare(this, other)
 
   enum class Type {

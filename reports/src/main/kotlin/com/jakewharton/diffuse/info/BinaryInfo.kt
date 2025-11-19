@@ -5,9 +5,6 @@ import com.jakewharton.diffuse.report.Report
 
 interface BinaryInfo : Report.Factory {
   companion object {
-    @JvmStatic
-    fun ofApk(
-      apk: Apk,
-    ): BinaryInfo = ApkInfo(apk)
+    @JvmStatic fun ofApk(apk: Apk): BinaryInfo = ApkInfo(apk)
   }
 }
