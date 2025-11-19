@@ -21,7 +21,7 @@ subprojects {
   apply plugin: 'com.diffplug.spotless'
   spotless {
     kotlin {
-      ktlint(libs.ktlint.get().version)
+      ktfmt(libs.ktfmt.get().version).googleStyle()
       target('**/*.kt')
     }
   }
