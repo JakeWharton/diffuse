@@ -25,7 +25,7 @@ private constructor(
         val classes =
           zip.entries.filter { it.path.endsWith(".class") }.map { it.asInput().toClass() }
 
-        val declaredMembers = classes.flatMap { it.declaredMembers }
+        val declaredMembers = classes.flatMapTo(LinkedHashSet()) { it.declaredMembers }
         val referencedMembers = classes.flatMapTo(LinkedHashSet()) { it.referencedMembers }
         // Declared methods are likely to reference other declared members. Ensure all are removed.
         referencedMembers -= declaredMembers
