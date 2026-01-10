@@ -1,7 +1,7 @@
 [versions]
 # Keep this values in sync with bundletool"s dependencies.
 aapt2Proto = "8.13.2-14304508"
-protobufJava = "4.33.2"
+protobufJava = "4.33.3"
 guava = "30.1-jre"
 
 [libraries]
