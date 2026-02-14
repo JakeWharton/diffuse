@@ -3,17 +3,17 @@ package com.jakewharton.diffuse.format
 import com.android.aapt.Resources.XmlNode
 import com.android.tools.build.bundletool.model.utils.xmlproto.XmlProtoNode
 import com.android.tools.build.bundletool.xml.XmlProtoToXmlConverter
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceFile
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_BOOLEAN
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COLOR_ARGB4
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COLOR_ARGB8
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COLOR_RGB4
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_COLOR_RGB8
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_DEC
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.INT_HEX
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.NULL
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.REFERENCE
-import com.google.devrel.gmscore.tools.apk.arsc.BinaryResourceValue.Type.STRING
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceFile
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.INT_BOOLEAN
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.INT_COLOR_ARGB4
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.INT_COLOR_ARGB8
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.INT_COLOR_RGB4
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.INT_COLOR_RGB8
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.INT_DEC
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.INT_HEX
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.NULL
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.REFERENCE
+import com.google.devrel.gmscore.tools.apk.arsc.ResourceValue.Type.STRING
 import com.google.devrel.gmscore.tools.apk.arsc.XmlChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlEndElementChunk
 import com.google.devrel.gmscore.tools.apk.arsc.XmlNamespaceStartChunk
@@ -44,7 +44,7 @@ private constructor(
     private val documentBuilderFactory =
       DocumentBuilderFactory.newInstance()!!.apply { isNamespaceAware = true }
 
-    internal fun BinaryResourceFile.toManifest(arsc: Arsc? = null): AndroidManifest {
+    internal fun ResourceFile.toManifest(arsc: Arsc? = null): AndroidManifest {
       return toDocument(arsc).toManifest()
     }
 
@@ -60,7 +60,7 @@ private constructor(
         .toManifest()
     }
 
-    private fun BinaryResourceFile.toDocument(arsc: Arsc?): Document {
+    private fun ResourceFile.toDocument(arsc: Arsc?): Document {
       val rootChunk =
         requireNotNull(chunks.singleOrNull() as XmlChunk?) {
           "Unable to parse manifest from binary XML"
