@@ -3,7 +3,7 @@ package com.jakewharton.diffuse.format
 @JvmInline
 value class TypeDescriptor(val value: String) : Comparable<TypeDescriptor> {
   override fun compareTo(other: TypeDescriptor): Int {
-    return sourceName.compareTo(other.sourceName)
+    return value.compareTo(other.value)
   }
 
   val sourceName
