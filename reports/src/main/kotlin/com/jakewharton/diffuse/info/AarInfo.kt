@@ -5,7 +5,7 @@ import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.AarInfoTextReport
 
 class AarInfo(private val aar: Aar) : BinaryInfo {
-  override fun toTextReport(): Report {
+  override fun toTextReport(summaryOnly: Boolean): Report {
     return AarInfoTextReport(aar)
   }
 }

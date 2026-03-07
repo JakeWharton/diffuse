@@ -9,7 +9,8 @@ import com.jakewharton.diffuse.format.ArchiveFile.Type
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.toSummaryString
 
-internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : Report {
+internal class ApkDiffTextReport(private val apkDiff: ApkDiff, private val summaryOnly: Boolean) :
+  Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
@@ -58,6 +59,8 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff) : Report {
       appendLine(apkDiff.dex.toSummaryTable())
       appendLine()
       appendLine(apkDiff.arsc.toSummaryTable())
+
+      if (summaryOnly) return@apply
       if (apkDiff.archive.changed || apkDiff.signatures.changed) {
         appendLine()
         appendLine("=================")

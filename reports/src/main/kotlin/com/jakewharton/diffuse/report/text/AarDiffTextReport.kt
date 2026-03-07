@@ -6,7 +6,8 @@ import com.jakewharton.diffuse.diff.toSummaryTable
 import com.jakewharton.diffuse.format.ArchiveFile.Type
 import com.jakewharton.diffuse.report.Report
 
-internal class AarDiffTextReport(private val aarDiff: AarDiff) : Report {
+internal class AarDiffTextReport(private val aarDiff: AarDiff, private val summaryOnly: Boolean) :
+  Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
@@ -25,6 +26,8 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff) : Report {
       )
       appendLine()
       appendLine(aarDiff.jars.toSummaryTable("JAR"))
+
+      if (summaryOnly) return@apply
       if (aarDiff.archive.changed) {
         appendLine()
         appendLine("=================")

@@ -4,9 +4,9 @@ interface Report {
   fun write(appendable: Appendable)
 
   interface Factory {
-    fun toTextReport(): Report
+    fun toTextReport(summaryOnly: Boolean): Report
 
-    fun toHtmlReport(): Report {
+    fun toHtmlReport(summaryOnly: Boolean): Report {
       TODO("Implement HTML reporting")
     }
   }

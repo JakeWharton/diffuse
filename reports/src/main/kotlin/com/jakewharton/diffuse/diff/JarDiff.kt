@@ -16,5 +16,5 @@ internal class JarDiff(
 
   val changed = jars.changed || archive.changed
 
-  override fun toTextReport(): Report = JarDiffTextReport(this)
+  override fun toTextReport(summaryOnly: Boolean): Report = JarDiffTextReport(this, summaryOnly)
 }

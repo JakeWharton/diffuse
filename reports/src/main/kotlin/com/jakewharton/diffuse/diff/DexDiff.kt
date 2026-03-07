@@ -32,7 +32,7 @@ internal class DexDiff(val oldDexes: List<Dex>, val newDexes: List<Dex>) : Binar
 
   val changed = strings.changed || types.changed || methods.changed || fields.changed
 
-  override fun toTextReport(): Report = DexDiffTextReport(this)
+  override fun toTextReport(summaryOnly: Boolean): Report = DexDiffTextReport(this, summaryOnly)
 }
 
 internal fun DexDiff.toSummaryTable() =

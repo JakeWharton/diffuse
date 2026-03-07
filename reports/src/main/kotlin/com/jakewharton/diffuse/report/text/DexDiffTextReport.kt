@@ -4,7 +4,8 @@ import com.jakewharton.diffuse.diff.DexDiff
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.report.Report
 
-internal class DexDiffTextReport(private val dexDiff: DexDiff) : Report {
+internal class DexDiffTextReport(private val dexDiff: DexDiff, private val summaryOnly: Boolean) :
+  Report {
   private val oldDex =
     requireNotNull(dexDiff.oldDexes.singleOrNull()) {
       "Dex diff report only supports a single old dex. Found: ${dexDiff.oldDexes}"
@@ -21,6 +22,8 @@ internal class DexDiffTextReport(private val dexDiff: DexDiff) : Report {
       append("NEW: ")
       appendLine(newDex.filename)
       appendLine()
+
+      if (summaryOnly) return@apply
       appendLine(dexDiff.toDetailReport())
     }
   }

@@ -24,5 +24,5 @@ internal class ApkDiff(
 
   val lintMessages = listOfNotNull(archive.resourcesArscCompression())
 
-  override fun toTextReport(): Report = ApkDiffTextReport(this)
+  override fun toTextReport(summaryOnly: Boolean): Report = ApkDiffTextReport(this, summaryOnly)
 }

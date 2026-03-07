@@ -15,5 +15,5 @@ internal class AarDiff(
   val jars = JarsDiff(oldAar.jars, oldMapping, newAar.jars, newMapping)
   val manifest = ManifestDiff(oldAar.manifest, newAar.manifest)
 
-  override fun toTextReport(): Report = AarDiffTextReport(this)
+  override fun toTextReport(summaryOnly: Boolean): Report = AarDiffTextReport(this, summaryOnly)
 }
