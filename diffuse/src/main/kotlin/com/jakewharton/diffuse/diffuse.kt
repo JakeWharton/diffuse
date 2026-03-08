@@ -127,9 +127,16 @@ private class OutputOptions(outputFs: FileSystem, private val output: PrintStrea
         }
       }
 
+  private val summaryOnly by
+    option(
+        "--summary-only",
+        help = "Skip generating detailed reports, outputting only the summary.",
+      )
+      .flag()
+
   fun write(reportFactory: Report.Factory) {
-    val textReport by lazy(NONE) { reportFactory.toTextReport().toString() }
-    val htmlReport by lazy(NONE) { reportFactory.toHtmlReport().toString() }
+    val textReport by lazy(NONE) { reportFactory.toTextReport(summaryOnly).toString() }
+    val htmlReport by lazy(NONE) { reportFactory.toHtmlReport(summaryOnly).toString() }
 
     text?.writeText(textReport)
     html?.writeText(htmlReport)

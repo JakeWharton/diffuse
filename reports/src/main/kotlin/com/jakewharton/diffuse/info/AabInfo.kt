@@ -6,7 +6,7 @@ import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.AabInfoTextReport
 
 class AabInfo(private val aab: Aab) : BinaryDiff {
-  override fun toTextReport(): Report {
+  override fun toTextReport(summaryOnly: Boolean): Report {
     return AabInfoTextReport(aab)
   }
 }

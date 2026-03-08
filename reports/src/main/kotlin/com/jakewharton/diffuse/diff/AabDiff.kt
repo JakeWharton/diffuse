@@ -29,5 +29,5 @@ internal class AabDiff(val oldAab: Aab, val newAab: Aab) : BinaryDiff {
         ModuleDiff(oldModule, newAab.featureModules.getValue(name))
       }
 
-  override fun toTextReport(): Report = AabDiffTextReport(this)
+  override fun toTextReport(summaryOnly: Boolean): Report = AabDiffTextReport(this, summaryOnly)
 }

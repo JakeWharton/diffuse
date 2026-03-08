@@ -6,7 +6,8 @@ import com.jakewharton.diffuse.diff.toSummaryTable
 import com.jakewharton.diffuse.format.ArchiveFile.Type
 import com.jakewharton.diffuse.report.Report
 
-internal class JarDiffTextReport(private val jarDiff: JarDiff) : Report {
+internal class JarDiffTextReport(private val jarDiff: JarDiff, private val summaryOnly: Boolean) :
+  Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
@@ -19,6 +20,8 @@ internal class JarDiffTextReport(private val jarDiff: JarDiff) : Report {
       appendLine(jarDiff.archive.toSummaryTable("JAR", Type.JAR_TYPES))
       appendLine()
       appendLine(jarDiff.jars.toSummaryTable("CLASSES"))
+
+      if (summaryOnly) return@apply
       if (jarDiff.archive.changed) {
         appendLine()
         appendLine("=================")

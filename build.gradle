@@ -28,6 +28,11 @@ subprojects {
 
   plugins.withId('org.jetbrains.kotlin.jvm') {
     kotlin {
+      plugins.withId('com.vanniktech.maven.publish') {
+        abiValidation {
+          enabled = true
+        }
+      }
       compilerOptions {
         jvmTarget = JvmTarget.JVM_11
         freeCompilerArgs = [

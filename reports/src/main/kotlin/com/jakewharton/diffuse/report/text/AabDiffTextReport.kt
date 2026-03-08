@@ -8,7 +8,8 @@ import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleCenter
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 
-internal class AabDiffTextReport(private val aabDiff: AabDiff) : Report {
+internal class AabDiffTextReport(private val aabDiff: AabDiff, private val summaryOnly: Boolean) :
+  Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
@@ -48,6 +49,7 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff) : Report {
           .toString()
       )
 
+      if (summaryOnly) return@apply
       appendLine("==================")
       appendLine("====   base   ====")
       appendLine("==================")

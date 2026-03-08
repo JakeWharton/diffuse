@@ -5,7 +5,7 @@ import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.ApkInfoTextReport
 
 class ApkInfo(private val apk: Apk) : BinaryInfo {
-  override fun toTextReport(): Report {
+  override fun toTextReport(summaryOnly: Boolean): Report {
     return ApkInfoTextReport(apk)
   }
 }

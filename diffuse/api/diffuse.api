@@ -1,0 +1,4 @@
+public final class com/jakewharton/diffuse/Diffuse {
+	public static final fun main ([Ljava/lang/String;)V
+}
+
