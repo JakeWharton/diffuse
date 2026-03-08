@@ -12,16 +12,19 @@ import org.objectweb.asm.Opcodes
 class Class
 private constructor(
   val descriptor: TypeDescriptor,
+  val bytecodeVersion: Int,
   val declaredMembers: List<Member>,
   val referencedMembers: List<Member>,
 ) {
   override fun toString() = descriptor.toString()
 
-  override fun hashCode() = Objects.hash(descriptor, declaredMembers, referencedMembers)
+  override fun hashCode() =
+    Objects.hash(descriptor, bytecodeVersion, declaredMembers, referencedMembers)
 
   override fun equals(other: Any?) =
     other is Class &&
       descriptor == other.descriptor &&
+      bytecodeVersion == other.bytecodeVersion &&
       declaredMembers == other.declaredMembers &&
       referencedMembers == other.referencedMembers
 
@@ -36,14 +39,32 @@ private constructor(
       val declaredVisitor = DeclaredMembersVisitor(type, referencedVisitor)
       reader.accept(declaredVisitor, 0)
 
-      return Class(type, declaredVisitor.members.sorted(), referencedVisitor.members.sorted())
+      return Class(
+        type,
+        declaredVisitor.version,
+        declaredVisitor.members.sorted(),
+        referencedVisitor.members.sorted(),
+      )
     }
   }
 }
 
 private class DeclaredMembersVisitor(val type: TypeDescriptor, val methodVisitor: MethodVisitor) :
   ClassVisitor(Opcodes.ASM9) {
+  var version: Int = 0
   val members = mutableListOf<Member>()
+
+  override fun visit(
+    version: Int,
+    access: Int,
+    name: String,
+    signature: String?,
+    superName: String?,
+    interfaces: Array<out String>?,
+  ) {
+    this.version = version
+    super.visit(version, access, name, signature, superName, interfaces)
+  }
 
   override fun visitMethod(
     access: Int,

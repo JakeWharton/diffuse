@@ -5,6 +5,7 @@
 
 **Added**
 - Add `--summary-only` flag.
+- Support diffing bytecode versions for classes.
 
 **Fixed**
 - Significantly improve `.jar` diff performance.

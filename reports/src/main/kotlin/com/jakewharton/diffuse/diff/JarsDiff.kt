@@ -18,6 +18,10 @@ internal class JarsDiff(
   val newMapping: ApiMapping,
 ) {
   val classes = componentDiff(oldJars, newJars) { it.classes.map(Class::descriptor) }
+  val bytecodeVersions =
+    componentDiff(oldJars, newJars) { jar ->
+      jar.classes.map { "${it.descriptor}: ${it.bytecodeVersion}" }
+    }
   val methods = componentDiff(oldJars, newJars) { it.members.filterIsInstance<Method>() }
   val declaredMethods =
     componentDiff(oldJars, newJars) { it.declaredMembers.filterIsInstance<Method>() }
@@ -29,7 +33,7 @@ internal class JarsDiff(
   val referencedFields =
     componentDiff(oldJars, newJars) { it.referencedMembers.filterIsInstance<Field>() }
 
-  val changed = methods.changed || fields.changed
+  val changed = bytecodeVersions.changed || methods.changed || fields.changed
 }
 
 internal fun JarsDiff.toSummaryTable(name: String) =
@@ -72,6 +76,7 @@ internal fun JarsDiff.toSummaryTable(name: String) =
 internal fun JarsDiff.toDetailReport() = buildString {
   // TODO appendComponentDiff("STRINGS", strings)?
   appendComponentDiff("CLASSES", classes)
+  appendComponentDiff("BYTECODE VERSIONS", bytecodeVersions)
   appendComponentDiff("METHODS", methods)
   appendComponentDiff("FIELDS", fields)
 }
