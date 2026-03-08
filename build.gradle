@@ -28,6 +28,9 @@ subprojects {
 
   plugins.withId('org.jetbrains.kotlin.jvm') {
     kotlin {
+      abiValidation {
+        enabled = project.name != 'test-helpers'
+      }
       compilerOptions {
         jvmTarget = JvmTarget.JVM_11
         freeCompilerArgs = [

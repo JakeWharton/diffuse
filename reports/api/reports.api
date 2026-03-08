@@ -1,0 +1,87 @@
+public abstract interface class com/jakewharton/diffuse/diff/BinaryDiff : com/jakewharton/diffuse/report/Report$Factory {
+	public static final field Companion Lcom/jakewharton/diffuse/diff/BinaryDiff$Companion;
+	public static fun ofAab (Lcom/jakewharton/diffuse/format/Aab;Lcom/jakewharton/diffuse/format/Aab;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public static fun ofAar (Lcom/jakewharton/diffuse/format/Aar;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Aar;Lcom/jakewharton/diffuse/format/ApiMapping;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public static fun ofApk (Lcom/jakewharton/diffuse/format/Apk;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Apk;Lcom/jakewharton/diffuse/format/ApiMapping;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public static fun ofDex (Lcom/jakewharton/diffuse/format/Dex;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Dex;Lcom/jakewharton/diffuse/format/ApiMapping;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public static fun ofJar (Lcom/jakewharton/diffuse/format/Jar;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Jar;Lcom/jakewharton/diffuse/format/ApiMapping;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+}
+
+public final class com/jakewharton/diffuse/diff/BinaryDiff$Companion {
+	public final fun ofAab (Lcom/jakewharton/diffuse/format/Aab;Lcom/jakewharton/diffuse/format/Aab;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public final fun ofAar (Lcom/jakewharton/diffuse/format/Aar;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Aar;Lcom/jakewharton/diffuse/format/ApiMapping;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public static synthetic fun ofAar$default (Lcom/jakewharton/diffuse/diff/BinaryDiff$Companion;Lcom/jakewharton/diffuse/format/Aar;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Aar;Lcom/jakewharton/diffuse/format/ApiMapping;ILjava/lang/Object;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public final fun ofApk (Lcom/jakewharton/diffuse/format/Apk;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Apk;Lcom/jakewharton/diffuse/format/ApiMapping;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public static synthetic fun ofApk$default (Lcom/jakewharton/diffuse/diff/BinaryDiff$Companion;Lcom/jakewharton/diffuse/format/Apk;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Apk;Lcom/jakewharton/diffuse/format/ApiMapping;ILjava/lang/Object;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public final fun ofDex (Lcom/jakewharton/diffuse/format/Dex;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Dex;Lcom/jakewharton/diffuse/format/ApiMapping;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public static synthetic fun ofDex$default (Lcom/jakewharton/diffuse/diff/BinaryDiff$Companion;Lcom/jakewharton/diffuse/format/Dex;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Dex;Lcom/jakewharton/diffuse/format/ApiMapping;ILjava/lang/Object;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public final fun ofJar (Lcom/jakewharton/diffuse/format/Jar;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Jar;Lcom/jakewharton/diffuse/format/ApiMapping;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+	public static synthetic fun ofJar$default (Lcom/jakewharton/diffuse/diff/BinaryDiff$Companion;Lcom/jakewharton/diffuse/format/Jar;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Jar;Lcom/jakewharton/diffuse/format/ApiMapping;ILjava/lang/Object;)Lcom/jakewharton/diffuse/diff/BinaryDiff;
+}
+
+public final class com/jakewharton/diffuse/diff/BinaryDiff$DefaultImpls {
+	public static fun toHtmlReport (Lcom/jakewharton/diffuse/diff/BinaryDiff;Z)Lcom/jakewharton/diffuse/report/Report;
+}
+
+public final class com/jakewharton/diffuse/info/AabInfo : com/jakewharton/diffuse/diff/BinaryDiff {
+	public fun <init> (Lcom/jakewharton/diffuse/format/Aab;)V
+	public fun toHtmlReport (Z)Lcom/jakewharton/diffuse/report/Report;
+	public fun toTextReport (Z)Lcom/jakewharton/diffuse/report/Report;
+}
+
+public final class com/jakewharton/diffuse/info/AarInfo : com/jakewharton/diffuse/info/BinaryInfo {
+	public fun <init> (Lcom/jakewharton/diffuse/format/Aar;)V
+	public fun toHtmlReport (Z)Lcom/jakewharton/diffuse/report/Report;
+	public fun toTextReport (Z)Lcom/jakewharton/diffuse/report/Report;
+}
+
+public final class com/jakewharton/diffuse/info/ApkInfo : com/jakewharton/diffuse/info/BinaryInfo {
+	public fun <init> (Lcom/jakewharton/diffuse/format/Apk;)V
+	public fun toHtmlReport (Z)Lcom/jakewharton/diffuse/report/Report;
+	public fun toTextReport (Z)Lcom/jakewharton/diffuse/report/Report;
+}
+
+public abstract interface class com/jakewharton/diffuse/info/BinaryInfo : com/jakewharton/diffuse/report/Report$Factory {
+	public static final field Companion Lcom/jakewharton/diffuse/info/BinaryInfo$Companion;
+	public static fun ofApk (Lcom/jakewharton/diffuse/format/Apk;)Lcom/jakewharton/diffuse/info/BinaryInfo;
+}
+
+public final class com/jakewharton/diffuse/info/BinaryInfo$Companion {
+	public final fun ofApk (Lcom/jakewharton/diffuse/format/Apk;)Lcom/jakewharton/diffuse/info/BinaryInfo;
+}
+
+public final class com/jakewharton/diffuse/info/BinaryInfo$DefaultImpls {
+	public static fun toHtmlReport (Lcom/jakewharton/diffuse/info/BinaryInfo;Z)Lcom/jakewharton/diffuse/report/Report;
+}
+
+public final class com/jakewharton/diffuse/info/DexInfo : com/jakewharton/diffuse/info/BinaryInfo {
+	public fun <init> (Lcom/jakewharton/diffuse/format/Dex;)V
+	public fun toHtmlReport (Z)Lcom/jakewharton/diffuse/report/Report;
+	public fun toTextReport (Z)Lcom/jakewharton/diffuse/report/Report;
+}
+
+public final class com/jakewharton/diffuse/info/JarInfo : com/jakewharton/diffuse/info/BinaryInfo {
+	public fun <init> (Lcom/jakewharton/diffuse/format/Jar;)V
+	public fun toHtmlReport (Z)Lcom/jakewharton/diffuse/report/Report;
+	public fun toTextReport (Z)Lcom/jakewharton/diffuse/report/Report;
+}
+
+public abstract interface class com/jakewharton/diffuse/report/Report {
+	public abstract fun write (Ljava/lang/Appendable;)V
+}
+
+public abstract interface class com/jakewharton/diffuse/report/Report$Factory {
+	public fun toHtmlReport (Z)Lcom/jakewharton/diffuse/report/Report;
+	public abstract fun toTextReport (Z)Lcom/jakewharton/diffuse/report/Report;
+}
+
+public final class com/jakewharton/diffuse/report/Report$Factory$DefaultImpls {
+	public static fun toHtmlReport (Lcom/jakewharton/diffuse/report/Report$Factory;Z)Lcom/jakewharton/diffuse/report/Report;
+}
+
+public final class com/jakewharton/diffuse/report/text/ApkInfoTextReport : com/jakewharton/diffuse/report/Report {
+	public fun <init> (Lcom/jakewharton/diffuse/format/Apk;)V
+	public fun toString ()Ljava/lang/String;
+	public fun write (Ljava/lang/Appendable;)V
+}
+
