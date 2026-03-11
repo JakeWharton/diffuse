@@ -1,15 +1,15 @@
 package com.jakewharton.diffuse.io
 
-import com.jakewharton.byteunits.BinaryByteUnit
 import kotlin.math.absoluteValue
+import me.saket.bytesize.binaryBytes
 
 @JvmInline
 value class Size(val bytes: Long) : Comparable<Size> {
   override fun toString(): String =
     if (bytes >= 0) {
-      BinaryByteUnit.format(bytes)
+      bytes.binaryBytes.toString()
     } else {
-      "-" + BinaryByteUnit.format(-bytes)
+      "-" + (-bytes).binaryBytes.toString()
     }
 
   override fun compareTo(other: Size) = bytes.compareTo(other.bytes)

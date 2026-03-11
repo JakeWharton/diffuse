@@ -4,7 +4,7 @@ apply plugin: 'org.jetbrains.dokka'
 
 dependencies {
   api libs.okio
-  implementation libs.byteunits
+  implementation libs.bytesize
 
   testImplementation libs.junit
   testImplementation libs.assertk
