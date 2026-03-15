@@ -3,6 +3,7 @@ package com.jakewharton.diffuse.diff
 import com.jakewharton.diffuse.diff.lint.resourcesArscCompression
 import com.jakewharton.diffuse.format.ApiMapping
 import com.jakewharton.diffuse.format.Apk
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.ApkDiffTextReport
 
@@ -24,5 +25,6 @@ internal class ApkDiff(
 
   val lintMessages = listOfNotNull(archive.resourcesArscCompression())
 
-  override fun toTextReport(summaryOnly: Boolean): Report = ApkDiffTextReport(this, summaryOnly)
+  override fun toTextReport(summaryOnly: Boolean, byteUnit: ByteUnit): Report =
+    ApkDiffTextReport(this, summaryOnly, byteUnit)
 }

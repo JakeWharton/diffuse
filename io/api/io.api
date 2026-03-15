@@ -1,3 +1,11 @@
+public final class com/jakewharton/diffuse/io/ByteUnit : java/lang/Enum {
+	public static final field Binary Lcom/jakewharton/diffuse/io/ByteUnit;
+	public static final field Decimal Lcom/jakewharton/diffuse/io/ByteUnit;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/diffuse/io/ByteUnit;
+	public static fun values ()[Lcom/jakewharton/diffuse/io/ByteUnit;
+}
+
 public final class com/jakewharton/diffuse/io/BytesInput : com/jakewharton/diffuse/io/Input {
 	public final fun getBytes ()Lokio/ByteString;
 	public fun getName ()Ljava/lang/String;
@@ -62,6 +70,8 @@ public final class com/jakewharton/diffuse/io/Size : java/lang/Comparable {
 	public static final fun plus-2SwpbTA (JJ)J
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (J)Ljava/lang/String;
+	public static final fun toString-impl (JLcom/jakewharton/diffuse/io/ByteUnit;)Ljava/lang/String;
+	public static synthetic fun toString-impl$default (JLcom/jakewharton/diffuse/io/ByteUnit;ILjava/lang/Object;)Ljava/lang/String;
 	public static final fun unaryMinus-kab5oJg (J)J
 	public final synthetic fun unbox-impl ()J
 }

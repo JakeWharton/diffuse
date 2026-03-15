@@ -3,6 +3,7 @@ package com.jakewharton.diffuse.info
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.format.ArchiveFile
 import com.jakewharton.diffuse.format.ArchiveFiles
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.io.Size
 import com.jakewharton.picnic.TableSectionDsl
 import com.jakewharton.picnic.TextAlignment
@@ -13,6 +14,7 @@ internal fun ArchiveFiles.toSummaryTable(
   displayTypes: List<ArchiveFile.Type>,
   skipIfEmptyTypes: Set<ArchiveFile.Type> = emptySet(),
   includeCompressed: Boolean = true,
+  byteUnit: ByteUnit = ByteUnit.Binary,
 ) =
   diffuseTable {
       header {
@@ -37,9 +39,9 @@ internal fun ArchiveFiles.toSummaryTable(
           old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
         if (oldSize != Size.ZERO || type !in skipIfEmptyTypes) {
           if (includeCompressed) {
-            row(name, oldSize, oldUncompressedSize)
+            row(name, oldSize.toString(byteUnit), oldUncompressedSize.toString(byteUnit))
           } else {
-            row(name, oldUncompressedSize)
+            row(name, oldUncompressedSize.toString(byteUnit))
           }
         }
       }

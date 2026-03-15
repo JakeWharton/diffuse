@@ -1,6 +1,7 @@
 package com.jakewharton.diffuse.diff
 
 import com.jakewharton.diffuse.format.Aab
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.AabDiffTextReport
 
@@ -29,5 +30,6 @@ internal class AabDiff(val oldAab: Aab, val newAab: Aab) : BinaryDiff {
         ModuleDiff(oldModule, newAab.featureModules.getValue(name))
       }
 
-  override fun toTextReport(summaryOnly: Boolean): Report = AabDiffTextReport(this, summaryOnly)
+  override fun toTextReport(summaryOnly: Boolean, byteUnit: ByteUnit): Report =
+    AabDiffTextReport(this, summaryOnly, byteUnit)
 }

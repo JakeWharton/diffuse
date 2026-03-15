@@ -2,10 +2,14 @@ package com.jakewharton.diffuse.report.text
 
 import com.jakewharton.diffuse.diff.DexDiff
 import com.jakewharton.diffuse.diff.toDetailReport
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.report.Report
 
-internal class DexDiffTextReport(private val dexDiff: DexDiff, private val summaryOnly: Boolean) :
-  Report {
+internal class DexDiffTextReport(
+  private val dexDiff: DexDiff,
+  private val summaryOnly: Boolean,
+  private val byteUnit: ByteUnit = ByteUnit.Binary,
+) : Report {
   private val oldDex =
     requireNotNull(dexDiff.oldDexes.singleOrNull()) {
       "Dex diff report only supports a single old dex. Found: ${dexDiff.oldDexes}"

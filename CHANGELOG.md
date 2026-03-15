@@ -5,6 +5,7 @@
 
 **Added**
 - Add `--summary-only` flag.
+- Add `--byte-unit` option.
 
 **Fixed**
 - Significantly improve `.jar` diff performance.

@@ -6,9 +6,12 @@ import com.jakewharton.diffuse.format.ApiMapping
 import com.jakewharton.diffuse.format.Apk
 import com.jakewharton.diffuse.format.Dex
 import com.jakewharton.diffuse.format.Jar
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.report.Report
 
 interface BinaryDiff : Report.Factory {
+  override fun toTextReport(summaryOnly: Boolean, byteUnit: ByteUnit): Report
+
   companion object {
     @JvmStatic
     fun ofApk(

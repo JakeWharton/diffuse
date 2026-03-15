@@ -4,6 +4,7 @@ import com.jakewharton.diffuse.diff.ArchiveFilesDiff.Change
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.format.ArchiveFile.Type
 import com.jakewharton.diffuse.format.ArchiveFiles
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.io.Size
 import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TableSectionDsl
@@ -98,6 +99,7 @@ internal fun ArchiveFilesDiff.toSummaryTable(
   name: String,
   displayTypes: List<Type>,
   skipIfEmptyTypes: Set<Type> = emptySet(),
+  byteUnit: ByteUnit = ByteUnit.Binary,
 ) =
   diffuseTable {
       header {
@@ -137,19 +139,24 @@ internal fun ArchiveFilesDiff.toSummaryTable(
         val newUncompressedSize =
           new.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
         if (oldSize != Size.ZERO || newSize != Size.ZERO || type !in skipIfEmptyTypes) {
-          val uncompressedDiff = (newUncompressedSize - oldUncompressedSize).toDiffString()
+          val uncompressedDiff = (newUncompressedSize - oldUncompressedSize).toDiffString(byteUnit)
           if (includeCompressed) {
             row(
               name,
-              oldSize,
-              newSize,
-              (newSize - oldSize).toDiffString(),
-              oldUncompressedSize,
-              newUncompressedSize,
+              oldSize.toString(byteUnit),
+              newSize.toString(byteUnit),
+              (newSize - oldSize).toDiffString(byteUnit),
+              oldUncompressedSize.toString(byteUnit),
+              newUncompressedSize.toString(byteUnit),
               uncompressedDiff,
             )
           } else {
-            row(name, oldUncompressedSize, newUncompressedSize, uncompressedDiff)
+            row(
+              name,
+              oldUncompressedSize.toString(byteUnit),
+              newUncompressedSize.toString(byteUnit),
+              uncompressedDiff,
+            )
           }
         }
       }
@@ -168,7 +175,7 @@ internal fun ArchiveFilesDiff.toSummaryTable(
     }
     .renderText()
 
-internal fun ArchiveFilesDiff.toDetailReport() = buildString {
+internal fun ArchiveFilesDiff.toDetailReport(byteUnit: ByteUnit = ByteUnit.Binary) = buildString {
   appendLine()
   appendLine(
     diffuseTable {
@@ -202,15 +209,15 @@ internal fun ArchiveFilesDiff.toDetailReport() = buildString {
             if (includeCompressed) {
               val totalSize = changes.fold(Size.ZERO) { acc, change -> acc + change.size }
               val totalDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.sizeDiff }
-              cell(totalSize) { alignment = MiddleRight }
-              cell(totalDiff.toDiffString()) { alignment = MiddleRight }
+              cell(totalSize.toString(byteUnit)) { alignment = MiddleRight }
+              cell(totalDiff.toDiffString(byteUnit)) { alignment = MiddleRight }
             }
             val totalUncompressedSize =
               changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSize }
             val totalUncompressedDiff =
               changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSizeDiff }
-            cell(totalUncompressedSize) { alignment = MiddleRight }
-            cell(totalUncompressedDiff.toDiffString()) { alignment = MiddleRight }
+            cell(totalUncompressedSize.toString(byteUnit)) { alignment = MiddleRight }
+            cell(totalUncompressedDiff.toDiffString(byteUnit)) { alignment = MiddleRight }
             cell("(total)")
           }
         }
@@ -223,13 +230,15 @@ internal fun ArchiveFilesDiff.toDetailReport() = buildString {
             }
           row {
             if (includeCompressed) {
-              cell(if (type != Change.Type.Removed) size else "") { alignment = MiddleRight }
-              cell(sizeDiff.toDiffString()) { alignment = MiddleRight }
+              cell(if (type != Change.Type.Removed) size.toString(byteUnit) else "") {
+                alignment = MiddleRight
+              }
+              cell(sizeDiff.toDiffString(byteUnit)) { alignment = MiddleRight }
             }
-            cell(if (type != Change.Type.Removed) uncompressedSize else "") {
+            cell(if (type != Change.Type.Removed) uncompressedSize.toString(byteUnit) else "") {
               alignment = MiddleRight
             }
-            cell(uncompressedSizeDiff.toDiffString()) { alignment = MiddleRight }
+            cell(uncompressedSizeDiff.toDiffString(byteUnit)) { alignment = MiddleRight }
             cell("$typeChar $path")
           }
         }

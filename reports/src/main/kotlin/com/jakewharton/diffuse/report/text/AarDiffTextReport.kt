@@ -4,10 +4,14 @@ import com.jakewharton.diffuse.diff.AarDiff
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.diff.toSummaryTable
 import com.jakewharton.diffuse.format.ArchiveFile.Type
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.report.Report
 
-internal class AarDiffTextReport(private val aarDiff: AarDiff, private val summaryOnly: Boolean) :
-  Report {
+internal class AarDiffTextReport(
+  private val aarDiff: AarDiff,
+  private val summaryOnly: Boolean,
+  private val byteUnit: ByteUnit = ByteUnit.Binary,
+) : Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
@@ -22,6 +26,7 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff, private val summa
           "AAR",
           Type.AAR_TYPES,
           skipIfEmptyTypes = setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res),
+          byteUnit = byteUnit,
         )
       )
       appendLine()
@@ -33,7 +38,7 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff, private val summa
         appendLine("=================")
         appendLine("====   AAR   ====")
         appendLine("=================")
-        appendLine(aarDiff.archive.toDetailReport())
+        appendLine(aarDiff.archive.toDetailReport(byteUnit))
       }
       if (aarDiff.manifest.changed) {
         appendLine()

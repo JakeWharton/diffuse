@@ -39,6 +39,7 @@ import com.jakewharton.diffuse.info.AarInfo
 import com.jakewharton.diffuse.info.ApkInfo
 import com.jakewharton.diffuse.info.DexInfo
 import com.jakewharton.diffuse.info.JarInfo
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.Input.Companion.asInput
 import com.jakewharton.diffuse.report.Report
@@ -134,9 +135,14 @@ private class OutputOptions(outputFs: FileSystem, private val output: PrintStrea
       )
       .flag()
 
+  private val byteUnit by
+    option("--byte-unit", help = "Byte unit to use in reports. Default is 'binary'.")
+      .choice("binary" to ByteUnit.Binary, "decimal" to ByteUnit.Decimal)
+      .default(ByteUnit.Binary)
+
   fun write(reportFactory: Report.Factory) {
-    val textReport by lazy(NONE) { reportFactory.toTextReport(summaryOnly).toString() }
-    val htmlReport by lazy(NONE) { reportFactory.toHtmlReport(summaryOnly).toString() }
+    val textReport by lazy(NONE) { reportFactory.toTextReport(summaryOnly, byteUnit).toString() }
+    val htmlReport by lazy(NONE) { reportFactory.toHtmlReport(summaryOnly, byteUnit).toString() }
 
     text?.writeText(textReport)
     html?.writeText(htmlReport)

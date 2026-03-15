@@ -1,11 +1,12 @@
 package com.jakewharton.diffuse.info
 
 import com.jakewharton.diffuse.format.Jar
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.JarInfoTextReport
 
 class JarInfo(private val jar: Jar) : BinaryInfo {
-  override fun toTextReport(summaryOnly: Boolean): Report {
-    return JarInfoTextReport(jar)
+  override fun toTextReport(summaryOnly: Boolean, byteUnit: ByteUnit): Report {
+    return JarInfoTextReport(jar, byteUnit)
   }
 }

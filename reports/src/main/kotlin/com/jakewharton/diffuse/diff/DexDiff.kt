@@ -4,6 +4,7 @@ import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.format.Dex
 import com.jakewharton.diffuse.format.Field
 import com.jakewharton.diffuse.format.Method
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.diffuse.report.text.DexDiffTextReport
 import com.jakewharton.diffuse.report.toDiffString
@@ -32,7 +33,8 @@ internal class DexDiff(val oldDexes: List<Dex>, val newDexes: List<Dex>) : Binar
 
   val changed = strings.changed || types.changed || methods.changed || fields.changed
 
-  override fun toTextReport(summaryOnly: Boolean): Report = DexDiffTextReport(this, summaryOnly)
+  override fun toTextReport(summaryOnly: Boolean, byteUnit: ByteUnit): Report =
+    DexDiffTextReport(this, summaryOnly, byteUnit)
 }
 
 internal fun DexDiff.toSummaryTable() =

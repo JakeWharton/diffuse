@@ -1,5 +1,6 @@
 package com.jakewharton.diffuse.report
 
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.io.Size
 
 internal fun Int.toUnitString(unit: String, vararg specializations: Pair<Int, String>): String {
@@ -19,9 +20,9 @@ internal fun Int.toDiffString(zeroSign: Char? = null) = buildString {
   append(this@toDiffString)
 }
 
-internal fun Size.toDiffString() = buildString {
+internal fun Size.toDiffString(byteUnit: ByteUnit = ByteUnit.Binary) = buildString {
   if (bytes > 0L) {
     append('+')
   }
-  append(this@toDiffString)
+  append(toString(byteUnit))
 }

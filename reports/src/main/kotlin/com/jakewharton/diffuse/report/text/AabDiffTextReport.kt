@@ -3,13 +3,17 @@ package com.jakewharton.diffuse.report.text
 import com.jakewharton.diffuse.diff.AabDiff
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.diffuseTable
+import com.jakewharton.diffuse.io.ByteUnit
 import com.jakewharton.diffuse.report.Report
 import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleCenter
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 
-internal class AabDiffTextReport(private val aabDiff: AabDiff, private val summaryOnly: Boolean) :
-  Report {
+internal class AabDiffTextReport(
+  private val aabDiff: AabDiff,
+  private val summaryOnly: Boolean,
+  private val byteUnit: ByteUnit = ByteUnit.Binary,
+) : Report {
   override fun write(appendable: Appendable) {
     appendable.apply {
       append("OLD: ")
@@ -55,7 +59,7 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff, private val summa
       appendLine("==================")
       appendLine()
       if (aabDiff.baseModule.archive.changed) {
-        appendLine(aabDiff.baseModule.archive.toDetailReport())
+        appendLine(aabDiff.baseModule.archive.toDetailReport(byteUnit))
       }
       if (aabDiff.baseModule.dex.changed) {
         appendLine(aabDiff.baseModule.dex.toDetailReport())
@@ -81,7 +85,7 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff, private val summa
         }
         if (changedModule != null) {
           if (changedModule.archive.changed) {
-            appendLine(changedModule.archive.toDetailReport())
+            appendLine(changedModule.archive.toDetailReport(byteUnit))
           }
           if (changedModule.dex.changed) {
             appendLine(changedModule.dex.toDetailReport())
