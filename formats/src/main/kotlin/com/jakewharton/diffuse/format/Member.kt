@@ -1,5 +1,7 @@
 package com.jakewharton.diffuse.format
 
+import dev.drewhamilton.poko.Poko
+
 sealed class Member : Comparable<Member> {
   abstract val declaringType: TypeDescriptor
   abstract val name: String
@@ -16,7 +18,8 @@ sealed class Member : Comparable<Member> {
   }
 }
 
-data class Field(
+@Poko
+class Field(
   override val declaringType: TypeDescriptor,
   override val name: String,
   val type: TypeDescriptor,
@@ -31,12 +34,19 @@ data class Field(
     return COMPARATOR.compare(this, other as Field)
   }
 
+  fun copy(
+    declaringType: TypeDescriptor = this.declaringType,
+    name: String = this.name,
+    type: TypeDescriptor = this.type,
+  ): Field = Field(declaringType, name, type)
+
   private companion object {
     val COMPARATOR = compareBy(Field::name, Field::type)
   }
 }
 
-data class Method(
+@Poko
+class Method(
   override val declaringType: TypeDescriptor,
   override val name: String,
   val parameterTypes: List<TypeDescriptor>,
@@ -62,6 +72,13 @@ data class Method(
     }
     return COMPARATOR.compare(this, other as Method)
   }
+
+  fun copy(
+    declaringType: TypeDescriptor = this.declaringType,
+    name: String = this.name,
+    parameterTypes: List<TypeDescriptor> = this.parameterTypes,
+    returnType: TypeDescriptor = this.returnType,
+  ): Method = Method(declaringType, name, parameterTypes, returnType)
 
   private companion object {
     val VOID = TypeDescriptor("V")

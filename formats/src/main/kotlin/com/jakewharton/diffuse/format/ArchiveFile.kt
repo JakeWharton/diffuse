@@ -1,16 +1,26 @@
 package com.jakewharton.diffuse.format
 
 import com.jakewharton.diffuse.format.Arsc as ArscFormat
+import dev.drewhamilton.poko.Poko
 import java.util.Locale
 import me.saket.bytesize.ByteSize
 
-data class ArchiveFile(
+@Poko
+class ArchiveFile(
   val path: String,
   val type: Type,
   val size: ByteSize,
   val uncompressedSize: ByteSize,
   val isCompressed: Boolean,
 ) {
+  fun copy(
+    path: String = this.path,
+    type: Type = this.type,
+    size: ByteSize = this.size,
+    uncompressedSize: ByteSize = this.uncompressedSize,
+    isCompressed: Boolean = this.isCompressed,
+  ): ArchiveFile = ArchiveFile(path, type, size, uncompressedSize, isCompressed)
+
   enum class Type {
     Dex,
     Jar,

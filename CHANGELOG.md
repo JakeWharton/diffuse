@@ -8,6 +8,7 @@
 
 **Changed**
 - Replace `com.jakewharton.diffuse.io.Size` with `me.saket.bytesize.ByteSize` in the APIs.
+- Eliminate `data class` from public APIs.
 
 **Fixed**
 - Significantly improve `.jar` diff performance.

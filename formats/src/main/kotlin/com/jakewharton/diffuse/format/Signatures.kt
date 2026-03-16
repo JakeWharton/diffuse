@@ -5,6 +5,7 @@ import com.android.apksig.util.DataSource
 import com.android.apksig.util.DataSources
 import com.jakewharton.diffuse.io.Input
 import com.jakewharton.diffuse.io.PathInput
+import dev.drewhamilton.poko.Poko
 import java.io.Closeable
 import java.nio.channels.FileChannel
 import kotlin.contracts.InvocationKind
@@ -12,7 +13,8 @@ import kotlin.contracts.contract
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
 
-data class Signatures(
+@Poko
+class Signatures(
   val v1: List<ByteString>,
   val v2: List<ByteString>,
   val v3: List<ByteString>,

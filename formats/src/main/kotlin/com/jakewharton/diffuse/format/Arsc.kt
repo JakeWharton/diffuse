@@ -2,9 +2,11 @@ package com.jakewharton.diffuse.format
 
 import com.google.devrel.gmscore.tools.apk.arsc.ResourceTableChunk
 import com.jakewharton.diffuse.io.Input
+import dev.drewhamilton.poko.Poko
 
 class Arsc private constructor(val configs: List<String>, val entries: Map<Int, Entry>) {
-  data class Entry(val type: String, val name: String) : Comparable<Entry> {
+  @Poko
+  class Entry(val type: String, val name: String) : Comparable<Entry> {
     override fun compareTo(other: Entry) = comparator.compare(this, other)
 
     override fun toString() = "$type/$name"

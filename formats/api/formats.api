@@ -98,11 +98,6 @@ public final class com/jakewharton/diffuse/format/Apk$Companion {
 
 public final class com/jakewharton/diffuse/format/ArchiveFile {
 	public fun <init> (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFile$Type;Lme/saket/bytesize/ByteSize;Lme/saket/bytesize/ByteSize;Z)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
-	public final fun component3 ()Lme/saket/bytesize/ByteSize;
-	public final fun component4 ()Lme/saket/bytesize/ByteSize;
-	public final fun component5 ()Z
 	public final fun copy (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFile$Type;Lme/saket/bytesize/ByteSize;Lme/saket/bytesize/ByteSize;Z)Lcom/jakewharton/diffuse/format/ArchiveFile;
 	public static synthetic fun copy$default (Lcom/jakewharton/diffuse/format/ArchiveFile;Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFile$Type;Lme/saket/bytesize/ByteSize;Lme/saket/bytesize/ByteSize;ZILjava/lang/Object;)Lcom/jakewharton/diffuse/format/ArchiveFile;
 	public fun equals (Ljava/lang/Object;)Z
@@ -217,10 +212,6 @@ public final class com/jakewharton/diffuse/format/Arsc$Entry : java/lang/Compara
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public fun compareTo (Lcom/jakewharton/diffuse/format/Arsc$Entry;)I
 	public synthetic fun compareTo (Ljava/lang/Object;)I
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/jakewharton/diffuse/format/Arsc$Entry;
-	public static synthetic fun copy$default (Lcom/jakewharton/diffuse/format/Arsc$Entry;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/jakewharton/diffuse/format/Arsc$Entry;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getName ()Ljava/lang/String;
 	public final fun getType ()Ljava/lang/String;
@@ -276,9 +267,6 @@ public final class com/jakewharton/diffuse/format/Field : com/jakewharton/diffus
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun compareTo (Lcom/jakewharton/diffuse/format/Member;)I
 	public synthetic fun compareTo (Ljava/lang/Object;)I
-	public final fun component1-BeHrSHk ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3-BeHrSHk ()Ljava/lang/String;
 	public final fun copy-sziKtKI (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/jakewharton/diffuse/format/Field;
 	public static synthetic fun copy-sziKtKI$default (Lcom/jakewharton/diffuse/format/Field;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/jakewharton/diffuse/format/Field;
 	public fun equals (Ljava/lang/Object;)Z
@@ -316,10 +304,6 @@ public final class com/jakewharton/diffuse/format/Method : com/jakewharton/diffu
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun compareTo (Lcom/jakewharton/diffuse/format/Member;)I
 	public synthetic fun compareTo (Ljava/lang/Object;)I
-	public final fun component1-BeHrSHk ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/util/List;
-	public final fun component4-BeHrSHk ()Ljava/lang/String;
 	public final fun copy-UgLDmOQ (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)Lcom/jakewharton/diffuse/format/Method;
 	public static synthetic fun copy-UgLDmOQ$default (Lcom/jakewharton/diffuse/format/Method;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lcom/jakewharton/diffuse/format/Method;
 	public fun equals (Ljava/lang/Object;)Z
@@ -334,12 +318,6 @@ public final class com/jakewharton/diffuse/format/Method : com/jakewharton/diffu
 public final class com/jakewharton/diffuse/format/Signatures {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Signatures$Companion;
 	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
-	public final fun component1 ()Ljava/util/List;
-	public final fun component2 ()Ljava/util/List;
-	public final fun component3 ()Ljava/util/List;
-	public final fun component4 ()Ljava/util/List;
-	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lcom/jakewharton/diffuse/format/Signatures;
-	public static synthetic fun copy$default (Lcom/jakewharton/diffuse/format/Signatures;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/jakewharton/diffuse/format/Signatures;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getV1 ()Ljava/util/List;
 	public final fun getV2 ()Ljava/util/List;
