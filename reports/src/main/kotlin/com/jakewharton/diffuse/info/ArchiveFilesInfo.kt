@@ -3,10 +3,10 @@ package com.jakewharton.diffuse.info
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.format.ArchiveFile
 import com.jakewharton.diffuse.format.ArchiveFiles
-import com.jakewharton.diffuse.io.Size
 import com.jakewharton.picnic.TableSectionDsl
 import com.jakewharton.picnic.TextAlignment
 import com.jakewharton.picnic.renderText
+import me.saket.bytesize.binaryBytes
 
 internal fun ArchiveFiles.toSummaryTable(
   name: String,
@@ -32,10 +32,10 @@ internal fun ArchiveFiles.toSummaryTable(
 
       fun TableSectionDsl.addApkRow(name: String, type: ArchiveFile.Type? = null) {
         val old = if (type != null) filterValues { it.type == type } else this@toSummaryTable
-        val oldSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.size }
+        val oldSize = old.values.fold(0.binaryBytes) { acc, file -> acc + file.size }
         val oldUncompressedSize =
-          old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
-        if (oldSize != Size.ZERO || type !in skipIfEmptyTypes) {
+          old.values.fold(0.binaryBytes) { acc, file -> acc + file.uncompressedSize }
+        if (oldSize != 0.binaryBytes || type !in skipIfEmptyTypes) {
           if (includeCompressed) {
             row(name, oldSize, oldUncompressedSize)
           } else {

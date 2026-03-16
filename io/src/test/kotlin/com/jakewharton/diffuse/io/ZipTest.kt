@@ -3,6 +3,7 @@ package com.jakewharton.diffuse.io
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.diffuse.testing.decodeHexWithWhitespace
+import me.saket.bytesize.binaryBytes
 import org.junit.Test
 
 class ZipTest {
@@ -23,7 +24,7 @@ class ZipTest {
         .toZip()
     val entry = zip.entries.single()
 
-    assertThat(entry.compressedSize).isEqualTo(Size(7))
-    assertThat(entry.uncompressedSize).isEqualTo(Size(5))
+    assertThat(entry.compressedSize).isEqualTo(7.binaryBytes)
+    assertThat(entry.uncompressedSize).isEqualTo(5.binaryBytes)
   }
 }

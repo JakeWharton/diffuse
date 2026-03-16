@@ -97,19 +97,19 @@ public final class com/jakewharton/diffuse/format/Apk$Companion {
 }
 
 public final class com/jakewharton/diffuse/format/ArchiveFile {
-	public synthetic fun <init> (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFile$Type;JJZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFile$Type;Lme/saket/bytesize/ByteSize;Lme/saket/bytesize/ByteSize;Z)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
-	public final fun component3-kab5oJg ()J
-	public final fun component4-kab5oJg ()J
+	public final fun component3 ()Lme/saket/bytesize/ByteSize;
+	public final fun component4 ()Lme/saket/bytesize/ByteSize;
 	public final fun component5 ()Z
-	public final fun copy-Ws8QFX4 (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFile$Type;JJZ)Lcom/jakewharton/diffuse/format/ArchiveFile;
-	public static synthetic fun copy-Ws8QFX4$default (Lcom/jakewharton/diffuse/format/ArchiveFile;Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFile$Type;JJZILjava/lang/Object;)Lcom/jakewharton/diffuse/format/ArchiveFile;
+	public final fun copy (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFile$Type;Lme/saket/bytesize/ByteSize;Lme/saket/bytesize/ByteSize;Z)Lcom/jakewharton/diffuse/format/ArchiveFile;
+	public static synthetic fun copy$default (Lcom/jakewharton/diffuse/format/ArchiveFile;Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFile$Type;Lme/saket/bytesize/ByteSize;Lme/saket/bytesize/ByteSize;ZILjava/lang/Object;)Lcom/jakewharton/diffuse/format/ArchiveFile;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getPath ()Ljava/lang/String;
-	public final fun getSize-kab5oJg ()J
+	public final fun getSize ()Lme/saket/bytesize/ByteSize;
 	public final fun getType ()Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
-	public final fun getUncompressedSize-kab5oJg ()J
+	public final fun getUncompressedSize ()Lme/saket/bytesize/ByteSize;
 	public fun hashCode ()I
 	public final fun isCompressed ()Z
 	public fun toString ()Ljava/lang/String;

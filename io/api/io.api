@@ -44,32 +44,6 @@ public final class com/jakewharton/diffuse/io/PathInput : com/jakewharton/diffus
 	public fun toZip ()Lcom/jakewharton/diffuse/io/Zip;
 }
 
-public final class com/jakewharton/diffuse/io/Size : java/lang/Comparable {
-	public static final field Companion Lcom/jakewharton/diffuse/io/Size$Companion;
-	public static final synthetic fun box-impl (J)Lcom/jakewharton/diffuse/io/Size;
-	public synthetic fun compareTo (Ljava/lang/Object;)I
-	public fun compareTo-p-hSGm4 (J)I
-	public static fun compareTo-p-hSGm4 (JJ)I
-	public static fun constructor-impl (J)J
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (JLjava/lang/Object;)Z
-	public static final fun equals-impl0 (JJ)Z
-	public static final fun getAbsoluteValue-kab5oJg (J)J
-	public final fun getBytes ()J
-	public fun hashCode ()I
-	public static fun hashCode-impl (J)I
-	public static final fun minus-2SwpbTA (JJ)J
-	public static final fun plus-2SwpbTA (JJ)J
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (J)Ljava/lang/String;
-	public static final fun unaryMinus-kab5oJg (J)J
-	public final synthetic fun unbox-impl ()J
-}
-
-public final class com/jakewharton/diffuse/io/Size$Companion {
-	public final fun getZERO-kab5oJg ()J
-}
-
 public final class com/jakewharton/diffuse/io/StringInput : com/jakewharton/diffuse/io/Input {
 	public fun getName ()Ljava/lang/String;
 	public fun source ()Lokio/Buffer;
@@ -95,10 +69,10 @@ public final class com/jakewharton/diffuse/io/Zip$DefaultImpls {
 
 public abstract interface class com/jakewharton/diffuse/io/Zip$Entry {
 	public abstract fun asInput ()Lcom/jakewharton/diffuse/io/Input;
-	public abstract fun getCompressedSize-kab5oJg ()J
+	public abstract fun getCompressedSize ()Lme/saket/bytesize/ByteSize;
 	public abstract fun getPath ()Ljava/lang/String;
-	public abstract fun getUncompressedSize-kab5oJg ()J
-	public abstract fun getZipSize-kab5oJg ()J
+	public abstract fun getUncompressedSize ()Lme/saket/bytesize/ByteSize;
+	public abstract fun getZipSize ()Lme/saket/bytesize/ByteSize;
 	public abstract fun isCompressed ()Z
 }
 

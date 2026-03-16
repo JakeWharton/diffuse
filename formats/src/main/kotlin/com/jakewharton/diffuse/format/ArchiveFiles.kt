@@ -2,8 +2,8 @@ package com.jakewharton.diffuse.format
 
 import com.jakewharton.diffuse.format.ArchiveFile.Type
 import com.jakewharton.diffuse.format.ArchiveFile.Type.Other
-import com.jakewharton.diffuse.io.Size
 import com.jakewharton.diffuse.io.Zip
+import me.saket.bytesize.binaryBytes
 
 class ArchiveFiles internal constructor(private val files: Map<String, ArchiveFile>) :
   Map<String, ArchiveFile> by files {
@@ -26,7 +26,7 @@ class ArchiveFiles internal constructor(private val files: Map<String, ArchiveFi
               it.isCompressed,
             )
         }
-        .plus("/" to ArchiveFile("/", Other, Size(22), Size.ZERO, false))
+        .plus("/" to ArchiveFile("/", Other, 22.binaryBytes, 0.binaryBytes, false))
         .let(::ArchiveFiles)
     }
   }

@@ -4,7 +4,6 @@ import com.jakewharton.diffuse.diff.ArchiveFilesDiff.Change
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.format.ArchiveFile.Type
 import com.jakewharton.diffuse.format.ArchiveFiles
-import com.jakewharton.diffuse.io.Size
 import com.jakewharton.diffuse.report.toDiffString
 import com.jakewharton.picnic.TableSectionDsl
 import com.jakewharton.picnic.TextAlignment.BottomCenter
@@ -12,6 +11,8 @@ import com.jakewharton.picnic.TextAlignment.BottomLeft
 import com.jakewharton.picnic.TextAlignment.MiddleCenter
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
+import me.saket.bytesize.ByteSize
+import me.saket.bytesize.binaryBytes
 
 internal class ArchiveFilesDiff(
   val oldFiles: ArchiveFiles,
@@ -20,10 +21,10 @@ internal class ArchiveFilesDiff(
 ) {
   data class Change(
     val path: String,
-    val size: Size,
-    val sizeDiff: Size,
-    val uncompressedSize: Size,
-    val uncompressedSizeDiff: Size,
+    val size: ByteSize,
+    val sizeDiff: ByteSize,
+    val uncompressedSize: ByteSize,
+    val uncompressedSizeDiff: ByteSize,
     val type: Type,
   ) {
     enum class Type {
@@ -54,9 +55,9 @@ internal class ArchiveFilesDiff(
         if (path !in newFiles) {
           Change(
             path,
-            Size.ZERO,
+            0.binaryBytes,
             -oldFile.size,
-            Size.ZERO,
+            0.binaryBytes,
             -oldFile.uncompressedSize,
             Change.Type.Removed,
           )
@@ -130,13 +131,13 @@ internal fun ArchiveFilesDiff.toSummaryTable(
       fun TableSectionDsl.addApkRow(name: String, type: Type? = null) {
         val old = if (type != null) oldFiles.filterValues { it.type == type } else oldFiles
         val new = if (type != null) newFiles.filterValues { it.type == type } else newFiles
-        val oldSize = old.values.fold(Size.ZERO) { acc, file -> acc + file.size }
-        val newSize = new.values.fold(Size.ZERO) { acc, file -> acc + file.size }
+        val oldSize = old.values.fold(0.binaryBytes) { acc, file -> acc + file.size }
+        val newSize = new.values.fold(0.binaryBytes) { acc, file -> acc + file.size }
         val oldUncompressedSize =
-          old.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
+          old.values.fold(0.binaryBytes) { acc, file -> acc + file.uncompressedSize }
         val newUncompressedSize =
-          new.values.fold(Size.ZERO) { acc, file -> acc + file.uncompressedSize }
-        if (oldSize != Size.ZERO || newSize != Size.ZERO || type !in skipIfEmptyTypes) {
+          new.values.fold(0.binaryBytes) { acc, file -> acc + file.uncompressedSize }
+        if (oldSize != 0.binaryBytes || newSize != 0.binaryBytes || type !in skipIfEmptyTypes) {
           val uncompressedDiff = (newUncompressedSize - oldUncompressedSize).toDiffString()
           if (includeCompressed) {
             row(
@@ -200,15 +201,15 @@ internal fun ArchiveFilesDiff.toDetailReport() = buildString {
         footer {
           row {
             if (includeCompressed) {
-              val totalSize = changes.fold(Size.ZERO) { acc, change -> acc + change.size }
-              val totalDiff = changes.fold(Size.ZERO) { acc, change -> acc + change.sizeDiff }
+              val totalSize = changes.fold(0.binaryBytes) { acc, change -> acc + change.size }
+              val totalDiff = changes.fold(0.binaryBytes) { acc, change -> acc + change.sizeDiff }
               cell(totalSize) { alignment = MiddleRight }
               cell(totalDiff.toDiffString()) { alignment = MiddleRight }
             }
             val totalUncompressedSize =
-              changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSize }
+              changes.fold(0.binaryBytes) { acc, change -> acc + change.uncompressedSize }
             val totalUncompressedDiff =
-              changes.fold(Size.ZERO) { acc, change -> acc + change.uncompressedSizeDiff }
+              changes.fold(0.binaryBytes) { acc, change -> acc + change.uncompressedSizeDiff }
             cell(totalUncompressedSize) { alignment = MiddleRight }
             cell(totalUncompressedDiff.toDiffString()) { alignment = MiddleRight }
             cell("(total)")

@@ -1,14 +1,14 @@
 package com.jakewharton.diffuse.format
 
 import com.jakewharton.diffuse.format.Arsc as ArscFormat
-import com.jakewharton.diffuse.io.Size
 import java.util.Locale
+import me.saket.bytesize.ByteSize
 
 data class ArchiveFile(
   val path: String,
   val type: Type,
-  val size: Size,
-  val uncompressedSize: Size,
+  val size: ByteSize,
+  val uncompressedSize: ByteSize,
   val isCompressed: Boolean,
 ) {
   enum class Type {

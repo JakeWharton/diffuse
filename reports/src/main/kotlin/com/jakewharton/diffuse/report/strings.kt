@@ -1,6 +1,6 @@
 package com.jakewharton.diffuse.report
 
-import com.jakewharton.diffuse.io.Size
+import me.saket.bytesize.ByteSize
 
 internal fun Int.toUnitString(unit: String, vararg specializations: Pair<Int, String>): String {
   return buildString {
@@ -19,8 +19,8 @@ internal fun Int.toDiffString(zeroSign: Char? = null) = buildString {
   append(this@toDiffString)
 }
 
-internal fun Size.toDiffString() = buildString {
-  if (bytes > 0L) {
+internal fun ByteSize.toDiffString() = buildString {
+  if (inWholeBytes > 0L) {
     append('+')
   }
   append(this@toDiffString)
