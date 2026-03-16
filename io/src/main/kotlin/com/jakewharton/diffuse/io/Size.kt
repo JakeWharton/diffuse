@@ -5,12 +5,7 @@ import me.saket.bytesize.binaryBytes
 
 @JvmInline
 value class Size(val bytes: Long) : Comparable<Size> {
-  override fun toString(): String =
-    if (bytes >= 0) {
-      bytes.binaryBytes.toString()
-    } else {
-      "-" + (-bytes).binaryBytes.toString()
-    }
+  override fun toString(): String = bytes.binaryBytes.toString()
 
   override fun compareTo(other: Size) = bytes.compareTo(other.bytes)
 
