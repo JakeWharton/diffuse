@@ -5,6 +5,7 @@
 
 **Added**
 - Add `--summary-only` flag.
+- Support diffing uses-permission counts.
 
 **Changed**
 - Replace `com.jakewharton.diffuse.io.Size` with `me.saket.bytesize.ByteSize` in the APIs.

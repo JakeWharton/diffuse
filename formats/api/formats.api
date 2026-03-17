@@ -44,8 +44,9 @@ public final class com/jakewharton/diffuse/format/Aar$Companion {
 public final class com/jakewharton/diffuse/format/AndroidManifest {
 	public static final field Companion Lcom/jakewharton/diffuse/format/AndroidManifest$Companion;
 	public static final field NAME Ljava/lang/String;
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getPackageName ()Ljava/lang/String;
+	public final fun getUsesPermissionCount ()I
 	public final fun getVersionCode ()Ljava/lang/Long;
 	public final fun getVersionName ()Ljava/lang/String;
 	public final fun getXml ()Ljava/lang/String;

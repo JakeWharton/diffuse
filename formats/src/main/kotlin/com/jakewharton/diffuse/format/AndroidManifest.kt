@@ -37,6 +37,7 @@ private constructor(
   val packageName: String,
   val versionName: String?,
   val versionCode: Long?,
+  val usesPermissionCount: Int,
 ) {
   companion object {
     const val NAME = "AndroidManifest.xml"
@@ -176,8 +177,15 @@ private constructor(
         } else {
           null
         }
+      val usesPermissionCount = manifestElement.getElementsByTagName("uses-permission").length
 
-      return AndroidManifest(toFormattedXml(), packageName, versionName, versionCode)
+      return AndroidManifest(
+        toFormattedXml(),
+        packageName,
+        versionName,
+        versionCode,
+        usesPermissionCount,
+      )
     }
 
     private fun Document.toFormattedXml() = buildString {
