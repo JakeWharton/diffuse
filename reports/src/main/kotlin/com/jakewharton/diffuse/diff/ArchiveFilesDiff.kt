@@ -35,59 +35,56 @@ internal class ArchiveFilesDiff(
   }
 
   val changes: List<Change> = run {
-    val added =
-      newFiles.mapNotNull { (path, newFile) ->
-        if (path !in oldFiles) {
-          Change(
-            path,
-            newFile.size,
-            newFile.size,
-            newFile.uncompressedSize,
-            newFile.uncompressedSize,
-            Change.Type.Added,
-          )
-        } else {
-          null
-        }
+    val added = newFiles.mapNotNull { (path, newFile) ->
+      if (path !in oldFiles) {
+        Change(
+          path,
+          newFile.size,
+          newFile.size,
+          newFile.uncompressedSize,
+          newFile.uncompressedSize,
+          Change.Type.Added,
+        )
+      } else {
+        null
       }
-    val removed =
-      oldFiles.mapNotNull { (path, oldFile) ->
-        if (path !in newFiles) {
-          Change(
-            path,
-            0.binaryBytes,
-            -oldFile.size,
-            0.binaryBytes,
-            -oldFile.uncompressedSize,
-            Change.Type.Removed,
-          )
-        } else {
-          null
-        }
+    }
+    val removed = oldFiles.mapNotNull { (path, oldFile) ->
+      if (path !in newFiles) {
+        Change(
+          path,
+          0.binaryBytes,
+          -oldFile.size,
+          0.binaryBytes,
+          -oldFile.uncompressedSize,
+          Change.Type.Removed,
+        )
+      } else {
+        null
       }
-    val changed =
-      oldFiles.mapNotNull { (path, oldFile) ->
-        val newFile =
-          newFiles[path]?.let {
-            if (includeCompressed) {
-              it
-            } else {
-              it.copy(size = oldFile.size, isCompressed = oldFile.isCompressed)
-            }
+    }
+    val changed = oldFiles.mapNotNull { (path, oldFile) ->
+      val newFile =
+        newFiles[path]?.let {
+          if (includeCompressed) {
+            it
+          } else {
+            it.copy(size = oldFile.size, isCompressed = oldFile.isCompressed)
           }
-        if (newFile != null && newFile != oldFile) {
-          Change(
-            path,
-            newFile.size,
-            newFile.size - oldFile.size,
-            newFile.uncompressedSize,
-            newFile.uncompressedSize - oldFile.uncompressedSize,
-            Change.Type.Changed,
-          )
-        } else {
-          null
         }
+      if (newFile != null && newFile != oldFile) {
+        Change(
+          path,
+          newFile.size,
+          newFile.size - oldFile.size,
+          newFile.uncompressedSize,
+          newFile.uncompressedSize - oldFile.uncompressedSize,
+          Change.Type.Changed,
+        )
+      } else {
+        null
       }
+    }
 
     (added + removed + changed).sortedByDescending { it.sizeDiff.absoluteValue }
   }
