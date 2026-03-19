@@ -16,6 +16,7 @@ class ClassTest {
     val type = TypeDescriptor($$"Lcom/jakewharton/diffuse/format/ClassTest$Dummy;")
 
     assertThat(clazz.descriptor).isEqualTo(type)
+    assertThat(clazz.bytecodeVersion).isEqualTo(55) // Reflects the JVM target 11.
 
     val initMethod = Method(type, "<init>", emptyList(), TypeDescriptor("V"))
     val stringArrayDescriptor = TypeDescriptor("[Ljava/lang/String;")
