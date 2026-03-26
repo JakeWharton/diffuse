@@ -29,6 +29,13 @@ internal class JarDiffTextReport(private val jarDiff: JarDiff, private val summa
         appendLine("=================")
         appendLine(jarDiff.archive.toDetailReport())
       }
+      if (jarDiff.manifest.changed) {
+        appendLine()
+        appendLine("======================")
+        appendLine("====   MANIFEST   ====")
+        appendLine("======================")
+        appendLine(jarDiff.manifest.toDetailReport())
+      }
       if (jarDiff.jars.changed) {
         appendLine()
         appendLine("=====================")

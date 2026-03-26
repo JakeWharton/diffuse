@@ -276,6 +276,7 @@ public final class com/jakewharton/diffuse/format/Jar : com/jakewharton/diffuse/
 	public fun getDeclaredMembers ()Ljava/util/List;
 	public fun getFilename ()Ljava/lang/String;
 	public final fun getFiles ()Lcom/jakewharton/diffuse/format/ArchiveFiles;
+	public final fun getManifest ()Ljava/lang/String;
 	public fun getMembers ()Ljava/util/List;
 	public fun getReferencedMembers ()Ljava/util/List;
 	public static final fun parse (Lcom/jakewharton/diffuse/io/Input;)Lcom/jakewharton/diffuse/format/Jar;
