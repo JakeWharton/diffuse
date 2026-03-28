@@ -12,7 +12,7 @@ internal class AabDiff(val oldAab: Aab, val newAab: Aab) : BinaryDiff {
         oldModule.dexes.map { it.withMapping(oldAab.apiMapping) },
         newModule.dexes.map { it.withMapping(newAab.apiMapping) },
       )
-    val manifest = ManifestDiff(oldModule.manifest, newModule.manifest)
+    val manifest = AndroidManifestDiff(oldModule.manifest, newModule.manifest)
 
     val changed = archive.changed || dex.changed || manifest.changed
   }

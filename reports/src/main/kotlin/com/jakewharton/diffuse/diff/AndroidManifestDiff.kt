@@ -5,7 +5,10 @@ import com.github.difflib.UnifiedDiffUtils
 import com.jakewharton.diffuse.diffuseTable
 import com.jakewharton.diffuse.format.AndroidManifest
 
-internal class ManifestDiff(val oldManifest: AndroidManifest, val newManifest: AndroidManifest) {
+internal class AndroidManifestDiff(
+  val oldManifest: AndroidManifest,
+  val newManifest: AndroidManifest,
+) {
   internal val parsedPropertiesChanged =
     oldManifest.packageName != newManifest.packageName ||
       oldManifest.versionName != newManifest.versionName ||
@@ -27,7 +30,7 @@ internal class ManifestDiff(val oldManifest: AndroidManifest, val newManifest: A
   val changed = parsedPropertiesChanged || diff.isNotEmpty()
 }
 
-internal fun ManifestDiff.toDetailReport() = buildString {
+internal fun AndroidManifestDiff.toDetailReport() = buildString {
   if (parsedPropertiesChanged) {
     appendLine()
     appendLine(

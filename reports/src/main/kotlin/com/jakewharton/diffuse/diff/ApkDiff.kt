@@ -20,7 +20,7 @@ internal class ApkDiff(
       newApk.dexes.map { it.withMapping(newMapping) },
     )
   val arsc = ArscDiff(oldApk.arsc, newApk.arsc)
-  val manifest = ManifestDiff(oldApk.manifest, newApk.manifest)
+  val manifest = AndroidManifestDiff(oldApk.manifest, newApk.manifest)
 
   val lintMessages = listOfNotNull(archive.resourcesArscCompression())
 

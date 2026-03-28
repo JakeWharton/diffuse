@@ -13,7 +13,7 @@ internal class AarDiff(
 ) : BinaryDiff {
   val archive = ArchiveFilesDiff(oldAar.files, newAar.files, includeCompressed = false)
   val jars = JarsDiff(oldAar.jars, oldMapping, newAar.jars, newMapping)
-  val manifest = ManifestDiff(oldAar.manifest, newAar.manifest)
+  val manifest = AndroidManifestDiff(oldAar.manifest, newAar.manifest)
 
   override fun toTextReport(summaryOnly: Boolean): Report = AarDiffTextReport(this, summaryOnly)
 }
