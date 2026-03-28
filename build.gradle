@@ -23,7 +23,7 @@ subprojects {
   spotless {
     kotlin {
       ktfmt(libs.ktfmt.get().version).googleStyle()
-      target('**/*.kt')
+      target('src/**/*.kt')
     }
   }
 
