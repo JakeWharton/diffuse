@@ -30,12 +30,12 @@ buildConfig {
 }
 
 // A zip and tar are configured by default. We don't care about tar.
-tasks.named('distTar').configure { task ->
+tasks.named('distTar') { task ->
   task.enabled = false
 }
 
 // Build an exploded application directory by default for local testing.
-tasks.named('assemble').configure { task ->
+tasks.named('assemble') { task ->
   task.dependsOn(tasks.named('installDist'))
 }
 
