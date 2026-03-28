@@ -1,9 +1,7 @@
 pluginManagement {
-  dependencyResolutionManagement {
-    repositories {
-      mavenCentral()
-      gradlePluginPortal()
-    }
+  repositories {
+    mavenCentral()
+    gradlePluginPortal()
   }
 }
 dependencyResolutionManagement {
