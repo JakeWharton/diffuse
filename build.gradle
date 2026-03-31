@@ -35,6 +35,7 @@ subprojects {
         }
       }
       compilerOptions {
+        allWarningsAsErrors = true
         jvmTarget = JvmTarget.JVM_11
         freeCompilerArgs = [
             "-progressive",

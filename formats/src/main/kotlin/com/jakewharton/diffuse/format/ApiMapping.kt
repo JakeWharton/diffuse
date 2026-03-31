@@ -134,7 +134,7 @@ class ApiMapping private constructor(private val typeMappings: Map<TypeDescripto
           }
       }
       if (fromDescriptor != null) {
-        typeMappings[toDescriptor!!] = TypeMapping(fromDescriptor!!, fields!!, methods!!)
+        typeMappings[toDescriptor!!] = TypeMapping(fromDescriptor, fields!!, methods!!)
       }
       return ApiMapping(typeMappings)
     }
