@@ -12,6 +12,7 @@ import com.jakewharton.picnic.TextAlignment.MiddleCenter
 import com.jakewharton.picnic.TextAlignment.MiddleRight
 import com.jakewharton.picnic.renderText
 import me.saket.bytesize.ByteSize
+import me.saket.bytesize.absoluteValue
 import me.saket.bytesize.binaryBytes
 
 internal class ArchiveFilesDiff(
