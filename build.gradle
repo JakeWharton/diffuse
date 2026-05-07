@@ -35,18 +35,18 @@ subprojects {
         }
       }
       compilerOptions {
-        jvmTarget = JvmTarget.JVM_11
+        jvmTarget = JvmTarget.fromTarget(libs.versions.jdkRelease.get())
         freeCompilerArgs = [
             "-progressive",
             '-opt-in=kotlin.contracts.ExperimentalContracts',
-            '-Xjdk-release=11',
+            "-Xjdk-release=${libs.versions.jdkRelease.get()}",
         ]
       }
     }
   }
 
   tasks.withType(JavaCompile).configureEach {
-    options.release = 11
+    options.release = libs.versions.jdkRelease.get().toInteger()
   }
 
   configurations.configureEach {

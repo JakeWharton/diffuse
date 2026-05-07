@@ -225,7 +225,6 @@ public abstract interface class com/jakewharton/diffuse/format/BinaryFormat {
 
 public final class com/jakewharton/diffuse/format/Class {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Class$Companion;
-	public synthetic fun <init> (Ljava/lang/String;ILjava/util/List;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBytecodeVersion ()I
 	public final fun getDeclaredMembers ()Ljava/util/List;

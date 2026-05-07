@@ -10,7 +10,7 @@ import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
 class Class
-private constructor(
+internal constructor(
   val descriptor: TypeDescriptor,
   val bytecodeVersion: Int,
   val declaredMembers: List<Member>,
@@ -29,24 +29,24 @@ private constructor(
       referencedMembers == other.referencedMembers
 
   companion object {
-    @JvmStatic
-    @JvmName("parse")
-    fun Input.toClass(): Class {
-      val reader = ClassReader(toByteArray())
-      val type = TypeDescriptor("L${reader.className};")
-
-      val referencedVisitor = ReferencedMembersVisitor()
-      val declaredVisitor = DeclaredMembersVisitor(type, referencedVisitor)
-      reader.accept(declaredVisitor, 0)
-
-      return Class(
-        type,
-        declaredVisitor.version,
-        declaredVisitor.members.sorted(),
-        referencedVisitor.members.sorted(),
-      )
-    }
+    @JvmStatic @JvmName("parse") fun Input.toClass(): Class = toClassImpl()
   }
+}
+
+internal fun Input.toClassImpl(): Class {
+  val reader = ClassReader(toByteArray())
+  val type = TypeDescriptor("L${reader.className};")
+
+  val referencedVisitor = ReferencedMembersVisitor()
+  val declaredVisitor = DeclaredMembersVisitor(type, referencedVisitor)
+  reader.accept(declaredVisitor, 0)
+
+  return Class(
+    descriptor = type,
+    bytecodeVersion = declaredVisitor.version,
+    declaredMembers = declaredVisitor.members.sorted(),
+    referencedMembers = referencedVisitor.members.sorted(),
+  )
 }
 
 private class DeclaredMembersVisitor(val type: TypeDescriptor, val methodVisitor: MethodVisitor) :
@@ -148,31 +148,6 @@ private class ReferencedMembersVisitor : MethodVisitor(Opcodes.ASM9) {
       }
     return TypeDescriptor(ownerDescriptor)
   }
-}
-
-private fun parseMethod(owner: TypeDescriptor, name: String, descriptor: String): Method {
-  val parameterTypes = mutableListOf<TypeDescriptor>()
-  var i = 1
-  while (true) {
-    if (descriptor[i] == ')') {
-      break
-    }
-    var typeIndex = i
-    while (descriptor[typeIndex] == '[') {
-      typeIndex++
-    }
-    val end =
-      if (descriptor[typeIndex] == 'L') {
-        descriptor.indexOf(';', startIndex = typeIndex)
-      } else {
-        typeIndex
-      }
-    val parameterDescriptor = descriptor.substring(i, end + 1)
-    parameterTypes += TypeDescriptor(parameterDescriptor)
-    i += parameterDescriptor.length
-  }
-  val returnType = TypeDescriptor(descriptor.substring(i + 1))
-  return Method(owner, name, parameterTypes, returnType)
 }
 
 private val lambdaMetaFactory =

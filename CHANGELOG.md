@@ -10,6 +10,7 @@
 **Changed**
 - Replace `com.jakewharton.diffuse.io.Size` with `me.saket.bytesize.ByteSize` in the APIs.
 - Eliminate `data class` from public APIs.
+- Prefer Class-File API on Java 24 or above.
 
 **Fixed**
 - Significantly improve `.jar` diff performance.

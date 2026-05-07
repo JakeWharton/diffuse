@@ -1,7 +1,12 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.vanniktech.maven.publish'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: "dev.drewhamilton.poko"
+
+addMultiReleaseSourceSet(24)
 
 dependencies {
   api projects.io
@@ -21,4 +26,51 @@ dependencies {
   testImplementation libs.junit
   testImplementation libs.assertk
   testImplementation projects.testHelpers
+}
+
+tasks.named('jar', Jar) {
+  manifest {
+    attributes 'Multi-Release': 'true'
+  }
+}
+
+def addMultiReleaseSourceSet(int version) {
+  kotlin.target.compilations.create("java${version}") {
+    // Import main and its classpath as dependencies and establish internal visibility.
+    associateWith(kotlin.target.compilations.main)
+
+    compileJavaTaskProvider.configure { JavaCompile task ->
+      task.options.release = version
+    }
+    compileTaskProvider.configure { KotlinJvmCompile task ->
+      task.compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(version.toString())
+        freeCompilerArgs = [
+          "-Xjdk-release=$version",
+        ]
+      }
+    }
+
+    tasks.named('jar', Jar) { jar ->
+      jar.from(output.allOutputs) {
+        into("META-INF/versions/$version")
+      }
+    }
+  }
+
+  def versionedTest = tasks.register("testJava${version}", Test) { task ->
+    task.group = LifecycleBasePlugin.VERIFICATION_GROUP
+    task.description = "Runs test suite using Java ${version} toolchain."
+    task.testClassesDirs = sourceSets.test.output.classesDirs
+    def testCpWithoutMainOutput = sourceSets.test.runtimeClasspath - sourceSets.main.output
+    // Prefer MR classes on the classpath, so remove main output from the test runtime classpath.
+    task.classpath = files(tasks.named('jar', Jar).flatMap { it.archiveFile }) + testCpWithoutMainOutput
+    task.javaLauncher = javaToolchains.launcherFor {
+      languageVersion = JavaLanguageVersion.of(version)
+      vendor = JvmVendorSpec.AZUL
+    }
+  }
+  tasks.named('check') {
+    dependsOn(versionedTest)
+  }
 }
