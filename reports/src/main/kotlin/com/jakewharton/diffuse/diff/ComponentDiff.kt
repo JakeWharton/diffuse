@@ -56,14 +56,22 @@ internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff
           )
           if (diff.added.isNotEmpty()) {
             appendLine()
-            diff.added.forEach { appendLine("+ $it") }
+            diff.added.forEach { appendLine("+ ${it.toString().truncateTo(1024)}") }
           }
           if (diff.removed.isNotEmpty()) {
             appendLine()
-            diff.removed.forEach { appendLine("- $it") }
+            diff.removed.forEach { appendLine("- ${it.toString().truncateTo(1024)}") }
           }
         }
         .prependIndent("  ")
     )
+  }
+}
+
+private fun String.truncateTo(max: Int): String {
+  return if (length > max) {
+    substring(0, max) + '…'
+  } else {
+    this
   }
 }
