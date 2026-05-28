@@ -13,8 +13,9 @@ internal class JarDiff(
 ) : BinaryDiff {
   val archive = ArchiveFilesDiff(oldJar.files, newJar.files, includeCompressed = false)
   val jars = JarsDiff(listOf(oldJar), oldMapping, listOf(newJar), newMapping)
+  val manifest = JarManifestDiff(oldJar.manifest, newJar.manifest)
 
-  val changed = jars.changed || archive.changed
+  val changed = jars.changed || archive.changed || manifest.changed
 
   override fun toTextReport(summaryOnly: Boolean): Report = JarDiffTextReport(this, summaryOnly)
 }

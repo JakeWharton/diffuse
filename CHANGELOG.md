@@ -6,6 +6,7 @@
 **Added**
 - Add `--summary-only` flag.
 - Support diffing bytecode versions for classes.
+- Show JAR manifest diff details.
 
 **Changed**
 - Replace `com.jakewharton.diffuse.io.Size` with `me.saket.bytesize.ByteSize` in the APIs.

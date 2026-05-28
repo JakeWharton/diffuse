@@ -280,11 +280,12 @@ public final class com/jakewharton/diffuse/format/Field : com/jakewharton/diffus
 
 public final class com/jakewharton/diffuse/format/Jar : com/jakewharton/diffuse/format/BinaryFormat, com/jakewharton/diffuse/format/CodeBinary {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Jar$Companion;
-	public synthetic fun <init> (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFiles;Ljava/util/List;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFiles;Ljava/util/List;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getClasses ()Ljava/util/List;
 	public fun getDeclaredMembers ()Ljava/util/List;
 	public fun getFilename ()Ljava/lang/String;
 	public final fun getFiles ()Lcom/jakewharton/diffuse/format/ArchiveFiles;
+	public final fun getManifest ()Ljava/lang/String;
 	public fun getMembers ()Ljava/util/List;
 	public fun getReferencedMembers ()Ljava/util/List;
 	public static final fun parse (Lcom/jakewharton/diffuse/io/Input;)Lcom/jakewharton/diffuse/format/Jar;
