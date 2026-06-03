@@ -1,6 +1,5 @@
 public final class com/jakewharton/diffuse/format/Aab : com/jakewharton/diffuse/format/BinaryFormat {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Aab$Companion;
-	public synthetic fun <init> (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ApiMapping;Lcom/jakewharton/diffuse/format/Aab$Module;Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getApiMapping ()Lcom/jakewharton/diffuse/format/ApiMapping;
 	public final fun getBaseModule ()Lcom/jakewharton/diffuse/format/Aab$Module;
 	public final fun getFeatureModules ()Ljava/util/Map;
@@ -15,7 +14,6 @@ public final class com/jakewharton/diffuse/format/Aab$Companion {
 
 public final class com/jakewharton/diffuse/format/Aab$Module {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Aab$Module$Companion;
-	public synthetic fun <init> (Lcom/jakewharton/diffuse/format/ArchiveFiles;Lcom/jakewharton/diffuse/format/AndroidManifest;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getDexes ()Ljava/util/List;
 	public final fun getFiles ()Lcom/jakewharton/diffuse/format/ArchiveFiles;
 	public final fun getManifest ()Lcom/jakewharton/diffuse/format/AndroidManifest;
@@ -27,7 +25,6 @@ public final class com/jakewharton/diffuse/format/Aab$Module$Companion {
 
 public final class com/jakewharton/diffuse/format/Aar : com/jakewharton/diffuse/format/BinaryFormat {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Aar$Companion;
-	public synthetic fun <init> (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFiles;Lcom/jakewharton/diffuse/format/AndroidManifest;Lcom/jakewharton/diffuse/format/Jar;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getClasses ()Lcom/jakewharton/diffuse/format/Jar;
 	public fun getFilename ()Ljava/lang/String;
 	public final fun getFiles ()Lcom/jakewharton/diffuse/format/ArchiveFiles;
@@ -44,7 +41,6 @@ public final class com/jakewharton/diffuse/format/Aar$Companion {
 public final class com/jakewharton/diffuse/format/AndroidManifest {
 	public static final field Companion Lcom/jakewharton/diffuse/format/AndroidManifest$Companion;
 	public static final field NAME Ljava/lang/String;
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun getVersionCode ()Ljava/lang/Long;
 	public final fun getVersionName ()Ljava/lang/String;
@@ -61,7 +57,6 @@ public final class com/jakewharton/diffuse/format/AndroidManifest$Companion {
 public final class com/jakewharton/diffuse/format/ApiMapping {
 	public static final field Companion Lcom/jakewharton/diffuse/format/ApiMapping$Companion;
 	public static final field EMPTY Lcom/jakewharton/diffuse/format/ApiMapping;
-	public synthetic fun <init> (Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun get (Lcom/jakewharton/diffuse/format/Field;)Lcom/jakewharton/diffuse/format/Field;
 	public final fun get (Lcom/jakewharton/diffuse/format/Member;)Lcom/jakewharton/diffuse/format/Member;
@@ -82,7 +77,6 @@ public final class com/jakewharton/diffuse/format/ApiMapping$Companion {
 
 public final class com/jakewharton/diffuse/format/Apk : com/jakewharton/diffuse/format/BinaryFormat {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Apk$Companion;
-	public synthetic fun <init> (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFiles;Ljava/util/List;Lcom/jakewharton/diffuse/format/Arsc;Lcom/jakewharton/diffuse/format/AndroidManifest;Lcom/jakewharton/diffuse/format/Signatures;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getArsc ()Lcom/jakewharton/diffuse/format/Arsc;
 	public final fun getDexes ()Ljava/util/List;
 	public fun getFilename ()Ljava/lang/String;
@@ -128,7 +122,6 @@ public final class com/jakewharton/diffuse/format/ArchiveFile$Type : java/lang/E
 	public static final field Native Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
 	public static final field Other Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
 	public static final field Res Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
-	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun fromAabName (Ljava/lang/String;)Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
 	public static final fun fromAarName (Ljava/lang/String;)Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
 	public static final fun fromApkName (Ljava/lang/String;)Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
@@ -198,7 +191,6 @@ public final class com/jakewharton/diffuse/format/ArchiveFiles$Companion {
 public final class com/jakewharton/diffuse/format/Arsc {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Arsc$Companion;
 	public static final field NAME Ljava/lang/String;
-	public synthetic fun <init> (Ljava/util/List;Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun create (Lcom/jakewharton/diffuse/io/Input;)Lcom/jakewharton/diffuse/format/Arsc;
 	public final fun getConfigs ()Ljava/util/List;
 	public final fun getEntries ()Ljava/util/Map;
@@ -225,7 +217,6 @@ public abstract interface class com/jakewharton/diffuse/format/BinaryFormat {
 
 public final class com/jakewharton/diffuse/format/Class {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Class$Companion;
-	public synthetic fun <init> (Ljava/lang/String;ILjava/util/List;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBytecodeVersion ()I
 	public final fun getDeclaredMembers ()Ljava/util/List;
@@ -248,7 +239,6 @@ public abstract interface class com/jakewharton/diffuse/format/CodeBinary {
 
 public final class com/jakewharton/diffuse/format/Dex : com/jakewharton/diffuse/format/BinaryFormat, com/jakewharton/diffuse/format/CodeBinary {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Dex$Companion;
-	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getClasses ()Ljava/util/List;
 	public fun getDeclaredMembers ()Ljava/util/List;
 	public fun getFilename ()Ljava/lang/String;
@@ -280,7 +270,6 @@ public final class com/jakewharton/diffuse/format/Field : com/jakewharton/diffus
 
 public final class com/jakewharton/diffuse/format/Jar : com/jakewharton/diffuse/format/BinaryFormat, com/jakewharton/diffuse/format/CodeBinary {
 	public static final field Companion Lcom/jakewharton/diffuse/format/Jar$Companion;
-	public synthetic fun <init> (Ljava/lang/String;Lcom/jakewharton/diffuse/format/ArchiveFiles;Ljava/util/List;Ljava/util/List;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getClasses ()Ljava/util/List;
 	public fun getDeclaredMembers ()Ljava/util/List;
 	public fun getFilename ()Ljava/lang/String;
