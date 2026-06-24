@@ -21,31 +21,31 @@ internal class AabDiffTextReport(private val aabDiff: AabDiff, private val summa
       appendLine()
       appendLine(
         diffuseTable {
-            cellStyle { alignment = MiddleCenter }
+          cellStyle { alignment = MiddleCenter }
 
-            header {
-              cellStyle { alignment = BottomLeft }
-              row {
-                cell("MODULES")
-                cell("old")
-                cell("new")
-              }
-            }
-
+          header {
+            cellStyle { alignment = BottomLeft }
             row {
-              cell("base") { alignment = MiddleRight }
-              cell("✓")
-              cell("✓")
-            }
-
-            for (name in aabDiff.featureModuleNames) {
-              row {
-                cell(name) { alignment = MiddleRight }
-                cell(if (name in aabDiff.oldAab.featureModules) "✓" else "")
-                cell(if (name in aabDiff.newAab.featureModules) "✓" else "")
-              }
+              cell("MODULES")
+              cell("old")
+              cell("new")
             }
           }
+
+          row {
+            cell("base") { alignment = MiddleRight }
+            cell("✓")
+            cell("✓")
+          }
+
+          for (name in aabDiff.featureModuleNames) {
+            row {
+              cell(name) { alignment = MiddleRight }
+              cell(if (name in aabDiff.oldAab.featureModules) "✓" else "")
+              cell(if (name in aabDiff.newAab.featureModules) "✓" else "")
+            }
+          }
+        }
           .toString()
       )
 

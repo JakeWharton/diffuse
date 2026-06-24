@@ -20,68 +20,67 @@ internal class ArscDiff(val oldArsc: Arsc, val newArsc: Arsc) {
       entriesRemoved.isNotEmpty()
 }
 
-internal fun ArscDiff.toSummaryTable() =
-  diffuseTable {
-      header {
-        row {
-          cell("ARSC")
-          cell("old")
-          cell("new")
-          cell("diff") { columnSpan = 2 }
+internal fun ArscDiff.toSummaryTable() = diffuseTable {
+  header {
+    row {
+      cell("ARSC")
+      cell("old")
+      cell("new")
+      cell("diff") { columnSpan = 2 }
+    }
+  }
+
+  body {
+    cellStyle { alignment = MiddleRight }
+
+    row {
+      cell("configs")
+      cell(oldArsc.configs.size)
+      cell(newArsc.configs.size)
+
+      val configsDelta = configsAdded.size - configsRemoved.size
+      cell(configsDelta.toDiffString()) { borderRight = false }
+
+      val delta =
+        if (configsAdded.isNotEmpty() || configsRemoved.isNotEmpty()) {
+          val added = configsAdded.size.toDiffString(zeroSign = '+')
+          val removed = (-configsRemoved.size).toDiffString(zeroSign = '-')
+          "($added $removed)"
+        } else {
+          ""
         }
-      }
-
-      body {
-        cellStyle { alignment = MiddleRight }
-
-        row {
-          cell("configs")
-          cell(oldArsc.configs.size)
-          cell(newArsc.configs.size)
-
-          val configsDelta = configsAdded.size - configsRemoved.size
-          cell(configsDelta.toDiffString()) { borderRight = false }
-
-          val delta =
-            if (configsAdded.isNotEmpty() || configsRemoved.isNotEmpty()) {
-              val added = configsAdded.size.toDiffString(zeroSign = '+')
-              val removed = (-configsRemoved.size).toDiffString(zeroSign = '-')
-              "($added $removed)"
-            } else {
-              ""
-            }
-          cell(delta) {
-            borderLeft = false
-            paddingLeft = 0
-            alignment = MiddleLeft
-          }
-        }
-
-        row {
-          cell("entries")
-          cell(oldArsc.entries.size)
-          cell(newArsc.entries.size)
-
-          val entriesDelta = entriesAdded.size - entriesRemoved.size
-          cell(entriesDelta.toDiffString()) { borderRight = false }
-
-          val delta =
-            if (entriesAdded.isNotEmpty() || entriesRemoved.isNotEmpty()) {
-              val added = entriesAdded.size.toDiffString(zeroSign = '+')
-              val removed = (-entriesRemoved.size).toDiffString(zeroSign = '-')
-              "($added $removed)"
-            } else {
-              ""
-            }
-          cell(delta) {
-            borderLeft = false
-            paddingLeft = 0
-            alignment = MiddleLeft
-          }
-        }
+      cell(delta) {
+        borderLeft = false
+        paddingLeft = 0
+        alignment = MiddleLeft
       }
     }
-    .renderText()
+
+    row {
+      cell("entries")
+      cell(oldArsc.entries.size)
+      cell(newArsc.entries.size)
+
+      val entriesDelta = entriesAdded.size - entriesRemoved.size
+      cell(entriesDelta.toDiffString()) { borderRight = false }
+
+      val delta =
+        if (entriesAdded.isNotEmpty() || entriesRemoved.isNotEmpty()) {
+          val added = entriesAdded.size.toDiffString(zeroSign = '+')
+          val removed = (-entriesRemoved.size).toDiffString(zeroSign = '-')
+          "($added $removed)"
+        } else {
+          ""
+        }
+      cell(delta) {
+        borderLeft = false
+        paddingLeft = 0
+        alignment = MiddleLeft
+      }
+    }
+  }
+}
+  .renderText()
 
 internal fun ArscDiff.toDetailReport() = buildString {
   fun <T> appendComponentDiff(
@@ -98,23 +97,23 @@ internal fun ArscDiff.toDetailReport() = buildString {
         buildString {
             appendLine(
               diffuseTable {
-                  header {
-                    row {
-                      cell("old")
-                      cell("new")
-                      cell("diff")
-                    }
+                header {
+                  row {
+                    cell("old")
+                    cell("new")
+                    cell("diff")
                   }
-
-                  val diffSize = (added.size - removed.size).toDiffString()
-                  val addedSize = added.size.toDiffString(zeroSign = '+')
-                  val removedSize = (-removed.size).toDiffString(zeroSign = '-')
-                  row(
-                    componentSelector(oldArsc).size,
-                    componentSelector(newArsc).size,
-                    "$diffSize ($addedSize $removedSize)",
-                  )
                 }
+
+                val diffSize = (added.size - removed.size).toDiffString()
+                val addedSize = added.size.toDiffString(zeroSign = '+')
+                val removedSize = (-removed.size).toDiffString(zeroSign = '-')
+                row(
+                  componentSelector(oldArsc).size,
+                  componentSelector(newArsc).size,
+                  "$diffSize ($addedSize $removedSize)",
+                )
+              }
                 .renderText()
             )
             added.forEach { appendLine("+ $it") }

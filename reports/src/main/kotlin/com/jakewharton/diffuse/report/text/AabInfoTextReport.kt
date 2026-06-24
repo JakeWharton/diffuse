@@ -13,14 +13,14 @@ internal class AabInfoTextReport(private val aab: Aab) : Report {
       appendLine()
       appendLine(
         diffuseTable {
-            header { row("MODULES") }
+          header { row("MODULES") }
 
-            row("base")
+          row("base")
 
-            for (name in aab.featureModules.keys) {
-              row(name)
-            }
+          for (name in aab.featureModules.keys) {
+            row(name)
           }
+        }
           .toString()
       )
 

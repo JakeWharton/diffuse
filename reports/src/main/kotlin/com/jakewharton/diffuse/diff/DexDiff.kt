@@ -35,87 +35,86 @@ internal class DexDiff(val oldDexes: List<Dex>, val newDexes: List<Dex>) : Binar
   override fun toTextReport(summaryOnly: Boolean): Report = DexDiffTextReport(this, summaryOnly)
 }
 
-internal fun DexDiff.toSummaryTable() =
-  diffuseTable {
-      header {
-        if (isMultidex) {
-          row {
-            cell("DEX") {
-              rowSpan = 2
-              alignment = BottomLeft
-            }
-            cell("raw") {
-              columnSpan = 3
-              alignment = BottomCenter
-            }
-            cell("unique") {
-              columnSpan = 4
-              alignment = BottomCenter
-            }
-          }
+internal fun DexDiff.toSummaryTable() = diffuseTable {
+  header {
+    if (isMultidex) {
+      row {
+        cell("DEX") {
+          rowSpan = 2
+          alignment = BottomLeft
         }
-        row {
-          if (!isMultidex) {
-            cell("DEX")
-          } else {
-            cell("old")
-            cell("new")
-            cell("diff")
-          }
-          cell("old")
-          cell("new")
-          cell("diff") { columnSpan = 2 }
+        cell("raw") {
+          columnSpan = 3
+          alignment = BottomCenter
         }
-      }
-
-      body {
-        cellStyle { alignment = MiddleRight }
-
-        row {
-          cell("files")
-          cell(oldDexes.size)
-          cell(newDexes.size)
-          cell((newDexes.size - oldDexes.size).toDiffString()) {
-            if (!isMultidex) {
-              borderRight = false
-            }
-          }
-          if (isMultidex) {
-            // Add empty cells to ensure borders get drawn
-            cell("")
-            cell("")
-            cell("") { columnSpan = 2 }
-          }
+        cell("unique") {
+          columnSpan = 4
+          alignment = BottomCenter
         }
-
-        fun addDexRow(name: String, diff: ComponentDiff<*>) = row {
-          cell(name)
-          if (isMultidex) {
-            cell(diff.oldRawCount)
-            cell(diff.newRawCount)
-            cell((diff.newRawCount - diff.oldRawCount).toDiffString())
-          }
-          cell(diff.oldCount)
-          cell(diff.newCount)
-          cell((diff.added.size - diff.removed.size).toDiffString()) { borderRight = false }
-
-          val addedSize = diff.added.size.toDiffString(zeroSign = '+')
-          val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
-          cell("($addedSize $removedSize)") {
-            borderLeft = false
-            paddingLeft = 0
-            alignment = MiddleLeft
-          }
-        }
-
-        addDexRow("strings", strings)
-        addDexRow("types", types)
-        addDexRow("classes", classes)
-        addDexRow("methods", methods)
-        addDexRow("fields", fields)
       }
     }
-    .renderText()
+    row {
+      if (!isMultidex) {
+        cell("DEX")
+      } else {
+        cell("old")
+        cell("new")
+        cell("diff")
+      }
+      cell("old")
+      cell("new")
+      cell("diff") { columnSpan = 2 }
+    }
+  }
+
+  body {
+    cellStyle { alignment = MiddleRight }
+
+    row {
+      cell("files")
+      cell(oldDexes.size)
+      cell(newDexes.size)
+      cell((newDexes.size - oldDexes.size).toDiffString()) {
+        if (!isMultidex) {
+          borderRight = false
+        }
+      }
+      if (isMultidex) {
+        // Add empty cells to ensure borders get drawn
+        cell("")
+        cell("")
+        cell("") { columnSpan = 2 }
+      }
+    }
+
+    fun addDexRow(name: String, diff: ComponentDiff<*>) = row {
+      cell(name)
+      if (isMultidex) {
+        cell(diff.oldRawCount)
+        cell(diff.newRawCount)
+        cell((diff.newRawCount - diff.oldRawCount).toDiffString())
+      }
+      cell(diff.oldCount)
+      cell(diff.newCount)
+      cell((diff.added.size - diff.removed.size).toDiffString()) { borderRight = false }
+
+      val addedSize = diff.added.size.toDiffString(zeroSign = '+')
+      val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
+      cell("($addedSize $removedSize)") {
+        borderLeft = false
+        paddingLeft = 0
+        alignment = MiddleLeft
+      }
+    }
+
+    addDexRow("strings", strings)
+    addDexRow("types", types)
+    addDexRow("classes", classes)
+    addDexRow("methods", methods)
+    addDexRow("fields", fields)
+  }
+}
+  .renderText()
 
 internal fun DexDiff.toDetailReport() = buildString {
   appendComponentDiff("STRINGS", strings)

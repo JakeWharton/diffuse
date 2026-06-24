@@ -29,25 +29,25 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff, private val summa
       if (apkDiff.lintMessages.isNotEmpty()) {
         appendLine(
           diffuseTable {
-              header { row("NOTICES") }
-              body {
-                apkDiff.lintMessages.sorted().forEach { notice ->
-                  row(
-                    buildString {
-                      append(
-                        when (notice.type) {
-                          Notice.Type.Informational -> 'i'
-                          Notice.Type.Warning -> '!'
-                          Notice.Type.Resolution -> '✓'
-                        }
-                      )
-                      append("  ")
-                      append(notice.message)
-                    }
-                  )
-                }
+            header { row("NOTICES") }
+            body {
+              apkDiff.lintMessages.sorted().forEach { notice ->
+                row(
+                  buildString {
+                    append(
+                      when (notice.type) {
+                        Notice.Type.Informational -> 'i'
+                        Notice.Type.Warning -> '!'
+                        Notice.Type.Resolution -> '✓'
+                      }
+                    )
+                    append("  ")
+                    append(notice.message)
+                  }
+                )
               }
             }
+          }
             .toString()
         )
         appendLine()

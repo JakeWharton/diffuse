@@ -39,19 +39,19 @@ internal fun StringBuilder.appendComponentDiff(name: String, diff: ComponentDiff
       buildString {
           appendLine(
             diffuseTable {
-                header {
-                  row {
-                    cell("old")
-                    cell("new")
-                    cell("diff")
-                  }
+              header {
+                row {
+                  cell("old")
+                  cell("new")
+                  cell("diff")
                 }
-
-                val diffSize = (diff.added.size - diff.removed.size).toDiffString()
-                val addedSize = diff.added.size.toDiffString(zeroSign = '+')
-                val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
-                row(diff.oldCount, diff.newCount, "$diffSize ($addedSize $removedSize)")
               }
+
+              val diffSize = (diff.added.size - diff.removed.size).toDiffString()
+              val addedSize = diff.added.size.toDiffString(zeroSign = '+')
+              val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
+              row(diff.oldCount, diff.newCount, "$diffSize ($addedSize $removedSize)")
+            }
               .renderText()
           )
           if (diff.added.isNotEmpty()) {

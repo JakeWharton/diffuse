@@ -36,42 +36,41 @@ internal class JarsDiff(
   val changed = bytecodeVersions.changed || methods.changed || fields.changed
 }
 
-internal fun JarsDiff.toSummaryTable(name: String) =
-  diffuseTable {
-      header {
-        row {
-          cell(name)
-          cell("old")
-          cell("new")
-          cell("diff") { columnSpan = 2 }
-        }
-      }
+internal fun JarsDiff.toSummaryTable(name: String) = diffuseTable {
+  header {
+    row {
+      cell(name)
+      cell("old")
+      cell("new")
+      cell("diff") { columnSpan = 2 }
+    }
+  }
 
-      body {
-        cellStyle { alignment = MiddleRight }
+  body {
+    cellStyle { alignment = MiddleRight }
 
-        fun addRow(name: String, diff: ComponentDiff<*>) = row {
-          cell(name)
-          cell(diff.oldCount)
-          cell(diff.newCount)
-          cell((diff.added.size - diff.removed.size).toDiffString()) { borderRight = false }
+    fun addRow(name: String, diff: ComponentDiff<*>) = row {
+      cell(name)
+      cell(diff.oldCount)
+      cell(diff.newCount)
+      cell((diff.added.size - diff.removed.size).toDiffString()) { borderRight = false }
 
-          val addedSize = diff.added.size.toDiffString(zeroSign = '+')
-          val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
-          cell("($addedSize $removedSize)") {
-            borderLeft = false
-            paddingLeft = 0
-            alignment = MiddleLeft
-          }
-        }
-
-        // TODO addRow("strings", strings)?
-        addRow("classes", classes)
-        addRow("methods", methods)
-        addRow("fields", fields)
+      val addedSize = diff.added.size.toDiffString(zeroSign = '+')
+      val removedSize = (-diff.removed.size).toDiffString(zeroSign = '-')
+      cell("($addedSize $removedSize)") {
+        borderLeft = false
+        paddingLeft = 0
+        alignment = MiddleLeft
       }
     }
-    .renderText()
+
+    // TODO addRow("strings", strings)?
+    addRow("classes", classes)
+    addRow("methods", methods)
+    addRow("fields", fields)
+  }
+}
+  .renderText()
 
 internal fun JarsDiff.toDetailReport() = buildString {
   // TODO appendComponentDiff("STRINGS", strings)?
