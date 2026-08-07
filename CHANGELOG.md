@@ -10,6 +10,7 @@
 **Changed**
 - Replace `com.jakewharton.diffuse.io.Size` with `me.saket.bytesize.ByteSize` in the APIs.
 - Eliminate `data class` from public APIs.
+- Show compressed columns when compressed entries present.
 
 **Fixed**
 - Significantly improve `.jar` diff performance.

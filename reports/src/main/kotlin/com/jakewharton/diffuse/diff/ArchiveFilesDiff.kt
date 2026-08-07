@@ -18,7 +18,7 @@ import me.saket.bytesize.binaryBytes
 internal class ArchiveFilesDiff(
   val oldFiles: ArchiveFiles,
   val newFiles: ArchiveFiles,
-  val includeCompressed: Boolean = true,
+  val includeCompressed: Boolean = oldFiles.isCompressed || newFiles.isCompressed,
 ) {
   data class Change(
     val path: String,
@@ -235,3 +235,6 @@ internal fun ArchiveFilesDiff.toDetailReport() = buildString {
       .renderText()
   )
 }
+
+private val ArchiveFiles.isCompressed: Boolean
+  get() = values.any { it.isCompressed }
