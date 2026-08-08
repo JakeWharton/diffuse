@@ -1,7 +1,10 @@
 package com.jakewharton.diffuse.format
 
+import assertk.all
 import assertk.assertThat
 import assertk.assertions.containsOnly
+import assertk.assertions.hasSize
+import assertk.assertions.index
 import assertk.assertions.isEqualTo
 import com.jakewharton.diffuse.format.Class.Companion.toClass
 import java.util.function.Function
@@ -17,6 +20,11 @@ class ClassTest {
 
     assertThat(clazz.descriptor).isEqualTo(type)
     assertThat(clazz.bytecodeVersion).isEqualTo(55) // Reflects the JVM target 11.
+    assertThat(clazz.kotlinMetadataVersion).all {
+      hasSize(3) // Like [2,4,0].
+      index(0).isEqualTo(2)
+      index(2).isEqualTo(0)
+    }
 
     val initMethod = Method(type, "<init>", emptyList(), TypeDescriptor("V"))
     val stringArrayDescriptor = TypeDescriptor("[Ljava/lang/String;")

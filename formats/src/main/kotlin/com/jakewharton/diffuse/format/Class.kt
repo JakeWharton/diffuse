@@ -2,6 +2,7 @@ package com.jakewharton.diffuse.format
 
 import com.jakewharton.diffuse.io.Input
 import java.util.Objects
+import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.FieldVisitor
@@ -13,18 +14,26 @@ class Class
 private constructor(
   val descriptor: TypeDescriptor,
   val bytecodeVersion: Int,
+  val kotlinMetadataVersion: IntArray,
   val declaredMembers: List<Member>,
   val referencedMembers: List<Member>,
 ) {
   override fun toString() = descriptor.toString()
 
   override fun hashCode() =
-    Objects.hash(descriptor, bytecodeVersion, declaredMembers, referencedMembers)
+    Objects.hash(
+      descriptor,
+      bytecodeVersion,
+      kotlinMetadataVersion.contentHashCode(),
+      declaredMembers,
+      referencedMembers,
+    )
 
   override fun equals(other: Any?) =
     other is Class &&
       descriptor == other.descriptor &&
       bytecodeVersion == other.bytecodeVersion &&
+      kotlinMetadataVersion.contentEquals(other.kotlinMetadataVersion) &&
       declaredMembers == other.declaredMembers &&
       referencedMembers == other.referencedMembers
 
@@ -42,6 +51,7 @@ private constructor(
       return Class(
         type,
         declaredVisitor.version,
+        declaredVisitor.kotlinMetadataVersion,
         declaredVisitor.members.sorted(),
         referencedVisitor.members.sorted(),
       )
@@ -52,6 +62,7 @@ private constructor(
 private class DeclaredMembersVisitor(val type: TypeDescriptor, val methodVisitor: MethodVisitor) :
   ClassVisitor(Opcodes.ASM9) {
   var version: Int = 0
+  var kotlinMetadataVersion = intArrayOf()
   val members = mutableListOf<Member>()
 
   override fun visit(
@@ -86,6 +97,28 @@ private class DeclaredMembersVisitor(val type: TypeDescriptor, val methodVisitor
   ): FieldVisitor? {
     members += Field(type, name, TypeDescriptor(descriptor))
     return null
+  }
+
+  override fun visitAnnotation(descriptor: String?, visible: Boolean): AnnotationVisitor? {
+    if (descriptor == "Lkotlin/Metadata;") {
+      return KotlinMetadataAnnotationVisitor { kotlinMetadataVersion = it }
+    }
+    return super.visitAnnotation(descriptor, visible)
+  }
+}
+
+/**
+ * Reads [Metadata.bytecodeVersion] directly via ASM's [AnnotationVisitor] instead of
+ * `kotlin.metadata.jvm.KotlinClassMetadata` to avoid overheads for parsing [Metadata.data1] and
+ * [Metadata.data2].
+ */
+private class KotlinMetadataAnnotationVisitor(
+  private val onMetadataVersionFound: (IntArray) -> Unit
+) : AnnotationVisitor(Opcodes.ASM9) {
+  override fun visit(name: String?, value: Any?) {
+    if (name == "mv" && value is IntArray) {
+      onMetadataVersionFound(value)
+    }
   }
 }
 

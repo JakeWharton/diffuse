@@ -221,6 +221,7 @@ public final class com/jakewharton/diffuse/format/Class {
 	public final fun getBytecodeVersion ()I
 	public final fun getDeclaredMembers ()Ljava/util/List;
 	public final fun getDescriptor-BeHrSHk ()Ljava/lang/String;
+	public final fun getKotlinMetadataVersion ()[I
 	public final fun getReferencedMembers ()Ljava/util/List;
 	public fun hashCode ()I
 	public static final fun parse (Lcom/jakewharton/diffuse/io/Input;)Lcom/jakewharton/diffuse/format/Class;
