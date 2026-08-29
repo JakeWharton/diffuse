@@ -7,6 +7,7 @@
 - Add `--summary-only` flag.
 - Support diffing bytecode versions for classes.
 - Support diffing Kotlin metadata versions for classes.
+- Support diffing directory entry sizes.
 
 **Changed**
 - Replace `com.jakewharton.diffuse.io.Size` with `me.saket.bytesize.ByteSize` in the APIs.

@@ -19,7 +19,7 @@ class ApkInfoTextReport(private val apk: Apk) : Report {
         apk.files.toSummaryTable(
           "APK",
           ArchiveFile.Type.APK_TYPES,
-          skipIfEmptyTypes = setOf(ArchiveFile.Type.Native),
+          skipIfEmptyTypes = setOf(ArchiveFile.Type.Native, ArchiveFile.Type.Dir),
         )
       )
       appendLine()

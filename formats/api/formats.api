@@ -114,6 +114,7 @@ public final class com/jakewharton/diffuse/format/ArchiveFile$Type : java/lang/E
 	public static final field Class Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
 	public static final field Companion Lcom/jakewharton/diffuse/format/ArchiveFile$Type$Companion;
 	public static final field Dex Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
+	public static final field Dir Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
 	public static final field JAR_TYPES Ljava/util/List;
 	public static final field Jar Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
 	public static final field JarLibs Lcom/jakewharton/diffuse/format/ArchiveFile$Type;
@@ -141,6 +142,7 @@ public final class com/jakewharton/diffuse/format/ArchiveFile$Type$Companion {
 
 public final class com/jakewharton/diffuse/format/ArchiveFiles : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
 	public static final field Companion Lcom/jakewharton/diffuse/format/ArchiveFiles$Companion;
+	public fun <init> (Ljava/util/Map;)V
 	public fun clear ()V
 	public synthetic fun compute (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
 	public fun compute (Ljava/lang/String;Ljava/util/function/BiFunction;)Lcom/jakewharton/diffuse/format/ArchiveFile;

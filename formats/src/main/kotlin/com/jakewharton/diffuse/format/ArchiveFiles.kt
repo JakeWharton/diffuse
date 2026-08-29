@@ -5,7 +5,7 @@ import com.jakewharton.diffuse.format.ArchiveFile.Type.Other
 import com.jakewharton.diffuse.io.Zip
 import me.saket.bytesize.binaryBytes
 
-class ArchiveFiles internal constructor(private val files: Map<String, ArchiveFile>) :
+class ArchiveFiles(private val files: Map<String, ArchiveFile>) :
   Map<String, ArchiveFile> by files {
   override fun hashCode() = files.hashCode()
 
