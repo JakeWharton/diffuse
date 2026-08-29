@@ -2,6 +2,7 @@ package com.jakewharton.diffuse.format
 
 import com.android.dex.ClassDef
 import com.android.dex.Dex as AndroidDex
+import com.android.dex.DexFormat as AndroidDexFormat
 import com.android.dex.FieldId
 import com.android.dex.MethodId
 import com.jakewharton.diffuse.io.Input
@@ -9,6 +10,7 @@ import com.jakewharton.diffuse.io.Input
 class Dex
 private constructor(
   override val filename: String,
+  val formatVersion: Int,
   val strings: List<String>,
   val types: List<String>,
   val classes: List<TypeDescriptor>,
@@ -26,6 +28,7 @@ private constructor(
     val mappedReferencedMembers = referencedMembers.map(mapping::get)
     return Dex(
       filename,
+      formatVersion,
       strings,
       types,
       mappedClasses,
@@ -38,7 +41,15 @@ private constructor(
     @JvmStatic
     @JvmName("parse")
     fun Input.toDex(): Dex {
-      val dex = AndroidDex(toByteArray())
+      val bytes = toByteArray()
+      val dex = AndroidDex(bytes)
+      val formatVersion =
+        String(
+            bytes,
+            offset = AndroidDexFormat.MAGIC_PREFIX.length,
+            length = AndroidDexFormat.VERSION_CURRENT.length,
+          )
+          .toInt()
       val classes = dex.classDefs().map { TypeDescriptor(dex.typeNames()[it.typeIndex]) }
       val declaredTypeIndices = dex.classDefs().map(ClassDef::getTypeIndex).toSet()
       val (declaredMethods, referencedMethods) =
@@ -53,7 +64,15 @@ private constructor(
           .mapEach { it.map(dex::getField) }
       val declaredMembers = declaredMethods + declaredFields
       val referencedMembers = referencedMethods + referencedFields
-      return Dex(name, dex.strings(), dex.typeNames(), classes, declaredMembers, referencedMembers)
+      return Dex(
+        name,
+        formatVersion,
+        dex.strings(),
+        dex.typeNames(),
+        classes,
+        declaredMembers,
+        referencedMembers,
+      )
     }
 
     private fun <T, R> Pair<T, T>.mapEach(body: (T) -> R): Pair<R, R> = body(first) to body(second)

@@ -243,6 +243,7 @@ public final class com/jakewharton/diffuse/format/Dex : com/jakewharton/diffuse/
 	public final fun getClasses ()Ljava/util/List;
 	public fun getDeclaredMembers ()Ljava/util/List;
 	public fun getFilename ()Ljava/lang/String;
+	public final fun getFormatVersion ()I
 	public fun getMembers ()Ljava/util/List;
 	public fun getReferencedMembers ()Ljava/util/List;
 	public final fun getStrings ()Ljava/util/List;

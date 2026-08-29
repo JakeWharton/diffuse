@@ -16,6 +16,10 @@ import com.jakewharton.picnic.renderText
 internal class DexDiff(val oldDexes: List<Dex>, val newDexes: List<Dex>) : BinaryDiff {
   val isMultidex = oldDexes.size > 1 || newDexes.size > 1
 
+  val formatVersions =
+    componentDiff(oldDexes, newDexes) { dex ->
+      listOf("${dex.filename}: ${dex.formatVersion}")
+    }
   val strings = componentDiff(oldDexes, newDexes) { it.strings }
   val types = componentDiff(oldDexes, newDexes) { it.types }
   val classes = componentDiff(oldDexes, newDexes) { it.classes }
@@ -30,7 +34,8 @@ internal class DexDiff(val oldDexes: List<Dex>, val newDexes: List<Dex>) : Binar
   val referencedFields =
     componentDiff(oldDexes, newDexes) { it.referencedMembers.filterIsInstance<Field>() }
 
-  val changed = strings.changed || types.changed || methods.changed || fields.changed
+  val changed =
+    formatVersions.changed || strings.changed || types.changed || methods.changed || fields.changed
 
   override fun toTextReport(summaryOnly: Boolean): Report = DexDiffTextReport(this, summaryOnly)
 }
@@ -117,6 +122,7 @@ internal fun DexDiff.toSummaryTable() = diffuseTable {
   .renderText()
 
 internal fun DexDiff.toDetailReport() = buildString {
+  appendComponentDiff("FORMAT VERSIONS", formatVersions)
   appendComponentDiff("STRINGS", strings)
   appendComponentDiff("TYPES", types)
   appendComponentDiff("METHODS", methods)

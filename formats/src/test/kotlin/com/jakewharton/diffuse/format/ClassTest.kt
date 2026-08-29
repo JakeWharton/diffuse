@@ -7,6 +7,7 @@ import assertk.assertions.hasSize
 import assertk.assertions.index
 import assertk.assertions.isEqualTo
 import com.jakewharton.diffuse.format.Class.Companion.toClass
+import com.jakewharton.diffuse.testing.requireResource
 import java.util.function.Function
 import org.junit.Test
 
