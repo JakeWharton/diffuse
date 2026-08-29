@@ -53,7 +53,11 @@ internal class ApkDiffTextReport(private val apkDiff: ApkDiff, private val summa
         appendLine()
       }
       appendLine(
-        apkDiff.archive.toSummaryTable("APK", Type.APK_TYPES, skipIfEmptyTypes = setOf(Type.Native))
+        apkDiff.archive.toSummaryTable(
+          "APK",
+          Type.APK_TYPES,
+          skipIfEmptyTypes = setOf(Type.Native, Type.Dir),
+        )
       )
       appendLine()
       appendLine(apkDiff.dex.toSummaryTable())

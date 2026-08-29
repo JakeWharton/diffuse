@@ -96,7 +96,7 @@ internal class ArchiveFilesDiff(
 internal fun ArchiveFilesDiff.toSummaryTable(
   name: String,
   displayTypes: List<Type>,
-  skipIfEmptyTypes: Set<Type> = emptySet(),
+  skipIfEmptyTypes: Set<Type> = setOf(Type.Dir),
 ) = diffuseTable {
   header {
     if (includeCompressed) {

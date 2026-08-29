@@ -1,12 +1,23 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.vanniktech.maven.publish'
 apply plugin: 'org.jetbrains.dokka'
+
+def friends = configurations.register('friends')
 
 dependencies {
   api projects.formats
   implementation libs.picnic
   implementation libs.diffUtils
 
+  add(friends.name, projects.formats)
+
   testImplementation libs.junit
   testImplementation libs.assertk
+}
+
+tasks.withType(KotlinCompile).configureEach { task ->
+  // https://www.liutikas.net/2025/01/12/Kotlin-Library-Friends.html
+  task.friendPaths.from(friends.map { it.incoming.artifactView {}.files })
 }

@@ -21,7 +21,8 @@ internal class AarDiffTextReport(private val aarDiff: AarDiff, private val summa
         aarDiff.archive.toSummaryTable(
           "AAR",
           Type.AAR_TYPES,
-          skipIfEmptyTypes = setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res),
+          skipIfEmptyTypes =
+            setOf(Type.JarLibs, Type.ApiJar, Type.LintJar, Type.Native, Type.Res, Type.Dir),
         )
       )
       appendLine()

@@ -11,7 +11,7 @@ import me.saket.bytesize.binaryBytes
 internal fun ArchiveFiles.toSummaryTable(
   name: String,
   displayTypes: List<ArchiveFile.Type>,
-  skipIfEmptyTypes: Set<ArchiveFile.Type> = emptySet(),
+  skipIfEmptyTypes: Set<ArchiveFile.Type> = setOf(ArchiveFile.Type.Dir),
   includeCompressed: Boolean = true,
 ) = diffuseTable {
   header {

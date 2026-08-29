@@ -42,24 +42,27 @@ class ArchiveFile(
     Res,
     Asset,
     Native,
+    Dir,
     Other;
 
     open val displayName
       get() = name.lowercase(Locale.US)
 
     companion object {
-      @JvmField val APK_TYPES = listOf(Dex, Arsc, Manifest, Res, Native, Asset, Other)
+      @JvmField val APK_TYPES = listOf(Dex, Arsc, Manifest, Res, Native, Asset, Dir, Other)
 
-      @JvmField val AAB_TYPES = listOf(Dex, Manifest, Res, Native, Asset, Other)
+      @JvmField val AAB_TYPES = listOf(Dex, Manifest, Res, Native, Asset, Dir, Other)
 
-      @JvmField val AAR_TYPES = listOf(Jar, Manifest, Res, Native, JarLibs, ApiJar, LintJar, Other)
+      @JvmField
+      val AAR_TYPES = listOf(Jar, Manifest, Res, Native, JarLibs, ApiJar, LintJar, Dir, Other)
 
-      @JvmField val JAR_TYPES = listOf(Class, Other)
+      @JvmField val JAR_TYPES = listOf(Class, Dir, Other)
 
       @JvmStatic
       @JvmName("fromApkName")
       fun String.toApkFileType() =
         when {
+          endsWith("/") -> Dir
           matches(Apk.classesDexRegex) -> Dex
           equals(AndroidManifest.NAME) -> Manifest
           equals(ArscFormat.NAME) -> Arsc
@@ -73,6 +76,7 @@ class ArchiveFile(
       @JvmName("fromAabName")
       fun String.toAabFileType() =
         when {
+          endsWith("/") -> Dir
           equals(Aab.Module.MANIFEST_FILE_PATH) -> Manifest
           startsWith("dex/") -> Dex
           startsWith("lib/") -> Native
@@ -85,6 +89,7 @@ class ArchiveFile(
       @JvmName("fromAarName")
       fun String.toAarFileType() =
         when {
+          endsWith("/") -> Dir
           equals("classes.jar") -> Jar
           equals("api.jar") -> ApiJar
           equals("lint.jar") -> LintJar
@@ -100,6 +105,7 @@ class ArchiveFile(
       @JvmName("fromJarName")
       fun String.toJarFileType() =
         when {
+          endsWith("/") -> Dir
           endsWith(".class") -> Class
           else -> Other
         }

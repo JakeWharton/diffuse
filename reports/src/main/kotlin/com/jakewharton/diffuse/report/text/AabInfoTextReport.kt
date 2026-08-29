@@ -44,7 +44,7 @@ internal class AabInfoTextReport(private val aab: Aab) : Report {
       module.files.toSummaryTable(
         "AAB",
         ArchiveFile.Type.AAB_TYPES,
-        skipIfEmptyTypes = setOf(ArchiveFile.Type.Native),
+        skipIfEmptyTypes = setOf(ArchiveFile.Type.Native, ArchiveFile.Type.Dir),
       )
     )
     appendLine(module.dexes.toSummaryTable())
