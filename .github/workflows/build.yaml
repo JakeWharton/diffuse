@@ -39,7 +39,7 @@ jobs:
       - name: Extract release notes
         id: release_notes
         if: startsWith(github.ref, 'refs/tags/')
-        uses: ffurrer2/extract-release-notes@v3
+        uses: ffurrer2/extract-release-notes@273da39a24fb7db106a35526c8162815faffd31d # v3.1.0
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
