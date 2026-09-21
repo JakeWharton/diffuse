@@ -2,6 +2,8 @@ package com.jakewharton.diffuse
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import com.jakewharton.diffuse.diff.DexDiff
 import com.jakewharton.diffuse.diff.toDetailReport
 import com.jakewharton.diffuse.format.Dex
@@ -20,7 +22,7 @@ class DexDiffTest {
         newDexes = listOf(Dex("classes.dex", 35)),
       )
 
-    assertThat(diff.changed).isEqualTo(false)
+    assertThat(diff.changed).isFalse()
     assertThat(diff.toDetailReport()).isEqualTo("")
   }
 
@@ -32,21 +34,19 @@ class DexDiffTest {
         newDexes = listOf(Dex("classes.dex", 38)),
       )
 
-    assertThat(diff.changed).isEqualTo(true)
+    assertThat(diff.changed).isTrue()
     assertThat(diff.toDetailReport())
       .isEqualTo(
         """
         |
         |FORMAT VERSIONS:
         |
-        |   old │ new │ diff      
-        |  ─────┼─────┼───────────
-        |   1   │ 1   │ 0 (+1 -1) 
-        |  
-        |  + classes.dex: 38
-        |  
-        |  - classes.dex: 35
-        |  
+        |   version │ old │ new │ diff       
+        |  ─────────┼─────┼─────┼────────────
+        |        35 │   1 │   0 │ -1 (+0 -1) 
+        |        38 │   0 │   1 │ +1 (+1 -0) 
+        |
+        |  classes.dex: 35 → 38
         |"""
           .trimMargin()
       )
@@ -60,21 +60,65 @@ class DexDiffTest {
         newDexes = listOf(Dex("classes.dex", 35), Dex("classes2.dex", 38)),
       )
 
-    assertThat(diff.changed).isEqualTo(true)
+    assertThat(diff.changed).isTrue()
     assertThat(diff.toDetailReport())
       .isEqualTo(
         """
         |
         |FORMAT VERSIONS:
         |
-        |   old │ new │ diff      
-        |  ─────┼─────┼───────────
-        |   2   │ 2   │ 0 (+1 -1) 
-        |  
-        |  + classes2.dex: 38
-        |  
-        |  - classes2.dex: 35
-        |  
+        |   version │ old │ new │ diff       
+        |  ─────────┼─────┼─────┼────────────
+        |        35 │   2 │   1 │ -1 (+0 -1) 
+        |        38 │   0 │   1 │ +1 (+1 -0) 
+        |
+        |  classes2.dex: 35 → 38
+        |"""
+          .trimMargin()
+      )
+  }
+
+  @Test
+  fun formatVersionsMultidexAdded() {
+    val diff =
+      DexDiff(
+        oldDexes = listOf(Dex("classes.dex", 35)),
+        newDexes = listOf(Dex("classes.dex", 35), Dex("classes2.dex", 38)),
+      )
+
+    assertThat(diff.changed).isTrue()
+    assertThat(diff.toDetailReport())
+      .isEqualTo(
+        """
+        |
+        |FORMAT VERSIONS:
+        |
+        |   version │ old │ new │ diff       
+        |  ─────────┼─────┼─────┼────────────
+        |        38 │   0 │   1 │ +1 (+1 -0) 
+        |"""
+          .trimMargin()
+      )
+  }
+
+  @Test
+  fun formatVersionsMultidexRemoved() {
+    val diff =
+      DexDiff(
+        oldDexes = listOf(Dex("classes.dex", 35), Dex("classes2.dex", 38)),
+        newDexes = listOf(Dex("classes.dex", 35)),
+      )
+
+    assertThat(diff.changed).isTrue()
+    assertThat(diff.toDetailReport())
+      .isEqualTo(
+        """
+        |
+        |FORMAT VERSIONS:
+        |
+        |   version │ old │ new │ diff       
+        |  ─────────┼─────┼─────┼────────────
+        |        38 │   1 │   0 │ -1 (+0 -1) 
         |"""
           .trimMargin()
       )
