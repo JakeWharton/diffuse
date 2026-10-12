@@ -17,8 +17,8 @@ internal class DexDiff(val oldDexes: List<Dex>, val newDexes: List<Dex>) : Binar
   val isMultidex = oldDexes.size > 1 || newDexes.size > 1
 
   val formatVersions =
-    componentDiff(oldDexes, newDexes) { dex ->
-      listOf("${dex.filename}: ${dex.formatVersion}")
+    versionDiff(oldDexes, newDexes) { dex ->
+      mapOf(dex.filename to dex.formatVersion)
     }
   val strings = componentDiff(oldDexes, newDexes) { it.strings }
   val types = componentDiff(oldDexes, newDexes) { it.types }
@@ -122,7 +122,7 @@ internal fun DexDiff.toSummaryTable() = diffuseTable {
   .renderText()
 
 internal fun DexDiff.toDetailReport() = buildString {
-  appendComponentDiff("FORMAT VERSIONS", formatVersions)
+  appendVersionDiff("FORMAT VERSIONS", formatVersions)
   appendComponentDiff("STRINGS", strings)
   appendComponentDiff("TYPES", types)
   appendComponentDiff("METHODS", methods)
