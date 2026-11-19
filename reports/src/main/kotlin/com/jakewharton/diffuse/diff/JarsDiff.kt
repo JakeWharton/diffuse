@@ -19,12 +19,16 @@ internal class JarsDiff(
 ) {
   val classes = componentDiff(oldJars, newJars) { it.classes.map(Class::descriptor) }
   val bytecodeVersions =
-    componentDiff(oldJars, newJars) { jar ->
-      jar.classes.map { "${it.descriptor}: ${it.bytecodeVersion}" }
+    versionDiff(oldJars, newJars) { jar ->
+      jar.classes.associate { it.descriptor to it.bytecodeVersion }
     }
   val kotlinMetadataVersions =
-    componentDiff(oldJars, newJars) { jar ->
-      jar.classes.map { "${it.descriptor}: ${it.kotlinMetadataVersion.joinToString(".")}" }
+    versionDiff(oldJars, newJars) { jar ->
+      jar.classes
+        .filter { it.kotlinMetadataVersion.isNotEmpty() }
+        .associate {
+          it.descriptor to KotlinMetadataVersion(it.kotlinMetadataVersion.toList())
+        }
     }
   val methods = componentDiff(oldJars, newJars) { it.members.filterIsInstance<Method>() }
   val declaredMethods =
@@ -80,8 +84,8 @@ internal fun JarsDiff.toSummaryTable(name: String) = diffuseTable {
 internal fun JarsDiff.toDetailReport() = buildString {
   // TODO appendComponentDiff("STRINGS", strings)?
   appendComponentDiff("CLASSES", classes)
-  appendComponentDiff("BYTECODE VERSIONS", bytecodeVersions)
-  appendComponentDiff("KOTLIN METADATA VERSIONS", kotlinMetadataVersions)
+  appendVersionDiff("BYTECODE VERSIONS", bytecodeVersions)
+  appendVersionDiff("KOTLIN METADATA VERSIONS", kotlinMetadataVersions)
   appendComponentDiff("METHODS", methods)
   appendComponentDiff("FIELDS", fields)
 }
