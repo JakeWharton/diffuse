@@ -8,6 +8,7 @@ import com.jakewharton.diffuse.io.Input
 class Jar
 private constructor(
   override val filename: String?,
+  val manifest: String,
   val files: ArchiveFiles,
   val classes: List<Class>,
   override val declaredMembers: List<Member>,
@@ -16,6 +17,8 @@ private constructor(
   override val members = declaredMembers + referencedMembers
 
   companion object {
+    private const val MANIFEST_PATH = "META-INF/MANIFEST.MF"
+
     @JvmStatic
     @JvmName("parse")
     fun Input.toJar(): Jar {
@@ -30,7 +33,14 @@ private constructor(
         // Declared methods are likely to reference other declared members. Ensure all are removed.
         referencedMembers -= declaredMembers
 
-        return Jar(name, files, classes, declaredMembers.sorted(), referencedMembers.sorted())
+        return Jar(
+          filename = name,
+          manifest = zip[MANIFEST_PATH].asInput().toUtf8(),
+          files = files,
+          classes = classes,
+          declaredMembers = declaredMembers.sorted(),
+          referencedMembers = referencedMembers.sorted(),
+        )
       }
     }
   }

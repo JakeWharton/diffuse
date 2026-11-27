@@ -8,6 +8,7 @@
 - Support diffing bytecode versions for classes.
 - Support diffing Kotlin metadata versions for classes.
 - Support diffing format versions for DEX files.
+- Show JAR manifest diff details.
 
 **Changed**
 - Replace `com.jakewharton.diffuse.io.Size` with `me.saket.bytesize.ByteSize` in the APIs.
